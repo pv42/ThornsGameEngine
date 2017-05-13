@@ -1,0 +1,13 @@
+name:Berretta 92
+mesh:M9_N,M9_1,M9_2
+texture:M9 (Kopie).png
+rotation:0,0,0
+scale:.01f
+noscopeoffset:3.0f,3.1f,-0.7f
+scopeoffset:3.55f,3.7f,0
+reloadDelay:2.1f
+magizineSize:8
+shotDelay:0.4f
+knockback:.2f
+end
+todo , update obj loader -> mesh:M9

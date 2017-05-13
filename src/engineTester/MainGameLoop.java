@@ -1,0 +1,193 @@
+package engineTester;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import engine.EngineMaster;
+import engine.inputs.*;
+import engine.inputs.listeners.InputEventListener;
+import engine.toolbox.Color;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
+import engine.graphics.cameras.FirstPersonCamera;
+import engineTester.client.GameClient;
+import engineTester.client.NetworkSender;
+import engine.toolbox.collada.ColladaLoader;
+import engine.graphics.entities.Entity;
+import engine.graphics.entities.FirstPersonPlayer;
+import engine.graphics.entities.Light;
+import engine.graphics.fontMeshCreator.FontType;
+import engine.graphics.fontMeshCreator.GUIText;
+import engine.graphics.guis.GuiTexture;
+import engine.graphics.models.OBJLoader;
+import engine.graphics.models.TexturedModel;
+import engine.graphics.particles.*;
+import engine.graphics.renderEngine.*;
+import engine.graphics.terrains.Terrain;
+import engine.graphics.textures.ModelTexture;
+import engine.graphics.textures.TerrainTexture;
+import engine.graphics.textures.TerrainTexturePack;
+import engine.toolbox.Settings;
+import engine.toolbox.Log;
+import shivt.guns.*;
+
+/***
+ * Created by pv42 on 16.06.16.
+ */
+
+public class MainGameLoop {
+    private static final String FONT = "courier_df";
+    private static final String TAG = "GameLoop";
+    private static final float FONT_SIZE = 1;
+    private static boolean onlineMode = false;
+    public static void main(String args[]) throws InterruptedException {
+        EngineMaster.init();
+        GameClient client = null;
+        if(onlineMode) client = new GameClient();
+        if(onlineMode) onlineMode = client.connect();
+        if(onlineMode) onlineMode = client.login(Settings.SERVER_USERNAME, Settings.SERVER_PASSWORD);
+        InputHandler.addListener(new InputEventListener(InputEvent.MOUSE_EVENT,InputEvent.KEY_PRESS,InputEvent.L_MOUSE) {
+            @Override
+            public void onOccur() {
+                Log.i("EVENT_TESTER","It works");
+            }
+        });
+        //todo AudioMaster.setListenerData();
+        // objs
+        
+        FontType font = Loader.loadFont(FONT);
+        ParticleMaster.init(MasterRenderer.getProjectionMatrix());
+        GUIText text = new GUIText("loading",FONT_SIZE,font, new Vector2f(0,0),1,false);
+        text.setColor(0.3f,0.3f,0.4f);
+        MasterRenderer.loadText(text);
+        List<Entity> entities = new ArrayList<>();
+        List<GuiTexture> guis = new ArrayList<>();
+        GuiTexture gui = new GuiTexture(Loader.loadTexture("cross.png"),new Vector2f(0f,0f),new Vector2f(.04f,.04f));
+        guis.add(gui);
+        TexturedModel texturedModel = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree"),new ModelTexture(Loader.loadTexture("lowPolyTree.png")));
+        texturedModel.getTexture().setReflectivity(.1f);
+        TexturedModel texturedModel2 = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern.png")));
+        texturedModel2.getTexture().setHasTransparency(true);
+        texturedModel2.getTexture().setUseFakeLightning(true);
+        Light sun = new Light(new Vector3f(30,100,30), new Color(.7,.7,1.0));
+        List<Light> lights = new ArrayList<>();
+        lights.add(sun);
+        //terrain engine.graphics.textures
+        TerrainTexture bgT = new TerrainTexture(Loader.loadTexture("grass.png"));
+        TerrainTexture rT = new TerrainTexture(Loader.loadTexture("dirt.png"));
+        TerrainTexture gT = new TerrainTexture(Loader.loadTexture("path.png"));
+        TerrainTexture bT = new TerrainTexture(Loader.loadTexture("grassFlowers.png"));//grassFlowers
+        TerrainTexturePack texturePack = new TerrainTexturePack(bgT,rT,bT,gT);
+        TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap.png"));
+        Terrain terrain = new Terrain(0,0,texturePack,blendMap,null);
+        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png"),4,true,true),1,3,3f,new Vector3f(20,10,25),new Vector3f(20f,10f,20f));
+        Random random = new Random();
+        for(int i = 0; i<500; i++) {
+            float x = random.nextFloat() * 800;
+            float z = random.nextFloat() * 800;
+            entities.add(new Entity(texturedModel2,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z),0,0,0,1));
+        }
+        for(int i = 0; i<300; i++) {
+            float x = random.nextFloat() * 800;
+            float z = random.nextFloat() * 800;
+            entities.add(new Entity(texturedModel,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z),0,0,0,.8f));
+        }
+        //player
+        ColladaLoader pcl = new ColladaLoader();
+        Matrix4f matrix = new Matrix4f();
+        matrix.setIdentity();
+        matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
+        List<TexturedModel> personModel = pcl.loadColladaModelAnimated("Hot_Girl_01",matrix);
+        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,1.3f);
+        player.setGun(new Beretta92());
+        FirstPersonCamera camera = new FirstPersonCamera(player);
+        float timeSinceFPSUpdate = 0f;
+        int framesSinceFPSUpdate = 0;
+        //network
+        NetworkSender networkSender = null;
+        if(onlineMode) {
+            networkSender = new NetworkSender(player, client);
+            //networkSender.start();
+        }
+        Log.i(TAG, "starting render");
+        while (!DisplayManager.isCloseRequested()) { //actual MainGameLoop
+            //game logic
+            //FPS Updates
+            if(timeSinceFPSUpdate >= 1.7f ) {
+                text = new GUIText((int)(framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps", FONT_SIZE, font, new Vector2f(0f, 0f), 1, false);
+                text.setColor(1.0f, 1.0f, 0.0f);
+                MasterRenderer.loadText(text);
+                timeSinceFPSUpdate = 0;
+                framesSinceFPSUpdate = 0;
+            }
+            MasterRenderer.processText(text);
+            player.move(terrain);
+            camera.move();
+            particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
+            ParticleMaster.update();
+            //animation
+            player.getModels().get(0).getRawModel().getBones().get(10).rotate(new Vector3f(0,1,0),1);
+            //game render
+            processFirstPersonPlayer(player);
+            MasterRenderer.processTerrain(terrain);
+            guis.forEach(MasterRenderer::processGui);
+            entities.forEach(MasterRenderer::processEntity);
+            lights.forEach(MasterRenderer::processLight);
+
+            MasterRenderer.render(camera,new Vector4f(0, -1, 0, 100000));
+            DisplayManager.updateDisplay();
+            InputLoop.loopHandle();
+            //post render
+            timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
+            framesSinceFPSUpdate ++;
+            //update Fullscreen
+            /*if(Keyboard.isKeyDown(Keyboard.KEY_F11)) {
+                fullscreen = !fullscreen;
+                if(fullscreen) {
+                    if(DisplayManager.updateDisplayMode(Settings.WIDTH_FULLSCREEN,Settings.HEIGHT_FULLSCREEN,true)) {
+                        MasterRenderer.init((float)Settings.WIDTH_FULLSCREEN/(float)Settings.HEIGHT_FULLSCREEN);
+                        GL11.glViewport(0,0,Settings.WIDTH_FULLSCREEN,Settings.HEIGHT_FULLSCREEN);
+                    } else {
+                        fullscreen = false;
+                    }
+                } else  {
+                    if(DisplayManager.updateDisplayMode(Settings.WIDTH,Settings.HEIGHT,false)) {
+                        MasterRenderer .init((float) Settings.WIDTH / (float) Settings.HEIGHT);
+                        GL11.glViewport(0, 0, Settings.WIDTH, Settings.HEIGHT);
+                    } else {
+                        fullscreen = true;
+                    }
+                }
+
+            //change Weapon
+            if(Keyboard.isKeyDown(Keyboard.KEY_1)) player.setGun(new KSR29());
+            if(Keyboard.isKeyDown(Keyboard.KEY_2)) player.setGun(new MP5());
+            if(Keyboard.isKeyDown(Keyboard.KEY_3)) player.setGun(new Beretta92());
+            if(Keyboard.isKeyDown(Keyboard.KEY_4)) player.setGun(new Blaster());
+            */
+        }
+        if(onlineMode && networkSender != null && client != null) {
+            networkSender.end();
+            try {
+                networkSender.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            client.close();
+        }
+        EngineMaster.finish();
+    }
+    private static void processFirstPersonPlayer(FirstPersonPlayer player) {
+        MasterRenderer.processAniEntity(player);
+        if(player.getGun().getScope() != null && player.getGun().getScopingProgress() == 1.0f && player.getGun().getReloadCooldown() == 0) {
+            MasterRenderer.processGui(player.getGun().getScope());
+            MasterRenderer.updateZoom(4);
+        } else {
+            //todo MasterRenderer.processMMEntity(player.getGun());
+            MasterRenderer.updateZoom(1 + player.getGun().getScopingProgress() * .5f);
+        }
+    }
+}

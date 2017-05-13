@@ -1,0 +1,36 @@
+////////////////////////////////////
+// .gun FileFormat for GameEngine //
+//		 by pv42				  //
+////////////////////////////////////
+FILESTRUCTURE:
+
+attribute1: attributeValue1
+attribute2: attributeValue2
+...
+attributeN: attributeValueN
+end
+
+ATTRIBUTES:
+mesh 				*	STRING defines OBJ name form model
+texture				*	STRING defines texturefile for model
+rotation				VECT3D set model offsetRotation
+scale					FLOAT  set model scale
+noscopeoffset   		VECT3D set model offset while not scpoed 
+scopeoffset     		VECT3D set model offset while scoped
+scopetexture    	S	STRING set a texturefile for gui while scoped
+scopetexturepos 	S	VECT2D set scopegui texture offset
+scopetexturescale	S	VECT2D set scopegui scale
+reloadDelay				FLOAT  set reloading time (s)
+magizineSize			INT    set magazinesize
+shotDelay				FLOAT  set time between shots (s)
+knockback				FLOAT  set x knockback after shot
+
+TYPES:
+STRING      native String (no ""/'')
+FLOAT       16bit number as decimal String (Java)
+VECT2D      2 floats seperated by ','
+VECT3D      3 floats seperated by ','
+INT         32bit integer as deciaml String
+* are must have attribs
+S if scopetexture is set all 'S' must set
+

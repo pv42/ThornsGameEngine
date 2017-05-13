@@ -1,0 +1,13 @@
+name:MP5
+mesh:MP5
+texture:MP5
+rotation:0,0,0
+scale:.03f
+noscopeoffset:3.0f,3.1f,-0.7f
+scopeoffset:3.55f,3.7f,-0.02
+reloadDelay:2.1f
+magizineSize:25
+shotDelay:0.1f
+knockback:.1f
+end
+

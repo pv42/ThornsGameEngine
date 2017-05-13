@@ -1,0 +1,12 @@
+name:Blaster
+mesh:Blaster
+texture:Blaster
+rotation:0,-90,0
+scale:.04f
+noscopeoffset:1.0f,3.1f,-0.7f
+scopeoffset:1.55f,3.7f,-0.02
+reloadDelay:1.2f
+magizineSize:100
+shotDelay:0.3f
+knockback:.02f
+end
