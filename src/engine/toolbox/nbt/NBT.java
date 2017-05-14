@@ -1,6 +1,5 @@
 package engine.toolbox.nbt;
 
-import engine.toolbox.Log;
 import shivt.levels.Level;
 
 import java.io.*;
@@ -77,14 +76,14 @@ public class NBT {
                 Compound c = readCompound(in,true);
                 compound.addSubCompound(c);
             } else {
-                NBTTag t = readTag(in,type);
+                Tag t = readTag(in,type);
                 compound.addNBTTag(t);
             }
         } while(type != DATATYPE_END);
         return compound;
     }
-    private static NBTTag readTag(InputStream in,byte type) throws IOException {
-        NBTTag tag = new NBTTag();
+    private static Tag readTag(InputStream in, byte type) throws IOException {
+        Tag tag = new Tag();
         tag.setDataType(type);
         if(type != DATATYPE_END) {
             tag.setName(readTagName(in));
@@ -187,7 +186,7 @@ public class NBT {
                 Compound c = readCompound(in,true);
                 compound.addSubCompound(c);
             } else {
-                NBTTag t = readTag(in,type);
+                Tag t = readTag(in,type);
                 compound.addNBTTag(t);
             }
         } while(type != DATATYPE_END);
@@ -209,7 +208,7 @@ public class NBT {
         writeTagName(compound.getName(),out);
         writeCompoundData(compound,out);
     }
-    private static void writeTag(NBTTag tag, OutputStream out) throws IOException {
+    private static void writeTag(Tag tag, OutputStream out) throws IOException {
         writeType(tag.getDataType(),out);
         if(tag.getDataType() != DATATYPE_END) {
             writeTagName(tag.getName(),out);
@@ -291,7 +290,7 @@ public class NBT {
         }
     }
     private static void writeCompoundData(Compound compound,DataOutputStream out) throws IOException {
-        for (NBTTag tag: compound.getData()) {
+        for (Tag tag: compound.getData()) {
             if(tag instanceof Compound) {
                 writeCompound((Compound) tag,out);
             } else {

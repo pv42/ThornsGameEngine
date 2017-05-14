@@ -5,7 +5,7 @@ import engine.toolbox.Settings;
 import engine.toolbox.nbt.Compound;
 import engine.toolbox.nbt.NBT;
 import engine.toolbox.nbt.NBTList;
-import engine.toolbox.nbt.NBTTag;
+import engine.toolbox.nbt.Tag;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.*;
@@ -63,21 +63,21 @@ public class Level {
             e.printStackTrace();
         }
         Level level = new Level();
-        List<Compound> stationsNBT = (List<Compound>) nbt.getNBTTagByName("stations").getData();
+        List<Compound> stationsNBT = (List<Compound>) nbt.getSubTagByName("stations").getData();
         for(Compound stationNBT: stationsNBT) {
             Vector3f pos = new Vector3f();
-            pos.x = (float)stationNBT.getNBTTagByName("x").getData();
-            pos.y = (float)stationNBT.getNBTTagByName("y").getData();
-            pos.z = (float)stationNBT.getNBTTagByName("z").getData();
-            int owner = (int)stationNBT.getNBTTagByName("owner").getData();
-            int troopStrength = (int)stationNBT.getNBTTagByName("troopStrength").getData();
+            pos.x = (float)stationNBT.getSubTagByName("x").getData();
+            pos.y = (float)stationNBT.getSubTagByName("y").getData();
+            pos.z = (float)stationNBT.getSubTagByName("z").getData();
+            int owner = (int)stationNBT.getSubTagByName("owner").getData();
+            int troopStrength = (int)stationNBT.getSubTagByName("troopStrength").getData();
             level.addStation(new Station(pos,owner,troopStrength));
         }
-        List<Compound> routesNBT = (List<Compound>) nbt.getNBTTagByName("routes").getData();
+        List<Compound> routesNBT = (List<Compound>) nbt.getSubTagByName("routes").getData();
         for(Compound routeNBT: routesNBT) {
-            int station1 = (int)routeNBT.getNBTTagByName("station1").getData();
-            int station2 = (int)routeNBT.getNBTTagByName("station2").getData();
-            float speed = (float)routeNBT.getNBTTagByName("speed").getData();
+            int station1 = (int)routeNBT.getSubTagByName("station1").getData();
+            int station2 = (int)routeNBT.getSubTagByName("station2").getData();
+            float speed = (float)routeNBT.getSubTagByName("speed").getData();
             level.addRoute(new Route(station1,station2,speed));
 
         }
@@ -87,19 +87,19 @@ public class Level {
     public static void writeToFile(String file,Level level) {
         Compound nbt = new Compound();
         nbt.setName("root");
-        NBTTag versionTag = new NBTTag("version",NBT.DATATYPE_INT, Settings.LEVEL_FILE_VERSION);
-        NBTTag stationsNBT = new NBTTag();
+        Tag versionTag = new Tag("version",NBT.DATATYPE_INT, Settings.LEVEL_FILE_VERSION);
+        Tag stationsNBT = new Tag();
         stationsNBT.setName("stations");
         stationsNBT.setDataType(NBT.DATATYPE_LIST);
         NBTList<Compound> stationsList = new NBTList<>();
         stationsList.setDataType(NBT.DATATYPE_COMPOUND);
         for(Station station: level.getStations()) {
             Compound c = new Compound();
-            NBTTag nbtTagX = new NBTTag("x",NBT.DATATYPE_FLOAT,station.getPosition().x);
-            NBTTag nbtTagY = new NBTTag("y",NBT.DATATYPE_FLOAT,station.getPosition().y);
-            NBTTag nbtTagZ = new NBTTag("z",NBT.DATATYPE_FLOAT,station.getPosition().z);
-            NBTTag nbtTagO = new NBTTag("owner",NBT.DATATYPE_INT,station.getOwner());
-            NBTTag nbtTagT = new NBTTag("troopStrength",NBT.DATATYPE_INT,station.getTroopsStrength());
+            Tag nbtTagX = new Tag("x",NBT.DATATYPE_FLOAT,station.getPosition().x);
+            Tag nbtTagY = new Tag("y",NBT.DATATYPE_FLOAT,station.getPosition().y);
+            Tag nbtTagZ = new Tag("z",NBT.DATATYPE_FLOAT,station.getPosition().z);
+            Tag nbtTagO = new Tag("owner",NBT.DATATYPE_INT,station.getOwner());
+            Tag nbtTagT = new Tag("troopStrength",NBT.DATATYPE_INT,station.getTroopsStrength());
             c.addNBTTag(nbtTagX);
             c.addNBTTag(nbtTagY);
             c.addNBTTag(nbtTagZ);
@@ -109,16 +109,16 @@ public class Level {
         }
         stationsNBT.setData(stationsList);
         nbt.addNBTTag(stationsNBT);
-        NBTTag routesNBT = new NBTTag();
+        Tag routesNBT = new Tag();
         routesNBT.setName("routes");
         routesNBT.setDataType(NBT.DATATYPE_LIST);
         NBTList<Compound> routesList = new NBTList<>();
         routesList.setDataType(NBT.DATATYPE_COMPOUND);
         for(Route route: level.getRoutes()) {
             Compound c = new Compound();
-            NBTTag nbtTag1 = new NBTTag("station1",NBT.DATATYPE_INT,route.getStations()[0]);
-            NBTTag nbtTag2 = new NBTTag("station2",NBT.DATATYPE_INT,route.getStations()[1]);
-            NBTTag nbtTagS = new NBTTag("speed",NBT.DATATYPE_FLOAT,route.getSpeed());
+            Tag nbtTag1 = new Tag("station1",NBT.DATATYPE_INT,route.getStations()[0]);
+            Tag nbtTag2 = new Tag("station2",NBT.DATATYPE_INT,route.getStations()[1]);
+            Tag nbtTagS = new Tag("speed",NBT.DATATYPE_FLOAT,route.getSpeed());
             c.addNBTTag(nbtTag1);
             c.addNBTTag(nbtTag2);
             c.addNBTTag(nbtTagS);

@@ -4,12 +4,12 @@ package engine.toolbox.nbt;
 /***
  * Created by pv42 on 26.09.2016.
  */
-public class NBTTag {
+public class Tag {
     private String name;
     private byte dataType;
     private Object data;
-    public NBTTag(){}
-    public NBTTag(String name, byte dataType, Object data) {
+    public Tag(){}
+    public Tag(String name, byte dataType, Object data) {
         this.name = name;
         this.dataType = dataType;
         this.data = data;
