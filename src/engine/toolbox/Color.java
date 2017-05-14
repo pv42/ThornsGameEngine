@@ -125,6 +125,7 @@ public class Color {
     public byte getAByte() {
         return (byte)(data/0x1000000);
     }
+
     /**
      * gets the red component of the 32bit color
      * @return 8bit colors red part
@@ -160,5 +161,29 @@ public class Color {
     }
     public float getB() {
         return (float) getBByte() / 255f;
+    }
+
+    /**
+     * Compares this color to the specified object.  The result is {@code
+     * true} if and only if the argument is not {@code null} and is a {@code
+     * Color} object that represents the same r,g,b,a values as this
+     * object.
+     *
+     * @param  obj
+     *         The object to compare this {@code Color} against
+     *
+     * @return  {@code true} if the given object represents a {@code Color}
+     *          equivalent to this color, {@code false} otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Color) {
+            Color anotherColor = (Color)obj;
+            if(getColorData() == anotherColor.getColorData()) return true;
+        }
+        return false;
     }
 }
