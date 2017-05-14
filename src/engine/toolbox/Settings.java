@@ -4,6 +4,7 @@ package engine.toolbox;
  * Created by pv42 on 21.06.16.
  */
 public class Settings {
+    private Settings() {  } // can not be created
     //graphics
     public static final int MULTI_SAMPLE_ANTI_ALIASING = 4; //todo
     public static final int FPS_LIMIT = 60;
