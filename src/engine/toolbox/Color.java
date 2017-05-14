@@ -45,9 +45,12 @@ public class Color {
      * @param B blue component float between 0 and 1
      * @param G green component float between 0 and 1
      * @param R red component float between 0 and 1
+     * @throws IllegalArgumentException if argument is not between 0 and 1
      */
     public Color(double A, double R, double G, double B) {
-        this((byte)(A * 0xff),(byte)(R * 0xff), (byte)(G * 0xff), (byte)(B * 0xff))  ;
+        this((byte)(A * 0xff),(byte)(R * 0xff), (byte)(G * 0xff), (byte)(B * 0xff));
+        if(0 > A || A > 1 || 0 > R || R > 1 || 0 > G || G > 1 || 0 > B || B > 1)
+            throw new IllegalArgumentException("Value have to be betweed 0.0 and 1.0");
     }
 
     /**
