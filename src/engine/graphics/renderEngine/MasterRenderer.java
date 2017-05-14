@@ -27,7 +27,7 @@ import engine.graphics.entities.Light;
 
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
-import engine.toolbox.Timer;
+import engine.toolbox.Time;
 
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
@@ -121,33 +121,33 @@ public class MasterRenderer {
      * @param clipPlane clipPlane for Water shading
      */
     public static void render(Camera camera, Vector4f clipPlane) {
-        startT = Timer.getNanoTime();
+        startT = Time.getNanoTime();
         prepare();
-        preT = Timer.getNanoTime();
+        preT = Time.getNanoTime();
         //entities
         entityRenderer.render(entities, lights, camera);
         //animation
         aniRenderer.render(aniEntities, lights, camera);
-        entT = Timer.getNanoTime();
+        entT = Time.getNanoTime();
         //normal
         //todo normalRenderer.render(normalEntities,clipPlane,lights, camera);
-        normT = Timer.getNanoTime();
+        normT = Time.getNanoTime();
         //terrain
         terrainRenderer.render(terrains, camera, lights);
-        terT = Timer.getNanoTime();
+        terT = Time.getNanoTime();
         //skybox
         skyboxRenderer.render(camera, SKY_RED, SKY_GREEN, SKY_BLUE);
-        skyT = Timer.getNanoTime();
+        skyT = Time.getNanoTime();
         //particles
         ParticleMaster.renderParticles(camera);
-        partT = Timer.getNanoTime();
+        partT = Time.getNanoTime();
         //lines
         lineRenderer.render(lineStripModels, camera);
         //gui
         guiRenderer.render(guis);
         //text
         fontRenderer.render(texts, camera, projectionMatrix);
-        guiT = Timer.getNanoTime();
+        guiT = Time.getNanoTime();
         //cleanup
         guis.clear();
         terrains.clear();
@@ -157,7 +157,7 @@ public class MasterRenderer {
         //todo normalEntities.clear();
         texts.clear();
         lights.clear();
-        endT = Timer.getNanoTime();
+        endT = Time.getNanoTime();
         double comT = 0.01 * (endT - startT);
 
         //System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );

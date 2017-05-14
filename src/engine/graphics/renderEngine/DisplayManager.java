@@ -8,7 +8,7 @@ import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.vector.Vector2f;
 
 import static engine.toolbox.Settings.*;
-import static engine.toolbox.Timer.getTime;
+import static engine.toolbox.Time.getTime;
 
 public class DisplayManager {
     private static final String TAG = "Engine:DisplayManager";

@@ -4,7 +4,7 @@ import engine.inputs.listeners.CursorListener;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
-import engine.toolbox.Timer;
+import engine.toolbox.Time;
 import org.lwjgl.glfw.*;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -31,8 +31,8 @@ public class InputHandler {
         GLFW.glfwSetCursorPosCallback(windowID, new GLFWCursorPosCallback() {
             @Override
             public void invoke(long l, double v, double v1) {
-                if(isMouseBound) eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Timer.getTime(),new Vector2f((float) v-mouseX,(float) v1-mouseY )));
-                else eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Timer.getTime(),new Vector2f((float) v,(float) v1 )));
+                if(isMouseBound) eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getTime(),new Vector2f((float) v-mouseX,(float) v1-mouseY )));
+                else eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getTime(),new Vector2f((float) v,(float) v1 )));
                 mouseX = (int)v;
                 mouseY = (int)v1;
             }
@@ -40,21 +40,21 @@ public class InputHandler {
         GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
-                eventQ.add(new InputEvent(MOUSE_EVENT,action,button,Timer.getTime(),new Vector2f(mouseX,mouseY)));
+                eventQ.add(new InputEvent(MOUSE_EVENT,action,button, Time.getTime(),new Vector2f(mouseX,mouseY)));
             }
         });
         GLFW.glfwSetKeyCallback(windowID, new GLFWKeyCallback() {
             @Override
             public void invoke(long windowID, int key, int scancode, int action, int mods) {
                 if(key != 0)  {
-                    eventQ.add(new InputEvent(KEY_EVENT,action,key, Timer.getTime()));
+                    eventQ.add(new InputEvent(KEY_EVENT,action,key, Time.getTime()));
                 }
             }
         });
         GLFW.glfwSetScrollCallback(windowID, new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
-                eventQ.add(new InputEvent(MOUSE_EVENT,SCROLL,0,Timer.getTime(),new Vector2f((float) xoffset,(float) yoffset)));
+                eventQ.add(new InputEvent(MOUSE_EVENT,SCROLL,0, Time.getTime(),new Vector2f((float) xoffset,(float) yoffset)));
             }
         });
     }
