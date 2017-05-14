@@ -38,4 +38,13 @@ public class Station {
     public void setTroopsStrength(int troopsStrength) {
         this.troopsStrength = troopsStrength;
     }
+
+    @Override
+    public String toString() {
+        return "Station{" +
+                "position=" + position +
+                ", owner=" + owner +
+                ", troopsStrength=" + troopsStrength +
+                '}';
+    }
 }

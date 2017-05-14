@@ -134,4 +134,12 @@ public class Level {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        return "Level{" +
+                "stations=" + stations +
+                ", routes=" + routes +
+                '}';
+    }
 }
