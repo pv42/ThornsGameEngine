@@ -19,8 +19,7 @@ public class Conversion {
         Vector2f normCoords = normalizedDeviceCoordsFromPixelCoods(pixelX,pixelY);
         Vector4f clipCoords = new Vector4f(normCoords.x,normCoords.y,-1,1);
         Vector4f eyeCoords = toEyeCoords(clipCoords, projectionMatrix);
-        Vector3f worldRay = toWorldCoords(eyeCoords, viewMatrix);
-        return worldRay;
+        return toWorldCoords(eyeCoords, viewMatrix);
     }
     public static Vector2f normalizedDeviceCoordsFromPixelCoods(float pixelX, float pixelY) {
         //float x = (2f * pixelX) / Display.getWidth() - 1;
