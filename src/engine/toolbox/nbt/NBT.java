@@ -31,7 +31,11 @@ public class NBT {
         //Log.i(read(in).toString());
 
         Level.writeToFile("test",Level.demoLevel());
-        Level.readFromFile("test");
+        Level l = Level.readFromFile("test");
+        System.out.println(l);
+    }
+    public static Compound readFromFile(String path) throws FileNotFoundException {
+        return read(new FileInputStream(path));
     }
     public static Compound read(InputStream in) {
         try {
@@ -287,12 +291,12 @@ public class NBT {
         }
     }
     private static void writeCompoundData(Compound compound,DataOutputStream out) throws IOException {
-
-        for (NBTTag tag: compound.getTags()){
-            writeTag(tag,out);
-        }
-        for (Compound c: compound.getSubCompounds()) {
-            writeCompound(c,out);
+        for (NBTTag tag: compound.getData()) {
+            if(tag instanceof Compound) {
+                writeCompound((Compound) tag,out);
+            } else {
+                writeTag(tag,out);
+            }
         }
         out.writeByte(DATATYPE_END);
     }
