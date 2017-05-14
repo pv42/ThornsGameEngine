@@ -6,13 +6,14 @@ import java.util.List;
 /**
  * Created by pv42 on 26.09.2016.
  */
-public class Compound  extends Tag {
+public class Compound  extends Tag<List<Tag>> {
 
     public Compound() {
         super("",NBT.DATATYPE_COMPOUND,new ArrayList<Tag>());
     }
     public void addNBTTag(Tag tag) {
-        if(tag.getDataType() != NBT.DATATYPE_END)getData().add(tag);
+        if(tag.getDataType() == NBT.DATATYPE_END) throw new IllegalArgumentException("Can't add end tag to Compound");
+            getData().add(tag);
     }
     public void addSubCompound(Compound c) {
         getData().add(c);
@@ -29,7 +30,7 @@ public class Compound  extends Tag {
 
     @Override
     public List<Tag> getData() {
-        return (List<Tag>) super.getData();
+        return super.getData();
     }
 
     @Override

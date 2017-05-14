@@ -4,12 +4,12 @@ package engine.toolbox.nbt;
 /***
  * Created by pv42 on 26.09.2016.
  */
-public class Tag {
+public class Tag<T>{
     private String name;
     private byte dataType;
-    private Object data;
+    private T data;
     public Tag(){}
-    public Tag(String name, byte dataType, Object data) {
+    public Tag(String name, byte dataType, T data) {
         this.name = name;
         this.dataType = dataType;
         this.data = data;
@@ -31,11 +31,11 @@ public class Tag {
         this.dataType = dataType;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
