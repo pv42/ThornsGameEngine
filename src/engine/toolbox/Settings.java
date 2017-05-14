@@ -30,6 +30,7 @@ public class Settings {
     //debug
     public static final boolean SHOW_DEBUG_LOG = false;
     public static final boolean WRITE_LOG_FILE = false;
+    public static final String LOG_PATH = "log/log.txt";
     //network
     public static final int NETWORK_TIMEOUT = 20; //ms between nw syncs
     public static final String SQL_USERNAME = "root";
