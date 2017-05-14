@@ -141,8 +141,8 @@ public class Maths {
         return new Vector3f(in.x/in.w,in.y/in.w,in.z/in.w);
     }
     public static Vector4f getAreaFromPositionAndScale(Vector2f pos,Vector2f scale) {
-        Vector2f min = Convertation.pixelFromOpenGLSpace2D(new Vector2f(pos.getX() - scale.getX(),pos.getY() - scale.getY()));
-        Vector2f max = Convertation.pixelFromOpenGLSpace2D(new Vector2f(pos.getX() + scale.getX(),pos.getY() + scale.getY()));
+        Vector2f min = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.getX() - scale.getX(),pos.getY() - scale.getY()));
+        Vector2f max = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.getX() + scale.getX(),pos.getY() + scale.getY()));
         return new Vector4f(min.x,min.y,max.x,max.y);
     }
 }

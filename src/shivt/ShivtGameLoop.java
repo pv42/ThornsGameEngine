@@ -54,7 +54,7 @@ public class ShivtGameLoop {
         DisplayManager.updateDisplay();
         timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
         framesSinceFPSUpdate++;
-        //System.out.println(Convertation.normalizedDeviceCoordsFromPixelCoods(Mouse.getX(), Mouse.getY()));
+        //System.out.println(Conversion.normalizedDeviceCoordsFromPixelCoods(Mouse.getX(), Mouse.getY()));
     }
     public void finish() {
         EngineMaster.finish();

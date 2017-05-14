@@ -2,7 +2,7 @@ package engine.inputs.clickAreas;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.renderEngine.MasterRenderer;
-import engine.toolbox.Convertation;
+import engine.toolbox.Conversion;
 import engine.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -24,7 +24,7 @@ public class ClickBox3D extends ClickArea{
     }
     @Override
     public boolean isPointIn(Vector2f point) {
-        Vector3f v = Convertation.getWorldRay(point.x, point.y, MasterRenderer.getProjectionMatrix(), Maths.createViewMatrix(camera));
+        Vector3f v = Conversion.getWorldRay(point.x, point.y, MasterRenderer.getProjectionMatrix(), Maths.createViewMatrix(camera));
         //points;
         /*
              y
