@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector4f;
  * Created by pv42 on 21.07.16.
  */
 public class Conversion {
+    private Conversion() {} //this can never be an object
     public static Vector2f pixelFromOpenGLSpace2D(Vector2f openGLSpace) {
         Vector2f size = DisplayManager.getSize();
         return new Vector2f((openGLSpace.x + 1)*.5f* size.x,(openGLSpace.y + 1)*.5f* size.y);
