@@ -2,35 +2,93 @@ package engine.toolbox;
 
 import org.lwjgl.util.vector.Vector3f;
 
-/***
+/**
  * Created by pv42 on 15.09.2016.
+ * A color saved as argb 32bit
  */
 public class Color {
     private int data; // 0x00rrbbgg / 0xAArrbbgg
-    public Color(byte A,byte r,byte b, byte g) {
-        data = A * 0x1000000 + r * 0x10000 + b * 0x100 + g;
+    /**
+     * Creates a RGBA color object
+     * @param A alpha component
+     * @param b blue component
+     * @param g green component
+     * @param r red component
+     */
+    public Color(byte A,byte r,byte g, byte b) {
+        data = A * 0x1000000 + r * 0x10000 + g * 0x100 + b;
     }
-    public Color(byte r, byte b, byte g) {
-        data = r * 0x10000 + b * 0x100 + g;
+
+    /**
+     * Creates a RGB color object with alpha 255 ( not transparent)
+     * @param b blue component
+     * @param g green component
+     * @param r red component
+     */
+    public Color(byte r, byte g, byte b) {
+        this(255,r,b,g);
     }
-    public Color(double r, double b, double g) {
-        data = (int)(r * 0x10000 * 0xff) + (int)(b * 0x100 * 0xff) + (int)(g * 0xff);
+
+    /**
+     * Creates a RGBA color object
+     * @param b blue component
+     * @param g green component
+     * @param r red component
+     */
+    public Color(double r, double g, double b) {
+        this(1.0,r,g,b);
     }
-    public Color(double A, double r, double b, double g) {
-        data = (int)(A * 0x1000000 * 0xff) + (int)(r * 0x10000 * 0xff) + (int)(b * 0x100 * 0xff) + (int)(g * 0xff);
+
+    /**
+     * Creates a RGBA color object
+     * @param A alpha component
+     * @param B blue component float between 0 and 1
+     * @param G green component float between 0 and 1
+     * @param R red component float between 0 and 1
+     */
+    public Color(double A, double R, double G, double B) {
+        this((byte)(A * 0xff),(byte)(R * 0xff), (byte)(G * 0xff), (byte)(B * 0xff))  ;
     }
+
+    /**
+     * Creates a color object from a rgb vector
+     * @param rgb rgb, each value has to be between 0 and 1
+     */
     public Color(Vector3f rgb) {
-        data = (int)(rgb.x * 0x10000 + rgb.y * 0x100 + rgb.z);
+        this(rgb.x, rgb.y, rgb.z);
     }
+
+    /**
+     * Creates a color object from a 32bit int representation
+     * @param data 32bit color data
+     */
     public Color(int data) {
         this.data = data;
     }
+
+    /**
+     * Gets a Color vector
+     * @return rgb vector of values between 0 and 1
+     */
     public Vector3f getVector() {
         return new Vector3f(getR(),getG(),getB());
     }
-    public int getData() {
+
+    /**
+     * gets the color data
+     * @return 32bit color data
+     */
+    public int getColorData() {
         return data;
     }
+
+    /**
+     * creates a color from the hsl
+     * @param h hue parameter of the hls format
+     * @param s satuartion parameter of the hls format
+     * @param l lightness parameter of the hls format
+     * @return Color
+     */
     public static Color fromHSL(float h, float s, float l) {
         // 0<=h<360, 0<=l,s<=1
         h = h % 360;
@@ -56,22 +114,48 @@ public class Color {
         rgb.z += m;
         return new Color(rgb);
     }
-    public int getIntR() {
-        return data/0x10000;
+
+    /**
+     * gets the alpha component of the 32bit color
+     * @return 8bit colors alpha part
+     */
+    public byte getAByte() {
+        return (byte)(data/0x1000000);
     }
-    public int getIntG() {
-        return (data/0x100)%0x100;
+    /**
+     * gets the red component of the 32bit color
+     * @return 8bit colors red part
+     */
+    public byte getRByte() {
+        return (byte)((data/0x10000)%0x100);
     }
-    public int getIntB() {
-        return  data%0x100;
+
+    /**
+     * gets the green component of the 32bit color
+     * @return 8bit colors green part
+     */
+    public byte getGByte() {
+        return (byte)((data/0x100)%0x100);
+    }
+
+    /**
+     * gets the blue component of the 32bit color
+     * @return 8bit colors blue part
+     */
+    public byte getBByte() {
+        return  (byte)(data%0x100);
+    }
+
+    public float getA() {
+        return (float) getAByte() / 255f;
     }
     public float getR() {
-        return (float) getIntR() / 255f;
+        return (float) getRByte() / 255f;
     }
     public float getG() {
-        return (float) getIntG() / 255f;
+        return (float) getGByte() / 255f;
     }
     public float getB() {
-        return (float) getIntB() / 255f;
+        return (float) getBByte() / 255f;
     }
 }
