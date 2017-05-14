@@ -6,21 +6,12 @@ import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import static engine.toolbox.nbt.Tag.*;
+
 public class NBT {
     private static final String TAG = "NBT";
     private static final boolean COMPRESS = true;
-    public static final byte DATATYPE_END = 0;
-    public static final byte DATATYPE_BYTE = 1;
-    public static final byte DATATYPE_SHORT = 2;
-    public static final byte DATATYPE_INT = 3;
-    public static final byte DATATYPE_LONG = 4;
-    public static final byte DATATYPE_FLOAT = 5;
-    public static final byte DATATYPE_DOUBLE = 6;
-    public static final byte DATATYPE_BYTEARRAY = 7;
-    public static final byte DATATYPE_STRING = 8;
-    public static final byte DATATYPE_LIST = 9;
-    public static final byte DATATYPE_COMPOUND = 10;
-    public static final byte DATATYPE_INTARRAY = 11;
+
 
     public static void main(String[] args)  {
         String f1 = "C:\\Users\\pv42\\AppData\\Roaming\\.minecraft\\saves\\Arena_Pvp_1.8\\level.dat";
