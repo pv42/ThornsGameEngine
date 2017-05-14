@@ -20,7 +20,8 @@ public class Log {
     public static void connectLogFile() {
         try {
             File file = new File(LOG_PATH);
-            if(!file.canWrite()) file.createNewFile();
+            if(!file.canWrite()) //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
             out = new PrintStream(new FileOutputStream(file));
             err = out;
         } catch (IOException e) {
