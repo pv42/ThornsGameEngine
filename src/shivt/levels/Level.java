@@ -89,7 +89,7 @@ public class Level {
     public static void writeToFile(String file,Level level) {
         Compound nbt = new Compound();
         nbt.setName("root");
-        Tag versionTag = new Tag("version",DATATYPE_INT, Settings.LEVEL_FILE_VERSION);
+        Tag versionTag = new Tag("version",Settings.LEVEL_FILE_VERSION);
         Tag stationsNBT = new Tag();
         stationsNBT.setName("stations");
         stationsNBT.setDataType(DATATYPE_LIST);
@@ -97,11 +97,11 @@ public class Level {
         stationsList.setDataType(DATATYPE_COMPOUND);
         for(Station station: level.getStations()) {
             Compound c = new Compound();
-            Tag nbtTagX = new Tag("x",DATATYPE_FLOAT,station.getPosition().x);
-            Tag nbtTagY = new Tag("y",DATATYPE_FLOAT,station.getPosition().y);
-            Tag nbtTagZ = new Tag("z",DATATYPE_FLOAT,station.getPosition().z);
-            Tag nbtTagO = new Tag("owner",DATATYPE_INT,station.getOwner());
-            Tag nbtTagT = new Tag("troopStrength",DATATYPE_INT,station.getTroopsStrength());
+            Tag<Float> nbtTagX = new Tag<>("x", station.getPosition().x);
+            Tag<Float> nbtTagY = new Tag<>("y", station.getPosition().y);
+            Tag<Float> nbtTagZ = new Tag<>("z", station.getPosition().z);
+            Tag<Integer> nbtTagO = new Tag<>("owner", station.getOwner());
+            Tag<Integer> nbtTagT = new Tag<>("troopStrength", station.getTroopsStrength());
             c.addNBTTag(nbtTagX);
             c.addNBTTag(nbtTagY);
             c.addNBTTag(nbtTagZ);
@@ -118,9 +118,9 @@ public class Level {
         routesList.setDataType(DATATYPE_COMPOUND);
         for(Route route: level.getRoutes()) {
             Compound c = new Compound();
-            Tag nbtTag1 = new Tag("station1", DATATYPE_INT,route.getStations()[0]);
-            Tag nbtTag2 = new Tag("station2", DATATYPE_INT,route.getStations()[1]);
-            Tag nbtTagS = new Tag("speed", DATATYPE_FLOAT,route.getSpeed());
+            Tag<Integer> nbtTag1 = new Tag<>("station1", route.getStations()[0]);
+            Tag<Integer> nbtTag2 = new Tag<>("station2", route.getStations()[1]);
+            Tag<Float> nbtTagS = new Tag<>("speed", route.getSpeed());
             c.addNBTTag(nbtTag1);
             c.addNBTTag(nbtTag2);
             c.addNBTTag(nbtTagS);
