@@ -9,10 +9,10 @@ import java.util.List;
 public class Compound  extends Tag<List<Tag>> {
 
     public Compound() {
-        super("",NBT.DATATYPE_COMPOUND,new ArrayList<Tag>());
+        super("", new ArrayList<>(), DATATYPE_COMPOUND);
     }
     public void addNBTTag(Tag tag) {
-        if(tag.getDataType() == NBT.DATATYPE_END) throw new IllegalArgumentException("Can't add end tag to Compound");
+        if(tag.getDataType() == DATATYPE_END) throw new IllegalArgumentException("Can't add end tag to Compound");
             getData().add(tag);
     }
     public void addSubCompound(Compound c) {

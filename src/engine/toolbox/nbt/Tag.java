@@ -1,6 +1,8 @@
 package engine.toolbox.nbt;
 
 
+import java.util.List;
+
 /***
  * Created by pv42 on 26.09.2016.
  */
@@ -22,12 +24,14 @@ public class Tag<T>{
     private byte dataType;
     private T data;
     public Tag(){}
-    public Tag(String name, byte dataType, T data) {
+    public Tag(String name, T data) {
+        this(name,data,dataTypeFromClass(data.getClass()));
+    }
+    public Tag(String name, T data, byte dataType) {
         this.name = name;
         this.dataType = dataType;
         this.data = data;
     }
-
     public String getName() {
         return name;
     }
@@ -64,6 +68,24 @@ public class Tag<T>{
             return DATATYPE_BYTE;
         } else if (c == Short.class) {
             return DATATYPE_SHORT;
+        }else if (c == Short.class) {
+            return DATATYPE_INT;
+        } else if (c == Integer.class) {
+            return DATATYPE_SHORT;
+        } else if (c == Long.class) {
+            return DATATYPE_LONG;
+        } else if (c == Float.class) {
+            return DATATYPE_FLOAT;
+        } else if (c == Double.class) {
+            return DATATYPE_DOUBLE;
+        } else if (c == List.class) {
+            return DATATYPE_BYTEARRAY;
+        } else if (c == List.class) {
+            return DATATYPE_LIST;
+        } else if (c == List.class) {
+            return DATATYPE_COMPOUND;
+        } else if (c == List.class) {
+            return DATATYPE_INTARRAY;
         }
         return 0;
     }
