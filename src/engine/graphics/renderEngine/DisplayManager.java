@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.util.vector.Vector2f;
+import org.joml.Vector2f;
 
 import static engine.toolbox.Settings.*;
 import static engine.toolbox.Time.getTime;

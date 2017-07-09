@@ -12,7 +12,7 @@ import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
-import org.lwjgl.util.vector.Vector2f;
+import org.joml.Vector2f;
 
 /***
  * Created by pv42 on 20.07.16.

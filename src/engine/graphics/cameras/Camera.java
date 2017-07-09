@@ -1,6 +1,6 @@
 package engine.graphics.cameras;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 /**
    Created by pv42 on 17.06.16.

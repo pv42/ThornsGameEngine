@@ -15,15 +15,14 @@ import org.lwjgl.glfw.GLFW;
  */
 public class EngineMaster {
     private static final String TAG = "Engine";
-    //private static GLFWErrorCallback errorCallback;
     public static void init() {
         if(Settings.WRITE_LOG_FILE) Log.connectLogFile();
         Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().getName());
         Log.i(TAG, "lwjgl-version: " + org.lwjgl.Version.getVersion());
         //todo glfw errors
-        if(!GLFW.glfwInit()) {
+        /*if(!GLFW.glfwInit()) {
             throw new IllegalStateException("GLFW init failed");
-        }
+        }*/
         AudioMaster.init();
         long windowID = DisplayManager.createDisplay();
         MasterRenderer.init();

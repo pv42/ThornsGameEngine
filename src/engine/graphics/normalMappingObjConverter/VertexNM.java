@@ -3,7 +3,7 @@ package engine.graphics.normalMappingObjConverter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 public class VertexNM {
 	
@@ -40,11 +40,11 @@ public class VertexNM {
 			return;
 		}
 		for(Vector3f tangent : tangents){
-			Vector3f.add(averagedTangent, tangent, averagedTangent);
+			averagedTangent.add( tangent, averagedTangent);
 		}
 		//todo why (0,0,0)
 		if(averagedTangent.x == 0 && averagedTangent.y ==0 && averagedTangent.z == 0) averagedTangent = new Vector3f(1,0,0);
-		averagedTangent.normalise();
+		averagedTangent.normalize();
 	}
 	
 	protected Vector3f getAverageTangent(){

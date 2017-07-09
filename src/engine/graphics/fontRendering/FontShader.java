@@ -1,9 +1,9 @@
 package engine.graphics.fontRendering;
 
 import engine.toolbox.Color;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import engine.graphics.shaders.ShaderProgram;
 
 public class FontShader extends ShaderProgram{

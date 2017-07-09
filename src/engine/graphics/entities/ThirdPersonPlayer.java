@@ -1,7 +1,7 @@
 package engine.graphics.entities;
 
 import engine.graphics.models.TexturedModel;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 import engine.graphics.renderEngine.DisplayManager;
 import engine.graphics.terrains.Terrain;
 

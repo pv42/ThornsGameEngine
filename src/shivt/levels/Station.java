@@ -1,6 +1,6 @@
 package shivt.levels;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 /**
  * Created by pv42 on 15.09.2016.

@@ -7,8 +7,8 @@ import engine.graphics.entities.Light;
 import engine.graphics.models.RawModel;
 
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import engine.graphics.shaders.TerrainShader;
 import engine.graphics.terrains.Terrain;

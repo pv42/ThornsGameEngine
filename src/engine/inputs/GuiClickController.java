@@ -1,9 +1,11 @@
-package engine.inputs.listeners;
+package engine.inputs;
 
 import engine.inputs.InputHandler;
 import engine.inputs.Clickable;
+import engine.inputs.listeners.CursorListener;
+import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Log;
-import org.lwjgl.util.vector.Vector2f;
+import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +15,12 @@ import static engine.inputs.InputEvent.*;
 /***
  * Created by pv42 on 14.09.2016.
  */
-public class GuiClickListener {
+public class GuiClickController {
     private List<Clickable> clickables;
     private int mouseX, mouseY;
     private Clickable currentClickable;
     private Clickable mouseDownClickable;
-    public GuiClickListener() {
+    public GuiClickController() {
         clickables = new ArrayList<>();
         currentClickable = null;
         InputHandler.setCursorListener(new CursorListener() {

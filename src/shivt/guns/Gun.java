@@ -4,7 +4,7 @@ import engine.graphics.entities.MMEntity;
 import engine.graphics.entities.Player;
 import engine.graphics.guis.GuiTexture;
 import engine.toolbox.Log;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 /**
   Created by pv42 on 24.06.16.

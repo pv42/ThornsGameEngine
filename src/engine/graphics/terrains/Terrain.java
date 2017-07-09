@@ -1,8 +1,8 @@
 package engine.graphics.terrains;
 
 import engine.graphics.models.RawModel;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.TerrainTexture;
 import engine.graphics.textures.TerrainTexturePack;
@@ -185,7 +185,7 @@ public class Terrain {
         float heightD = getHeight(x, z-1 , image);
         float heightU = getHeight(x, z+1 , image);
         Vector3f normal = new Vector3f(heightL-heightR, 2f, heightD - heightU);
-        normal.normalise();
+        normal.normalize();
         return normal;
     }
     private Vector3f calculateNormal(int x, int z, HeightGenerator generator ) {
@@ -194,7 +194,7 @@ public class Terrain {
         float heightD = generator.generateHeight(x, z-1);
         float heightU = generator.generateHeight(x, z+1);
         Vector3f normal = new Vector3f(heightL-heightR, 2f, heightD - heightU);
-        normal.normalise();
+        normal.normalize();
         return normal;
     }
 }

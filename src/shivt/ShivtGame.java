@@ -1,11 +1,11 @@
 package shivt;
 
-import engine.inputs.listeners.GuiClickListener;
+import engine.inputs.GuiClickController;
 import engine.inputs.listeners.OnClickListener;
 import engine.graphics.renderEngine.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Log;
-import org.lwjgl.util.vector.Vector2f;
+import org.joml.Vector2f;
 import shivt.guiElements.Button;
 import shivt.levels.Level;
 import shivt.levels.RenderLevel;
@@ -22,7 +22,7 @@ public class ShivtGame {
     private int requestedGameState;
     private ShivtGameLoop gameLoop;
     private ShivtCamera camera;
-    private GuiClickListener guiClickListener;
+    private GuiClickController guiClickController;
     public static void main(String[] argv) {
         new ShivtGame();
     }
@@ -30,7 +30,7 @@ public class ShivtGame {
         gameState = GAME_STATE_NULL;
         requestedGameState = GAME_STATE_MAIN_MENU;
         gameLoop = new ShivtGameLoop();
-        guiClickListener = new GuiClickListener();
+        guiClickController = new GuiClickController();
         requestedGameState(GAME_STATE_MAIN_MENU);
         camera = new ShivtCamera();
         Level level = Level.readFromFile("test");
@@ -53,7 +53,7 @@ public class ShivtGame {
     }
     private void mainMenu() {
         Button startBtn = new Button(new Vector2f(),new Vector2f(.7f,.3f),"start");
-        guiClickListener.addClickable(startBtn);
+        guiClickController.addClickable(startBtn);
         startBtn.addOnClickListener(new OnClickListener() {
             @Override
             public void onClick() {

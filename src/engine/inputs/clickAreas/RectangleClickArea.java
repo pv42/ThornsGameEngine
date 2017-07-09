@@ -1,12 +1,12 @@
 package engine.inputs.clickAreas;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector4f;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 /**
  * Created by pv42 on 07.09.2016.
  */
-public class RectangleClickArea extends ClickArea {
+public class RectangleClickArea implements ClickArea {
     private float lwrX,lwrY,uprX,uprY;
 
     public RectangleClickArea(float lwrX, float lwrY, float uprX, float uprY) {

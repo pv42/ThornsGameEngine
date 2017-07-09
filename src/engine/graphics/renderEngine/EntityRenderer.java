@@ -7,7 +7,7 @@ import engine.graphics.entities.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.vector.Matrix4f;
+import org.joml.Matrix4f;
 import engine.graphics.shaders.StaticShader;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Maths;

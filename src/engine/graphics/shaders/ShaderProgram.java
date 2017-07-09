@@ -3,7 +3,7 @@ package engine.graphics.shaders;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.vector.*;
+import org.joml.*;
 import engine.toolbox.Log;
 
 import java.io.BufferedReader;
@@ -92,16 +92,16 @@ public abstract class ShaderProgram {
         GL20.glUniform1f(location,value);
     }
     protected void loadVector(int loaction, Vector2f vector) {
-        GL20.glUniform2f(loaction,vector.getX(),vector.getY());
+        GL20.glUniform2f(loaction,vector.x(),vector.y());
     }
     protected void loadVector(int loaction, Vector3f vector) {
-        GL20.glUniform3f(loaction,vector.getX(),vector.getY(),vector.getZ());
+        GL20.glUniform3f(loaction,vector.x(),vector.y(),vector.z());
     }
     protected void loadVector(int loaction, Vector4f vector) {
-        GL20.glUniform4f(loaction,vector.getX(),vector.getY(),vector.getZ(),vector.getW());
+        GL20.glUniform4f(loaction,vector.x(),vector.y(),vector.z(),vector.w());
     }
     protected void loadMatrix(int location, Matrix4f matrix) {
-        matrix.store(matrixBuffer);
+        matrix.get(matrixBuffer);
         matrixBuffer.flip();
         GL20.glUniformMatrix4fv(location,false,matrixBuffer);
     }

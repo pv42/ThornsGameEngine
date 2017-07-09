@@ -4,8 +4,8 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.models.RawModel;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
@@ -80,6 +80,9 @@ public class ParticleRenderer {
         shader.loadNumberOfRows(texture.getNumberOfRows());
     }
     private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix,float[] vboData) {
+        throw new UnsupportedOperationException("todo");
+        //todo
+        /*
         Matrix4f modelMatrix = new Matrix4f();
         Matrix4f.translate(position,modelMatrix,modelMatrix);
         modelMatrix.m00 = viewMatrix.m00;
@@ -94,25 +97,25 @@ public class ParticleRenderer {
         Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix,null);
         Matrix4f.rotate((float)Math.toRadians(rotation),new Vector3f(0,0,1),modelViewMatrix,modelViewMatrix);
         Matrix4f.scale(new Vector3f(scale,scale,scale),modelViewMatrix,modelViewMatrix);
-        storeMatrixData(modelViewMatrix,vboData);
+        storeMatrixData(modelViewMatrix,vboData);*/
     }
     private void storeMatrixData(Matrix4f matrix, float[] data) {
-        data[pointer++] = matrix.m00;
-        data[pointer++] = matrix.m01;
-        data[pointer++] = matrix.m02;
-        data[pointer++] = matrix.m03;
-        data[pointer++] = matrix.m10;
-        data[pointer++] = matrix.m11;
-        data[pointer++] = matrix.m12;
-        data[pointer++] = matrix.m13;
-        data[pointer++] = matrix.m20;
-        data[pointer++] = matrix.m21;
-        data[pointer++] = matrix.m22;
-        data[pointer++] = matrix.m23;
-        data[pointer++] = matrix.m30;
-        data[pointer++] = matrix.m31;
-        data[pointer++] = matrix.m32;
-        data[pointer++] = matrix.m33;
+        data[pointer++] = matrix.m00();
+        data[pointer++] = matrix.m01();
+        data[pointer++] = matrix.m02();
+        data[pointer++] = matrix.m03();
+        data[pointer++] = matrix.m10();
+        data[pointer++] = matrix.m11();
+        data[pointer++] = matrix.m12();
+        data[pointer++] = matrix.m13();
+        data[pointer++] = matrix.m20();
+        data[pointer++] = matrix.m21();
+        data[pointer++] = matrix.m22();
+        data[pointer++] = matrix.m23();
+        data[pointer++] = matrix.m30();
+        data[pointer++] = matrix.m31();
+        data[pointer++] = matrix.m32();
+        data[pointer++] = matrix.m33();
     }
     private void prepare() {
         shader.start();

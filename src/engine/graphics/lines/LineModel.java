@@ -1,8 +1,8 @@
 package engine.graphics.lines;
 
 import engine.toolbox.Color;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 /***
  * Created by pv42 on 12.08.16.
@@ -21,7 +21,7 @@ public class LineModel {
         this.color = color;
         this.pointCount = pointCount;
         transformation = new Matrix4f();
-        transformation.setIdentity();
+        transformation.identity();
     }
 
     public Vector3f getPosition() {

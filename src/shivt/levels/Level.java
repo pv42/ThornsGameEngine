@@ -6,7 +6,7 @@ import engine.toolbox.nbt.Compound;
 import engine.toolbox.nbt.NBT;
 import engine.toolbox.nbt.NBTList;
 import engine.toolbox.nbt.Tag;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 import java.io.*;
 import java.util.ArrayList;

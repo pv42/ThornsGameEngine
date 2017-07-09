@@ -9,8 +9,8 @@ import engine.inputs.InputLoop;
 import engine.graphics.renderEngine.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector4f;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 import shivt.guiElements.Button;
 import shivt.levels.RenderLevel;
 

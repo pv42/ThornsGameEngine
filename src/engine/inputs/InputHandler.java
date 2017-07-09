@@ -6,7 +6,7 @@ import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.Time;
 import org.lwjgl.glfw.*;
-import org.lwjgl.util.vector.Vector2f;
+import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class InputHandler {
         });
     }
     static boolean hasNextEvent() {
-        return eventQ.size() != 0;
+        return !eventQ.isEmpty();
     }
     static void handleNextEvent() {
         InputEvent e = eventQ.remove(0);
@@ -74,7 +74,7 @@ public class InputHandler {
                 case KEY_RELEASE:
                     type = "KEY_UP,";
                     break;
-                case KEY_REPEATE:
+                case KEY_REPEAT:
                     type = "KEY_RPT,";
                     break;
                 case SCROLL:

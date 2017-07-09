@@ -1,6 +1,6 @@
 package engine.graphics.particles;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 /**
  * Created by pv42 on 23.06.16.
@@ -26,8 +26,8 @@ public class ParticleSystem1 extends ParticleSystem{
         float dirX = (float) Math.random() * 2f - 1f;
         float dirZ = (float) Math.random() * 2f - 1f;
         Vector3f velocity = new Vector3f(dirX/1.2f, 1, dirZ/1.2f);
-        velocity.normalise();
-        velocity.scale(speed);
+        velocity.normalize();
+        velocity.mul(speed, velocity);
         new Particle(texture,new Vector3f(center), velocity, gravityComplient, lifeLength, 0, getScale());
     }
 

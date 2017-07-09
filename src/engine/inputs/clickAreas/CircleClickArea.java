@@ -1,11 +1,11 @@
 package engine.inputs.clickAreas;
 
-import org.lwjgl.util.vector.Vector2f;
+import org.joml.Vector2f;
 
 /**
  * Created by pv42 on 07.09.2016.
  */
-public class CircleClickArea extends ClickArea {
+public class CircleClickArea implements ClickArea {
     private float x,y,r;
 
     public CircleClickArea(float x, float y, float r) {

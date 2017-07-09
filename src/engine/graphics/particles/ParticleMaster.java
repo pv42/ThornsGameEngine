@@ -1,7 +1,7 @@
 package engine.graphics.particles;
 
 import engine.graphics.cameras.Camera;
-import org.lwjgl.util.vector.Matrix4f;
+import org.joml.Matrix4f;
 
 import java.util.*;
 

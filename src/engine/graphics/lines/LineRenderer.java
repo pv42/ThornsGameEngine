@@ -6,7 +6,7 @@ import engine.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Matrix4f;
+import org.joml.Matrix4f;
 import java.util.List;
 
 /***
@@ -57,6 +57,6 @@ public class LineRenderer {
     private void loadModelMatrix(LineModel lineStripModel) {
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(
                 lineStripModel.getPosition(), lineStripModel.getRotation(), lineStripModel.getScale());
-        shader.loadTransformationMatrix(Matrix4f.mul(transformationMatrix,lineStripModel.getTransformation(),null));
+        shader.loadTransformationMatrix(transformationMatrix.mul(lineStripModel.getTransformation(),new Matrix4f()));
     }
 }

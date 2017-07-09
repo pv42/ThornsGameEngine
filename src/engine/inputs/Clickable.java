@@ -40,7 +40,7 @@ public abstract class Clickable {
     }
     public void onClick() {
         onClickListeners.forEach(OnClickListener::onClick);
-    };
+    }
 
     public void addOnMouseDownListener(OnMouseDownListener onMouseDownListener) {
         onMouseDownListeners.add(onMouseDownListener);

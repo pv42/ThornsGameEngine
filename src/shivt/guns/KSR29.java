@@ -3,7 +3,7 @@ package shivt.guns;
 import engine.audio.AudioMaster;
 import engine.audio.Source;
 import engine.graphics.entities.Player;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 import engine.graphics.particles.Particle;
 import engine.graphics.particles.ParticleTexture;
 import engine.graphics.renderEngine.DisplayManager;
@@ -28,7 +28,7 @@ public class KSR29 extends Gun {
         if(reloadCooldown > 0) return false;
         remainingAmmo --;
         shotCooldown = getShotDelay();
-        new Particle(new ParticleTexture(Loader.loadTexture("boom"),5,true,false), Vector3f.add(player.getEyePosition(),getMuzzlePosition(),null), Maths.scaleVector(new Vector3f(0,0,1),getProjectileSpeed()),0,10f,0,2);
+        //todo new Particle(new ParticleTexture(Loader.loadTexture("boom"),5,true,false), Vector3f.add(player.getEyePosition(),getMuzzlePosition(),null), Maths.scaleVector(new Vector3f(0,0,1),getProjectileSpeed()),0,10f,0,2);
         soundSource.play(soundBuffer);
         return true;
     }
@@ -46,7 +46,7 @@ public class KSR29 extends Gun {
         float gx =  - knockback + getOffsetPosition().x * (1f-scprog) +getScopeOffsetPosition().x * scprog;
         float gz = getOffsetPosition().z * (1f-scprog) + getScopeOffsetPosition().z * scprog;
         Vector3f calcOffset = new Vector3f(gx * sin + gz * cos,getOffsetPosition().y * (1f-scprog) + getScopeOffsetPosition().y * scprog, gx * cos - gz * sin);
-        setPosition(Vector3f.add(player.getPosition(),calcOffset,null));
+        //todo setPosition(Vector3f.add(player.getPosition(),calcOffset,null));
         //rot
         reloadCooldown = Math.max(reloadCooldown - DisplayManager.getFrameTimeSeconds(), 0f);
         shotCooldown = Math.max(shotCooldown - DisplayManager.getFrameTimeSeconds(), 0f);

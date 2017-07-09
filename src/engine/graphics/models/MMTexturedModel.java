@@ -1,6 +1,6 @@
 package engine.graphics.models;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 import engine.graphics.textures.ModelTexture;
 
 import java.util.ArrayList;

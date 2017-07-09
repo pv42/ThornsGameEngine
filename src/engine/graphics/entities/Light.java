@@ -1,7 +1,7 @@
 package engine.graphics.entities;
 
 import engine.toolbox.Color;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 /**
  * Created by pv42 on 17.06.16.
@@ -43,6 +43,6 @@ public class Light {
     }
 
     public void move(Vector3f deltaPosition) {
-        Vector3f.add(this.position,deltaPosition,this.position);
+        position.add(deltaPosition);
     }
 }

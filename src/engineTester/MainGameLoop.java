@@ -8,10 +8,10 @@ import engine.EngineMaster;
 import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import engine.graphics.cameras.FirstPersonCamera;
 import engineTester.client.GameClient;
 import engineTester.client.NetworkSender;
@@ -98,7 +98,7 @@ public class MainGameLoop {
         //player
         ColladaLoader pcl = new ColladaLoader();
         Matrix4f matrix = new Matrix4f();
-        matrix.setIdentity();
+        matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
         List<TexturedModel> personModel = pcl.loadColladaModelAnimated("Hot_Girl_01",matrix);
         FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,1.3f);

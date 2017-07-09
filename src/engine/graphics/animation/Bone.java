@@ -6,8 +6,8 @@ import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 /***
  * Created by pv42 on 27.07.16.
@@ -24,15 +24,15 @@ public class Bone {
 
     public Bone(Bone parent) {
         jointMatrix = new Matrix4f();
-        jointMatrix.setIdentity();
+        jointMatrix.identity();
         inverseJointMatrix = new Matrix4f();
-        inverseJointMatrix.setIdentity();
+        inverseJointMatrix.identity();
         inverseBindMatrix = new Matrix4f();
-        inverseBindMatrix.setIdentity();
+        inverseBindMatrix.identity();
         bindShapeMatrix = new Matrix4f();
-        bindShapeMatrix.setIdentity();
+        bindShapeMatrix.identity();
         transfomationMatrix = new Matrix4f();
-        transfomationMatrix.setIdentity();
+        transfomationMatrix.identity();
         this.parent = parent;
         if(Settings.SHOW_SKELETON_BONES) {
             line = Loader.loadToVAO(new Line(new Vector3f(),new Vector3f(1,0,0)));
@@ -50,7 +50,7 @@ public class Bone {
 
     public void setJointMatrix(Matrix4f jointMatrix) {
         this.jointMatrix = jointMatrix;
-        Matrix4f.invert(jointMatrix,inverseJointMatrix);
+        jointMatrix.invert(inverseJointMatrix);
 
     }
     public void rotateJoint(Vector3f axis,float angle) {
@@ -60,15 +60,16 @@ public class Bone {
         v.y = - mv.y;
         v.z = - mv.z;
         //Matrix4f.translate(mv,jointMatrix,jointMatrix);
-        Matrix4f.rotate((float) Math.toRadians(angle),axis,jointMatrix,jointMatrix);
+        jointMatrix.rotate((float) Math.toRadians(angle),axis);
         //Matrix4f.translate(v,jointMatrix,jointMatrix);
         Maths.getPositionComponent(jointMatrix);
     }
     public void scaleJoint(Vector3f scale) {
-        Matrix4f.scale(scale,jointMatrix,jointMatrix);
+        //todo Matrix4f.scale(scale,jointMatrix,jointMatrix);
     }
     public void translateJoint(Vector3f translation) {
-        Matrix4f.translate(translation,jointMatrix,jointMatrix);
+        jointMatrix.translate(translation);
+
     }
 
     public void rotate(Vector3f axis,float angle) {
@@ -78,29 +79,29 @@ public class Bone {
         v.y = - mv.y;
         v.z = - mv.z;
         //Matrix4f.translate(mv,jointMatrix,jointMatrix);
-        Matrix4f.rotate((float) Math.toRadians(angle),axis,transfomationMatrix,transfomationMatrix);
+        transfomationMatrix.rotate((float) Math.toRadians(angle),axis);
         //Matrix4f.translate(v,jointMatrix,jointMatrix);
     }
     public void scale(Vector3f scale) {
-        Matrix4f.scale(scale,transfomationMatrix,transfomationMatrix);
+        //todo Matrix4f.scale(scale,transfomationMatrix,transfomationMatrix);
     }
     public void scale(float scale) {
-        Matrix4f.scale(new Vector3f(scale,scale,scale),transfomationMatrix,transfomationMatrix);
+        //todo Matrix4f.scale(new Vector3f(scale,scale,scale),transfomationMatrix,transfomationMatrix);
     }
     public void translate(Vector3f translation) {
-        Matrix4f.translate(translation,transfomationMatrix,transfomationMatrix);
+        transfomationMatrix.translate(translation);
     }
 
 
     public Matrix4f getTransformationMatrix() {
-        Matrix4f transformation = Matrix4f.mul(getTransfomation(), getWorldMatrix(), null);
-        if(Settings.SHOW_SKELETON_BONES) line.setTransformation(transformation );
+        //todo Matrix4f transformation = Matrix4f.mul(getTransfomation(), getWorldMatrix(), null);
+        /*if(Settings.SHOW_SKELETON_BONES) line.setTransformation(transformation );
         return Maths.mulMatrices(new Matrix4f[]{
                 bindShapeMatrix,
                 inverseBindMatrix,
                 transformation
-        });
-
+        });*/
+        return null;
     }
 
     public Matrix4f getWorldMatrix() {
@@ -132,7 +133,9 @@ public class Bone {
 
     public Matrix4f getTransfomation() {
         if(parent == null) return transfomationMatrix;
-        return Matrix4f.mul(parent.getTransformationMatrix(),transfomationMatrix,null);
+        Matrix4f m = new Matrix4f();
+        parent.getTransformationMatrix().mul(m,transfomationMatrix);
+        return m;
     }
     public LineModel getLine() {
         return line;

@@ -1,8 +1,8 @@
 package engine.graphics.particles;
 
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import engine.graphics.renderEngine.DisplayManager;
 import engine.toolbox.Settings;
 
@@ -47,9 +47,9 @@ public class Particle {
     }
     protected boolean update() {
         velocity.y += Settings.GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
-        Vector3f chnage = new Vector3f(velocity);
-        chnage.scale(DisplayManager.getFrameTimeSeconds());
-        Vector3f.add(chnage,position,position);
+        Vector3f change = new Vector3f(velocity);
+        change.mul(DisplayManager.getFrameTimeSeconds());
+        position.add(change);
         updateTextureCoordsInfo();
         elapsedTime += DisplayManager.getFrameTimeSeconds();
         return elapsedTime < lifeLength; //todo

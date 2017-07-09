@@ -1,10 +1,10 @@
 package engine.toolbox;
 
 import engine.graphics.cameras.Camera;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 /***
  * Created by pv42 on 17.06.16.
@@ -12,9 +12,9 @@ import org.lwjgl.util.vector.Vector4f;
 public class Maths {
     public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
         Matrix4f matrix = new Matrix4f();
-        matrix.setIdentity();
-        Matrix4f.translate(translation,matrix,matrix);
-        Matrix4f.scale(new Vector3f(scale.x,scale.y,1f), matrix,matrix);
+        matrix.identity();
+        matrix.translate(new Vector3f(translation, 0));
+        matrix.scale(new Vector3f(scale.x,scale.y,1f));
         return matrix;
     }
     public static Matrix4f createTransformationMatrix(Vector3f translation, Vector3f roatation, float scale) {
@@ -22,33 +22,37 @@ public class Maths {
     }
     public static Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry, float rz, float scale) {
         Matrix4f matrix = new Matrix4f();
-        matrix.setIdentity();
-        Matrix4f.translate(translation,matrix,matrix);
-        Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1,0,0),matrix,matrix );
-        Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0,1,0),matrix,matrix );
-        Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0,0,1),matrix,matrix );
-        Matrix4f.scale(new Vector3f(scale,scale,scale), matrix,matrix);
+        matrix.identity();
+        //todo
+        // Matrix4f.translate(translation,matrix,matrix);
+        //Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1,0,0),matrix,matrix );
+        //Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0,1,0),matrix,matrix );
+        //Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0,0,1),matrix,matrix );
+        //Matrix4f.scale(new Vector3f(scale,scale,scale), matrix,matrix);
         return matrix;
     }
     public static Matrix4f createViewMatrix(Camera camera) {
         Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.setIdentity();
-        Matrix4f.rotate((float) Math.toRadians(camera.getPitch()),new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-        Matrix4f.rotate((float) Math.toRadians(camera.getYaw()),  new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
-        Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
+        viewMatrix.identity();
+        //todo
+        //Matrix4f.rotate((float) Math.toRadians(camera.getPitch()),new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
+        //Matrix4f.rotate((float) Math.toRadians(camera.getYaw()),  new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
+        //Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1), viewMatrix, viewMatrix);
         Vector3f cameraPos = camera.getPosition();
         Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-        Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
+        //Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
         return viewMatrix;
     }
     public static Matrix4f createViewMatrixNoRoll(Camera camera) {
         Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.setIdentity();
-        Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0), viewMatrix, viewMatrix);
-        Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0), viewMatrix, viewMatrix);
+        viewMatrix.identity();
+        viewMatrix.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0));
+        viewMatrix.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0));
+
+
         Vector3f cameraPos = camera.getPosition();
         Vector3f negativeCameraPos = new Vector3f(-cameraPos.x,-cameraPos.y,-cameraPos.z);
-        Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
+        viewMatrix.translate(negativeCameraPos);
         return viewMatrix;
     }
     public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) { //todo do not work
@@ -75,13 +79,13 @@ public class Maths {
     public static Vector3f intersectLinePlane(Vector3f linepoint, Vector3f linedirect, Vector3f point1, Vector3f point2, Vector3f point3) {
         //ebene in coordinatenform
         Vector3f p = point1;
-        Vector3f u = Vector3f.sub(point1,point2,null);
-        Vector3f v = Vector3f.sub(point1,point3,null);
-        Vector3f n = Vector3f.cross(u,v,null);
+        Vector3f u = point1.sub(point2, new Vector3f());
+        Vector3f v = point1.sub(point3, new Vector3f());
+        Vector3f n = u.cross(v,new Vector3f());
         float a = n.x;
         float b = n.y;
         float c = n.z;
-        float d = Vector3f.dot(n,p);
+        float d = n.dot(p);
         float x,y,z;
         float lambda = a * linepoint.x + b* linepoint.y + c* linepoint.z;
         lambda /= (a * linedirect.x + b* linedirect.y +c* linedirect.z);
@@ -93,8 +97,9 @@ public class Maths {
         return s;
     }
     public static boolean isPointInTriangle(Vector3f p , Vector3f t1, Vector3f t2, Vector3f t3) {
-        Vector3f v0 = Vector3f.sub(t3,t1,null);
-        Vector3f v1 = Vector3f.sub(t2,t1,null);
+        //todo
+        // Vector3f v0 = Vector3f.sub(t3,t1,null);
+        /*Vector3f v1 = Vector3f.sub(t2,t1,null);
         Vector3f v2 = Vector3f.sub(p,t1,null);
         float dot00 = Vector3f.dot(v0, v0);
         float dot01 = Vector3f.dot(v0, v1);
@@ -104,7 +109,8 @@ public class Maths {
         float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
         float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
         float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-        return (u >= 0) && (v >= 0) && (u + v < 1);
+        return (u >= 0) && (v >= 0) && (u + v < 1);*/
+        return false;
     }
     public static boolean isPointInQuad(Vector3f p , Vector3f t1, Vector3f t2, Vector3f t3, Vector3f t4) {
         return isPointInTriangle(p,t1,t2,t3) || isPointInTriangle(p,t1,t3,t4);
@@ -115,22 +121,23 @@ public class Maths {
     public static Matrix4f mulMatrices(Matrix4f[] matrices) {
         Matrix4f m = new Matrix4f(matrices[0]);
         for(int i = 1; i < matrices.length; i++) {
-            Matrix4f.mul(m,matrices[i],m);
+            //todo
+            //Matrix4f.mul(m,matrices[i],m);
         }
         return m;
     }
     public static Vector3f getPositionComponent(Matrix4f matrix4f) {
-        if(Math.abs(matrix4f.m03 + matrix4f.m13 + matrix4f.m23 + Math.abs(matrix4f.m33-1)) > 0.01)
+        if(Math.abs(matrix4f.m03() + matrix4f.m13() + matrix4f.m23() + Math.abs(matrix4f.m33()-1)) > 0.01)
             Log.w("unusual TM:\n" + matrix4f);
-        return new Vector3f(matrix4f.m30,matrix4f.m31, matrix4f.m32);
+        return new Vector3f(matrix4f.m30(),matrix4f.m31(), matrix4f.m32());
     }
     public static Vector3f getRotationComponent(Matrix4f m) {
-        float sy = m.m20;
+        float sy = m.m20();
         float ry = (float) Math.asin(sy);
         float cy = (float) Math.cos(ry);
-        float sz = - m.m10 / cy;
+        float sz = - m.m10() / cy;
         float rz = (float) Math.asin(sz);
-        float sx = - m.m21 / cy;
+        float sx = - m.m21() / cy;
         float rx = (float) Math.asin(sx);
         //Log.d("rx:" + Math.toDegrees(rx));
         //Log.d("ry:" + Math.toDegrees(ry));
@@ -141,8 +148,8 @@ public class Maths {
         return new Vector3f(in.x/in.w,in.y/in.w,in.z/in.w);
     }
     public static Vector4f getAreaFromPositionAndScale(Vector2f pos,Vector2f scale) {
-        Vector2f min = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.getX() - scale.getX(),pos.getY() - scale.getY()));
-        Vector2f max = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.getX() + scale.getX(),pos.getY() + scale.getY()));
+        Vector2f min = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.x() - scale.x(),pos.y() - scale.y()));
+        Vector2f max = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.x() + scale.x(),pos.y() + scale.y()));
         return new Vector4f(min.x,min.y,max.x,max.y);
     }
 }

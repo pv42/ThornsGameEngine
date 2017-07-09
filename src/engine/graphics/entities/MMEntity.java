@@ -1,7 +1,7 @@
 package engine.graphics.entities;
 
 import engine.graphics.models.MMTexturedModel;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 
 /**
@@ -98,7 +98,7 @@ public class MMEntity {
     }
 
     public void increasePosition(Vector3f dpos) {
-        Vector3f.add(position, dpos, position);
+        position.add(dpos);
     }
 
     public void increasePosition(float dx, float dy, float dz) {

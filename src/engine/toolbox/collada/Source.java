@@ -2,7 +2,7 @@ package engine.toolbox.collada;
 
 
 import engine.toolbox.Log;
-import org.lwjgl.util.vector.Matrix4f;
+import org.joml.Matrix4f;
 
 /**
  * Created by pv42 on 04.08.16.
@@ -45,22 +45,22 @@ public class Source {
         float[][] floatData = getFloatData();
         for (int i = 0; i < data.length; i++) {
             matrices[i] = new Matrix4f();
-            matrices[i].m00 = floatData[i][0];
-            matrices[i].m01 = floatData[i][1];
-            matrices[i].m02 = floatData[i][2];
-            matrices[i].m03 = floatData[i][3];
-            matrices[i].m10 = floatData[i][4];
-            matrices[i].m11 = floatData[i][5];
-            matrices[i].m12 = floatData[i][6];
-            matrices[i].m13 = floatData[i][7];
-            matrices[i].m20 = floatData[i][8];
-            matrices[i].m21 = floatData[i][9];
-            matrices[i].m22 = floatData[i][10];
-            matrices[i].m23 = floatData[i][11];
-            matrices[i].m30 = floatData[i][12];
-            matrices[i].m31 = floatData[i][13];
-            matrices[i].m32 = floatData[i][14];
-            matrices[i].m33 = floatData[i][15];
+            matrices[i].m00(floatData[i][0]);
+            matrices[i].m01(floatData[i][1]);
+            matrices[i].m02(floatData[i][2]);
+            matrices[i].m03(floatData[i][3]);
+            matrices[i].m10(floatData[i][4]);
+            matrices[i].m11(floatData[i][5]);
+            matrices[i].m12(floatData[i][6]);
+            matrices[i].m13(floatData[i][7]);
+            matrices[i].m20(floatData[i][8]);
+            matrices[i].m21(floatData[i][9]);
+            matrices[i].m22(floatData[i][10]);
+            matrices[i].m23(floatData[i][11]);
+            matrices[i].m30(floatData[i][12]);
+            matrices[i].m31(floatData[i][13]);
+            matrices[i].m32(floatData[i][14]);
+            matrices[i].m33(floatData[i][15]);
             matrices[i].transpose();
         }
         return matrices;

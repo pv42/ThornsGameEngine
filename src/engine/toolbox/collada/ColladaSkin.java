@@ -8,8 +8,8 @@ import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.Util;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector4f;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ColladaSkin {
     private Vertices vsource;
     public ColladaSkin() {
         bindShapeMatrix = new Matrix4f();
-        bindShapeMatrix.setIdentity();
+        bindShapeMatrix.identity();
     }
 
     public Vertices getVsource() {
@@ -74,13 +74,13 @@ public class ColladaSkin {
             List<Vector4f> normals = new ArrayList<>();
             for(float[] v : vsource.getPosition()) {
                 Vector4f vec = new Vector4f(v[0],v[1],v[2],1);
-                Matrix4f.transform(tranformation,vec,vec);
+                tranformation.transform(vec, vec);
                 vertices.add(vec);
             }
             vsource.setPosition(Util.get2DArray(vertices));
             for(float[] n : vsource.getNormal()) {
                 Vector4f vec = new Vector4f(n[0],n[1],n[2],1);
-                Matrix4f.transform(tranformation,vec,vec);
+                tranformation.transform(vec, vec);
                 normals.add(vec);
             }
             vsource.setNormal(Util.get2DArray(normals));

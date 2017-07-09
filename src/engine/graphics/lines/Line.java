@@ -1,7 +1,7 @@
 package engine.graphics.lines;
 
 import engine.toolbox.Color;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 
 /**
  * Created by pv42 on 12.08.16.

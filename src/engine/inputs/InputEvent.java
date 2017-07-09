@@ -3,7 +3,7 @@ package engine.inputs;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.util.vector.Vector2f;
+import org.joml.Vector2f;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -16,7 +16,7 @@ public class InputEvent {
     public static final int KEY_EVENT = 1;
     public static final int KEY_PRESS = GLFW.GLFW_PRESS;
     public static final int KEY_RELEASE = GLFW.GLFW_RELEASE;
-    public static final int KEY_REPEATE = GLFW.GLFW_REPEAT;
+    public static final int KEY_REPEAT = GLFW.GLFW_REPEAT;
     public static final int CURSOR_MOVE = 3;
     public static final int SCROLL = 4;
     public static final int L_MOUSE = 0;

@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Matrix4f;
+import org.joml.Matrix4f;
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Light;
 import engine.graphics.renderEngine.MasterRenderer;

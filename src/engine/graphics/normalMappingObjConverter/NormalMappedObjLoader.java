@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import engine.graphics.models.RawModel;
 import engine.graphics.renderEngine.Loader;
@@ -85,9 +85,11 @@ public class NormalMappedObjLoader {
 		return Loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
 	}
 
-	//NEW 
 	private static void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2,
 			List<Vector2f> textures) {
+		//todo
+		throw new UnsupportedOperationException("todo x10");
+		/*
 		Vector3f delatPos1 = Vector3f.sub(v1.getPosition(), v0.getPosition(), null);
 		Vector3f delatPos2 = Vector3f.sub(v2.getPosition(), v0.getPosition(), null);
 		Vector2f uv0 = textures.get(v0.getTextureIndex());
@@ -104,6 +106,7 @@ public class NormalMappedObjLoader {
 		v0.addTangent(tangent);
 		v1.addTangent(tangent);
 		v2.addTangent(tangent);
+		*/
 	}
 
 	private static VertexNM processVertex(String[] vertex, List<VertexNM> vertices,

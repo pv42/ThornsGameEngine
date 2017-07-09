@@ -1,10 +1,10 @@
 package engine.toolbox;
 
 import engine.graphics.renderEngine.DisplayManager;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 /***
  * Created by pv42 on 21.07.16.
@@ -27,15 +27,16 @@ public class Conversion {
         return new Vector2f(); //// TODO: 12.09.2016
     }
     private static Vector4f toEyeCoords(Vector4f clipCoords,Matrix4f projectionMatrix) {
-        Matrix4f invertProjection = Matrix4f.invert(projectionMatrix,null);
-        Vector4f eyeCoords = Matrix4f.transform(invertProjection,clipCoords,null);
+
+        Matrix4f invertProjection = projectionMatrix.invert(new Matrix4f());
+        Vector4f eyeCoords = invertProjection.transform(clipCoords);
         return new Vector4f(eyeCoords.x, eyeCoords.y, -1 , 0);
     }
     private static Vector3f toWorldCoords(Vector4f eyeCoords,Matrix4f viewMatrix) {
-        Matrix4f invertedView = Matrix4f.invert(viewMatrix,null);
-        Vector4f rayWorld = Matrix4f.transform(invertedView, eyeCoords,null);
+        Matrix4f invertedView = viewMatrix.invert(new Matrix4f());
+        Vector4f rayWorld = invertedView.transform(eyeCoords);
         Vector3f mouseRay = new Vector3f(rayWorld.x,rayWorld.y,rayWorld.z);
-        mouseRay.normalise();
+        mouseRay.normalize();
         return mouseRay;
     }
 }

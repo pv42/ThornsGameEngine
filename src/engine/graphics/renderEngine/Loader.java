@@ -11,7 +11,7 @@ import engine.toolbox.Util;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.stb.STBImage;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 import engine.graphics.textures.TextureData;
 
 import java.io.File;
@@ -192,7 +192,7 @@ public class Loader {
         IntBuffer h = BufferUtils.createIntBuffer(1);
         IntBuffer w = BufferUtils.createIntBuffer(1);
         IntBuffer comp = BufferUtils.createIntBuffer(1);
-        STBImage.stbi_set_flip_vertically_on_load(flip ? 1 : 0);
+        STBImage.stbi_set_flip_vertically_on_load(flip);
         ByteBuffer image = STBImage.stbi_load(fileName, w, h, comp, 4);
         if (image == null) {
             throw new RuntimeException("Failed to load a texture file! (" + fileName + ")\n" + STBImage.stbi_failure_reason());

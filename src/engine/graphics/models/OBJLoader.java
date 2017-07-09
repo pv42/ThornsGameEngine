@@ -1,8 +1,8 @@
 package engine.graphics.models;
 
 import engine.graphics.animation.Bone;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Log;
 
@@ -82,9 +82,9 @@ public class OBJLoader {
         indicesArray = new int[indices.size()];
         int pointer = 0;
         for(Vector3f vertex: vertices) {
-            verticesArray[pointer++] = vertex.getX();
-            verticesArray[pointer++] = vertex.getY();
-            verticesArray[pointer++] = vertex.getZ();
+            verticesArray[pointer++] = vertex.x();
+            verticesArray[pointer++] = vertex.y();
+            verticesArray[pointer++] = vertex.z();
         }
         pointer = 0;
         for(int index : indices) {
@@ -168,9 +168,9 @@ public class OBJLoader {
         indicesArray = new int[indices.size()];
         int pointer = 0;
         for(Vector3f vertex: vertices) {
-            verticesArray[pointer++] = vertex.getX();
-            verticesArray[pointer++] = vertex.getY();
-            verticesArray[pointer++] = vertex.getZ();
+            verticesArray[pointer++] = vertex.x();
+            verticesArray[pointer++] = vertex.y();
+            verticesArray[pointer++] = vertex.z();
         }
         pointer = 0;
         for(int index : indices) {
@@ -182,13 +182,13 @@ public class OBJLoader {
         int currentVertexPointer = Integer.parseInt(vertxData[0]) - 1;
         indices.add(currentVertexPointer);
         Vector2f currentTexture = textures.get(Integer.parseInt(vertxData[1]) - 1);
-        textureArray[currentVertexPointer * 2] = currentTexture.getX();
-        textureArray[currentVertexPointer * 2 + 1] = currentTexture.getY();
+        textureArray[currentVertexPointer * 2] = currentTexture.x();
+        textureArray[currentVertexPointer * 2 + 1] = currentTexture.y();
         if(vertxData.length == 3) {
             Vector3f currentNormal = normals.get(Integer.parseInt(vertxData[2]) - 1);
-            normalsArray[currentVertexPointer * 3] = currentNormal.getX();
-            normalsArray[currentVertexPointer * 3 + 1] = currentNormal.getY();
-            normalsArray[currentVertexPointer * 3 + 2] = currentNormal.getZ();
+            normalsArray[currentVertexPointer * 3] = currentNormal.x();
+            normalsArray[currentVertexPointer * 3 + 1] = currentNormal.y();
+            normalsArray[currentVertexPointer * 3 + 2] = currentNormal.z();
         } else {
             // no normal data in obj
         }
@@ -198,17 +198,17 @@ public class OBJLoader {
         int currentVertexPointer = Integer.parseInt(vertxData[0]) - 1;
         indices.add(currentVertexPointer);
         Vector2f currentTexture = textures.get(Integer.parseInt(vertxData[1]) - 1);
-        textureArray[currentVertexPointer * 2] = currentTexture.getX();
-        textureArray[currentVertexPointer * 2 + 1] = currentTexture.getY();
+        textureArray[currentVertexPointer * 2] = currentTexture.x();
+        textureArray[currentVertexPointer * 2 + 1] = currentTexture.y();
         boneIndicesArray[currentVertexPointer * 2] = (int) boneIndices.get(currentVertexPointer).x;
         boneIndicesArray[currentVertexPointer * 2 + 1] = (int) boneIndices.get(currentVertexPointer).y;
         boneWeightArray[currentVertexPointer * 2] = boneWeights.get(currentVertexPointer).x;
         boneWeightArray[currentVertexPointer * 2 + 1] = boneIndices.get(currentVertexPointer).y;
         if(vertxData.length == 3) {
             Vector3f currentNormal = normals.get(Integer.parseInt(vertxData[2]) - 1);
-            normalsArray[currentVertexPointer * 3] = currentNormal.getX();
-            normalsArray[currentVertexPointer * 3 + 1] = currentNormal.getY();
-            normalsArray[currentVertexPointer * 3 + 2] = currentNormal.getZ();
+            normalsArray[currentVertexPointer * 3] = currentNormal.x();
+            normalsArray[currentVertexPointer * 3 + 1] = currentNormal.y();
+            normalsArray[currentVertexPointer * 3 + 2] = currentNormal.z();
         } else {
             // no normal data in obj
         }

@@ -1,6 +1,6 @@
 package Server;
 
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 

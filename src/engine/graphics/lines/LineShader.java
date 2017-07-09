@@ -4,7 +4,7 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.shaders.ShaderProgram;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
-import org.lwjgl.util.vector.Matrix4f;
+import org.joml.Matrix4f;
 
 /***
  * Created by pv42 on 12.08.16.

@@ -1,8 +1,8 @@
 package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import engine.graphics.renderEngine.DisplayManager;
 import engine.graphics.shaders.ShaderProgram;
 import engine.toolbox.Maths;
@@ -40,11 +40,11 @@ public class SkyBoxShader extends ShaderProgram {
     }
     protected void loadViewMatrix(Camera camera) {
         Matrix4f matrix = Maths.createViewMatrix(camera);
-        matrix.m30 = 0;
-        matrix.m31 = 0;
-        matrix.m32 = 0;
+        matrix.m30(0);
+        matrix.m31(0);
+        matrix.m32(0);
         rotation += ROTATE_SPEED * DisplayManager.getFrameTimeSeconds();
-        Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0,1,0),matrix,matrix);
+        matrix.rotate((float) Math.toRadians(rotation), new Vector3f(0,1,0));
         super.loadMatrix(location_viewMatrix, matrix);
     }
     public void loadFogColor(float r,float g, float b){

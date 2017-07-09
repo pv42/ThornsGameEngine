@@ -9,7 +9,7 @@ import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Log;
 import org.lwjgl.glfw.GLFW;
 import shivt.guns.Gun;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Vector3f;
 import engine.graphics.renderEngine.DisplayManager;
 import engine.graphics.terrains.Terrain;
 import engine.toolbox.Settings;

@@ -30,9 +30,9 @@ import engine.toolbox.Settings;
 import engine.toolbox.Time;
 
 import org.lwjgl.opengl.*;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class MasterRenderer {
     //default
@@ -264,12 +264,12 @@ public class MasterRenderer {
         float frustum_length = Settings.FAR_PLANE - Settings.NEAR_PLANE;
 
         projectionMatrix = new Matrix4f();
-        projectionMatrix.m00 = x_scale;
-        projectionMatrix.m11 = y_scale;
-        projectionMatrix.m22 = -((Settings.FAR_PLANE + Settings.NEAR_PLANE) / frustum_length);
-        projectionMatrix.m23 = -1;
-        projectionMatrix.m32 = -((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length);
-        projectionMatrix.m33 = 0;
+        projectionMatrix.m00(x_scale);
+        projectionMatrix.m11(y_scale);
+        projectionMatrix.m22(-((Settings.FAR_PLANE + Settings.NEAR_PLANE) / frustum_length));
+        projectionMatrix.m23(-1);
+        projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));
+        projectionMatrix.m33(0);
     }
 
     public static Matrix4f getProjectionMatrix() {
@@ -318,6 +318,6 @@ public class MasterRenderer {
      * @return the current aspect ratio
      */
     public static float getAspectRatio() {
-        return DisplayManager.getSize().getX() / DisplayManager.getSize().getY();
+        return DisplayManager.getSize().x() / DisplayManager.getSize().y();
     }
 }

@@ -2,8 +2,8 @@ package engine.graphics.shaders;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Light;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import engine.toolbox.Maths;
 
 import java.util.List;
