@@ -1,6 +1,7 @@
 package shivt.guns;
 
 import engine.audio.AudioMaster;
+import engine.audio.OggSource;
 import engine.audio.Source;
 import engine.graphics.entities.Player;
 import org.joml.Vector3f;
@@ -14,7 +15,7 @@ import engine.toolbox.Maths;
  * Created by pv42 on 01.07.16.
  */
 public class Blaster extends Gun {
-    private int soundBuffer;
+    private OggSource soundBuffer;
     private Source soundSource;
     public Blaster() {
         super(new GunLoader("Blaster"));

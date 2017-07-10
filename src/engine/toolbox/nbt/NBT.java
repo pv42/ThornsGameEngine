@@ -66,7 +66,7 @@ public class NBT {
             if(type == DATATYPE_COMPOUND) {
                 Compound c = readCompound(in,true);
                 compound.addSubCompound(c);
-            } else {
+            } else if(type != DATATYPE_END){
                 Tag t = readTag(in,type);
                 compound.addNBTTag(t);
             }
@@ -176,7 +176,7 @@ public class NBT {
             if(type == DATATYPE_COMPOUND) {
                 Compound c = readCompound(in,true);
                 compound.addSubCompound(c);
-            } else {
+            } else if(type != DATATYPE_END){
                 Tag t = readTag(in,type);
                 compound.addNBTTag(t);
             }

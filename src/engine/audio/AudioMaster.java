@@ -1,12 +1,15 @@
 package engine.audio;
 
 import engine.toolbox.Log;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.demo.util.IOUtil;
 import org.lwjgl.openal.*;
 import org.joml.Vector3f;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -29,15 +32,14 @@ public class AudioMaster {
     public static void init() {
         Log.i(TAG, "initialising");
         try {
-            device = getDefaulDeviceID();
+            device = openDefaultDevice();
             alcCapabilities = ALC.createCapabilities(device);
-
             context = ALC10.alcCreateContext(device, (IntBuffer)null);
             if (context == NULL) {
                 throw new IllegalStateException("Failed to create an OpenAL context.");
             }
 
-            //zodo alcSetThreadContext(context);
+            EXTThreadLocalContext.alcSetThreadContext(context);
             AL.createCapabilities(alcCapabilities);
 
 
@@ -51,23 +53,28 @@ public class AudioMaster {
 
 
 
-    public static int loadSound(String filename) {
-        //todo Log.d(TAG, "loading sound " + filename);
-        /*int buffer = AL10.alGenBuffers();
-        buffers.add(buffer);
-        //STBVorbis stbVorbis = new STBVorbis();
-        //WaveData wavFile = null;
+    public static OggSource loadSound(String filename) {
+        Log.d(TAG, "loading sound " + filename);
+        int buffer = AL10.alGenBuffers();
+        ByteBuffer vorbis = null;
+        IntBuffer buffers = BufferUtils.createIntBuffer(2);
+        AL10.alGenBuffers(buffers);
         try {
-            //wavFile = WaveData.create(new BufferedInputStream(new FileInputStream("res/sounds/" + filename + ".wav")));
-        } catch (FileNotFoundException e) {
-            Log.e("faild reading sound: ");
+            vorbis = IOUtil.ioResourceToByteBuffer(filename,256* 1024);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        if (wavFile == null) Log.e("sound is null");
-        AL10.alBufferData(buffer, wavFile.format, wavFile.data, wavFile.samplerate);
-        wavFile.dispose();
-        return buffer;*/
-        return 0;
+        IntBuffer errorBuffer = BufferUtils.createIntBuffer(1);
+
+        long handle = STBVorbis.stb_vorbis_open_memory(vorbis, errorBuffer, null);
+        OggSource oggSource = new OggSource(handle, buffers);
+        if (handle == NULL) {
+            throw new RuntimeException("Failed to open Ogg Vorbis file. Error: " + errorBuffer.get(0));
+        }
+
+
+
+        return oggSource;
     }
 
     public static void setListenerData() {
@@ -87,12 +94,12 @@ public class AudioMaster {
     public static void cleanUp() {
         for (int buffer : buffers) {
             AL10.alDeleteBuffers(buffer);
-            ALC.destroy();
         }
-        // todo al.destroy
+        ALC10.alcCloseDevice(device);
+        ALC.destroy();
     }
 
-    private static long getDefaulDeviceID() {
+    private static long openDefaultDevice() {
         long device = ALC10.alcOpenDevice((ByteBuffer)null);
         if (device == NULL) {
             throw new IllegalStateException("Failed to open the default device.");

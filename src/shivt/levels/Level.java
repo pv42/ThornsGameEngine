@@ -71,14 +71,14 @@ public class Level {
             pos.x = (float)stationNBT.getSubTagByName("x").getData();
             pos.y = (float)stationNBT.getSubTagByName("y").getData();
             pos.z = (float)stationNBT.getSubTagByName("z").getData();
-            int owner = (int)stationNBT.getSubTagByName("owner").getData();
-            int troopStrength = (int)stationNBT.getSubTagByName("troopStrength").getData();
+            int owner = (Short)stationNBT.getSubTagByName("owner").getData();
+            int troopStrength = (Short)stationNBT.getSubTagByName("troopStrength").getData();
             level.addStation(new Station(pos,owner,troopStrength));
         }
         List<Compound> routesNBT = (List<Compound>) nbt.getSubTagByName("routes").getData();
         for(Compound routeNBT: routesNBT) {
-            int station1 = (int)routeNBT.getSubTagByName("station1").getData();
-            int station2 = (int)routeNBT.getSubTagByName("station2").getData();
+            int station1 = (Short)routeNBT.getSubTagByName("station1").getData();
+            int station2 = (Short)routeNBT.getSubTagByName("station2").getData();
             float speed = (float)routeNBT.getSubTagByName("speed").getData();
             level.addRoute(new Route(station1,station2,speed));
 
@@ -89,8 +89,9 @@ public class Level {
     public static void writeToFile(String file,Level level) {
         Compound nbt = new Compound();
         nbt.setName("root");
-        Tag versionTag = new Tag("version",Settings.LEVEL_FILE_VERSION);
-        Tag stationsNBT = new Tag();
+        Tag<Long> versionTag = new Tag<>("version", Settings.LEVEL_FILE_VERSION);
+        nbt.addNBTTag(versionTag);
+        Tag<NBTList<Compound>> stationsNBT = new Tag<>();
         stationsNBT.setName("stations");
         stationsNBT.setDataType(DATATYPE_LIST);
         NBTList<Compound> stationsList = new NBTList<>();
@@ -111,7 +112,7 @@ public class Level {
         }
         stationsNBT.setData(stationsList);
         nbt.addNBTTag(stationsNBT);
-        Tag routesNBT = new Tag();
+        Tag<NBTList<Compound>> routesNBT = new Tag<>();
         routesNBT.setName("routes");
         routesNBT.setDataType(DATATYPE_LIST);
         NBTList<Compound> routesList = new NBTList<>();

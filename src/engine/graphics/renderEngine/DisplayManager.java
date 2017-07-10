@@ -23,6 +23,7 @@ public class DisplayManager {
      * @return windowID
      */
     public static long createDisplay() {
+        if(!GLFW.glfwInit()) throw new IllegalStateException("GLFW init failed");
         windowID = GLFW.glfwCreateWindow(WIDTH,HEIGHT,TITLE, MemoryUtil.NULL,MemoryUtil.NULL);
         if(windowID == MemoryUtil.NULL) throw new IllegalStateException("Windows creation failed");
         GLFW.glfwMakeContextCurrent(windowID);

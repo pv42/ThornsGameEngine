@@ -80,24 +80,23 @@ public class ParticleRenderer {
         shader.loadNumberOfRows(texture.getNumberOfRows());
     }
     private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix,float[] vboData) {
-        throw new UnsupportedOperationException("todo");
-        //todo
-        /*
+
         Matrix4f modelMatrix = new Matrix4f();
-        Matrix4f.translate(position,modelMatrix,modelMatrix);
-        modelMatrix.m00 = viewMatrix.m00;
-        modelMatrix.m01 = viewMatrix.m10;
-        modelMatrix.m02 = viewMatrix.m20;
-        modelMatrix.m10 = viewMatrix.m01;
-        modelMatrix.m11 = viewMatrix.m11;
-        modelMatrix.m12 = viewMatrix.m21;
-        modelMatrix.m20 = viewMatrix.m02;
-        modelMatrix.m21 = viewMatrix.m12;
-        modelMatrix.m22 = viewMatrix.m22;
-        Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix,null);
-        Matrix4f.rotate((float)Math.toRadians(rotation),new Vector3f(0,0,1),modelViewMatrix,modelViewMatrix);
-        Matrix4f.scale(new Vector3f(scale,scale,scale),modelViewMatrix,modelViewMatrix);
-        storeMatrixData(modelViewMatrix,vboData);*/
+        modelMatrix.translate(position);
+
+        modelMatrix.m00(viewMatrix.m00());
+        modelMatrix.m01(viewMatrix.m10());
+        modelMatrix.m02(viewMatrix.m20());
+        modelMatrix.m10(viewMatrix.m01());
+        modelMatrix.m11(viewMatrix.m11());
+        modelMatrix.m12(viewMatrix.m21());
+        modelMatrix.m20(viewMatrix.m02());
+        modelMatrix.m21(viewMatrix.m12());
+        modelMatrix.m22(viewMatrix.m22());
+        Matrix4f modelViewMatrix = viewMatrix.mul(modelMatrix, new Matrix4f());
+        modelMatrix.rotate((float)Math.toRadians(rotation),new Vector3f(0,0,1));
+        modelViewMatrix.scale(scale);
+        storeMatrixData(modelViewMatrix,vboData);
     }
     private void storeMatrixData(Matrix4f matrix, float[] data) {
         data[pointer++] = matrix.m00();
