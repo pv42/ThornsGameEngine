@@ -1,21 +1,17 @@
 package shivt.guns;
 
 import engine.audio.AudioMaster;
-import engine.audio.OggSource;
+import engine.audio.OggData;
 import engine.audio.Source;
 import engine.graphics.entities.Player;
 import org.joml.Vector3f;
-import engine.graphics.particles.Particle;
-import engine.graphics.particles.ParticleTexture;
 import engine.graphics.renderEngine.DisplayManager;
-import engine.graphics.renderEngine.Loader;
-import engine.toolbox.Maths;
 
 /***
  * Created by pv42 on 01.07.16.
  */
 public class Blaster extends Gun {
-    private OggSource soundBuffer;
+    private OggData soundBuffer;
     private Source soundSource;
     public Blaster() {
         super(new GunLoader("Blaster"));

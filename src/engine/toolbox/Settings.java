@@ -28,7 +28,7 @@ public class Settings {
     public static final int MAX_BONES = 250;
     public static final boolean SHOW_SKELETON_BONES = false;
     //debug
-    public static final boolean SHOW_DEBUG_LOG = false;
+    public static final boolean SHOW_DEBUG_LOG = true;
     public static final boolean WRITE_LOG_FILE = false;
     public static final String LOG_PATH = "log/log.txt";
     //network

@@ -9,22 +9,25 @@ import java.nio.IntBuffer;
 /**
  * Created by pv42 on 10.07.2017.
  */
-public class OggSource {
+public class OggData {
     private STBVorbisInfo info;
     private int format;
     private int channels;
     private int sampleRate;
     private long decoder;
-    private IntBuffer buffers;
-    public OggSource(long decoder, IntBuffer buffers) {
+    private int lengthSamples;
+    private float lengthSeconds;
+    public OggData(long decoder) {
         this.decoder = decoder;
-        this.buffers = buffers;
         try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
             STBVorbis.stb_vorbis_get_info(decoder, info);
-            this.channels = info.channels();
-            this.sampleRate = info.sample_rate();
-            this.format = getFormat(channels);
+            channels = info.channels();
+            sampleRate = info.sample_rate();
+
         }
+        lengthSamples = STBVorbis.stb_vorbis_stream_length_in_samples(decoder);
+        lengthSeconds = STBVorbis.stb_vorbis_stream_length_in_seconds(decoder);
+        format = getFormat(channels);
     }
     public void printInfo() {
         System.out.println("channels = " + info.channels());
@@ -45,9 +48,6 @@ public class OggSource {
                 throw new UnsupportedOperationException("Unsupported number of channels: " + channels);
         }
     }
-    public IntBuffer getBuffers() {
-        return buffers;
-    }
 
     public int getFormat() {
         return format;
@@ -63,5 +63,13 @@ public class OggSource {
 
     public int getChannels() {
         return channels;
+    }
+
+    public int getLengthSamples() {
+        return lengthSamples;
+    }
+
+    public float getLengthSeconds() {
+        return lengthSeconds;
     }
 }

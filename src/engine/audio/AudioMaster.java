@@ -6,9 +6,6 @@ import org.lwjgl.demo.util.IOUtil;
 import org.lwjgl.openal.*;
 import org.joml.Vector3f;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -38,7 +35,6 @@ public class AudioMaster {
             if (context == NULL) {
                 throw new IllegalStateException("Failed to create an OpenAL context.");
             }
-
             EXTThreadLocalContext.alcSetThreadContext(context);
             AL.createCapabilities(alcCapabilities);
 
@@ -53,28 +49,21 @@ public class AudioMaster {
 
 
 
-    public static OggSource loadSound(String filename) {
+    public static OggData loadSound(String filename) {
         Log.d(TAG, "loading sound " + filename);
-        int buffer = AL10.alGenBuffers();
         ByteBuffer vorbis = null;
-        IntBuffer buffers = BufferUtils.createIntBuffer(2);
-        AL10.alGenBuffers(buffers);
         try {
-            vorbis = IOUtil.ioResourceToByteBuffer(filename,256* 1024);
+            vorbis = IOUtil.ioResourceToByteBuffer(filename,256 * 1024);
         } catch (IOException e) {
             e.printStackTrace();
         }
         IntBuffer errorBuffer = BufferUtils.createIntBuffer(1);
-
         long handle = STBVorbis.stb_vorbis_open_memory(vorbis, errorBuffer, null);
-        OggSource oggSource = new OggSource(handle, buffers);
         if (handle == NULL) {
             throw new RuntimeException("Failed to open Ogg Vorbis file. Error: " + errorBuffer.get(0));
         }
-
-
-
-        return oggSource;
+        OggData oggData = new OggData(handle);
+        return oggData;
     }
 
     public static void setListenerData() {
