@@ -9,11 +9,15 @@ import org.joml.Vector3f;
  */
 public class MatrixCalc {
     public static void main(String args[]) {
-        Matrix4f tm = Maths.createTransformationMatrix(new Vector3f(11,8,5),44,10,30,1);
-        System.out.print(tm);
-        Vector3f rot = Maths.getRotationComponent(tm);
+        Matrix4f tm = Maths.createTransformationMatrix(new Vector3f(9, 8, 5), 0, 90, 0, 1);
+        System.out.println(tm);
+        Vector3f transl = new Vector3f(1,0,0);
+        tm.translate(transl);
+        System.out.println(tm);
 
-        System.out.println("\nx:" + Math.toDegrees(rot.x) + "\ny:" + Math.toDegrees(rot.y) + "\nz:" + Math.toDegrees(rot.z));
+        //Vector3f rot = Maths.getRotationComponent(tm);
+
+        //System.out.println("\nx:" + Math.toDegrees(rot.x) + "\ny:" + Math.toDegrees(rot.y) + "\nz:" + Math.toDegrees(rot.z));
     }
     /*private static Matrix4f readMatrix4f(String sin) {
         Matrix4f matrix4f = new Matrix4f();

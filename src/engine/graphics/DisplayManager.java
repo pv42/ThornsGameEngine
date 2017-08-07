@@ -1,4 +1,4 @@
-package engine.graphics.renderEngine;
+package engine.graphics;
 
 import engine.toolbox.Log;
 import org.lwjgl.glfw.GLFW;

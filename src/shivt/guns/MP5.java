@@ -11,9 +11,8 @@ import engine.graphics.entities.Player;
 import org.joml.Vector3f;
 import engine.graphics.particles.Particle;
 import engine.graphics.particles.ParticleTexture;
-import engine.graphics.renderEngine.DisplayManager;
+import engine.graphics.DisplayManager;
 import engine.graphics.renderEngine.Loader;
-import engine.toolbox.Maths;
 
 
 /**
@@ -33,7 +32,9 @@ public class MP5 extends Gun {
         if(reloadCooldown > 0) return false;
         remainingAmmo --;
         shotCooldown = getShotDelay();
-        new Particle(new ParticleTexture(Loader.loadTexture("boom"),5,true,false), player.getEyePosition().add(getMuzzlePosition(),new Vector3f()), Maths.scaleVector(new Vector3f(1,0,0),getProjectileSpeed()),0,10f,0,2);
+        new Particle(new ParticleTexture(Loader.loadTexture("boom"),5,true,false),
+                player.getEyePosition().add(getMuzzlePosition(),new Vector3f()),
+                new Vector3f(getProjectileSpeed(),0,0),0,10f,0,2);
         //todo direction
         soundSource.play(soundBuffer);
         return true;

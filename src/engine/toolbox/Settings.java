@@ -4,13 +4,15 @@ package engine.toolbox;
  * Created by pv42 on 21.06.16.
  */
 public class Settings {
-    private Settings() {  } // can not be created
+    private Settings() { // can not be created
+    }
+
     //graphics
     public static final int MULTI_SAMPLE_ANTI_ALIASING = 4; //todo
     public static final int FPS_LIMIT = 60;
     public static final int WIDTH = 600; //not fullscreen
     public static final int HEIGHT = 600;
-    public static final int WIDTH_FULLSCREEN = 1920;
+    public static final int WIDTH_FULLSCREEN = 1920; //todo not hard codr
     public static final int HEIGHT_FULLSCREEN = 1080;
     public static final int ANISOTROPIC_FILTERING = 1;
     public static final int MAX_PARTICLE_INSTANCES = 10000;
@@ -29,7 +31,7 @@ public class Settings {
     public static final int MAX_BONES = 250;
     public static final boolean SHOW_SKELETON_BONES = false;
     //debug
-    public static final boolean SHOW_DEBUG_LOG = true;
+    public static final boolean SHOW_DEBUG_LOG = false;
     public static final boolean WRITE_LOG_FILE = false;
     public static final String LOG_PATH = "log/log.txt";
     //network

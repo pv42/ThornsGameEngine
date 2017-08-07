@@ -91,19 +91,21 @@ public abstract class ShaderProgram {
     protected void loadFloat(int location , float value) {
         GL20.glUniform1f(location,value);
     }
-    protected void loadVector(int loaction, Vector2f vector) {
-        GL20.glUniform2f(loaction,vector.x(),vector.y());
+    protected void loadVector(int location, Vector2f vector) {
+        GL20.glUniform2f(location,vector.x(),vector.y());
     }
-    protected void loadVector(int loaction, Vector3f vector) {
-        GL20.glUniform3f(loaction,vector.x(),vector.y(),vector.z());
+    protected void loadVector(int location, Vector3f vector) {
+        GL20.glUniform3f(location,vector.x(),vector.y(),vector.z());
     }
-    protected void loadVector(int loaction, Vector4f vector) {
-        GL20.glUniform4f(loaction,vector.x(),vector.y(),vector.z(),vector.w());
+    protected void loadVector(int location, Vector4f vector) {
+        GL20.glUniform4f(location,vector.x(),vector.y(),vector.z(),vector.w());
     }
     protected void loadMatrix(int location, Matrix4f matrix) {
-        matrix.get(matrixBuffer);
-        matrixBuffer.flip();
-        GL20.glUniformMatrix4fv(location,false,matrixBuffer);
+        float[] floats = new float[16];
+        matrix.get(floats);
+        //matrix.get(matrixBuffer);
+        //matrixBuffer.flip();
+        GL20.glUniformMatrix4fv(location,false,floats);
     }
 
     private static int loadShader(String file, int type) {

@@ -34,9 +34,9 @@ public class Bone {
         transfomationMatrix = new Matrix4f();
         transfomationMatrix.identity();
         this.parent = parent;
-        if(Settings.SHOW_SKELETON_BONES) {
-            line = Loader.loadToVAO(new Line(new Vector3f(),new Vector3f(1,0,0)));
-            line.setColor(Color.fromHSL(15 * getNumOfParents(),1,.5f));
+        if (Settings.SHOW_SKELETON_BONES) {
+            line = Loader.loadToVAO(new Line(new Vector3f(), new Vector3f(1, 0, 0)));
+            line.setColor(Color.fromHSL(15 * getNumOfParents(), 1, .5f));
         }
     }
 
@@ -53,41 +53,47 @@ public class Bone {
         jointMatrix.invert(inverseJointMatrix);
 
     }
-    public void rotateJoint(Vector3f axis,float angle) {
-        Vector3f v =  Maths.getPositionComponent(jointMatrix);
+
+    public void rotateJoint(Vector3f axis, float angle) {
+        Vector3f v = Maths.getPositionComponent(jointMatrix);
         Vector3f mv = new Vector3f();
-        v.x = - mv.x;
-        v.y = - mv.y;
-        v.z = - mv.z;
+        v.x = -mv.x;
+        v.y = -mv.y;
+        v.z = -mv.z;
         //Matrix4f.translate(mv,jointMatrix,jointMatrix);
-        jointMatrix.rotate((float) Math.toRadians(angle),axis);
+        jointMatrix.rotate((float) Math.toRadians(angle), axis);
         //Matrix4f.translate(v,jointMatrix,jointMatrix);
         Maths.getPositionComponent(jointMatrix);
     }
+
     public void scaleJoint(Vector3f scale) {
         //todo Matrix4f.scale(scale,jointMatrix,jointMatrix);
     }
+
     public void translateJoint(Vector3f translation) {
         jointMatrix.translate(translation);
 
     }
 
-    public void rotate(Vector3f axis,float angle) {
-        Vector3f v =  Maths.getPositionComponent(jointMatrix);
+    public void rotate(Vector3f axis, float angle) {
+        Vector3f v = Maths.getPositionComponent(jointMatrix);
         Vector3f mv = new Vector3f();
-        v.x = - mv.x;
-        v.y = - mv.y;
-        v.z = - mv.z;
+        v.x = -mv.x;
+        v.y = -mv.y;
+        v.z = -mv.z;
         //Matrix4f.translate(mv,jointMatrix,jointMatrix);
-        transfomationMatrix.rotate((float) Math.toRadians(angle),axis);
+        transfomationMatrix.rotate((float) Math.toRadians(angle), axis);
         //Matrix4f.translate(v,jointMatrix,jointMatrix);
     }
+
     public void scale(Vector3f scale) {
         //todo Matrix4f.scale(scale,transfomationMatrix,transfomationMatrix);
     }
+
     public void scale(float scale) {
         //todo Matrix4f.scale(new Vector3f(scale,scale,scale),transfomationMatrix,transfomationMatrix);
     }
+
     public void translate(Vector3f translation) {
         transfomationMatrix.translate(translation);
     }
@@ -105,9 +111,11 @@ public class Bone {
     }
 
     public Matrix4f getWorldMatrix() {
-        if(parent == null) return jointMatrix;
-        return Maths.mulMatrices(new Matrix4f[]{parent.getWorldMatrix(),jointMatrix});
+        if (parent == null) return jointMatrix;
+        //todo !! mulMatrices
+        return Maths.mulMatrices(new Matrix4f[]{parent.getWorldMatrix(), jointMatrix});
     }
+
     public String getName() {
         return name;
     }
@@ -115,28 +123,32 @@ public class Bone {
     public void setName(String name) {
         this.name = name;
     }
+
     public String getNameTree() {
-        if(parent == null) return name;
+        if (parent == null) return name;
         return parent.getNameTree() + "->" + name;
     }
 
     public Bone getParent() {
         return parent;
     }
+
     public boolean hasParent() {
         return parent != null;
     }
+
     public int getNumOfParents() {
-        if(parent == null) return 0;
+        if (parent == null) return 0;
         return parent.getNumOfParents() + 1;
     }
 
     public Matrix4f getTransfomation() {
-        if(parent == null) return transfomationMatrix;
+        if (parent == null) return transfomationMatrix;
         Matrix4f m = new Matrix4f();
-        parent.getTransformationMatrix().mul(m,transfomationMatrix);
+        parent.getTransformationMatrix().mul(m, transfomationMatrix);
         return m;
     }
+
     public LineModel getLine() {
         return line;
     }

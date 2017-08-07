@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by pv42 on 03.07.16.
  */
+@Deprecated
 public class MMTexturedModel {
     private List<RawModel> rawmodels;
     private ModelTexture texture;

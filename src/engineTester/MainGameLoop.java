@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import engine.EngineMaster;
+import engine.graphics.DisplayManager;
 import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
@@ -75,6 +76,7 @@ public class MainGameLoop {
         Light sun = new Light(new Vector3f(30,100,30), new Color(.7,.7,1.0));
         List<Light> lights = new ArrayList<>();
         lights.add(sun);
+        Entity tree = new Entity(texturedModel,new Vector3f(),0,0,0, 1);
         //terrain engine.graphics.textures
         TerrainTexture bgT = new TerrainTexture(Loader.loadTexture("grass.png"));
         TerrainTexture rT = new TerrainTexture(Loader.loadTexture("dirt.png"));
@@ -131,6 +133,7 @@ public class MainGameLoop {
             //animation
             player.getModels().get(0).getRawModel().getBones().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
+            MasterRenderer.processEntity(tree);
             processFirstPersonPlayer(player);
             MasterRenderer.processTerrain(terrain);
             guis.forEach(MasterRenderer::processGui);

@@ -1,10 +1,10 @@
-package test;
+package engineTester;
 
 import engine.EngineMaster;
 import engine.audio.AudioMaster;
 import engine.audio.OggData;
 import engine.audio.Source;
-import engine.graphics.renderEngine.DisplayManager;
+import engine.graphics.DisplayManager;
 
 /**
  * Created by pv42 on 10.07.2017.

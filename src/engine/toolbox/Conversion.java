@@ -1,6 +1,6 @@
 package engine.toolbox;
 
-import engine.graphics.renderEngine.DisplayManager;
+import engine.graphics.DisplayManager;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

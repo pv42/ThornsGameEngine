@@ -22,14 +22,16 @@ public class Level {
     private static final String LEVELS_SAVE_PATH = "res/shivtLevels/%s.dat";
     private List<Station> stations = new ArrayList<>();
     private List<Route> routes = new ArrayList<>();
+
     private Level() {
     }
+
     public static Level demoLevel() {
         Level level = new Level();
-        level.addStation(new Station(new Vector3f(10,  0,  0), Station.OWNER_ALLIED,  0));
-        level.addStation(new Station(new Vector3f( 0, 10,  0), Station.OWNER_NEUTRAL, 0));
-        level.addStation(new Station(new Vector3f( 0, -5, -8), Station.OWNER_NEUTRAL, 0));
-        level.addStation(new Station(new Vector3f( 0, -5,  8), Station.OWNER_NEUTRAL, 0));
+        level.addStation(new Station(new Vector3f(10, 0, 0), Station.OWNER_ALLIED, 0));
+        level.addStation(new Station(new Vector3f(0, 10, 0), Station.OWNER_NEUTRAL, 0));
+        level.addStation(new Station(new Vector3f(0, -5, -8), Station.OWNER_NEUTRAL, 0));
+        level.addStation(new Station(new Vector3f(0, -5, 8), Station.OWNER_NEUTRAL, 0));
         level.addRoute(new Route(0, 1, 1));
         level.addRoute(new Route(0, 2, 1));
         level.addRoute(new Route(1, 3, 1));
@@ -46,9 +48,11 @@ public class Level {
     private void addStation(Station station) {
         stations.add(station);
     }
+
     private void addRoute(Route route) {
         routes.add(route);
     }
+
     public List<Station> getStations() {
         return stations;
     }
@@ -56,37 +60,39 @@ public class Level {
     public List<Route> getRoutes() {
         return routes;
     }
+
     public static Level readFromFile(String file) {
         Compound nbt = null;
         try {
             nbt = NBT.read(new FileInputStream(String.format(LEVELS_SAVE_PATH, file)));
-            Log.d(TAG,nbt.toString());
+            Log.d(TAG, nbt.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         Level level = new Level();
         List<Compound> stationsNBT = (List<Compound>) nbt.getSubTagByName("stations").getData();
-        for(Compound stationNBT: stationsNBT) {
+        for (Compound stationNBT : stationsNBT) {
             Vector3f pos = new Vector3f();
-            pos.x = (float)stationNBT.getSubTagByName("x").getData();
-            pos.y = (float)stationNBT.getSubTagByName("y").getData();
-            pos.z = (float)stationNBT.getSubTagByName("z").getData();
-            int owner = (Short)stationNBT.getSubTagByName("owner").getData();
-            int troopStrength = (Short)stationNBT.getSubTagByName("troopStrength").getData();
-            level.addStation(new Station(pos,owner,troopStrength));
+            pos.x = (float) stationNBT.getSubTagByName("x").getData();
+            pos.y = (float) stationNBT.getSubTagByName("y").getData();
+            pos.z = (float) stationNBT.getSubTagByName("z").getData();
+            int owner = (int) stationNBT.getSubTagByName("owner").getData();
+            int troopStrength = (int) stationNBT.getSubTagByName("troopStrength").getData();
+            level.addStation(new Station(pos, owner, troopStrength));
         }
         List<Compound> routesNBT = (List<Compound>) nbt.getSubTagByName("routes").getData();
-        for(Compound routeNBT: routesNBT) {
-            int station1 = (Short)routeNBT.getSubTagByName("station1").getData();
-            int station2 = (Short)routeNBT.getSubTagByName("station2").getData();
-            float speed = (float)routeNBT.getSubTagByName("speed").getData();
-            level.addRoute(new Route(station1,station2,speed));
+        for (Compound routeNBT : routesNBT) {
+            int station1 = (int) routeNBT.getSubTagByName("station1").getData();
+            int station2 = (int) routeNBT.getSubTagByName("station2").getData();
+            float speed = (float) routeNBT.getSubTagByName("speed").getData();
+            level.addRoute(new Route(station1, station2, speed));
 
         }
         return level;
 
     }
-    public static void writeToFile(String file,Level level) {
+
+    public static void writeToFile(String file, Level level) {
         Compound nbt = new Compound();
         nbt.setName("root");
         Tag<Long> versionTag = new Tag<>("version", Settings.LEVEL_FILE_VERSION);
@@ -96,7 +102,7 @@ public class Level {
         stationsNBT.setDataType(DATATYPE_LIST);
         NBTList<Compound> stationsList = new NBTList<>();
         stationsList.setDataType(DATATYPE_COMPOUND);
-        for(Station station: level.getStations()) {
+        for (Station station : level.getStations()) {
             Compound c = new Compound();
             Tag<Float> nbtTagX = new Tag<>("x", station.getPosition().x);
             Tag<Float> nbtTagY = new Tag<>("y", station.getPosition().y);
@@ -117,7 +123,7 @@ public class Level {
         routesNBT.setDataType(DATATYPE_LIST);
         NBTList<Compound> routesList = new NBTList<>();
         routesList.setDataType(DATATYPE_COMPOUND);
-        for(Route route: level.getRoutes()) {
+        for (Route route : level.getRoutes()) {
             Compound c = new Compound();
             Tag<Integer> nbtTag1 = new Tag<>("station1", route.getStations()[0]);
             Tag<Integer> nbtTag2 = new Tag<>("station2", route.getStations()[1]);
@@ -131,8 +137,8 @@ public class Level {
         nbt.addNBTTag(routesNBT);
         Log.d(nbt.toString());
         try {
-            File f = new File(String.format(LEVELS_SAVE_PATH,file));
-            NBT.write(nbt,new FileOutputStream(f));
+            File f = new File(String.format(LEVELS_SAVE_PATH, file));
+            NBT.write(nbt, new FileOutputStream(f));
         } catch (IOException e) {
             e.printStackTrace();
         }

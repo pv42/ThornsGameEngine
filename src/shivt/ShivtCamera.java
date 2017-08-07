@@ -15,7 +15,7 @@ import static engine.inputs.InputEvent.KEY_REPEAT;
  */
 public class ShivtCamera extends Camera {
     public ShivtCamera() {
-        setPosition(new Vector3f(0,12.5f,0));
+        setPosition(new Vector3f(0, 12.5f, 0));
         setYaw(180);
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_REPEAT, GLFW.GLFW_KEY_UP) {
             @Override
@@ -69,7 +69,7 @@ public class ShivtCamera extends Camera {
                 setPosition(pos);
             }
         });
-        InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_UP) {
+        InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_UP) {
             @Override
             public void onOccur() {
                 Vector3f pos = getPosition();
@@ -77,7 +77,7 @@ public class ShivtCamera extends Camera {
                 setPosition(pos);
             }
         });
-        InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_DOWN) {
+        InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_DOWN) {
             @Override
             public void onOccur() {
 
@@ -86,7 +86,7 @@ public class ShivtCamera extends Camera {
                 setPosition(pos);
             }
         });
-        InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_LEFT) {
+        InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_LEFT) {
             @Override
             public void onOccur() {
 
@@ -95,7 +95,7 @@ public class ShivtCamera extends Camera {
                 setPosition(pos);
             }
         });
-        InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_RIGHT) {
+        InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_RIGHT) {
             @Override
             public void onOccur() {
 
@@ -104,7 +104,7 @@ public class ShivtCamera extends Camera {
                 setPosition(pos);
             }
         });
-        InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_PAGE_UP) {
+        InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_PAGE_UP) {
             @Override
             public void onOccur() {
 
@@ -113,7 +113,7 @@ public class ShivtCamera extends Camera {
                 setPosition(pos);
             }
         });
-        InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_PAGE_DOWN) {
+        InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_PAGE_DOWN) {
             @Override
             public void onOccur() {
                 Vector3f pos = getPosition();

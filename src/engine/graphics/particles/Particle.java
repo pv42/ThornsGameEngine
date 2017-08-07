@@ -3,7 +3,7 @@ package engine.graphics.particles;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import engine.graphics.renderEngine.DisplayManager;
+import engine.graphics.DisplayManager;
 import engine.toolbox.Settings;
 
 public class Particle {

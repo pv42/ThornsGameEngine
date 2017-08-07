@@ -9,11 +9,6 @@ public abstract class Camera {
     private Vector3f position = new Vector3f(0,5,0);
     private float pitch = 11, yaw = 30, roll;
 
-
-    public Camera() {
-
-    }
-
     public abstract void move();
 
     public Vector3f getPosition() {

@@ -65,22 +65,22 @@ public class ColladaSkin {
     public TexturedModel getAnimatedTexturedModel() {
         return getAnimatedTexturedModel(null);
     }
-    public TexturedModel getAnimatedTexturedModel(Matrix4f tranformation) {
+    public TexturedModel getAnimatedTexturedModel(Matrix4f transformation) {
         if(vsource.getPosition() == null) Log.w("pnull");
         if(vsource.getNormal() == null) Log.w("nnull");
         if(vsource.getTexCoord() == null) Log.w("vnull");
-        if(tranformation != null) {
+        if(transformation != null) {
             List<Vector4f> vertices = new ArrayList<>();
             List<Vector4f> normals = new ArrayList<>();
             for(float[] v : vsource.getPosition()) {
                 Vector4f vec = new Vector4f(v[0],v[1],v[2],1);
-                tranformation.transform(vec, vec);
+                transformation.transform(vec, vec);
                 vertices.add(vec);
             }
             vsource.setPosition(Util.get2DArray(vertices));
             for(float[] n : vsource.getNormal()) {
                 Vector4f vec = new Vector4f(n[0],n[1],n[2],1);
-                tranformation.transform(vec, vec);
+                transformation.transform(vec, vec);
                 normals.add(vec);
             }
             vsource.setNormal(Util.get2DArray(normals));

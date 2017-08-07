@@ -3,6 +3,7 @@ package engine.graphics.shaders;
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Light;
 import engine.toolbox.Color;
+import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -53,6 +54,7 @@ public class StaticShader extends ShaderProgram{
 
     @Override
     protected void getAllUniformLocations() {
+
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix");
@@ -79,7 +81,6 @@ public class StaticShader extends ShaderProgram{
             locations_bone[i] = super.getUniformLocation("bone[" + i + "]");
         }
         location_useAnimation = super.getUniformLocation("useAnimation");
-
     }
     public void connectTextures() {
         super.loadInt(location_texture,0);

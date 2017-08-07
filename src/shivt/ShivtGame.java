@@ -2,7 +2,7 @@ package shivt;
 
 import engine.inputs.GuiClickController;
 import engine.inputs.listeners.OnClickListener;
-import engine.graphics.renderEngine.DisplayManager;
+import engine.graphics.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Log;
 import org.joml.Vector2f;

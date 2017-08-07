@@ -5,7 +5,7 @@ import engine.audio.OggData;
 import engine.audio.Source;
 import engine.graphics.entities.Player;
 import org.joml.Vector3f;
-import engine.graphics.renderEngine.DisplayManager;
+import engine.graphics.DisplayManager;
 
 /***
  * Created by pv42 on 01.07.16.

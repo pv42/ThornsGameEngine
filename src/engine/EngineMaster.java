@@ -3,7 +3,7 @@ package engine;
 import engine.audio.AudioMaster;
 import engine.inputs.*;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.renderEngine.DisplayManager;
+import engine.graphics.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.toolbox.Log;
@@ -22,10 +22,6 @@ public class EngineMaster {
         Log.i(TAG, "v:" + Version.getVersion());
         Log.i(TAG, "lwjgl-version: " + Version.VERSION_MAJOR + "." +  Version.VERSION_MINOR + "." +
                 Version.VERSION_REVISION );
-        //todo glfw errors
-        /*if(!GLFW.glfwInit()) {
-            throw new IllegalStateException("GLFW init failed");
-        }*/
         AudioMaster.init();
         long windowID = DisplayManager.createDisplay();
         MasterRenderer.init();

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import engine.graphics.DisplayManager;
 import engine.graphics.animation.*;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
@@ -78,7 +79,7 @@ public class MasterRenderer {
         guiRenderer = new GuiRenderer(getAspectRatio()); // todo
         fontRenderer = new FontRenderer(getAspectRatio());
         lights = new ArrayList<>();
-        Log.i(TAG, " initialised");
+        Log.i(TAG, "initialised");
     }
 
     /**

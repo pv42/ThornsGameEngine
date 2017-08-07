@@ -20,7 +20,7 @@ public class Log {
     public static void connectLogFile() {
         try {
             File file = new File(LOG_PATH);
-            if(!file.canWrite()) //noinspection ResultOfMethodCallIgnored
+            if (!file.canWrite()) //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
             out = new PrintStream(new FileOutputStream(file));
             err = out;
@@ -30,30 +30,34 @@ public class Log {
     }
 
     public static void d(String text) {
-        if(Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:" + text);
+        if (Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:" + text);
     }
-    public static void d(String tag,String text) {
-        if(Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:"+ tag + " " + text);
+
+    public static void d(String tag, String text) {
+        if (Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:" + tag + " " + text);
     }
 
     public static void i(String text) {
         out.println(new Date().toString() + " INFO:" + text);
     }
-    public static void i(String tag,String text) {
-        out.println(new Date().toString() + " INFO:"+ tag + " " + text);
+
+    public static void i(String tag, String text) {
+        out.println(new Date().toString() + " INFO:" + tag + " " + text);
     }
 
     public static void w(String text) {
         out.println(new Date().toString() + " WARN:" + text);
     }
-    public static void w(String tag,String text) {
+
+    public static void w(String tag, String text) {
         out.println(new Date().toString() + " WARN:" + tag + " " + text);
     }
 
     public static void e(String text) {
         err.println(new Date().toString() + " ERR :" + text);
     }
-    public static void e(String tag,String text) {
-        err.println(new Date().toString() + " ERR :"+ tag + " " + text);
+
+    public static void e(String tag, String text) {
+        err.println(new Date().toString() + " ERR :" + tag + " " + text);
     }
 }
