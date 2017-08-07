@@ -234,7 +234,7 @@ public class MasterRenderer {
     private static void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(SKY_COLOR.getR() , SKY_COLOR.getG(), SKY_COLOR.getB(),  1);
+        GL11.glClearColor(SKY_COLOR.getR(), SKY_COLOR.getG(), SKY_COLOR.getB(), 1);
     }
 
     /**
@@ -271,6 +271,7 @@ public class MasterRenderer {
         projectionMatrix.m23(-1);
         projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));
         projectionMatrix.m33(0);
+        Log.d("PRM " + projectionMatrix.toString());
     }
 
     public static Matrix4f getProjectionMatrix() {

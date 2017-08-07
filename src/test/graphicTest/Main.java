@@ -6,7 +6,6 @@ import engine.graphics.renderEngine.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.shaders.SimpleShader;
 import engine.graphics.textures.ModelTexture;
-import org.lwjgl.glfw.GLFW;
 
 public class Main {
     public static void main(String args[]) {

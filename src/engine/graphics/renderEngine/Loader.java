@@ -80,7 +80,6 @@ public class Loader {
     }
 
 
-
     public static LineModel loadToVAO(Line line) {
         int vaoID = createVAO();
         int[] indices = new int[2];

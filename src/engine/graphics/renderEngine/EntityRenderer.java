@@ -62,11 +62,11 @@ public class EntityRenderer {
     }
 
     private void prepareTexturedModel(TexturedModel model) {
-        
+
         RawModel rawModel = model.getRawModel();
         List<Bone> bones;
         List<Matrix4f> boneMatrices = null;
-        if(model.isAnimated()){
+        if (model.isAnimated()) {
             bones = rawModel.getBones();
             boneMatrices = bones.stream().map(Bone::getTransformationMatrix).collect(Collectors.toList());
         }
@@ -86,7 +86,7 @@ public class EntityRenderer {
         }
         shader.loadFakeLightning(texture.isUseFakeLightning());
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
-        if(model.isAnimated()) shader.loadBones(boneMatrices);
+        if (model.isAnimated()) shader.loadBones(boneMatrices);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
         shader.loadUseSpecMap(texture.hasSpecularMap());
