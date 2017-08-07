@@ -1,6 +1,7 @@
 package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
+import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import engine.graphics.renderEngine.DisplayManager;
@@ -47,8 +48,8 @@ public class SkyBoxShader extends ShaderProgram {
         matrix.rotate((float) Math.toRadians(rotation), new Vector3f(0,1,0));
         super.loadMatrix(location_viewMatrix, matrix);
     }
-    public void loadFogColor(float r,float g, float b){
-        super.loadVector(location_fogColor,new Vector3f(r,g,b));
+    public void loadFogColor(Color fogColor){
+        super.loadVector(location_fogColor,fogColor.getVector());
     }
     public void connectTextures() {
         super.loadInt(location_cubeMap,0);

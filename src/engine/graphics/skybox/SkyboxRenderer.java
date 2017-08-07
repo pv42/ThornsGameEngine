@@ -2,6 +2,7 @@ package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.models.RawModel;
+import engine.toolbox.Color;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -76,10 +77,10 @@ public class SkyboxRenderer {
         shader.stop();
     }
 
-    public void render(Camera camera,float fogR,float fogG, float fogB) {
+    public void render(Camera camera, Color fogColor) {
         shader.start();
         shader.loadViewMatrix(camera);
-        shader.loadFogColor(fogR,fogG,fogB);
+        shader.loadFogColor(fogColor);
         GL30.glBindVertexArray(cube.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         bindTextures();

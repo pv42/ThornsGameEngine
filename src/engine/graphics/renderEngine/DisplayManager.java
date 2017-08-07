@@ -80,7 +80,7 @@ public class DisplayManager {
      * @return {@code true} if a valid setting was found.
      */
     public static boolean updateDisplayMode(int width, int height, boolean fullscreen) {
-        //todo
+        //todo implement
         /*if (Display.getDisplayMode().getWidth() == width &&
                 Display.getDisplayMode().getHeight() == height &&
                 Display.isFullscreen() == fullscreen) return true;

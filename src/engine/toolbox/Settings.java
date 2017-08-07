@@ -15,6 +15,7 @@ public class Settings {
     public static final int ANISOTROPIC_FILTERING = 1;
     public static final int MAX_PARTICLE_INSTANCES = 10000;
     public static final float AMBIENT_LIGHT = .1f;
+    public static final Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
     //environment
     public static final float GRAVITY = -10; //ms^-2
     //input

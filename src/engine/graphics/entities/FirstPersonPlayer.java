@@ -53,7 +53,7 @@ public class FirstPersonPlayer extends Player{
         upwardSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
         super.increasePosition(dx, upwardSpeed * DisplayManager.getFrameTimeSeconds(), dz);
         float terrainHeight = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
-        if (getPosition().y < terrainHeight) { //todo !!!!!!
+        if (getPosition().y < terrainHeight) {
             upwardSpeed = 0;
             super.getPosition().y = terrainHeight;
             isInAir = false;
@@ -69,7 +69,7 @@ public class FirstPersonPlayer extends Player{
         InputHandler.setCursorListener(new CursorListener() {
             @Override
             public void onMove(int x, int y) {
-                //todo
+                // todo  implement
                 increaseRotation(y * 0.1f, - x * 0.1f,0);
             }
         });

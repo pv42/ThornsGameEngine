@@ -1,9 +1,9 @@
 package engine.audio;
 
+import engine.toolbox.IOUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.stb.STBVorbisInfo;
-import test.Vorbis;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,7 +13,6 @@ import java.nio.ShortBuffer;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.round;
-import static org.lwjgl.demo.util.IOUtil.ioResourceToByteBuffer;
 import static org.lwjgl.stb.STBVorbis.*;
 import static org.lwjgl.stb.STBVorbis.stb_vorbis_seek;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -41,7 +40,8 @@ public class Decoder {
 
     Decoder(String filePath) {
         try {
-            vorbis = ioResourceToByteBuffer(filePath, 256 * 1024);
+
+            vorbis = IOUtil.ioResourceToByteBuffer(filePath, 256 * 1024);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -34,9 +34,10 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import static engine.toolbox.Settings.SKY_COLOR;
+
 public class MasterRenderer {
     //default
-    public static final float SKY_RED = 0.1f, SKY_GREEN = 0.12f, SKY_BLUE = 0.18f; //todo
     private static final String TAG = "Engine:MasterRenderer";
     private static Matrix4f projectionMatrix;
     //renderers
@@ -136,7 +137,7 @@ public class MasterRenderer {
         terrainRenderer.render(terrains, camera, lights);
         terT = Time.getNanoTime();
         //skybox
-        skyboxRenderer.render(camera, SKY_RED, SKY_GREEN, SKY_BLUE);
+        skyboxRenderer.render(camera, SKY_COLOR);
         skyT = Time.getNanoTime();
         //particles
         ParticleMaster.renderParticles(camera);
@@ -233,7 +234,7 @@ public class MasterRenderer {
     private static void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1);
+        GL11.glClearColor(SKY_COLOR.getR() , SKY_COLOR.getG(), SKY_COLOR.getB(),  1);
     }
 
     /**

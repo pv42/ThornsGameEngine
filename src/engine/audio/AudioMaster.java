@@ -1,8 +1,8 @@
 package engine.audio;
 
+import engine.toolbox.IOUtil;
 import engine.toolbox.Log;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.demo.util.IOUtil;
 import org.lwjgl.openal.*;
 import org.joml.Vector3f;
 
@@ -38,10 +38,6 @@ public class AudioMaster {
             EXTThreadLocalContext.alcSetThreadContext(context);
             AL.createCapabilities(alcCapabilities);
 
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,8 +58,7 @@ public class AudioMaster {
         if (handle == NULL) {
             throw new RuntimeException("Failed to open Ogg Vorbis file. Error: " + errorBuffer.get(0));
         }
-        OggData oggData = new OggData(handle);
-        return oggData;
+        return new OggData(handle);
     }
 
     public static void setListenerData() {
@@ -89,7 +84,7 @@ public class AudioMaster {
     }
 
     private static long openDefaultDevice() {
-        long device = ALC10.alcOpenDevice((ByteBuffer)null);
+        long device = ALC10.alcOpenDevice((ByteBuffer) null);
         if (device == NULL) {
             throw new IllegalStateException("Failed to open the default device.");
         }
