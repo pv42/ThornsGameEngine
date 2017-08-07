@@ -15,8 +15,8 @@ import java.util.List;
  * Created by pv42 on 17.06.16.
  */
 public class StaticShader extends ShaderProgram{
-    private static final String VERTEX_FILE = "src/engine/graphics/shaders/vertexShader";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/fragmentShader";
+    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/vertexShader";
+    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/fragmentShader";
     private static final int MAX_LIGHTS = 4;
     private int location_transformationMatrix;
     private int location_projectionMatrix;

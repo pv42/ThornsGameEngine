@@ -1,8 +1,8 @@
 package engine.graphics.shaders;
 
 public class SimpleShader extends ShaderProgram {
-    private static final String VERTEX_FILE = "src/engine/graphics/shaders/simpleVertexShader";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/testFragmentShader";
+    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/simpleVertexShader";
+    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/testFragmentShader";
     public SimpleShader() {
         super(VERTEX_FILE,FRAGMENT_FILE);
     }

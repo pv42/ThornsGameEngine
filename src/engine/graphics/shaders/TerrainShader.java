@@ -13,8 +13,8 @@ import java.util.List;
   Created by pv42 on 18.06.16.
  */
 public class TerrainShader extends ShaderProgram{
-    private static final String VERTEX_FILE = "src/engine/graphics/shaders/terrainVertexShader";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/terrainFragmentShader";
+    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/terrainVertexShader";
+    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/terrainFragmentShader";
     private static final int MAX_LIGHTS = 4;
     private int location_transformationMatrix,
             location_projectionMatrix,

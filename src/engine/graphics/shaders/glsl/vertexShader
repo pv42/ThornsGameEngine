@@ -55,6 +55,8 @@ void main(void) {
     vec4 positionToCamera = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionToCamera;
 
+    //gl_Position = vec4(position,1.0);
+
     pass_uv = (uv / numberOfRows) + offset;
 
     if(useFakeLightning > 0.5) {
