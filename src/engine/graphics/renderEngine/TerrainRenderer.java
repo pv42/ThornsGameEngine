@@ -15,10 +15,8 @@ import engine.graphics.terrains.Terrain;
 import engine.graphics.textures.TerrainTexturePack;
 import engine.toolbox.Maths;
 
+import static engine.toolbox.Settings.SKY_COLOR;
 
-import static engine.graphics.renderEngine.MasterRenderer.SKY_RED;
-import static engine.graphics.renderEngine.MasterRenderer.SKY_BLUE;
-import static engine.graphics.renderEngine.MasterRenderer.SKY_GREEN;
 
 public class TerrainRenderer {
 
@@ -42,7 +40,7 @@ public class TerrainRenderer {
         shader.start();
         shader.loadViewMatrix(camera);
         shader.loadLight(lights);
-        shader.loadSkyColor(SKY_RED, SKY_GREEN, SKY_BLUE);
+        shader.loadSkyColor(SKY_COLOR);
         for (Terrain terrain : terrains) {
             prepareTerrain(terrain);
             loadModelMatrix(terrain);

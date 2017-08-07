@@ -19,6 +19,8 @@ import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Maths;
 
+import static engine.toolbox.Settings.SKY_COLOR;
+
 public class NormalMappingRenderer {
 
 	private NormalMappingShader shader;
@@ -94,7 +96,7 @@ public class NormalMappingRenderer {
 
 	private void prepare(Vector4f clipPlane, List<Light> lights, Camera camera) {
 		shader.loadClipPlane(clipPlane);
-		shader.loadSkyColour(MasterRenderer.SKY_RED, MasterRenderer.SKY_GREEN, MasterRenderer.SKY_BLUE);
+		shader.loadSkyColor(SKY_COLOR);
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		
 		shader.loadLights(lights, viewMatrix);

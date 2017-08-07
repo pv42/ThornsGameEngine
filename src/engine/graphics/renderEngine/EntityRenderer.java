@@ -21,9 +21,7 @@ import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_UV;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_NORMAL;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONEINDICES;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONEWEIGHT;
-import static engine.graphics.renderEngine.MasterRenderer.SKY_BLUE;
-import static engine.graphics.renderEngine.MasterRenderer.SKY_GREEN;
-import static engine.graphics.renderEngine.MasterRenderer.SKY_RED;
+import static engine.toolbox.Settings.SKY_COLOR;
 
 
 /***
@@ -118,7 +116,7 @@ public class EntityRenderer {
 
     private void prepare(List<Light> lights, Camera camera) {
         shader.start();
-        shader.loadSkyColor(SKY_RED, SKY_GREEN, SKY_BLUE);
+        shader.loadSkyColor(SKY_COLOR);
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
     }

@@ -2,6 +2,7 @@ package engine.graphics.normalMappingRenderer;
 
 import java.util.List;
 
+import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -85,8 +86,8 @@ public class NormalMappingShader extends ShaderProgram{
 		super.loadVector(location_offset, new Vector2f(x,y));
 	}
 	
-	protected void loadSkyColour(float r, float g, float b){
-		super.loadVector(location_skyColour, new Vector3f(r,g,b));
+	protected void loadSkyColor(Color skyColor){
+		super.loadVector(location_skyColour, skyColor.getVector());
 	}
 	
 	protected void loadShineVariables(float damper,float reflectivity){

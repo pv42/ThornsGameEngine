@@ -8,6 +8,7 @@ import engine.graphics.entities.Entity;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.shaders.StaticShader;
+import engine.toolbox.Settings;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -19,9 +20,6 @@ import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Maths;
 
-import static engine.graphics.renderEngine.MasterRenderer.SKY_BLUE;
-import static engine.graphics.renderEngine.MasterRenderer.SKY_GREEN;
-import static engine.graphics.renderEngine.MasterRenderer.SKY_RED;
 
 /***
  * Created by pv42 on 27.07.16.
@@ -112,7 +110,7 @@ public class AnimatedEntityRenderer {
 
     private void prepare(List<Light> lights, Camera camera) {
         shader.start();
-        shader.loadSkyColor(SKY_RED, SKY_GREEN, SKY_BLUE);
+        shader.loadSkyColor(Settings.SKY_COLOR);
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
     }

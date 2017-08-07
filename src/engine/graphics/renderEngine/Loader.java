@@ -1,6 +1,5 @@
 package engine.graphics.renderEngine;
 
-import engine.graphics.models.AnimatedRawModel;
 import engine.graphics.animation.Bone;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.lines.Line;
@@ -35,6 +34,30 @@ public class Loader {
     private static List<Integer> vbos = new ArrayList<>();
     private static List<Integer> textures = new ArrayList<>();
 
+    public static RawModel loadToVAO(float[] positions, int dimension) {
+        int vaoID = createVAO();
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, dimension, positions);
+        unbindVAO();
+        return new RawModel(vaoID, positions.length / dimension);
+    }
+
+    public static RawModel loadToVAO(float[] positions, int[] indices) {
+        int vaoID = createVAO();
+        bindIndicesBuffer(indices);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
+        unbindVAO();
+        return new RawModel(vaoID, indices.length);
+    }
+
+    public static RawModel loadToVAO(float[] positions, float[] uv, int[] indices) {
+        int vaoID = createVAO();
+        bindIndicesBuffer(indices);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
+        unbindVAO();
+        return new RawModel(vaoID, indices.length);
+    }
+
     public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
@@ -56,12 +79,7 @@ public class Loader {
         return new RawModel(vaoID, indices.length);
     }
 
-    public static RawModel loadToVAO(float[] position, int dimension) {
-        int vaoID = createVAO();
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, dimension, position);
-        unbindVAO();
-        return new RawModel(vaoID, position.length / dimension);
-    }
+
 
     public static LineModel loadToVAO(Line line) {
         int vaoID = createVAO();

@@ -2,6 +2,7 @@ package engine.graphics.shaders;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Light;
+import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import engine.toolbox.Maths;
@@ -88,8 +89,8 @@ public class TerrainShader extends ShaderProgram{
         super.loadFloat(location_shineDamper,shineDamper);
         super.loadFloat(location_reflectivity,reflectivity);
     }
-    public void loadSkyColor(float r, float g, float b) {
-        super.loadVector(location_skyColor,new Vector3f(r,g,b));
+    public void loadSkyColor(Color skyColor) {
+        super.loadVector(location_skyColor, skyColor.getVector());
     }
     public void connectTextures() {
         super.loadInt(location_bgTexture,0);

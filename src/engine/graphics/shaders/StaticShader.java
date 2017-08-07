@@ -2,6 +2,7 @@ package engine.graphics.shaders;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Light;
+import engine.toolbox.Color;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -117,8 +118,8 @@ public class StaticShader extends ShaderProgram{
     public void loadUseSpecMap(boolean usesSpecMap) {
         super.loadBoolean(location_usesSpecMap, usesSpecMap);
     }
-    public void loadSkyColor(float r, float g, float b) {
-        super.loadVector(location_skyColor, new Vector3f(r,g,b));
+    public void loadSkyColor(Color skyColor) {
+        super.loadVector(location_skyColor, skyColor.getVector());
     }
     public void loadNumberOfRows(int numberOfRows) {
         super.loadFloat(location_numberOfRows,numberOfRows);
