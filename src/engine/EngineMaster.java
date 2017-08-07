@@ -8,6 +8,7 @@ import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
+import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 
 /***
@@ -18,7 +19,9 @@ public class EngineMaster {
     public static void init() {
         if(Settings.WRITE_LOG_FILE) Log.connectLogFile();
         Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().getName());
-        Log.i(TAG, "lwjgl-version: " + org.lwjgl.Version.getVersion());
+        Log.i(TAG, "v:" + Version.getVersion());
+        Log.i(TAG, "lwjgl-version: " + Version.VERSION_MAJOR + "." +  Version.VERSION_MINOR + "." +
+                Version.VERSION_REVISION );
         //todo glfw errors
         /*if(!GLFW.glfwInit()) {
             throw new IllegalStateException("GLFW init failed");

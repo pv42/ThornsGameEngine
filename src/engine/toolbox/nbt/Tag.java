@@ -63,6 +63,7 @@ public class Tag<T>{
         if(dataType == DATATYPE_STRING) ds = "\"" + ds + "\"";
             return name + ":" + ds;
     }
+
     public static byte dataTypeFromClass(Class c) {
         if (c == Byte.class) {
             return DATATYPE_BYTE;

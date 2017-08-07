@@ -5,10 +5,10 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by pv42 on 04.08.16.
@@ -107,4 +107,5 @@ public class Util {
     public static Vector2f getVector2f(Vector4f in) {
         return new Vector2f(in.x/in.w,in.y/in.w);
     }
+
 }
