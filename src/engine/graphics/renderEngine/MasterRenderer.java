@@ -24,7 +24,7 @@ import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.Terrain;
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Entity;
-import engine.graphics.entities.Light;
+import engine.graphics.lights.Light;
 
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
@@ -303,11 +303,7 @@ public class MasterRenderer {
 
     public static void processText(GUIText text) {
         FontType font = text.getFont();
-        List<GUIText> textBatch = texts.get(font);
-        if (textBatch == null) {
-            textBatch = new ArrayList<>();
-            texts.put(font, textBatch);
-        }
+        List<GUIText> textBatch = texts.computeIfAbsent(font, k -> new ArrayList<>());
         textBatch.add(text);
     }
 

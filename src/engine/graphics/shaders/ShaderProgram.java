@@ -93,6 +93,18 @@ public abstract class ShaderProgram {
     }
 
     /**
+     * get a shader's array uniform locations in the vram
+     * @param uniformName the uniform's variable name
+     * @param locations array to store the locations
+     * @param size arrays size
+     */
+    public void getUniformLocationsArray(String uniformName, int[] locations, int size) {
+        for( int i = 0; i < size; i++) {
+            locations[i] = getUniformLocation(uniformName + "[" + i + "]");
+        }
+    }
+
+    /**
      * loads a binary value to a shader's uniform
      *
      * @param location uniform location

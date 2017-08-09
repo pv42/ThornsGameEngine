@@ -3,7 +3,7 @@ package engine.graphics.renderEngine;
 import engine.graphics.animation.Bone;
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Entity;
-import engine.graphics.entities.Light;
+import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import org.lwjgl.opengl.*;

@@ -1,7 +1,7 @@
 package shivt.levels;
 
 import engine.graphics.entities.Entity;
-import engine.graphics.entities.Light;
+import engine.graphics.lights.Light;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.models.OBJLoader;

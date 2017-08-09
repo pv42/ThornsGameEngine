@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.joml.Matrix4f;
 import engine.graphics.cameras.Camera;
-import engine.graphics.entities.Light;
+import engine.graphics.lights.Light;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Maths;

@@ -3,7 +3,7 @@ package engine.graphics.renderEngine;
 import java.util.List;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.entities.Light;
+import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 
 import org.lwjgl.opengl.*;

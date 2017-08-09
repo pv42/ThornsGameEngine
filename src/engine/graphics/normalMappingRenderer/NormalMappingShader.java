@@ -8,7 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import engine.graphics.entities.Light;
+import engine.graphics.lights.Light;
 import engine.graphics.shaders.ShaderProgram;
 
 public class NormalMappingShader extends ShaderProgram{

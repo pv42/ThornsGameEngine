@@ -12,7 +12,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import engine.graphics.entities.Entity;
-import engine.graphics.entities.Light;
+import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.MasterRenderer;
