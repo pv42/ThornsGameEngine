@@ -10,8 +10,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Created on 17.06.16.
  * A openGL shader program with vertex and fragment shader
+ * Created on 17.06.16.
  * @author pv42
  */
 public abstract class ShaderProgram {
@@ -162,7 +162,7 @@ public abstract class ShaderProgram {
     }
 
     /**
-     * compiles and load a glsl shader
+     * compiles and loads a glsl shader
      * @param file shader's source file path
      * @param type shader type e.g. vertex or fragment
      * @return the shaderID or 0 if the loading failed
