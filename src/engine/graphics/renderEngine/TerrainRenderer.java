@@ -39,7 +39,7 @@ public class TerrainRenderer {
     public void render(List<Terrain> terrains, Camera camera, List<Light> lights) {
         shader.start();
         shader.loadViewMatrix(camera);
-        shader.loadLight(lights);
+        shader.loadLights(lights);
         shader.loadSkyColor(SKY_COLOR);
         for (Terrain terrain : terrains) {
             prepareTerrain(terrain);

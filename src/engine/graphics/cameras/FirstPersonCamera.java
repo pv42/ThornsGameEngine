@@ -1,6 +1,7 @@
 package engine.graphics.cameras;
 
 import engine.graphics.entities.FirstPersonPlayer;
+import engine.toolbox.Log;
 
 /**
    Created by pv42 on 17.06.16.
@@ -20,9 +21,14 @@ public class FirstPersonCamera extends Camera{
     public void move() {
         calculateZoom();
         calculatePitch();
+        calculateYaw();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
         calculateCameraPosition(horizontalDistance,verticalDistance);
+
+    }
+
+    private void calculateYaw() {
         setYaw(180 - player.getRy());
     }
 

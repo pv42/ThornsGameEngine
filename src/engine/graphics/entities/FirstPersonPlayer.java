@@ -25,7 +25,6 @@ public class FirstPersonPlayer extends Player{
     private static final float MAX_PITCH_ABS = 70;
     private float currentSpeed;
     private float currentSideSpeed;
-    private int dMouseX, dMouseY;
     private float heightAngle = 0;
     private Gun gun;
     private boolean sprinting;
@@ -36,8 +35,7 @@ public class FirstPersonPlayer extends Player{
     }
     @Override
     public void move(Terrain terrain) {
-        super.increaseRotation(0, dMouseX * TURN_SPEED, 0); //todo
-        heightAngle += dMouseY * TURN_SPEED;
+        heightAngle = getRx();
         heightAngle = Math.max(Math.min(heightAngle,MAX_PITCH_ABS),-MAX_PITCH_ABS);
         float bothFact = 1;
         if(currentSideSpeed != 0 && currentSpeed != 0) {
@@ -65,12 +63,9 @@ public class FirstPersonPlayer extends Player{
     private void registerEvents() {
         DisplayManager.setMouseGrabbed(true);
         InputHandler.setMouseBound(true);
-        InputHandler.setCursorListener(new CursorListener() {
-            @Override
-            public void onMove(int x, int y) {
-                // todo  implement
-                increaseRotation(y * 0.1f, - x * 0.1f,0);
-            }
+        InputHandler.setCursorListener((x, y) -> {
+            // todo  implement
+            increaseRotation(y * 0.1f, - x * 0.1f,0);
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_W) {
             @Override

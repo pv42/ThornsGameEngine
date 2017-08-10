@@ -1,4 +1,4 @@
-package test;
+package engineTester;
 
 import engine.EngineMaster;
 import engine.graphics.DisplayManager;
