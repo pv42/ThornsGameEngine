@@ -22,7 +22,7 @@ public class FirstPersonCamera extends Camera{
         calculatePitch();
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
-        calculateCamaraPosition(horizontalDistance,verticalDistance);
+        calculateCameraPosition(horizontalDistance,verticalDistance);
         setYaw(180 - player.getRy());
     }
 
@@ -44,7 +44,7 @@ public class FirstPersonCamera extends Camera{
     private float calculateVerticalDistance() {
         return (float) (distanceFromPlayer * Math.sin(Math.toRadians(getPitch())));
     }
-    private void calculateCamaraPosition(float horizontalDistance, float verticalDistance) {
+    private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
         float theta = player.getRy();
         float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));

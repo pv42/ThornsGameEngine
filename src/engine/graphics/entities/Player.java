@@ -13,7 +13,6 @@ import java.util.List;
 public abstract class Player extends Entity{
     static final float RUN_SPEED = 30;
     static final float SPRINT_FACTOR = 1.5f;
-    static final float GRAVITY = Settings.GRAVITY; //todo
     private static final float JUMP_POWER = 30;
     private static final float EYE_HEIGHT = 4.6f;
     float upwardSpeed;

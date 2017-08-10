@@ -186,7 +186,6 @@ public class Loader {
             GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, date.getHeight(), date.getWidth(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, date.getBuffer());
         }
         //posX, negX, posY, negY, posZ, negZ
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR); //todo what does it tut27
         textures.add(texID);
         return texID;

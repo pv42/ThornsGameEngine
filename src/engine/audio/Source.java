@@ -70,7 +70,6 @@ public class Source {
         pcm.position(0);
         AL10.alBufferData(buffer, oggData.getFormat(), pcm, oggData.getSampleRate());
         samplesLeft -= samples / oggData.getChannels();
-        Log.d(samplesLeft + "");
         return true;
     }
     public boolean update( OggData oggData) {
@@ -79,13 +78,7 @@ public class Source {
             int buffer = AL10.alSourceUnqueueBuffers(sourceId);
 
             if (!stream(buffer, oggData,pcm)) {
-                boolean shouldExit = true;
-
-
-
-                if (shouldExit) {
-                    return false;
-                }
+                return false;
             }
             AL10.alSourceQueueBuffers(sourceId, buffer);
         }

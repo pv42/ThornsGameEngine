@@ -46,7 +46,7 @@ public class Particle {
         return scale;
     }
     protected boolean update() {
-        velocity.y += Settings.GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
+        velocity.y -= Settings.GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
         Vector3f change = new Vector3f(velocity);
         change.mul(DisplayManager.getFrameTimeSeconds());
         position.add(change);

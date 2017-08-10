@@ -23,18 +23,25 @@ public class DisplayManager {
      * @return windowID
      */
     public static long createDisplay() {
-        if(!GLFW.glfwInit()) throw new IllegalStateException("GLFW init failed");
         windowID = GLFW.glfwCreateWindow(WIDTH,HEIGHT,TITLE, MemoryUtil.NULL,MemoryUtil.NULL);
         if(windowID == MemoryUtil.NULL) throw new IllegalStateException("Windows creation failed");
         GLFW.glfwMakeContextCurrent(windowID);
         GLFW.glfwSwapInterval(FPS_LIMIT/60);
         GLFW.glfwShowWindow(windowID);
-        GL.createCapabilities();
+        GLCapabilities capabilities = GL.createCapabilities();
         printDisplayModes();
         GL11.glViewport(0,0,WIDTH,HEIGHT);
+        GL11.glOrtho(0,WIDTH,HEIGHT, 0.0, -1.0, 1.0);
         lastFrameEnd = getTime();
         Log.i(TAG,"Display created");
         return windowID;
+    }
+
+    /**
+     * creates the GLFW context
+     * */
+    public static void init() {
+        if(!GLFW.glfwInit()) throw new IllegalStateException("GLFW init failed");
     }
 
     /**
@@ -153,6 +160,9 @@ public class DisplayManager {
         } else {
             GLFW.glfwSetInputMode(windowID,GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_NORMAL);
         }
+    }
+    public static long getWindowID() {
+        return windowID;
     }
 
 }

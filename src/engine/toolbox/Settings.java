@@ -19,7 +19,7 @@ public class Settings {
     public static final float AMBIENT_LIGHT = .1f;
     public static final Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
     //environment
-    public static final float GRAVITY = -10; //ms^-2
+    public static final float GRAVITY = 10; //ms^-2
     //input
     public static final float MOUSE_SENSITIVITY = 0.4f;
     //camera

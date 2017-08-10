@@ -23,6 +23,7 @@ public class EngineMaster {
         Log.i(TAG, "lwjgl-version: " + Version.VERSION_MAJOR + "." +  Version.VERSION_MINOR + "." +
                 Version.VERSION_REVISION );
         AudioMaster.init();
+        DisplayManager.init();
         long windowID = DisplayManager.createDisplay();
         MasterRenderer.init();
         ParticleMaster.init(MasterRenderer.getProjectionMatrix());

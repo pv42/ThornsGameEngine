@@ -15,6 +15,7 @@ import engine.toolbox.Settings;
 import java.util.List;
 
 import static engine.inputs.InputEvent.*;
+import static engine.toolbox.Settings.GRAVITY;
 
 /***
  * Created by pv42 on 20.06.16.
@@ -48,7 +49,7 @@ public class FirstPersonPlayer extends Player{
         float distanceSide = currentSideSpeed * ( sprinting ? SPRINT_FACTOR : 1) * bothFact * DisplayManager.getFrameTimeSeconds();
         dx += (float) (distanceSide * Math.cos(Math.toRadians(super.getRy())));
         dz -= (float) (distanceSide * Math.sin(Math.toRadians(super.getRy())));
-        upwardSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+        upwardSpeed -= GRAVITY * DisplayManager.getFrameTimeSeconds();
         super.increasePosition(dx, upwardSpeed * DisplayManager.getFrameTimeSeconds(), dz);
         float terrainHeight = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
         if (getPosition().y < terrainHeight) {

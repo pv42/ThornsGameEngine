@@ -46,7 +46,7 @@ public class AudioMaster {
 
 
     public static OggData loadSound(String filename) {
-        Log.d(TAG, "loading sound " + filename);
+        Log.d(TAG, "loading sound \"" + filename + "\"");
         ByteBuffer vorbis = null;
         try {
             vorbis = IOUtil.ioResourceToByteBuffer(filename,256 * 1024);

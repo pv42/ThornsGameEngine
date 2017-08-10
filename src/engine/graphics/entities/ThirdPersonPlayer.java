@@ -7,6 +7,8 @@ import engine.graphics.terrains.Terrain;
 
 import java.util.List;
 
+import static engine.toolbox.Settings.GRAVITY;
+
 /***
  * Created by pv42 on 20.06.16.
  */
@@ -24,7 +26,7 @@ public class ThirdPersonPlayer extends Player{
         float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRy())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRy())));
-        upwardSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+        upwardSpeed -= GRAVITY * DisplayManager.getFrameTimeSeconds();
 
         super.increasePosition(dx, upwardSpeed * DisplayManager.getFrameTimeSeconds(), dz);
         float terrainHeigt = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
