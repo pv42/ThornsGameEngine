@@ -16,7 +16,7 @@ public class Settings {
     private static final String CONFIG_FILE = "conf.ini";
     private static final String TAG = "Settings";
     //graphics
-    public static int FPS_LIMIT = 60;
+    public static int LIMIT_FPS = 0;
     public static int WIDTH = 600; //not fullscreen
     public static int HEIGHT = 600;
     public static int ANISOTROPIC_FILTERING = 1;
@@ -36,7 +36,7 @@ public class Settings {
     public static int MAX_BONES = 250;
     public static boolean SHOW_SKELETON_BONES = false;
     //debug
-    public static boolean SHOW_DEBUG_LOG = false;
+    public static boolean SHOW_DEBUG_LOG = true;
     public static final boolean WRITE_LOG_FILE = false;
     public static final String LOG_PATH = "log/log.txt";
     //network
@@ -69,7 +69,7 @@ public class Settings {
         } else {
             Log.i(TAG,"settings don't exist creating");
         }
-        FPS_LIMIT      = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_FPS, FPS_LIMIT));
+        LIMIT_FPS      = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_FPS, LIMIT_FPS));
         WIDTH          = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_WIDTH, WIDTH));
         HEIGHT         = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_HEIGHT, HEIGHT));
         ANISOTROPIC_FILTERING = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_ANIF, ANISOTROPIC_FILTERING));

@@ -27,9 +27,6 @@ public class StaticShader extends Lighted3DShader {
 
     public StaticShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
-        start();
-        loadAmbientLight(Settings.AMBIENT_LIGHT);
-        stop();
     }
 
     @Override

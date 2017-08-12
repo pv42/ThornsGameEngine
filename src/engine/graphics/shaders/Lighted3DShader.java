@@ -4,6 +4,7 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.lights.Light;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
+import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -31,6 +32,9 @@ public abstract class Lighted3DShader extends ShaderProgram {
      */
     public Lighted3DShader(String vertexFile, String fragmentFile) {
         super(vertexFile, fragmentFile);
+        start();
+        loadAmbientLight(Settings.AMBIENT_LIGHT);
+        stop();
     }
 
     @Override

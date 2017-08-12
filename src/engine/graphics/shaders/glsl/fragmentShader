@@ -18,6 +18,7 @@ uniform float reflectivity;
 uniform vec3 skyColor;
 
 uniform float ambient_light;
+
 const float CELL_SHADING_LEVELS = -1; // -1 to disable
 
 void main(void) {
