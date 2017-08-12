@@ -272,7 +272,7 @@ public class MasterRenderer {
         projectionMatrix.m23(-1);
         projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));
         projectionMatrix.m33(0);
-        Log.d("PRM " + projectionMatrix.toString());
+
     }
 
     public static Matrix4f getProjectionMatrix() {
