@@ -19,8 +19,6 @@ public class Settings {
     public static int FPS_LIMIT = 60;
     public static int WIDTH = 600; //not fullscreen
     public static int HEIGHT = 600;
-    public static int WIDTH_FULLSCREEN = 1920; //todo not hard codr
-    public static int HEIGHT_FULLSCREEN = 1080;
     public static int ANISOTROPIC_FILTERING = 1;
     public static int MAX_PARTICLE_INSTANCES = 10000;
     public static float AMBIENT_LIGHT = .1f;
@@ -55,6 +53,11 @@ public class Settings {
     private static Ini ini;
     private static final String SECTION_GRAPHIC = "graphic";
     private static final String KEY_FPS = "fps_cap";
+    private static final String KEY_WIDTH = "width";
+    private static final String KEY_HEIGHT = "height";
+    private static final String KEY_ANIF = "anisotropic_filtering";
+    private static final String KEY_MAXPAR = "maximum_particles";
+    private static final String KEY_AMBINET = "ambient_light";
     private static final String SECTION_LOG = "log";
     private static final String KEY_SDL = "show_debug_log";
 
@@ -62,32 +65,36 @@ public class Settings {
         ini = new Ini();
         File f = new File(CONFIG_FILE);
         if(f.exists()) {
-            loadIni(ini, f);
+            loadIni(f);
         } else {
-            Log.i(TAG,"settings dont exist creating");
+            Log.i(TAG,"settings don't exist creating");
         }
-        FPS_LIMIT =      Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_FPS, FPS_LIMIT));
+        FPS_LIMIT      = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_FPS, FPS_LIMIT));
+        WIDTH          = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_WIDTH, WIDTH));
+        HEIGHT         = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_HEIGHT, HEIGHT));
+        ANISOTROPIC_FILTERING = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_ANIF, ANISOTROPIC_FILTERING));
+        MAX_PARTICLE_INSTANCES = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MAXPAR, MAX_PARTICLE_INSTANCES));
+        AMBIENT_LIGHT  = Float.parseFloat(     getSetting(SECTION_GRAPHIC, KEY_AMBINET, AMBIENT_LIGHT));
         SHOW_DEBUG_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
         Log.d(TAG,"loaded settings");
-        storeIni(ini,f);
+        storeIni(f);
 
     }
     private static String getSetting(String section, String key, Object defaultValue) {
         if(ini.containsKey(key)) {
-            Log.w(ini.get(section,key));
             return ini.get(section,key);
         }
         ini.put(section,key,defaultValue);
         return defaultValue.toString();
     }
-    private static void loadIni(Ini ini, File f) {
+    private static void loadIni(File f) {
         try {
             ini.load(f);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private static void storeIni(Ini ini, File f) {
+    private static void storeIni(File f) {
         try {
             ini.store(f);
         } catch (IOException e) {
