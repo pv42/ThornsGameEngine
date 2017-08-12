@@ -29,20 +29,20 @@ public class RenderLevel {
     private List<GUIText> texts;
     private List<Vector3f> ends;
     private Light sun;
-    public RenderLevel(Level level, FontType font) {
+    public RenderLevel(ShivtLevel shivtLevel, FontType font) {
         lines = new ArrayList<>();
         entities = new ArrayList<>();
         ends = new ArrayList<>();
         texts = new ArrayList<>();
         ParticleTexture pt = new ParticleTexture(Loader.loadTexture("frostfire.png"),4,true,true);
-        for (Route route: level.getRoutes()) {
+        for (Route route: shivtLevel.getRoutes()) {
             int start = route.getStations()[0],
                     end = route.getStations()[1];
-            ParticleSystem ps = new ParticleSystemStream(pt,30,1.7f,.5f,level.getStations().get(start).getPosition(),new Vector3f(.01f,.01f,.01f));
+            ParticleSystem ps = new ParticleSystemStream(pt,30,1.7f,.5f, shivtLevel.getStations().get(start).getPosition(),new Vector3f(.01f,.01f,.01f));
             lines.add(ps);
-            ends.add(level.getStations().get(end).getPosition());
+            ends.add(shivtLevel.getStations().get(end).getPosition());
         }
-        for(Station station : level.getStations()) {
+        for(Station station : shivtLevel.getStations()) {
             TexturedModel texturedModel = new TexturedModel(OBJLoader.loadObjModel("spaceStation"),new ModelTexture(Loader.loadTexture("blue.png")));
             texturedModel.getTexture().setReflectivity(.1f);
             Entity e = new Entity(texturedModel,station.getPosition(),0,0,0,.5f);

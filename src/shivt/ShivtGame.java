@@ -7,7 +7,7 @@ import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Log;
 import org.joml.Vector2f;
 import shivt.guiElements.Button;
-import shivt.levels.Level;
+import shivt.levels.ShivtLevel;
 import shivt.levels.RenderLevel;
 
 /***
@@ -33,7 +33,7 @@ public class ShivtGame {
         guiClickController = new GuiClickController();
         requestedGameState(GAME_STATE_MAIN_MENU);
         camera = new ShivtCamera();
-        Level level = Level.readFromFile("test");
+        ShivtLevel level = ShivtLevel.readFromFile("test");
         RenderLevel renderLevel = new RenderLevel(level,Loader.loadFont("courier_df"));
         while (!DisplayManager.isCloseRequested()) {
             gameLoop.loop(renderLevel,camera);

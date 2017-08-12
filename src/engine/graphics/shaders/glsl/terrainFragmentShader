@@ -49,8 +49,8 @@ void main(void) {
         float nDotl = dot(unitNormal, unitLight);
         float brightness = max(nDotl, 0.0);
         if(CELL_SHADING_LEVELS >= 0.0) {
-            float level = floor(brightness * CELL_SHADING_LEVELS);
-            brightness = level / CELL_SHADING_LEVELS;
+            float shivtLevel = floor(brightness * CELL_SHADING_LEVELS);
+            brightness = shivtLevel / CELL_SHADING_LEVELS;
         }
         vec3 lightDirection = - unitLight;
         vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
@@ -59,8 +59,8 @@ void main(void) {
         specularFactor = max(specularFactor,0.0);
         float dampedFactor = pow(specularFactor, shineDamper);
         if(CELL_SHADING_LEVELS >= 0.0) {
-            float level = floor(dampedFactor * CELL_SHADING_LEVELS);
-            dampedFactor = level / CELL_SHADING_LEVELS;
+            float shivtLevel = floor(dampedFactor * CELL_SHADING_LEVELS);
+            dampedFactor = shivtLevel / CELL_SHADING_LEVELS;
         }
         totalDiffuse = totalDiffuse +  (brightness * lightColor[i])/attFactor;
         totalSpecular = totalSpecular + (dampedFactor * lightColor[i] * reflectivity)/attFactor;

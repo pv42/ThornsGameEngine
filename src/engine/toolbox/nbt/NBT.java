@@ -1,6 +1,6 @@
 package engine.toolbox.nbt;
 
-import shivt.levels.Level;
+import shivt.levels.ShivtLevel;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;
@@ -20,8 +20,8 @@ public class NBT {
         //FileInputStream in = new FileInputStream(f1);
         //Log.i(read(in).toString());
 
-        Level.writeToFile("test",Level.demoLevel());
-        Level l = Level.readFromFile("test");
+        ShivtLevel.writeToFile("test", ShivtLevel.demoLevel());
+        ShivtLevel l = ShivtLevel.readFromFile("test");
         System.out.println(l);
     }
     public static Compound readFromFile(String path) throws FileNotFoundException {

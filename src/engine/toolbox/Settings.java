@@ -21,24 +21,25 @@ public class Settings {
     public static int HEIGHT = 600;
     public static int ANISOTROPIC_FILTERING = 1;
     public static int MAX_PARTICLE_INSTANCES = 10000;
-    public static float AMBIENT_LIGHT = .1f;
-    public static Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
+
     //environment
     public static final float GRAVITY = 10; //ms^-2
+    public static float AMBIENT_LIGHT = .1f;
+    public static Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
     //input
     public static final float MOUSE_SENSITIVITY = 0.4f;
     //camera
-    public static final float FOV = 70;
+    public static float FOV = 70;
     public static final float NEAR_PLANE = 0.1f;
     public static final float FAR_PLANE = 2000;
     //animation
-    public static int MAX_BONES_PER_VERTEX = 4;
-    public static int MAX_BONES = 250;
-    public static boolean SHOW_SKELETON_BONES = false;
+    public static final int MAX_BONES_PER_VERTEX = 4;
+    public static final int MAX_BONES = 250;
+    public static final boolean SHOW_SKELETON_BONES = false;
     //debug
     public static boolean SHOW_DEBUG_LOG = true;
-    public static final boolean WRITE_LOG_FILE = false;
-    public static final String LOG_PATH = "log/log.txt";
+    public static boolean WRITE_LOG_FILE = false;
+    public static String LOG_PATH = "log/log.txt";
     //network
     public static final int NETWORK_TIMEOUT = 20; //ms between nw syncs
     public static final String SQL_USERNAME = "root";
@@ -60,7 +61,9 @@ public class Settings {
     private static final String KEY_AMBINET = "ambient_light";
     private static final String SECTION_LOG = "log";
     private static final String KEY_SDL = "show_debug_log";
-
+    private static final String KEY_WLF = "write_log_to_file";
+    private static final String KEY_LFP = "log_file_path";
+    private static final String KEY_FOV = "field_of_view";
     public static void loadSettings() {
         ini = new Ini();
         File f = new File(CONFIG_FILE);
@@ -74,14 +77,17 @@ public class Settings {
         HEIGHT         = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_HEIGHT, HEIGHT));
         ANISOTROPIC_FILTERING = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_ANIF, ANISOTROPIC_FILTERING));
         MAX_PARTICLE_INSTANCES = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MAXPAR, MAX_PARTICLE_INSTANCES));
+        FOV            = Float.parseFloat(    getSetting(SECTION_GRAPHIC, KEY_FOV, FOV));
         AMBIENT_LIGHT  = Float.parseFloat(     getSetting(SECTION_GRAPHIC, KEY_AMBINET, AMBIENT_LIGHT));
         SHOW_DEBUG_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
+        WRITE_LOG_FILE = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_WLF, WRITE_LOG_FILE));
+        LOG_PATH = getSetting(SECTION_LOG, KEY_LFP, LOG_PATH);
         Log.d(TAG,"loaded settings");
         storeIni(f);
 
     }
     private static String getSetting(String section, String key, Object defaultValue) {
-        if(ini.containsKey(key)) {
+        if(ini.get(section,key) != null) {
             return ini.get(section,key);
         }
         ini.put(section,key,defaultValue);

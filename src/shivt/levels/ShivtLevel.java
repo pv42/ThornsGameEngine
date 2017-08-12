@@ -17,17 +17,17 @@ import static engine.toolbox.nbt.Tag.*;
 /***
  * Created by pv42 on 15.09.2016.
  */
-public class Level {
+public class ShivtLevel {
     private static final String TAG = "LEVEL";
     private static final String LEVELS_SAVE_PATH = "res/shivtLevels/%s.dat";
     private List<Station> stations = new ArrayList<>();
     private List<Route> routes = new ArrayList<>();
 
-    private Level() {
+    private ShivtLevel() {
     }
 
-    public static Level demoLevel() {
-        Level level = new Level();
+    public static ShivtLevel demoLevel() {
+        ShivtLevel level = new ShivtLevel();
         level.addStation(new Station(new Vector3f(10, 0, 0), Station.OWNER_ALLIED, 0));
         level.addStation(new Station(new Vector3f(0, 10, 0), Station.OWNER_NEUTRAL, 0));
         level.addStation(new Station(new Vector3f(0, -5, -8), Station.OWNER_NEUTRAL, 0));
@@ -61,7 +61,7 @@ public class Level {
         return routes;
     }
 
-    public static Level readFromFile(String file) {
+    public static ShivtLevel readFromFile(String file) {
         Compound nbt = null;
         try {
             nbt = NBT.read(new FileInputStream(String.format(LEVELS_SAVE_PATH, file)));
@@ -69,7 +69,7 @@ public class Level {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        Level level = new Level();
+        ShivtLevel shivtLevel = new ShivtLevel();
         List<Compound> stationsNBT = (List<Compound>) nbt.getSubTagByName("stations").getData();
         for (Compound stationNBT : stationsNBT) {
             Vector3f pos = new Vector3f();
@@ -78,21 +78,21 @@ public class Level {
             pos.z = (float) stationNBT.getSubTagByName("z").getData();
             int owner = (int) stationNBT.getSubTagByName("owner").getData();
             int troopStrength = (int) stationNBT.getSubTagByName("troopStrength").getData();
-            level.addStation(new Station(pos, owner, troopStrength));
+            shivtLevel.addStation(new Station(pos, owner, troopStrength));
         }
         List<Compound> routesNBT = (List<Compound>) nbt.getSubTagByName("routes").getData();
         for (Compound routeNBT : routesNBT) {
             int station1 = (int) routeNBT.getSubTagByName("station1").getData();
             int station2 = (int) routeNBT.getSubTagByName("station2").getData();
             float speed = (float) routeNBT.getSubTagByName("speed").getData();
-            level.addRoute(new Route(station1, station2, speed));
+            shivtLevel.addRoute(new Route(station1, station2, speed));
 
         }
-        return level;
+        return shivtLevel;
 
     }
 
-    public static void writeToFile(String file, Level level) {
+    public static void writeToFile(String file, ShivtLevel shivtLevel) {
         Compound nbt = new Compound();
         nbt.setName("root");
         Tag<Long> versionTag = new Tag<>("version", Settings.LEVEL_FILE_VERSION);
@@ -102,7 +102,7 @@ public class Level {
         stationsNBT.setDataType(DATATYPE_LIST);
         NBTList<Compound> stationsList = new NBTList<>();
         stationsList.setDataType(DATATYPE_COMPOUND);
-        for (Station station : level.getStations()) {
+        for (Station station : shivtLevel.getStations()) {
             Compound c = new Compound();
             Tag<Float> nbtTagX = new Tag<>("x", station.getPosition().x);
             Tag<Float> nbtTagY = new Tag<>("y", station.getPosition().y);
@@ -123,7 +123,7 @@ public class Level {
         routesNBT.setDataType(DATATYPE_LIST);
         NBTList<Compound> routesList = new NBTList<>();
         routesList.setDataType(DATATYPE_COMPOUND);
-        for (Route route : level.getRoutes()) {
+        for (Route route : shivtLevel.getRoutes()) {
             Compound c = new Compound();
             Tag<Integer> nbtTag1 = new Tag<>("station1", route.getStations()[0]);
             Tag<Integer> nbtTag2 = new Tag<>("station2", route.getStations()[1]);
@@ -146,7 +146,7 @@ public class Level {
 
     @Override
     public String toString() {
-        return "Level{" +
+        return "ShivtLevel{" +
                 "stations=" + stations +
                 ", routes=" + routes +
                 '}';
