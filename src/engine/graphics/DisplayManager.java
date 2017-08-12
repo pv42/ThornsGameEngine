@@ -26,7 +26,7 @@ public class DisplayManager {
         windowID = GLFW.glfwCreateWindow(WIDTH,HEIGHT,TITLE, MemoryUtil.NULL,MemoryUtil.NULL);
         if(windowID == MemoryUtil.NULL) throw new IllegalStateException("Windows creation failed");
         GLFW.glfwMakeContextCurrent(windowID);
-        GLFW.glfwSwapInterval(FPS_LIMIT/60);
+        GLFW.glfwSwapInterval(60/FPS_LIMIT);
         GLFW.glfwShowWindow(windowID);
         GLCapabilities capabilities = GL.createCapabilities();
         printDisplayModes();

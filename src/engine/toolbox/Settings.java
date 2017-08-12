@@ -16,7 +16,6 @@ public class Settings {
     private static final String CONFIG_FILE = "conf.ini";
     private static final String TAG = "Settings";
     //graphics
-    public static int MULTI_SAMPLE_ANTI_ALIASING = 4; //todo
     public static int FPS_LIMIT = 60;
     public static int WIDTH = 600; //not fullscreen
     public static int HEIGHT = 600;
@@ -52,30 +51,47 @@ public class Settings {
     public static final String SQL_SERVER = "192.168.178.21";
     public static final long LEVEL_FILE_VERSION = 1000000; //x.yy.zzzz -> xyyzzzz
 
-    static {
-        loadSettings();
-    }
+    //new ini stuff
+    private static Ini ini;
+    private static final String SECTION_GRAPHIC = "graphic";
+    private static final String KEY_FPS = "fps_cap";
+    private static final String SECTION_LOG = "log";
+    private static final String KEY_SDL = "show_debug_log";
 
     public static void loadSettings() {
-        Ini ini = new Ini();
+        ini = new Ini();
         File f = new File(CONFIG_FILE);
         if(f.exists()) {
-            try {
-                ini.load(f);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            SHOW_DEBUG_LOG = Boolean.parseBoolean(ini.get("log", "show_debug_log"));
-            Log.d(TAG,"loaded settings");
+            loadIni(ini, f);
         } else {
-            ini.put("log","show_debug_log",SHOW_DEBUG_LOG);
-            try {
-                ini.store(f);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Log.i(TAG,"settings crated");
+            Log.i(TAG,"settings dont exist creating");
         }
+        FPS_LIMIT =      Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_FPS, FPS_LIMIT));
+        SHOW_DEBUG_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
+        Log.d(TAG,"loaded settings");
+        storeIni(ini,f);
 
+    }
+    private static String getSetting(String section, String key, Object defaultValue) {
+        if(ini.containsKey(key)) {
+            Log.w(ini.get(section,key));
+            return ini.get(section,key);
+        }
+        ini.put(section,key,defaultValue);
+        return defaultValue.toString();
+    }
+    private static void loadIni(Ini ini, File f) {
+        try {
+            ini.load(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private static void storeIni(Ini ini, File f) {
+        try {
+            ini.store(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

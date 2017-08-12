@@ -17,6 +17,7 @@ import org.lwjgl.glfw.GLFW;
 public class EngineMaster {
     private static final String TAG = "Engine";
     public static void init() {
+        Settings.loadSettings();
         if(Settings.WRITE_LOG_FILE) Log.connectLogFile();
         Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().getName());
         Log.i(TAG, "v:" + Version.getVersion());
