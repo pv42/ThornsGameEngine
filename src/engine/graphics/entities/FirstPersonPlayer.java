@@ -2,13 +2,12 @@ package engine.graphics.entities;
 
 import engine.graphics.models.TexturedModel;
 import engine.inputs.InputEvent;
-import engine.inputs.listeners.CursorListener;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import org.lwjgl.glfw.GLFW;
 import shivt.guns.Gun;
 import org.joml.Vector3f;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.terrains.Terrain;
 import engine.toolbox.Settings;
 

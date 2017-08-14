@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.animation.*;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;

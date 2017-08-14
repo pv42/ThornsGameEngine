@@ -75,13 +75,13 @@ public class Settings {
         ANISOTROPIC_FILTERING = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_ANIF, ANISOTROPIC_FILTERING));
         MAX_PARTICLE_INSTANCES = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MAXPAR, MAX_PARTICLE_INSTANCES));
         AMBIENT_LIGHT  = Float.parseFloat(     getSetting(SECTION_GRAPHIC, KEY_AMBINET, AMBIENT_LIGHT));
-        SHOW_DEBUG_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
+        SHOW_DEBUG_LOG = Boolean.parseBoolean( getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
         Log.d(TAG,"loaded settings");
         storeIni(f);
 
     }
     private static String getSetting(String section, String key, Object defaultValue) {
-        if(ini.containsKey(key)) {
+        if(ini.get(section).containsKey(key)) {
             return ini.get(section,key);
         }
         ini.put(section,key,defaultValue);

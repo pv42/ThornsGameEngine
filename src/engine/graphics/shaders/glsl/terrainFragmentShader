@@ -20,7 +20,7 @@ uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
 
-const float AMBIENT_LIGHT = 0.1;
+const float AMBIENT_LIGHT = 0.05;
 const float TILE_FACTOR = 40.0;
 const float CELL_SHADING_LEVELS = -1; // -1 to disable
 
@@ -43,7 +43,10 @@ void main(void) {
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     for(int i = 0; i < 4; i++) {
-        float distance = length (toLightVector[i]);
+        if(lightColor[i].x > 0.68 && lightColor[i].x < 0.72) {
+            totalDiffuse = vec3(1.0);
+        }
+        /*float distance = length (toLightVector[i]);
         float attFactor = attenuation[i].x + attenuation[i].y * distance + attenuation[i].z * distance * distance;
         vec3 unitLight = normalize(toLightVector[i]);
         float nDotl = dot(unitNormal, unitLight);
@@ -63,10 +66,10 @@ void main(void) {
             dampedFactor = level / CELL_SHADING_LEVELS;
         }
         totalDiffuse = totalDiffuse +  (brightness * lightColor[i])/attFactor;
-        totalSpecular = totalSpecular + (dampedFactor * lightColor[i] * reflectivity)/attFactor;
+        totalSpecular = totalSpecular + (dampedFactor * lightColor[i] * reflectivity)/attFactor;*/
     }
     totalDiffuse = max(totalDiffuse , AMBIENT_LIGHT);
     out_Color = vec4(totalDiffuse,1.0) * totalColor + vec4( totalSpecular, 0.0);
-    out_Color = mix(vec4(skyColor,1.0), out_Color, visibility);
+    out_Color = mix(vec4(skyColor,1.0), out_Color, visibility); // calculates the fading out to horizon
 
 }

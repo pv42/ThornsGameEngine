@@ -1,13 +1,6 @@
 package engine.graphics.shaders;
 
-import engine.graphics.cameras.Camera;
-import engine.graphics.lights.Light;
-import engine.toolbox.Color;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import engine.toolbox.Maths;
 
-import java.util.List;
 
 /**
   Created by pv42 on 18.06.16.
@@ -15,7 +8,6 @@ import java.util.List;
 public class TerrainShader extends Lighted3DShader{
     private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/terrainVertexShader";
     private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/terrainFragmentShader";
-    private static final int MAX_LIGHTS = 4;
     private int location_bgTexture,
             location_rTexture,
             location_gTexture,

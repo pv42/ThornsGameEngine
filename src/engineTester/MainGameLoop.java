@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import engine.EngineMaster;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
@@ -73,7 +73,7 @@ public class MainGameLoop {
         TexturedModel texturedModel2 = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern.png")));
         texturedModel2.getTexture().setHasTransparency(true);
         texturedModel2.getTexture().setUseFakeLightning(true);
-        Light sun = new Light(new Vector3f(30,20,30), new Color(.7,.7,1.0));
+        Light sun = new Light(new Vector3f(30,20,30), new Color(.7,.5,.8));
         List<Light> lights = new ArrayList<>();
         lights.add(sun);
         Entity tree = new Entity(texturedModel,new Vector3f(),0,0,0, 1);

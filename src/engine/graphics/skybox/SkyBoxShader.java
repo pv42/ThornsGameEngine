@@ -4,7 +4,7 @@ import engine.graphics.cameras.Camera;
 import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.shaders.ShaderProgram;
 import engine.toolbox.Maths;
 

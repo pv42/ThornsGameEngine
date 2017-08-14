@@ -22,7 +22,7 @@ public class StaticShader extends Lighted3DShader {
     private int location_specMap;
     private int location_usesSpecMap;
     private int location_texture;
-    private int locations_bone[];
+    private int locations_bone;
     private int location_useAnimation;
 
     public StaticShader() {
@@ -46,8 +46,7 @@ public class StaticShader extends Lighted3DShader {
         location_usesSpecMap = super.getUniformLocation("usesSpecularMap");
         location_specMap = super.getUniformLocation("specularMap");
         location_texture = super.getUniformLocation("diffTexture");
-        locations_bone = new int[Settings.MAX_BONES];
-        super.getUniformLocationsArray("bone", locations_bone, Settings.MAX_BONES);
+        locations_bone = super.getUniformLocation("bone");
         /*for (int i = 0; i < Settings.MAX_BONES; i++) {
             locations_bone[i] = super.getUniformLocation("bone[" + i + "]");
         }*/
@@ -70,15 +69,16 @@ public class StaticShader extends Lighted3DShader {
     public void loadOffset(float offsetX, float offsetY) {
         super.loadVector(location_offset, new Vector2f(offsetX, offsetY));
     }
-
+    //todo
+    @Deprecated
     public void loadBones(List<Matrix4f> bones) {
-        for (int i = 0; i < Settings.MAX_BONES; i++) {
+        /*for (int i = 0; i < Settings.MAX_BONES; i++) {
             if (i < bones.size()) {
                 super.loadMatrix(locations_bone[i], bones.get(i));
             } else {
                 super.loadMatrix(locations_bone[i], new Matrix4f());
             }
-        }
+        }*/
     }
 
     public void loadUseAnimation(boolean useAnimation) {

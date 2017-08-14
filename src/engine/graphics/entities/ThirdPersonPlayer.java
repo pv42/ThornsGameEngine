@@ -2,7 +2,7 @@ package engine.graphics.entities;
 
 import engine.graphics.models.TexturedModel;
 import org.joml.Vector3f;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.terrains.Terrain;
 
 import java.util.List;

@@ -8,6 +8,7 @@ import engine.toolbox.Log;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * A openGL shader program with vertex and fragment shader
@@ -98,6 +99,7 @@ public abstract class ShaderProgram {
      * @param locations array to store the locations
      * @param size arrays size
      */
+    @Deprecated
     public void getUniformLocationsArray(String uniformName, int[] locations, int size) {
         for( int i = 0; i < size; i++) {
             locations[i] = getUniformLocation(uniformName + "[" + i + "]");
@@ -171,6 +173,23 @@ public abstract class ShaderProgram {
     protected void loadMatrix(int location, Matrix4f matrix) {
         matrix.get(matrixBuffer);
         GL20.glUniformMatrix4fv(location, false, matrixBuffer);
+    }
+
+    protected void loadVectorArray(int location, List<Vector3f> vectors, int size) {
+        float data[] = new float[size*3];
+        for(int i = 0; i < size; i++) {
+            if (i < vectors.size()) {
+                data[3 * i] = vectors.get(i).x();
+                data[3 * i + 1] = vectors.get(i).y();
+                data[3 * i + 2] = vectors.get(i).z();
+            } else {
+                data[3 * i] = 0;
+                data[3 * i + 1] = 0;
+                data[3 * i + 2] = 0;
+
+            }
+        }
+        GL20.glUniform3fv(location, data);
     }
 
     /**

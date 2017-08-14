@@ -48,7 +48,7 @@ public class Color {
      * @throws IllegalArgumentException if argument is not between 0 and 1
      */
     public Color(double A, double R, double G, double B) {
-        this((byte)(A * 0xff),(byte)(R * 0xff), (byte)(G * 0xff), (byte)(B * 0xff));
+        this((byte)(A * 255.0),(byte)(R * 255.0), (byte)(G * 255.0), (byte)(B * 0xff));
         if(0 > A || A > 1 || 0 > R || R > 1 || 0 > G || G > 1 || 0 > B || B > 1)
             throw new IllegalArgumentException("Value have to be betweed 0.0 and 1.0");
     }
@@ -151,16 +151,16 @@ public class Color {
     }
 
     public float getA() {
-        return (float) getAByte() / 255f;
+        return (float) getUnsignedFromByte(getAByte()) / 255f;
     }
     public float getR() {
-        return (float) getRByte() / 255f;
+        return (float) getUnsignedFromByte(getRByte()) / 255f;
     }
     public float getG() {
-        return (float) getGByte() / 255f;
+        return (float) getUnsignedFromByte(getGByte()) / 255f;
     }
     public float getB() {
-        return (float) getBByte() / 255f;
+        return (float) getUnsignedFromByte(getBByte()) / 255f;
     }
 
     /**
@@ -185,5 +185,9 @@ public class Color {
             if(getColorData() == anotherColor.getColorData()) return true;
         }
         return false;
+    }
+
+    private static int getUnsignedFromByte(byte b) {
+        return  b & 0xff;
     }
 }

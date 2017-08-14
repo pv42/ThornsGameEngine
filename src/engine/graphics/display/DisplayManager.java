@@ -1,7 +1,9 @@
-package engine.graphics;
+package engine.graphics.display;
 
 import engine.toolbox.Log;
+import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryUtil;
@@ -12,35 +14,27 @@ import static engine.toolbox.Time.getTime;
 
 public class DisplayManager {
     private static final String TAG = "Engine:DisplayManager";
-    private static final String TITLE ="engine_";
     private static long lastFrameEnd;
     private static float delta;
-    private static long windowID;
+    private static Window window;
 
     /**
      * creates a GLFW window
      *
      * @return windowID
      */
-    public static long createDisplay() {
-        windowID = GLFW.glfwCreateWindow(WIDTH,HEIGHT,TITLE, MemoryUtil.NULL,MemoryUtil.NULL);
-        if(windowID == MemoryUtil.NULL) throw new IllegalStateException("Windows creation failed");
-        GLFW.glfwMakeContextCurrent(windowID);
-        GLFW.glfwSwapInterval(LIMIT_FPS);
-        GLFW.glfwShowWindow(windowID);
-        GLCapabilities capabilities = GL.createCapabilities();
-        printDisplayModes();
-        GL11.glViewport(0,0,WIDTH,HEIGHT);
-        GL11.glOrtho(0,WIDTH,HEIGHT, 0.0, -1.0, 1.0);
+    public static Window createWindow() {
+        window = Window.createWindow();
         lastFrameEnd = getTime();
         Log.i(TAG,"Display created");
-        return windowID;
+        return window;
     }
 
     /**
      * creates the GLFW context
      * */
     public static void init() {
+        GLFWErrorCallback.createPrint(System.err).set();
         if(!GLFW.glfwInit()) throw new IllegalStateException("GLFW init failed");
     }
 
@@ -48,7 +42,7 @@ public class DisplayManager {
      * updates the windows
      */
     public static void updateDisplay() {
-        GLFW.glfwSwapBuffers(windowID);
+        GLFW.glfwSwapBuffers(window.getId());
         GLFW.glfwPollEvents();
         long currentFrameTime = getTime();
         delta = (currentFrameTime - lastFrameEnd)/1000f;
@@ -59,7 +53,9 @@ public class DisplayManager {
      * destroys the GLFW window
      */
     public static void destroyDisplay() {
-        GLFW.glfwDestroyWindow(windowID);
+        window.destroy();
+        GLFW.glfwTerminate();
+        GLFW.glfwSetErrorCallback(null).free();
         Log.i(TAG,"Display destroyed");
     }
 
@@ -137,17 +133,15 @@ public class DisplayManager {
      * @return {@code true} if a close request was send to the GLFW window
      */
     public static boolean isCloseRequested() {
-        return GLFW.glfwWindowShouldClose(windowID);
+        return window.isCloseRequested();
     }
 
     /**
      *
      * @return the window size as Vector2D
      */
-    public static Vector2f getSize() {
-        int[] h = new int[1],w = new int[1];
-        GLFW.glfwGetWindowSize(windowID,h,w);
-        return new Vector2f(w[0],h[0]);
+    public static Vector2i getSize() {
+        return window.getSize();
     }
 
     /**
@@ -156,13 +150,10 @@ public class DisplayManager {
      */
     public static void setMouseGrabbed(boolean b) {
         if(b) {
-            GLFW.glfwSetInputMode(windowID,GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_DISABLED);
+            GLFW.glfwSetInputMode(window.getId(),GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_DISABLED);
         } else {
-            GLFW.glfwSetInputMode(windowID,GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_NORMAL);
+            GLFW.glfwSetInputMode(window.getId(),GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_NORMAL);
         }
-    }
-    public static long getWindowID() {
-        return windowID;
     }
 
 }

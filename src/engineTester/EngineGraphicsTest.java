@@ -1,22 +1,18 @@
 package engineTester;
 
-import engine.EngineMaster;
-import engine.graphics.DisplayManager;
-import engine.graphics.cameras.Camera;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.cameras.StaticCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.models.OBJLoader;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.shaders.StaticShader;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -71,7 +67,7 @@ public class EngineGraphicsTest {
 
         } else  {
             DisplayManager.init();
-            window = DisplayManager.createDisplay();
+            window = DisplayManager.createWindow().getId();
         }
         //glMatrixMode(GL_PROJECTION);
         //glLoadIdentity();
