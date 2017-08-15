@@ -52,12 +52,12 @@ public class Settings {
     //new ini stuff
     private static Ini ini;
     private static final String SECTION_GRAPHIC = "graphic";
-    private static final String KEY_FPS = "fps_cap";
+    private static final String KEY_VSYNC = "vsync";
     private static final String KEY_WIDTH = "width";
     private static final String KEY_HEIGHT = "height";
     private static final String KEY_ANIF = "anisotropic_filtering";
-    private static final String KEY_MAXPAR = "maximum_particles";
-    private static final String KEY_AMBINET = "ambient_light";
+    private static final String KEY_MAX_PARTICLES = "maximum_particles";
+    private static final String KEY_AMBIENT = "ambient_light";
     private static final String SECTION_LOG = "log";
     private static final String KEY_SDL = "show_debug_log";
 
@@ -69,20 +69,22 @@ public class Settings {
         } else {
             Log.i(TAG,"settings don't exist creating");
         }
-        LIMIT_FPS      = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_FPS, LIMIT_FPS));
+        LIMIT_FPS      = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_VSYNC, LIMIT_FPS));
         WIDTH          = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_WIDTH, WIDTH));
         HEIGHT         = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_HEIGHT, HEIGHT));
         ANISOTROPIC_FILTERING = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_ANIF, ANISOTROPIC_FILTERING));
-        MAX_PARTICLE_INSTANCES = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MAXPAR, MAX_PARTICLE_INSTANCES));
-        AMBIENT_LIGHT  = Float.parseFloat(     getSetting(SECTION_GRAPHIC, KEY_AMBINET, AMBIENT_LIGHT));
+        MAX_PARTICLE_INSTANCES = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MAX_PARTICLES, MAX_PARTICLE_INSTANCES));
+        AMBIENT_LIGHT  = Float.parseFloat(     getSetting(SECTION_GRAPHIC, KEY_AMBIENT, AMBIENT_LIGHT));
         SHOW_DEBUG_LOG = Boolean.parseBoolean( getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
         Log.d(TAG,"loaded settings");
         storeIni(f);
 
     }
     private static String getSetting(String section, String key, Object defaultValue) {
-        if(ini.get(section).containsKey(key)) {
-            return ini.get(section,key);
+        if(ini.get(section) != null) {
+            if(ini.get(section).containsKey(key)) {
+                return ini.get(section,key);
+            }
         }
         ini.put(section,key,defaultValue);
         return defaultValue.toString();

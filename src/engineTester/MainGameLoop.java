@@ -73,7 +73,7 @@ public class MainGameLoop {
         TexturedModel texturedModel2 = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern.png")));
         texturedModel2.getTexture().setHasTransparency(true);
         texturedModel2.getTexture().setUseFakeLightning(true);
-        Light sun = new Light(new Vector3f(40,15,40), new Color(.7,.3,.4), new Vector3f(0.7f,0.00f, 0.00f));
+        Light sun = new Light(new Vector3f(500,50000,500), new Color(1,1,.9), new Vector3f(1f,0.00f, 0.00f));
         List<Light> lights = new ArrayList<>();
         lights.add(sun);
         Entity tree = new Entity(texturedModel,new Vector3f(),0,0,0, 1);
@@ -85,7 +85,7 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(bgT,rT,bT,gT);
         TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap.png"));
         Terrain terrain = new Terrain(0,0,texturePack,blendMap,null);
-        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png"),4,true,true),1,3,3f,new Vector3f(20,10,25),new Vector3f(20f,10f,20f));
+        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png", false),4,true,true),100,1.3f,3f,new Vector3f(20,10,25),new Vector3f(2f,2f,2f));
         Random random = new Random();
         for(int i = 0; i<500; i++) {
             float x = random.nextFloat() * 800;

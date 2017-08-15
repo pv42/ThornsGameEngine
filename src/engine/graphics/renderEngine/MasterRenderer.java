@@ -138,7 +138,8 @@ public class MasterRenderer {
         terrainRenderer.render(terrains, camera, lights);
         terT = Time.getNanoTime();
         //skybox
-        //todo enble skybox skyboxRenderer.render(camera, SKY_COLOR);
+        //todo enble skybox
+        skyboxRenderer.render(camera, SKY_COLOR);
         skyT = Time.getNanoTime();
         //particles
         ParticleMaster.renderParticles(camera);

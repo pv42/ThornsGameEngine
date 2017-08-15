@@ -143,7 +143,10 @@ public class Loader {
     }
 
     public static int loadTexture(String fileName) {
-        TextureData data = decodeTextureFile("res/textures/" + fileName, true);
+        return loadTexture(fileName,true);
+    }
+    public static int loadTexture(String fileName, boolean flip) {
+        TextureData data = decodeTextureFile("res/textures/" + fileName, flip);
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
@@ -177,27 +180,34 @@ public class Loader {
         return texID;
     }
 
-    public static int loadCubeMapTexture(String[] textureFiles) {
+    public static int loadCubeMapTexture(String[] textureFiles, String fileExtension) {
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
         for (int i = 0; i < textureFiles.length; i++) {
-            TextureData date = decodeTextureFile("res/textures/" + textureFiles[i] + ".png", true);
+            TextureData date = decodeTextureFile("res/textures/" + textureFiles[i] + fileExtension, false);
             GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, date.getHeight(), date.getWidth(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, date.getBuffer());
         }
         //posX, negX, posY, negY, posZ, negZ
         GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR); //todo what does it tut27
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL12.GL_TEXTURE_WRAP_R, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
         textures.add(texID);
         return texID;
     }
 
-    public static int loadCubeMapTexture(String textureFile) {
+    public static int loadCubeMapTexture(String textureFile, String fileExtesion) {
         String[] postfix = {"_rt", "_lf", "_up", "_dn", "_bk", "_ft"};
         String[] fileNames = new String[6];
         for (int i = 0; i < 6; i++) {
             fileNames[i] = textureFile + postfix[i];
         }
-        return loadCubeMapTexture(fileNames);
+        return loadCubeMapTexture(fileNames, fileExtesion);
+    }
+
+    public static int loadCubeMapTexture(String textureFile) {
+        return loadCubeMapTexture(textureFile, ".png");
     }
 
     public static FontType loadFont(String fontName) {

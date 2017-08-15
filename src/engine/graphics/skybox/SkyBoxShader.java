@@ -14,7 +14,7 @@ import engine.toolbox.Maths;
 public class SkyBoxShader extends ShaderProgram {
     private static final String FRAGMENT_FILE = "src/engine/graphics/skybox/skyboxFragment";
     private static final String VERTEX_FILE = "src/engine/graphics/skybox/skyboxVertex";
-    private final float ROTATE_SPEED = 1f;
+    private final float ROTATE_SPEED = 0.5f;
     private int location_viewMatrix;
     private int location_projectionMatrix;
     private int location_fogColor;
