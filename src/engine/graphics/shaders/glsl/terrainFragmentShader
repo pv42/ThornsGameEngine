@@ -45,8 +45,8 @@ void main(void) {
     for(int i = 0; i < 4; i++) {
         float distance = length (toLightVector[i]);
         //distance = 0;
-        float attFactor = lightAttenuation[i].x + lightAttenuation[i].y * distance + lightAttenuation[i].z * distance * distance;
-        if(attFactor == 0) attFactor = 1;
+        float attFactor = 0.1* + lightAttenuation[i].y * distance + lightAttenuation[i].z * distance * distance;
+        if(attFactor < 0.01) attFactor = 0.01;
         vec3 unitLight = normalize(toLightVector[i]);
         float nDotl = dot(unitNormal, unitLight);
         float brightness = max(nDotl, 0.0);
