@@ -45,7 +45,7 @@ public abstract class Lighted3DShader extends ShaderProgram {
         location_viewMatrix = super.getUniformLocation("viewMatrix");
         locations_lightPosition = super.getUniformLocation("lightPosition");
         locations_lightColor = super.getUniformLocation("lightColor");
-        locations_attenuation = super.getUniformLocation("attenuation");
+        locations_attenuation = super.getUniformLocation("lightAttenuation");
 
         /*super.getUniformLocationsArray("lightPosition", locations_lightPosition, MAX_LIGHTS);
         super.getUniformLocationsArray("lightColor", locations_lightColor, MAX_LIGHTS);
@@ -84,7 +84,6 @@ public abstract class Lighted3DShader extends ShaderProgram {
             lightPositions.add(light.getPosition());
             lightColors.add(light.getColor().getVector());
             attenuations.add(light.getAttenuation());
-            System.out.println(light.getPosition());
         }
         super.loadVectorArray(locations_lightPosition, lightPositions, MAX_LIGHTS);
         super.loadVectorArray(locations_lightColor, lightColors, MAX_LIGHTS);

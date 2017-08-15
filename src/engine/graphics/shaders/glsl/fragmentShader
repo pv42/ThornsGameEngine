@@ -12,7 +12,7 @@ uniform sampler2D diffTexture;
 uniform sampler2D specularMap;
 uniform float usesSpecularMap;
 uniform vec3 lightColor[4];
-uniform vec3 attenuation[4];
+uniform vec3 lightAttenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
@@ -28,7 +28,7 @@ void main(void) {
     vec3 totalSpecular = vec3(0.0);
     for (int i = 0; i < 4; i++) {
         float distance = length (toLightVector[i]);
-        float attFactor = attenuation[i].x + attenuation[i].y * distance + attenuation[i].z * distance * distance;
+        float attFactor = lightAttenuation[i].x + lightAttenuation[i].y * distance + lightAttenuation[i].z * distance * distance;
         vec3 unitLight = normalize(toLightVector[i]);
         float nDotl = dot(unitNormal, unitLight);
         float brightness = max(nDotl,0.0 );

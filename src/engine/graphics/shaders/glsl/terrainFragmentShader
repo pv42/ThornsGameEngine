@@ -15,7 +15,7 @@ uniform sampler2D bTexture;
 uniform sampler2D blendMap;
 
 uniform vec3 lightColor[4];
-uniform vec3 attenuation[4];
+uniform vec3 lightAttenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
@@ -43,11 +43,10 @@ void main(void) {
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     for(int i = 0; i < 4; i++) {
-        if(lightColor[i].x > 0.68 && lightColor[i].x < 0.72) {
-            totalDiffuse = vec3(1.0);
-        }
-        /*float distance = length (toLightVector[i]);
-        float attFactor = attenuation[i].x + attenuation[i].y * distance + attenuation[i].z * distance * distance;
+        float distance = length (toLightVector[i]);
+        //distance = 0;
+        float attFactor = lightAttenuation[i].x + lightAttenuation[i].y * distance + lightAttenuation[i].z * distance * distance;
+        if(attFactor == 0) attFactor = 1;
         vec3 unitLight = normalize(toLightVector[i]);
         float nDotl = dot(unitNormal, unitLight);
         float brightness = max(nDotl, 0.0);
@@ -66,7 +65,7 @@ void main(void) {
             dampedFactor = level / CELL_SHADING_LEVELS;
         }
         totalDiffuse = totalDiffuse +  (brightness * lightColor[i])/attFactor;
-        totalSpecular = totalSpecular + (dampedFactor * lightColor[i] * reflectivity)/attFactor;*/
+        totalSpecular = totalSpecular + (dampedFactor * lightColor[i] * reflectivity)/attFactor;
     }
     totalDiffuse = max(totalDiffuse , AMBIENT_LIGHT);
     out_Color = vec4(totalDiffuse,1.0) * totalColor + vec4( totalSpecular, 0.0);

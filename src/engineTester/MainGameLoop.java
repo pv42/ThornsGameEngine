@@ -73,7 +73,7 @@ public class MainGameLoop {
         TexturedModel texturedModel2 = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern.png")));
         texturedModel2.getTexture().setHasTransparency(true);
         texturedModel2.getTexture().setUseFakeLightning(true);
-        Light sun = new Light(new Vector3f(30,20,30), new Color(.7,.5,.8));
+        Light sun = new Light(new Vector3f(30,20,30), new Color(.7,.3,.2), new Vector3f(1,0.001f, -0.001f));
         List<Light> lights = new ArrayList<>();
         lights.add(sun);
         Entity tree = new Entity(texturedModel,new Vector3f(),0,0,0, 1);
