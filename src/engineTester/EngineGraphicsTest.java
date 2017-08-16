@@ -1,14 +1,24 @@
 package engineTester;
 
+import engine.graphics.animation.Bone;
+import engine.graphics.cameras.Camera;
 import engine.graphics.display.DisplayManager;
 import engine.graphics.cameras.StaticCamera;
 import engine.graphics.entities.Entity;
+import engine.graphics.lights.Light;
 import engine.graphics.models.OBJLoader;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
+import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.shaders.Lighted3DShader;
+import engine.graphics.shaders.ShaderProgram;
 import engine.graphics.shaders.StaticShader;
+import engine.graphics.terrains.Terrain;
 import engine.graphics.textures.ModelTexture;
+import engine.graphics.textures.TerrainTexturePack;
+import engine.graphics.textures.TextureData;
+import engine.toolbox.Color;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
@@ -17,9 +27,14 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import javax.xml.soap.Text;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static engine.toolbox.Settings.HEIGHT;
+import static engine.toolbox.Settings.SKY_COLOR;
 import static engine.toolbox.Settings.WIDTH;
 import static java.lang.Math.floor;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -49,26 +64,8 @@ public class EngineGraphicsTest {
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-        if(false) {
-            window = glfwCreateWindow(WIDTH, HEIGHT, "H@", NULL, NULL);
-            if (window == NULL) {
-                throw new RuntimeException("Failed to create the GLFW window");
-            }
-            glfwMakeContextCurrent(window);
-            GL.createCapabilities();
-            glfwSwapInterval(1);
-            glfwShowWindow(window);
-            glOrtho(0.0, WIDTH, HEIGHT, 0.0, -1.0, 1.0);
-
-
-        } else  {
-            DisplayManager.init();
-            window = DisplayManager.createWindow().getId();
-        }
+        DisplayManager.init();
+        window = DisplayManager.createWindow().getId();
         //glMatrixMode(GL_PROJECTION);
         //glLoadIdentity();
         glMatrixMode(GL_MODELVIEW);
@@ -79,65 +76,30 @@ public class EngineGraphicsTest {
         glVertexPointer(2, GL_FLOAT, 16, charBuffer);
 
         glClearColor(43f / 255f, 43f / 255f, 43f / 255f, 0f); // BG color
-        RawModel rawModel = OBJLoader.loadObjModel("dragon");
+        RawModel rawModel = OBJLoader.loadObjModel("barrel");
         createProjectionMatrix(1,1);
+        StaticShader shader = new StaticShader();
+        Camera camera = new StaticCamera(new Vector3f(0,0,20), new Vector3f());
+        Light cameraLight = new Light(new Vector3f(0,0,10), new Color(1.0,1.0,1.0));
+        List<Light> lights = new ArrayList<>();
+        lights.add(cameraLight);
+        ModelTexture texture = new ModelTexture(Loader.loadTexture("barrel.png"));
+        TexturedModel texturedModel = new TexturedModel(rawModel,texture);
+        Entity entity = new Entity(texturedModel,new Vector3f(), 0,0,0,.2f);
+        prepareRenderer(shader,projectionMatrix);
+        GL11.glEnable(GL_COLOR_BUFFER_BIT);
+        GL11.glEnable(GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_GEQUAL);
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
-            if(false) {
+            glClearDepth(1.0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            glClearColor(0.1f,0.4f,0.7f, 0.5f);
+            entity.increaseRotation(.1f,.07f,.03f);
 
-                glClear(GL_COLOR_BUFFER_BIT);
+            render(entity,shader,camera,lights);
 
-                // Progress bar
-                glPushMatrix();
-                glTranslatef(WIDTH * 0.5f, HEIGHT * 0.5f, 0.0f);
-                glBegin(GL_QUADS);
-                {
-                    glColor3f(0.5f * 43f / 255f, 0.5f * 43f / 255f, 0.5f * 43f / 255f);
-                    glVertex2f(-256.0f, -32.0f);
-                    glVertex2f(256.0f, -32.0f);
-                    glVertex2f(256.0f, 32.0f);
-                    glVertex2f(-256.0f, 32.0f);
-
-                    glColor3f(0.5f, 0.5f, 0.0f);
-
-                    glVertex2f(-254.0f, -30.0f);
-                    glVertex2f(-254.0f + progress * 508.0f, -30.0f);
-                    glVertex2f(-254.0f + progress * 508.0f, 30.0f);
-                    glVertex2f(-254.0f, 30.0f);
-                }
-                glEnd();
-                glPopMatrix();
-
-                glColor3f(169f / 255f, 183f / 255f, 198f / 255f); // Text color
-
-                // Progress text
-                int minutes = (int) floor(time / 60.0f);
-                int seconds = (int) floor((time - minutes * 60.0f));
-                int quads = stb_easy_font_print(WIDTH * 0.5f - 13, HEIGHT * 0.5f - 4, String.format("%02d:%02d", minutes, seconds), null, charBuffer);
-                glDrawArrays(GL_QUADS, 0, quads * 4);
-
-                // HUD
-                quads = stb_easy_font_print(4, 4, "Press HOME to rewind", null, charBuffer);
-                glDrawArrays(GL_QUADS, 0, quads * 4);
-
-                quads = stb_easy_font_print(4, 20, "Press LEFT/RIGHT or LMB to seek", null, charBuffer);
-                glDrawArrays(GL_QUADS, 0, quads * 4);
-
-                quads = stb_easy_font_print(4, 36, "Press SPACE to pause/resume", null, charBuffer);
-                glDrawArrays(GL_QUADS, 0, quads * 4);
-
-
-            } else  {
-                render(rawModel);
-                StaticShader shader = new StaticShader();
-                shader.start();
-                shader.loadProjectionMatrix(projectionMatrix);
-                shader.connectTextures();
-                shader.stop();
-                render(new Entity(new TexturedModel(rawModel,new ModelTexture(Loader.loadTexture("grass.png"))),new Vector3f(),0,0,0,0),shader);
-            }
             glfwSwapBuffers(window);
-
         }
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -146,33 +108,51 @@ public class EngineGraphicsTest {
         glfwSetErrorCallback(null).free();
     }
 
-    private static void render(RawModel model) {
-        GL30.glBindVertexArray(model.getVaoID());
-        GL20.glEnableVertexAttribArray(0);
-        GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-        GL20.glDisableVertexAttribArray(0);
-        GL30.glBindVertexArray(0);
+    private static void prepareRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+        shader.start();
+        shader.loadProjectionMatrix(projectionMatrix);
+        shader.connectTextures();
+        shader.stop();
     }
-    public static void render(Entity entity, StaticShader shader) {
-        TexturedModel model = entity.getModels().get(0);
-        RawModel rawModel = model.getRawModel();
-        GL30.glBindVertexArray(rawModel.getVaoID());
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
-        GL20.glEnableVertexAttribArray(2);
-        shader.loadViewMatrix(new StaticCamera(new Vector3f(10000000,-1529560,-1000000000), new Vector3f(10,10,80)));
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale());
-        shader.loadTransformationMatrix(transformationMatrix);
-        ModelTexture texture = model.getTexture();
-        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
-        GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-        GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+
+
+
+    public static void render(Entity entity, StaticShader shader, Camera camera, List<Light> lights) {
+        shader.start();
+        shader.loadViewMatrix(camera);
+        shader.loadLights(lights);
+        shader.loadSkyColor(SKY_COLOR);
+
+        prepareTexturedModel(entity.getModels().get(0), shader);
+        shader.loadTransformationMatrix(Maths.createTransformationMatrix(entity.getPosition(),
+                entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale()));
+        GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModels().get(0).getRawModel().getVertexCount(),
+                    GL11.GL_UNSIGNED_INT, 0);
+        unbindTexturedModel();
+
+        shader.stop();
+        //
+
+    }
+
+    private static void unbindTexturedModel() {
+        MasterRenderer.enableCulling();
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);
-        GL30.glBindVertexArray(0);
+        GL20.glDisableVertexAttribArray(3); //ani
+        GL20.glDisableVertexAttribArray(4); //ani
+        GL30.glBindVertexArray(0); //unbind vertex array
+
     }
+
+
+
+    private static void bindTextures(ModelTexture modelTexture) {
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, modelTexture.getID());
+    }
+
     private static void createProjectionMatrix(float aspectRatio, float zoom) {
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.FOV / zoom / 2f))));
         float x_scale = y_scale / aspectRatio;
@@ -185,6 +165,29 @@ public class EngineGraphicsTest {
         projectionMatrix.m23(-1);
         projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));
         projectionMatrix.m33(0);
+    }
+
+    private static void prepareTexturedModel(TexturedModel model, StaticShader shader) {
+        RawModel rawModel = model.getRawModel();
+        GL30.glBindVertexArray(rawModel.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
+        GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
+        ModelTexture texture = model.getTexture();
+        shader.loadUseAnimation(model.isAnimated());
+        shader.loadNumberOfRows(texture.getNumberOfRows());
+        if (texture.isHasTransparency()) {
+            MasterRenderer.disableCulling();
+        }
+        shader.loadFakeLightning(texture.isUseFakeLightning());
+        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+        shader.loadUseSpecMap(texture.hasSpecularMap());
+        if (texture.hasSpecularMap()) {
+            GL13.glActiveTexture(GL13.GL_TEXTURE1);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getSpecularMapID());
+        }
     }
 }
 

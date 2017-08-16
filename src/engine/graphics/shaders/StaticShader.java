@@ -22,7 +22,7 @@ public class StaticShader extends Lighted3DShader {
     private int location_specMap;
     private int location_usesSpecMap;
     private int location_texture;
-    private int locations_bone;
+    private int locations_bone; //todo
     private int location_useAnimation;
 
     public StaticShader() {

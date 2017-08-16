@@ -52,7 +52,7 @@ void main(void) {
         totalSpecular = totalSpecular + (dampedFactor * lightColor[i] * reflectivity )/ attFactor;
     }
     totalDiffuse = max(totalDiffuse , ambient_light);
-
+    //totalDiffuse = vec3(0.5);
 
     vec4 textureColor = texture(diffTexture,pass_uv);
     if(textureColor.a < 0.5) {
@@ -65,4 +65,5 @@ void main(void) {
     }
     out_Color = vec4(totalDiffuse,1.0) * textureColor + vec4( totalSpecular, 0.0);
     out_Color = mix(vec4(skyColor,1.0), out_Color, visibility);
+    //out_Color = vec4(totalDiffuse, 1.0);
 }
