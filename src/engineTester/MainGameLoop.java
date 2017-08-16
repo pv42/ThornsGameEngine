@@ -85,7 +85,7 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(bgT,rT,bT,gT);
         TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap.png"));
         Terrain terrain = new Terrain(0,0,texturePack,blendMap,null);
-        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png", false),4,true,true),100,1.3f,3f,new Vector3f(20,10,25),new Vector3f(2f,2f,2f));
+        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png", false),4,true,true),1,1.3f,3f,new Vector3f(20,10,25),new Vector3f(2f,2f,2f));
         Random random = new Random();
         for(int i = 0; i<500; i++) {
             float x = random.nextFloat() * 800;
@@ -102,7 +102,8 @@ public class MainGameLoop {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        List<TexturedModel> personModel = pcl.loadColladaModelAnimated("Hot_Girl_01",matrix);
+        List<TexturedModel> personModel = pcl.loadColladaModelAnimated("laptop",matrix);
+        Entity girl = new Entity(personModel, new Vector3f(30,5,50),0,0,0,2f);
         FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,1.3f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);
@@ -126,12 +127,13 @@ public class MainGameLoop {
                 framesSinceFPSUpdate = 0;
             }
             MasterRenderer.processText(text);
+            MasterRenderer.processEntity(girl);
             player.move(terrain);
             camera.move();
             particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
             ParticleMaster.update();
             //animation
-            player.getModels().get(0).getRawModel().getBones().get(10).rotate(new Vector3f(0,1,0),1);
+            //player.getModels().get(0).getRawModel().getBones().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
             MasterRenderer.processEntity(tree);
             processFirstPersonPlayer(player);
