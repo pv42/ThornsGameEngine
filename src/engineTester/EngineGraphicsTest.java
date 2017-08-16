@@ -1,6 +1,5 @@
 package engineTester;
 
-import engine.graphics.animation.Bone;
 import engine.graphics.cameras.Camera;
 import engine.graphics.display.DisplayManager;
 import engine.graphics.cameras.StaticCamera;
@@ -11,13 +10,8 @@ import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
-import engine.graphics.shaders.Lighted3DShader;
-import engine.graphics.shaders.ShaderProgram;
-import engine.graphics.shaders.StaticShader;
-import engine.graphics.terrains.Terrain;
+import engine.graphics.shaders.EntityShader;
 import engine.graphics.textures.ModelTexture;
-import engine.graphics.textures.TerrainTexturePack;
-import engine.graphics.textures.TextureData;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
@@ -27,24 +21,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-import javax.xml.soap.Text;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static engine.toolbox.Settings.HEIGHT;
 import static engine.toolbox.Settings.SKY_COLOR;
-import static engine.toolbox.Settings.WIDTH;
-import static java.lang.Math.floor;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.stb.STBEasyFont.stb_easy_font_print;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * Created by pv42 on 11.07.2017.
@@ -78,7 +63,7 @@ public class EngineGraphicsTest {
         glClearColor(43f / 255f, 43f / 255f, 43f / 255f, 0f); // BG color
         RawModel rawModel = OBJLoader.loadObjModel("barrel");
         createProjectionMatrix(1,1);
-        StaticShader shader = new StaticShader();
+        EntityShader shader = new EntityShader();
         Camera camera = new StaticCamera(new Vector3f(0,0,20), new Vector3f());
         Light cameraLight = new Light(new Vector3f(0,0,10), new Color(1.0,1.0,1.0));
         List<Light> lights = new ArrayList<>();
@@ -108,7 +93,7 @@ public class EngineGraphicsTest {
         glfwSetErrorCallback(null).free();
     }
 
-    private static void prepareRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+    private static void prepareRenderer(EntityShader shader, Matrix4f projectionMatrix) {
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextures();
@@ -117,7 +102,7 @@ public class EngineGraphicsTest {
 
 
 
-    public static void render(Entity entity, StaticShader shader, Camera camera, List<Light> lights) {
+    public static void render(Entity entity, EntityShader shader, Camera camera, List<Light> lights) {
         shader.start();
         shader.loadViewMatrix(camera);
         shader.loadLights(lights);
@@ -167,7 +152,7 @@ public class EngineGraphicsTest {
         projectionMatrix.m33(0);
     }
 
-    private static void prepareTexturedModel(TexturedModel model, StaticShader shader) {
+    private static void prepareTexturedModel(TexturedModel model, EntityShader shader) {
         RawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);

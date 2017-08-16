@@ -11,9 +11,13 @@ public class TexturedModel {
     private boolean isAnimated;
 
     public TexturedModel(RawModel rawmodel, ModelTexture texture) {
-        this.rawmodel = rawmodel;
+        this(rawmodel,texture,false);
+    }
+
+    public TexturedModel(RawModel rawModel, ModelTexture texture, boolean isAnimated) {
+        this.rawmodel = rawModel;
         this.texture = texture;
-        isAnimated = false;
+        this.isAnimated = isAnimated;
     }
 
     public RawModel getRawModel() {

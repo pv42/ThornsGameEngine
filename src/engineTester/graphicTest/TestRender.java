@@ -4,8 +4,7 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Entity;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
-import engine.graphics.shaders.StaticShader;
-import engine.toolbox.Log;
+import engine.graphics.shaders.EntityShader;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
@@ -15,11 +14,11 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 public class TestRender {
-    private StaticShader shader;
+    private EntityShader shader;
     private Matrix4f projectionMatrix;
     private boolean f = true;
     public TestRender() {
-        this.shader = new StaticShader();
+        this.shader = new EntityShader();
         createProjectionMatrix(1,1);
     }
 

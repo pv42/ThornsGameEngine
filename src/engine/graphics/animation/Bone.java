@@ -16,7 +16,7 @@ public class Bone {
     private Matrix4f jointMatrix;
     private Matrix4f inverseJointMatrix;
     private Matrix4f inverseBindMatrix;
-    private Matrix4f transfomationMatrix;
+    private Matrix4f transformationMatrix;
     private Matrix4f bindShapeMatrix = null;
     private Bone parent = null;
     private String name;
@@ -31,8 +31,8 @@ public class Bone {
         inverseBindMatrix.identity();
         bindShapeMatrix = new Matrix4f();
         bindShapeMatrix.identity();
-        transfomationMatrix = new Matrix4f();
-        transfomationMatrix.identity();
+        transformationMatrix = new Matrix4f();
+        transformationMatrix.identity();
         this.parent = parent;
         if (Settings.SHOW_SKELETON_BONES) {
             line = Loader.loadToVAO(new Line(new Vector3f(), new Vector3f(1, 0, 0)));
@@ -82,32 +82,30 @@ public class Bone {
         v.y = -mv.y;
         v.z = -mv.z;
         //Matrix4f.translate(mv,jointMatrix,jointMatrix);
-        transfomationMatrix.rotate((float) Math.toRadians(angle), axis);
+        transformationMatrix.rotate((float) Math.toRadians(angle), axis);
         //Matrix4f.translate(v,jointMatrix,jointMatrix);
     }
 
     public void scale(Vector3f scale) {
-        //todo Matrix4f.scale(scale,transfomationMatrix,transfomationMatrix);
+        //todo Matrix4f.scale(scale,transformationMatrix,transformationMatrix);
     }
 
     public void scale(float scale) {
-        //todo Matrix4f.scale(new Vector3f(scale,scale,scale),transfomationMatrix,transfomationMatrix);
+        //todo Matrix4f.scale(new Vector3f(scale,scale,scale),transformationMatrix,transformationMatrix);
     }
 
     public void translate(Vector3f translation) {
-        transfomationMatrix.translate(translation);
+        transformationMatrix.translate(translation);
     }
 
 
     public Matrix4f getTransformationMatrix() {
-        //todo Matrix4f transformation = Matrix4f.mul(getTransfomation(), getWorldMatrix(), null);
-        /*if(Settings.SHOW_SKELETON_BONES) line.setTransformation(transformation );
+        //if(Settings.SHOW_SKELETON_BONES) line.setTransformation(transformation );
         return Maths.mulMatrices(new Matrix4f[]{
                 bindShapeMatrix,
                 inverseBindMatrix,
-                transformation
-        });*/
-        return null;
+                transformationMatrix
+        });
     }
 
     public Matrix4f getWorldMatrix() {
@@ -143,9 +141,9 @@ public class Bone {
     }
 
     public Matrix4f getTransfomation() {
-        if (parent == null) return transfomationMatrix;
+        if (parent == null) return transformationMatrix;
         Matrix4f m = new Matrix4f();
-        parent.getTransformationMatrix().mul(m, transfomationMatrix);
+        parent.getTransformationMatrix().mul(m, transformationMatrix);
         return m;
     }
 

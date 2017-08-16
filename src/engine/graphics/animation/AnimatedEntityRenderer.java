@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import engine.graphics.entities.Entity;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
-import engine.graphics.shaders.StaticShader;
+import engine.graphics.shaders.EntityShader;
 import engine.toolbox.Settings;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -26,10 +26,10 @@ import engine.toolbox.Maths;
  */
 @Deprecated
 public class AnimatedEntityRenderer {
-    private StaticShader shader;
+    private EntityShader shader;
 
     public AnimatedEntityRenderer(Matrix4f projectionMatrix) {
-        shader = new StaticShader();
+        shader = new EntityShader();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextures();

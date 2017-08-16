@@ -191,7 +191,15 @@ public abstract class ShaderProgram {
         }
         GL20.glUniform3fv(location, data);
     }
-
+    public void loadMatrixArray(int location, List<Matrix4f> matrices, int size) {
+        float data[] = new float[size * 16];
+        for(int i = 0; i < size; i++) {
+            if(i < matrices.size()) {
+                matrices.get(i).get(data,i * 16);
+            }
+        }
+        GL20.glUniformMatrix4fv(location, false, data);
+    }
     /**
      * compiles and loads a glsl shader
      * @param file shader's source file path
@@ -222,4 +230,6 @@ public abstract class ShaderProgram {
         Log.d("shader '" + file + "' loaded");
         return shaderID;
     }
+
+
 }

@@ -110,8 +110,7 @@ public class Maths {
     public static Matrix4f mulMatrices(Matrix4f[] matrices) {
         Matrix4f m = new Matrix4f(matrices[0]);
         for (int i = 1; i < matrices.length; i++) {
-            //todo
-            //Matrix4f.mul(m,matrices[i],m);
+            m.mul(matrices[i]);
         }
         return m;
     }

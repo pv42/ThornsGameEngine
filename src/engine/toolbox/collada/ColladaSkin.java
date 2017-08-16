@@ -93,7 +93,7 @@ public class ColladaSkin {
         fillBoneData(boneInicesArray,boneWeightArray,vertexWeights.getIndices(),vertexWeights.getWeights());
         RawModel model  =  Loader.loadToVAOAnimated(pos, uv, norm, vsource.getIndices(), boneInicesArray, boneWeightArray, bones);
         ModelTexture texture = new ModelTexture(Loader.loadTexture(vsource.getImageFile()));
-        return new TexturedModel(model,texture);
+        return new TexturedModel(model,texture,true);
     }
     private void fillBoneData(int[] bina, float[] bwea, List<List<Integer>> bin,List<List<Float>> bwe) {
         for (int i = 0; i < bin.size(); i++) {

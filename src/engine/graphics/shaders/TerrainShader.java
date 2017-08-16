@@ -6,8 +6,8 @@ package engine.graphics.shaders;
   Created by pv42 on 18.06.16.
  */
 public class TerrainShader extends Lighted3DShader{
-    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/terrainVertexShader";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/terrainFragmentShader";
+    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/terrainVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/terrainFragmentShader.glsl";
     private int location_bgTexture,
             location_rTexture,
             location_gTexture,

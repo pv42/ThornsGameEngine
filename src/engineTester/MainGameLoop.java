@@ -102,9 +102,10 @@ public class MainGameLoop {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        List<TexturedModel> personModel = pcl.loadColladaModelAnimated("laptop",matrix);
-        Entity girl = new Entity(personModel, new Vector3f(30,5,50),0,0,0,2f);
-        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,1.3f);
+        List<TexturedModel> personModel = pcl.loadColladaModelAnimated("Hot_Girl_01",matrix);
+        List<TexturedModel> laptop = new ColladaLoader().loadColladaModelAnimated("Laptop");
+        Entity girl = new Entity(laptop, new Vector3f(30,5,50),-90,0,0,20f);
+        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.3f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
