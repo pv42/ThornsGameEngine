@@ -102,8 +102,8 @@ public class MainGameLoop {
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
         List<TexturedModel> personModel = pcl.loadColladaModelAnimated("Hot_Girl_01",matrix);
-        List<TexturedModel> laptop = new ColladaLoader().loadColladaModelAnimated("Laptop");
-        Entity girl = new Entity(laptop, new Vector3f(30,5,50),-90,0,0,20f);
+        List<TexturedModel> lara = new ColladaLoader().loadColladaModelAnimated("Lara_Croft");
+        Entity girl = new Entity(lara, new Vector3f(30,5,50),-90,0,0,20f);
         FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);
@@ -126,6 +126,7 @@ public class MainGameLoop {
                 timeSinceFPSUpdate = 0;
                 framesSinceFPSUpdate = 0;
             }
+            girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
             MasterRenderer.processText(text);
             MasterRenderer.processEntity(girl);
             player.move(terrain);
