@@ -61,7 +61,6 @@ public class Source {
             matrices[i].m31(floatData[i][13]);
             matrices[i].m32(floatData[i][14]);
             matrices[i].m33(floatData[i][15]);
-            matrices[i].transpose();
         }
         return matrices;
     }

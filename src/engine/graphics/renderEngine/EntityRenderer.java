@@ -1,13 +1,12 @@
 package engine.graphics.renderEngine;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.shaders.EntityShader;
-import engine.toolbox.Log;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import engine.graphics.textures.ModelTexture;
@@ -16,7 +15,6 @@ import engine.toolbox.Maths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_POSITION;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_UV;
@@ -66,12 +64,12 @@ public class EntityRenderer {
     private void prepareTexturedModel(TexturedModel model) {
 
         RawModel rawModel = model.getRawModel();
-        List<Bone> bones;
+        List<Joint> joints;
         List<Matrix4f> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
-            bones = rawModel.getBones();
-            for(Bone bone: bones) {
-                boneMatrices.add(bone.getTransformationMatrix());
+            joints = rawModel.getJoints();
+            for(Joint joint : joints) {
+                boneMatrices.add(joint.getJointMatrix());
             }
         }
         GL30.glBindVertexArray(rawModel.getVaoID());

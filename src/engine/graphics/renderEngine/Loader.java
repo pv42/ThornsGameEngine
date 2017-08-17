@@ -1,6 +1,6 @@
 package engine.graphics.renderEngine;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.lines.Line;
 import engine.graphics.lines.LineModel;
@@ -92,7 +92,7 @@ public class Loader {
         return new LineModel(vaoID, line.getColor(), 2);
     }
 
-    public static RawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Bone> bones) {
+    public static RawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
@@ -101,7 +101,7 @@ public class Loader {
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONEINDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONEWEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
         unbindVAO();
-        return new RawModel(vaoID, indices.length, bones);
+        return new RawModel(vaoID, indices.length, joints);
     }
 
     public static int loadToVAO(float[] positions, float[] uv) {

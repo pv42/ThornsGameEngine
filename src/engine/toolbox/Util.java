@@ -1,6 +1,6 @@
 package engine.toolbox;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -62,15 +62,15 @@ public class Util {
         }
         return out;
     }
-    public static List<Bone> getList(Bone[] in) {
-        List<Bone> out = new ArrayList<>();
+    public static List<Joint> getList(Joint[] in) {
+        List<Joint> out = new ArrayList<>();
         for (int i = 0; i < in.length; i++) {
             out.add(in[i]);
         }
         return out;
     }
-    public static List<Bone> getList(Map<String,Bone> in) {
-        List<Bone> out = new ArrayList<>(in.values());
+    public static List<Joint> getList(Map<String,Joint> in) {
+        List<Joint> out = new ArrayList<>(in.values());
         return out;
     }
     public static float[][] get2DArray(List<Vector4f> in) {

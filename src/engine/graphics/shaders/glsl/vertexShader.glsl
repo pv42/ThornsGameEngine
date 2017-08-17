@@ -47,16 +47,13 @@ void main(void) {
             bi = bi.yzwx;
             bw = bw.yzwx;
         }
-        animatedPosition = vec4(position, 1.0);
-        animatedNormal = vec4(normal, 1.0);
+        //animatedPosition = vec4(position, 1.0);
+        //animatedNormal = vec4(normal, 1.0);
         worldPosition = transformationMatrix * animatedPosition;
         actualNormal = animatedNormal.xyz / animatedNormal.w;
     }
     vec4 positionToCamera = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionToCamera;
-    //gl_Position = positionToCamera;
-    //gl_Position = worldPosition;
-    //gl_Position = vec4(position,1.0);
 
     pass_uv = (uv / numberOfRows) + offset;
 

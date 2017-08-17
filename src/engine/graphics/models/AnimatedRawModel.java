@@ -1,6 +1,6 @@
 package engine.graphics.models;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import java.util.List;
  */
 
 public class AnimatedRawModel {
-    private List<Bone> bones;
+    private List<Joint> joints;
     private int vaoID;
     private int vertexCount;
-    public AnimatedRawModel(int vaoID, int vertexCount, List<Bone> bones) {
+    public AnimatedRawModel(int vaoID, int vertexCount, List<Joint> joints) {
         this.vaoID = vaoID;
         this.vertexCount = vertexCount;
-        this.bones = bones;
+        this.joints = joints;
     }
     public int getVaoID() {
         return vaoID;
@@ -23,7 +23,7 @@ public class AnimatedRawModel {
     public int getVertexCount() {
         return vertexCount;
     }
-    public List<Bone> getBones() {
-        return bones;
+    public List<Joint> getJoints() {
+        return joints;
     }
 }

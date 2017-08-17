@@ -1,6 +1,6 @@
 package engine.toolbox.collada;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
@@ -14,67 +14,48 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.joml.Matrix4fc.PROPERTY_IDENTITY;
+
 /***
  * Created by pv42 on 04.08.16.
  */
 public class ColladaSkin {
-    private Matrix4f bindShapeMatrix;
-    private List<Bone> bones;
+    private static final String TAG = "ColladaSkin";
+    private List<Joint> joints;
     private VertexWeights vertexWeights;
     private Vertices vsource;
+    private Matrix4f bindShapeMatrix;
     public ColladaSkin() {
-        bindShapeMatrix = new Matrix4f();
-        bindShapeMatrix.identity();
+
     }
 
-    public Vertices getVsource() {
-        return vsource;
-    }
 
     public void setVsource(Vertices vsource) {
         this.vsource = vsource;
-    }
-
-    public VertexWeights getVertexWeights() {
-        return vertexWeights;
     }
 
     public void setVertexWeights(VertexWeights vertexWeights) {
         this.vertexWeights = vertexWeights;
     }
 
-    public List<Bone> getBones() {
-        return bones;
-    }
-
-    public void setBones(List<Bone> bones) {
-        this.bones = bones;
-        for (Bone bone:bones) {
-            bone.setBindShapeMatrix(bindShapeMatrix);
-        }
-    }
-
-    public void setBindShapeMatrix(Matrix4f bindMatrix) {
-        this.bindShapeMatrix = bindMatrix;
-    }
-
-    public Matrix4f getBindMatrix() {
-        return bindShapeMatrix;
+    public void setJoints(List<Joint> joints) {
+        this.joints = joints;
     }
 
     public TexturedModel getAnimatedTexturedModel() {
         return getAnimatedTexturedModel(null);
     }
     public TexturedModel getAnimatedTexturedModel(Matrix4f transformation) {
-        if(vsource.getPosition() == null) Log.w("pnull");
-        if(vsource.getNormal() == null) Log.w("nnull");
-        if(vsource.getTexCoord() == null) Log.w("vnull");
-        if(transformation != null) {
+        if(vsource.getPosition() == null) Log.e(TAG,"pnull");
+        if(vsource.getNormal() == null) Log.e(TAG,"nnull");
+        if(vsource.getTexCoord() == null) Log.e(TAG,"vnull");
+        if(transformation != null || ((bindShapeMatrix.properties() & PROPERTY_IDENTITY) != 0) ) {
             List<Vector4f> vertices = new ArrayList<>();
             List<Vector4f> normals = new ArrayList<>();
             for(float[] v : vsource.getPosition()) {
                 Vector4f vec = new Vector4f(v[0],v[1],v[2],1);
-                transformation.transform(vec, vec);
+                if(transformation != null) transformation.transform(vec, vec);
+                if((bindShapeMatrix.properties() & PROPERTY_IDENTITY) != 0) bindShapeMatrix.transform(vec,vec);
                 vertices.add(vec);
             }
             vsource.setPosition(Util.get2DArray(vertices));
@@ -88,10 +69,10 @@ public class ColladaSkin {
         float[] pos = Util.get1DArray(vsource.getPosition());
         float[] uv = Util.get1DArray(vsource.getTexCoord());
         float[] norm = Util.get1DArray(vsource.getNormal());
-        int[] boneInicesArray = new int[uv.length * 2];
+        int[] boneIndicesArray = new int[uv.length * 2];
         float[] boneWeightArray = new float[uv.length * 2];
-        fillBoneData(boneInicesArray,boneWeightArray,vertexWeights.getIndices(),vertexWeights.getWeights());
-        RawModel model  =  Loader.loadToVAOAnimated(pos, uv, norm, vsource.getIndices(), boneInicesArray, boneWeightArray, bones);
+        fillBoneData(boneIndicesArray,boneWeightArray,vertexWeights.getIndices(),vertexWeights.getWeights());
+        RawModel model  =  Loader.loadToVAOAnimated(pos, uv, norm, vsource.getIndices(), boneIndicesArray, boneWeightArray, joints);
         ModelTexture texture = new ModelTexture(Loader.loadTexture(vsource.getImageFile()));
         return new TexturedModel(model,texture,true);
     }
@@ -107,5 +88,13 @@ public class ColladaSkin {
                 }
             }
         }
+    }
+
+    public Matrix4f getBindShapeMatrix() {
+        return bindShapeMatrix;
+    }
+
+    public void setBindShapeMatrix(Matrix4f bindShapeMatrix) {
+        this.bindShapeMatrix = bindShapeMatrix;
     }
 }

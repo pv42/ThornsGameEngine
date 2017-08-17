@@ -21,6 +21,14 @@ public class EntityShader extends Lighted3DShader {
     private int location_bones; //todo
     private int location_useAnimation;
 
+    /**
+     * shader for entities, supports:
+     * -texture atlases
+     * -bone animation
+     * -spec maps
+     * -lighting
+     * - ...
+     */
     public EntityShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
@@ -46,19 +54,35 @@ public class EntityShader extends Lighted3DShader {
         location_useAnimation = super.getUniformLocation("useAnimation");
     }
 
+    /**
+     * connect the textures to the texture banks
+     */
     public void connectTextures() {
         super.loadInt(location_texture, 0);
         super.loadInt(location_specMap, 1);
     }
 
+    /**
+     * loads if a specular map should be used
+     * @param usesSpecMap should a spec. map be used
+     */
     public void loadUseSpecMap(boolean usesSpecMap) {
         super.loadBoolean(location_usesSpecMap, usesSpecMap);
     }
 
+    /**
+     * loads the number of rows if the texture is an atlas or 1
+     * @param numberOfRows the number of rows/cols the texture has
+     */
     public void loadNumberOfRows(int numberOfRows) {
         super.loadFloat(location_numberOfRows, numberOfRows);
     }
 
+    /**
+     * loads the texture offset in texture atlases
+     * @param offsetX textures x offset
+     * @param offsetY textures y offset
+     */
     public void loadOffset(float offsetX, float offsetY) {
         super.loadVector(location_offset, new Vector2f(offsetX, offsetY));
     }
@@ -71,7 +95,11 @@ public class EntityShader extends Lighted3DShader {
         super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 
+    /**
+     * loads whether the rendered gpu should use bone animation
+     * @param useAnimation should animations be used
+     */
     public void loadUseAnimation(boolean useAnimation) {
-        super.loadBoolean(location_useAnimation, true);
+        super.loadBoolean(location_useAnimation, useAnimation);
     }
 }

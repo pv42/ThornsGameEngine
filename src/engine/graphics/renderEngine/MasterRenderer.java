@@ -206,14 +206,6 @@ public class MasterRenderer {
             newBatch.add(entity);
             aniEntities.put(entityModel, newBatch);
         }
-        //add bones
-        if (Settings.SHOW_SKELETON_BONES) {
-            for (Bone b : entityModel.get(0).getRawModel().getBones()) {
-                b.getLine().setPosition(entity.getPosition());
-                b.getLine().setRotation(new Vector3f(entity.getRx(), entity.getRy(), entity.getRz()));
-                processLine(b.getLine());
-            }
-        }
     }
 
     public static void processLine(LineModel lineStripModel) {

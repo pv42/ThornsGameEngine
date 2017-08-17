@@ -1,6 +1,6 @@
 package engine.graphics.models;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import engine.graphics.renderEngine.Loader;
@@ -93,7 +93,7 @@ public class OBJLoader {
         return Loader.loadToVAO(verticesArray,textureArray,normalsArray,indicesArray);
     }
     @Deprecated
-    public static RawModel loadObjModelAnimated(String filename, List<Bone> bones) {
+    public static RawModel loadObjModelAnimated(String filename, List<Joint> joints) {
         FileReader fr = null;
         try {
             fr = new FileReader(new File("res/meshs/" + filename + ".obj"));
@@ -176,7 +176,7 @@ public class OBJLoader {
         for(int index : indices) {
             indicesArray[pointer++] = index;
         }
-        return Loader.loadToVAOAnimated(verticesArray,textureArray,normalsArray,indicesArray,boneIndicesArray,boneWeightArray,bones);
+        return Loader.loadToVAOAnimated(verticesArray,textureArray,normalsArray,indicesArray,boneIndicesArray,boneWeightArray, joints);
     }
     private static void processVertx(String[] vertxData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals, float[] textureArray,float[] normalsArray) {
         int currentVertexPointer = Integer.parseInt(vertxData[0]) - 1;

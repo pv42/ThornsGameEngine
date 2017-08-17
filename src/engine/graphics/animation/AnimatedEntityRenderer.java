@@ -65,8 +65,8 @@ public class AnimatedEntityRenderer {
 
     private void prepareTexturedModel(TexturedModel model) {
         RawModel rawModel = model.getRawModel();
-        List<Bone> bones = rawModel.getBones();
-        List<Matrix4f> boneMatrices = bones.stream().map(Bone::getTransformationMatrix).collect(Collectors.toList());
+        List<Joint> joints = rawModel.getJoints();
+        List<Matrix4f> boneMatrices = joints.stream().map(Joint::getJointMatrix).collect(Collectors.toList());
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);

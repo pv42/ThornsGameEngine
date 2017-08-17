@@ -76,7 +76,6 @@ public class MainGameLoop {
         Light sun = new Light(new Vector3f(500,50000,500), new Color(1,1,.9), new Vector3f(1f,0.00f, 0.00f));
         List<Light> lights = new ArrayList<>();
         lights.add(sun);
-        Entity tree = new Entity(texturedModel,new Vector3f(),0,0,0, 1);
         //terrain engine.graphics.textures
         TerrainTexture bgT = new TerrainTexture(Loader.loadTexture("grass.png"));
         TerrainTexture rT = new TerrainTexture(Loader.loadTexture("dirt.png"));
@@ -105,7 +104,7 @@ public class MainGameLoop {
         List<TexturedModel> personModel = pcl.loadColladaModelAnimated("Hot_Girl_01",matrix);
         List<TexturedModel> laptop = new ColladaLoader().loadColladaModelAnimated("Laptop");
         Entity girl = new Entity(laptop, new Vector3f(30,5,50),-90,0,0,20f);
-        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.3f);
+        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
@@ -134,9 +133,8 @@ public class MainGameLoop {
             particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
             ParticleMaster.update();
             //animation
-            //player.getModels().get(0).getRawModel().getBones().get(10).rotate(new Vector3f(0,1,0),1);
+            //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
-            MasterRenderer.processEntity(tree);
             processFirstPersonPlayer(player);
             MasterRenderer.processTerrain(terrain);
             guis.forEach(MasterRenderer::processGui);

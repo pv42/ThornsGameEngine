@@ -1,11 +1,10 @@
 package engine.toolbox.collada;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import engine.graphics.models.TexturedModel;
 import engine.toolbox.Log;
 import engine.toolbox.Util;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,8 +30,7 @@ public class ColladaLoader {
     private Map<String, Node> idElements = new HashMap<>();
     private Map<String, Node> symbolElements = new HashMap<>();
     private List<TexturedModel> animatedTexturedModels = new ArrayList<>();
-    private Map<String, Bone> bones = new HashMap<>();
-    private List<Bone> bonesSorted;
+    private Map<String, Joint> allJoints = new HashMap<>();
     private List<Node> skinsToHandle = new ArrayList<>();
 
     public List<TexturedModel> loadColladaModelAnimated(String filename) {
@@ -345,6 +343,8 @@ public class ColladaLoader {
                     case "TEXCOORD":
                         uv = readSource(getIdElement(source)).getFloatData();
                         break;
+                    default:
+                        Log.w("unknown input type: " + semantic);
                 }
             } else if (n.getNodeName().equals("vcount")) {
                 vcount = readInt_array(n);
@@ -354,11 +354,16 @@ public class ColladaLoader {
                 Log.w(TAG, "unkn_v:" + n.getNodeName());
             }
         }
-        float[][] normal = new float[p.length / 3][3];
-        for (int i = 0; i < p.length / 3; i++) {
-            normal[i] = norm[p[3 * i + 1]];
+        if(p != null) {
+            float[][] normal = new float[p.length / 3][3];
+            for (int i = 0; i < p.length / 3; i++) {
+                normal[i] = norm[p[3 * i + 1]];
+            }
+            vertices.setNormal(normal);
+        } else {
+            Log.w(TAG,"p is not set");
         }
-        vertices.setNormal(normal);
+
         vertices.setTexCoord(uv);
         vertices.setIndices(p);
         vertices.setImageFile(img);
@@ -436,6 +441,10 @@ public class ColladaLoader {
         return new Param(node.getAttributes().getNamedItem("name").getNodeValue(), node.getAttributes().getNamedItem("type").getNodeValue());
     }
 
+    /**
+     * read a library_controllers node
+     * @param node node to read
+     */
     private void library_controllers(Node node) {
         //Log.d(TAG,"library:controllers");
         for (Node n : getListFromNodeList(node.getChildNodes())) {
@@ -447,6 +456,10 @@ public class ColladaLoader {
         }
     }
 
+    /**
+     * reads a controller node
+     * @param node node to read
+     */
     private void controller(Node node) {
         putIdElement(node);
         for (Node n : getListFromNodeList(node.getChildNodes())) {
@@ -458,17 +471,21 @@ public class ColladaLoader {
         }
     }
 
+    /**
+     * reads a skin element (child element from controller)
+     * @param node node to read
+     */
     private void skin(Node node) {
         skinsToHandle.add(node);
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("bind_shape_matrix")) {
-                //todo
+                //todo usally idetity but can be used
             } else if (n.getNodeName().equals("source")) {
                 source(n);
             } else if (n.getNodeName().equals("joints")) {
-                ////todo ;
+                Log.w(TAG,"toto_sk:" +  n.getNodeName());
             } else if (n.getNodeName().equals("vertex_weights")) {
-                ////todo ;
+                Log.w(TAG,"toto_sk:" +  n.getNodeName());
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_sk:" + n.getNodeName());
             }
@@ -480,7 +497,7 @@ public class ColladaLoader {
         skin.setVsource(readGeometry(getIdElement(node.getAttributes().getNamedItem("source").getNodeValue())));
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("joints")) {
-                readJoints(n); //store in bones global
+                skin.setJoints(readJoints(n)); //store in joints global
             } else if (n.getNodeName().equals("bind_shape_matrix")) {
                 skin.setBindShapeMatrix(readMatrix4f(n));
             } else if (n.getNodeName().equals("vertex_weights")) {
@@ -489,11 +506,10 @@ public class ColladaLoader {
                 Log.w(TAG, "unkn_sk:" + n.getNodeName());
             }
         }
-        skin.setBones(bonesSorted);
         return skin;
     }
 
-    private void readJoints(Node node) {
+    private List<Joint> readJoints(Node node) {
         List<Matrix4f> matrices = null;
         List<String> sids = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
@@ -509,14 +525,14 @@ public class ColladaLoader {
                 Log.w(TAG, "unkn_J:" + n.getNodeName());
             }
         }
-        if (matrices == null || sids == null) Log.e(TAG, "wrong joint data");
-        bonesSorted = new ArrayList<>();
+        if (matrices == null || sids == null || sids.size() != matrices.size()) Log.e(TAG, "wrong joint data");
+        List<Joint> joints = new ArrayList<>();
         for (int i = 0; i < matrices.size(); i++) {
             String sid = sids.get(i);
-            bones.get(sid).setInverseBindMatrix(matrices.get(i));
-
-            bonesSorted.add(bones.get(sid));
+            allJoints.get(sid).setInverseBindMatrix(matrices.get(i));
+            joints.add(allJoints.get(sid));
         }
+        return joints;
 
     }
 
@@ -583,34 +599,43 @@ public class ColladaLoader {
         }
     }
 
-    private void node(Node node, Bone parent) {
+    private void node(Node node, Joint parent) {
         putIdElement(node);
         String type = node.getAttributes().getNamedItem("type") == null ? "NODE" : node.getAttributes().getNamedItem("type").getNodeValue();
         if (type.equals("JOINT")) {
             String sid = node.getAttributes().getNamedItem("sid").getNodeValue();
             String name = node.getAttributes().getNamedItem("sid").getNodeValue();
-            Bone bone = new Bone(parent);
-            bone.setName(name);
+            //Joint joint = new Joint(parent);
+            Matrix4f tm = null;
+            List<Node> childs = new ArrayList<>();
             for (Node n : getListFromNodeList(node.getChildNodes())) {
                 if (n.getNodeName().equals("matrix")) {
-                    bone.setJointMatrix(readMatrix4f(n));
+                    tm = readMatrix4f(n);
                 } else if (n.getNodeName().equals("rotate")) {
                     float[] rot = readFloat_array(n);
-                    bone.rotateJoint(new Vector3f(rot[0], rot[1], rot[2]), rot[3]);
+                    Log.w(TAG,"todo nJr");
+                    //todo joint.rotateJoint(new Vector3f(rot[0], rot[1], rot[2]), rot[3]);
                 } else if (n.getNodeName().equals("scale")) {
                     float[] rot = readFloat_array(n);
-                    bone.scaleJoint(new Vector3f(rot[0], rot[1], rot[2]));
+                    Log.w(TAG,"todo nJs");
+                    //joint.scaleJoint(new Vector3f(rot[0], rot[1], rot[2]));
                 } else if (n.getNodeName().equals("translate")) {
                     float[] rot = readFloat_array(n);
-                    bone.translateJoint(new Vector3f(rot[0], rot[1], rot[2]));
+                    Log.w(TAG,"todo nJt");
+                    //joint.translateJoint(new Vector3f(rot[0], rot[1], rot[2]));
                 } else if (n.getNodeName().equals("node")) {
-                    node(n, bone);
+                    childs.add(n);
                 } else if (!n.getNodeName().equals("#text")) {
                     Log.w(TAG, "unkn_n:" + n.getNodeName());
                 }
 
             }
-            bones.put(sid, bone);
+            if(tm == null) tm = new Matrix4f().identity();
+            Joint joint = new Joint(name,tm ,parent);
+            allJoints.put(sid, joint);
+            for(Node n: childs) {
+                node(n,joint);
+            }
         } else if (type.equals("NODE")) {
             for (Node n : getListFromNodeList(node.getChildNodes())) {
                 if (n.getNodeName().equals("instance_controller")) {
@@ -681,22 +706,7 @@ public class ColladaLoader {
             array[i] = Float.valueOf(s);
             i++;
         }
-        matrix4f.m00(array[0]);
-        matrix4f.m10(array[1]);
-        matrix4f.m20(array[2]);
-        matrix4f.m30(array[3]);
-        matrix4f.m01(array[4]);
-        matrix4f.m11(array[5]);
-        matrix4f.m21(array[6]);
-        matrix4f.m31(array[7]);
-        matrix4f.m02(array[8]);
-        matrix4f.m12(array[9]);
-        matrix4f.m22(array[10]);
-        matrix4f.m32(array[11]);
-        matrix4f.m03(array[12]);
-        matrix4f.m13(array[13]);
-        matrix4f.m23(array[14]);
-        matrix4f.m33(array[15]);
+        matrix4f.set(array);
         return matrix4f;
     }
 
