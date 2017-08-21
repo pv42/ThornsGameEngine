@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import engine.graphics.display.DisplayManager;
-import engine.graphics.animation.*;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.fontMeshCreator.TextMeshData;
@@ -19,7 +18,7 @@ import engine.graphics.lines.LineModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.normalMappingRenderer.NormalMappingRenderer;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.shaders.TerrainShader;
+import engine.graphics.terrains.TerrainShader;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.Terrain;
 import engine.graphics.cameras.Camera;
@@ -32,7 +31,6 @@ import engine.toolbox.Time;
 
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import static engine.toolbox.Settings.SKY_COLOR;

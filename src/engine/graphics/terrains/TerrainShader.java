@@ -1,13 +1,14 @@
-package engine.graphics.shaders;
+package engine.graphics.terrains;
 
 
+import engine.graphics.shaders.Lighted3DShader;
 
 /**
   Created by pv42 on 18.06.16.
  */
-public class TerrainShader extends Lighted3DShader{
-    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/terrainVertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/terrainFragmentShader.glsl";
+public class TerrainShader extends Lighted3DShader {
+    private static final String VERTEX_FILE = "src/engine/graphics/terrains/terrainVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "src/engine/graphics/terrains/terrainFragmentShader.glsl";
     private int location_bgTexture,
             location_rTexture,
             location_gTexture,
@@ -33,6 +34,9 @@ public class TerrainShader extends Lighted3DShader{
         location_blendMap = super.getUniformLocation("blendMap");
     }
 
+    /**
+     * connect texture uniform to texture bank
+     */
     public void connectTextures() {
         super.loadInt(location_bgTexture,0);
         super.loadInt(location_rTexture,1);

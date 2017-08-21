@@ -60,12 +60,13 @@ public class DisplayManager {
     }
 
     /**
-     *
+     * gets the time between the last two display updates
      * @return time between the last two updateDisplay() calls in s
      */
     public static float getFrameTimeSeconds() {
         return delta;
     }
+
     @Deprecated
     public static void printDisplayModes() {
         long monitor = GLFW.glfwGetPrimaryMonitor();
@@ -77,6 +78,7 @@ public class DisplayManager {
         }
         Log.d(TAG,"Monitor " + GLFW.glfwGetMonitorName(monitor) + " supports following vidModes:" + modes);
     }
+
     /**
      * Updates the windows dimension and fullscreen state
      *
@@ -129,7 +131,7 @@ public class DisplayManager {
     }
 
     /**
-     *
+     *  checks if the windows close was requested
      * @return {@code true} if a close request was send to the GLFW window
      */
     public static boolean isCloseRequested() {
@@ -137,7 +139,7 @@ public class DisplayManager {
     }
 
     /**
-     *
+     * gets the window size
      * @return the window size as Vector2D
      */
     public static Vector2i getSize() {
@@ -145,6 +147,7 @@ public class DisplayManager {
     }
 
     /**
+     * (un-)grabbes the mouse
      * @param b {@code false} enable the courser (default)
      *          {@code true} disable the courser
      */

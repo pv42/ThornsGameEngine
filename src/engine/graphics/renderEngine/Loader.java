@@ -27,13 +27,21 @@ public class Loader {
     static final int VERTEX_ATTRIB_ARRAY_POSITION = 0;
     static final int VERTEX_ATTRIB_ARRAY_UV = 1;
     static final int VERTEX_ATTRIB_ARRAY_NORMAL = 2;
-    static final int VERTEX_ATTRIB_ARRAY_BONEINDICES = 3;
-    static final int VERTEX_ATTRIB_ARRAY_BONEWEIGHT = 4;
+    static final int VERTEX_ATTRIB_ARRAY_TANGENTS = 3;
+    static final int VERTEX_ATTRIB_ARRAY_BONE_INDICES = 3; // todo both tangents and animation
+    static final int VERTEX_ATTRIB_ARRAY_BONE_WEIGHT = 4;
     private static final float ANISOTROPIC_FILTERING = Settings.ANISOTROPIC_FILTERING;
+    private static final String TAG = "Loader";
     private static List<Integer> vaos = new ArrayList<>();
     private static List<Integer> vbos = new ArrayList<>();
     private static List<Integer> textures = new ArrayList<>();
 
+    /**
+     * loads a rawmodel with only a position array in 2D or 3D
+     * @param positions positions array
+     * @param dimension coordinate dimension
+     * @return rawmodel
+     */
     public static RawModel loadToVAO(float[] positions, int dimension) {
         int vaoID = createVAO();
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, dimension, positions);
@@ -41,6 +49,12 @@ public class Loader {
         return new RawModel(vaoID, positions.length / dimension);
     }
 
+    /**
+     * loads a rawmodel with positions and indices
+     * @param positions positions array
+     * @param indices indices array
+     * @return rawmodel
+     */
     public static RawModel loadToVAO(float[] positions, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
@@ -49,6 +63,27 @@ public class Loader {
         return new RawModel(vaoID, indices.length);
     }
 
+    /**
+     * loads a rawmodel with positions and indices
+     * @param positions positions array
+     * @param uv texture coordinates array
+     * @return rawmodel
+     */
+    public static int loadToVAO(float[] positions, float[] uv) {
+        int vaoID = createVAO();
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 2, positions);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
+        unbindVAO();
+        return vaoID;
+    }
+
+    /**
+     * loads a rawmodel with positions, texture coordinates and indices
+     * @param positions positions array
+     * @param uv texture coordinates array
+     * @param indices indices array
+     * @return rawmodel
+     */
     public static RawModel loadToVAO(float[] positions, float[] uv, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
@@ -58,6 +93,14 @@ public class Loader {
         return new RawModel(vaoID, indices.length);
     }
 
+    /**
+     * loads a rawmodel with positions, texture coordinates, normals and indices
+     * @param positions positions array
+     * @param uv texture coordinates array
+     * @param normals surface normal array
+     * @param indices indices array
+     * @return rawmodel
+     */
     public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
@@ -68,17 +111,25 @@ public class Loader {
         return new RawModel(vaoID, indices.length);
     }
 
+    /**
+     * loads a rawmodel with positions, texture coordinates, normals, tangents and indices
+     * @param positions positions array
+     * @param uv texture coordinates array
+     * @param normals surface normal array
+     * @param tangents surface tangents array
+     * @param indices indices array
+     * @return rawmodel
+     */
     public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, float tangents[], int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_NORMAL, 3, normals);
-        storeDataInAttributeList(3, 3, tangents);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_TANGENTS, 3, tangents);
         unbindVAO();
         return new RawModel(vaoID, indices.length);
     }
-
 
     public static LineModel loadToVAO(Line line) {
         int vaoID = createVAO();
@@ -92,24 +143,26 @@ public class Loader {
         return new LineModel(vaoID, line.getColor(), 2);
     }
 
+    /**
+     * loads a animated rawmodel with positions, texture coordinates, normals, boneIndices, boneWeights and indices
+     * @param positions positions array
+     * @param uv texture coordinates array
+     * @param normals surface normal array
+     * @param boneIndices bone indices
+     * @param boneWeight bone weights for the indexed bones
+     * @param indices indices array
+     * @return rawmodel
+     */
     public static RawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_NORMAL, 3, normals);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONEINDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONEWEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_INDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
         unbindVAO();
         return new RawModel(vaoID, indices.length, joints);
-    }
-
-    public static int loadToVAO(float[] positions, float[] uv) {
-        int vaoID = createVAO();
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 2, positions);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
-        unbindVAO();
-        return vaoID;
     }
 
     public static int createEmptyVbo(int floatCount) {
@@ -142,10 +195,26 @@ public class Loader {
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
+    /**
+     * loads a texture file to VRAM
+     * @param fileName textures filename including extension
+     * @return texture id
+     */
     public static int loadTexture(String fileName) {
         return loadTexture(fileName,true);
     }
+
+    /**
+     * loads a texture file to VRAM
+     * @param fileName textures filename including extension
+     * @param flip if true flips the texture after loading
+     * @return texture id
+     */
     public static int loadTexture(String fileName, boolean flip) {
+        if(fileName == null) {
+            fileName = "white.png";
+            Log.w(TAG,"tried to load null texture");
+        }
         TextureData data = decodeTextureFile("res/textures/" + fileName, flip);
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -180,6 +249,12 @@ public class Loader {
         return texID;
     }
 
+    /**
+     * loads a cubemap texture for skyboxes
+     * @param textureFiles filenames without extensions, in order pos. X, neg. X, pos./neg. Y, pos./neg. Z
+     * @param fileExtension filenames file extensions like ".png"
+     * @return texture id
+     */
     public static int loadCubeMapTexture(String[] textureFiles, String fileExtension) {
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -197,17 +272,19 @@ public class Loader {
         return texID;
     }
 
-    public static int loadCubeMapTexture(String textureFile, String fileExtesion) {
+    /**
+     * loads a cubemap texture for skyboxes
+     * @param textureFile filename without extensions and postfix, the actual textures must be named filename + "_rt"/"_lf"/"_up"/"_dn"/"_bk"/"_ft"
+     * @param fileExtension filenames file extensions like ".png"
+     * @return texture id
+     */
+    public static int loadCubeMapTexture(String textureFile, String fileExtension) {
         String[] postfix = {"_rt", "_lf", "_up", "_dn", "_bk", "_ft"};
         String[] fileNames = new String[6];
         for (int i = 0; i < 6; i++) {
             fileNames[i] = textureFile + postfix[i];
         }
-        return loadCubeMapTexture(fileNames, fileExtesion);
-    }
-
-    public static int loadCubeMapTexture(String textureFile) {
-        return loadCubeMapTexture(textureFile, ".png");
+        return loadCubeMapTexture(fileNames, fileExtension);
     }
 
     public static FontType loadFont(String fontName) {
@@ -226,6 +303,10 @@ public class Loader {
         return new TextureData(image, w.get(), h.get());
     }
 
+    /**
+     * creates and binds a vertex array object
+     * @return vao id
+     */
     private static int createVAO() {
         int vaoID = GL30.glGenVertexArrays();
         vaos.add(vaoID);
@@ -233,26 +314,29 @@ public class Loader {
         return vaoID;
     }
 
-    private static void storeDataInAttributeList(int attributeNumber, int coordianteSize, float[] data) {
+    private static void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
         int vboID = GL15.glGenBuffers();
         vbos.add(vboID);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
         FloatBuffer floatBuffer = storeDataInFloatBuffer(data);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, floatBuffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(attributeNumber, coordianteSize, GL11.GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
-    private static void storeDataInAttributeList(int attributeNumber, int coordianteSize, int[] data) {
+    private static void storeDataInAttributeList(int attributeNumber, int coordinateSize, int[] data) {
         int vboID = GL15.glGenBuffers();
         vbos.add(vboID);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
         IntBuffer intBuffer = storeDataInIntBuffer(data);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, intBuffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(attributeNumber, coordianteSize, GL11.GL_INT, false, 0, 0);
+        GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_INT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
+    /**
+     * unbinds any vaos
+     */
     private static void unbindVAO() {
         GL30.glBindVertexArray(0);
     }
@@ -279,9 +363,12 @@ public class Loader {
         return floatBuffer;
     }
 
+    /**
+     * unloads all textures, vaos and vbos from VRAM
+     */
     public static void cleanUp() {
-        vaos.forEach(GL30::glDeleteVertexArrays);
         vbos.forEach(GL15::glDeleteBuffers);
+        vaos.forEach(GL30::glDeleteVertexArrays);
         textures.forEach(GL11::glDeleteTextures);
     }
 }

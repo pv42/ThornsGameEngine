@@ -19,8 +19,8 @@ import java.util.Map;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_POSITION;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_UV;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_NORMAL;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONEINDICES;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONEWEIGHT;
+import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_INDICES;
+import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_WEIGHT;
 import static engine.toolbox.Settings.SKY_COLOR;
 
 
@@ -77,8 +77,8 @@ public class EntityRenderer {
         GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_UV);
         GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_NORMAL);
         if (model.isAnimated()) {
-            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEINDICES);
-            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEWEIGHT);
+            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_INDICES);
+            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT);
         }
         ModelTexture texture = model.getTexture();
         shader.loadUseAnimation(model.isAnimated());
@@ -103,8 +103,8 @@ public class EntityRenderer {
         GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_POSITION);
         GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_UV);
         GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_NORMAL);
-        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEINDICES); //ani
-        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEWEIGHT); //ani
+        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_INDICES); //ani
+        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT); //ani
         GL30.glBindVertexArray(0); //unbind vertex array
 
     }

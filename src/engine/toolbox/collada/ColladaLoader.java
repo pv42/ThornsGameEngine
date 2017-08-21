@@ -17,14 +17,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /***
  * Created by pv42 on 02.08.16.
  */
+//todo prevent loading multiple collada files
 public class ColladaLoader {
     private static final String TAG = "COLLADA";
     private Map<String, Node> idElements = new HashMap<>();
@@ -322,15 +320,16 @@ public class ColladaLoader {
 
     private Vertices readPolylist(Node node) {
         //String img = readImage(readMaterial(getIdElement(node.getAttributes().getNamedItem("material").getNodeValue())).getInstanceEffect().getImage());
-        String img = "white";
-
-        float[][] norm = null;
-        float[][] uv = null;
-        int[] p = null;
+        String img = "white.png";
+        float[][] normalData = null;
+        float[][] uvData = null;
+        int[] primitive = null;
         int[] vcount = null;
+        int numberOfInputs = 0;
         Vertices vertices = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
+                numberOfInputs++;
                 String source = n.getAttributes().getNamedItem("source").getNodeValue();
                 String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
                 switch (semantic) {
@@ -338,10 +337,10 @@ public class ColladaLoader {
                         vertices = readVertices(getIdElement(source), null, null);
                         break;
                     case "NORMAL":
-                        norm = readSource(getIdElement(source)).getFloatData();
+                        normalData = readSource(getIdElement(source)).getFloatData();
                         break;
                     case "TEXCOORD":
-                        uv = readSource(getIdElement(source)).getFloatData();
+                        uvData = readSource(getIdElement(source)).getFloatData();
                         break;
                     default:
                         Log.w("unknown input type: " + semantic);
@@ -349,24 +348,29 @@ public class ColladaLoader {
             } else if (n.getNodeName().equals("vcount")) {
                 vcount = readInt_array(n);
             } else if (n.getNodeName().equals("p")) {
-                p = readInt_array(n);
+                primitive = readInt_array(n);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_v:" + n.getNodeName());
             }
         }
-        if(p != null) {
-            float[][] normal = new float[p.length / 3][3];
-            for (int i = 0; i < p.length / 3; i++) {
-                normal[i] = norm[p[3 * i + 1]];
+        if(primitive != null) {
+            float[][] pos  = new float[primitive.length / numberOfInputs][3];
+            float[][] norm = new float[primitive.length / numberOfInputs][3];
+            float[][] uv   = new float[primitive.length / numberOfInputs][2];
+            int[] indices = new int[primitive.length / numberOfInputs];
+            for (int i = 0; i < primitive.length / numberOfInputs; i++) {
+                pos[i] = vertices.getPosition()[primitive[numberOfInputs * i]];
+                norm[i] = normalData[primitive[numberOfInputs * i + 1]];
+                uv[i]  = uvData[primitive[numberOfInputs* i + 2]];
+                indices[i] = i;
             }
-            vertices.setNormal(normal);
+            vertices.setPosition(pos);
+            vertices.setNormal(norm);
+            vertices.setTexCoord(uv);
+            vertices.setIndices(indices);
         } else {
-            Log.w(TAG,"p is not set");
+            Log.w(TAG, "p is not set");
         }
-
-        vertices.setTexCoord(uv);
-        vertices.setIndices(p);
-        vertices.setImageFile(img);
         return vertices;
     }
 
@@ -605,28 +609,26 @@ public class ColladaLoader {
         if (type.equals("JOINT")) {
             String sid = node.getAttributes().getNamedItem("sid").getNodeValue();
             String name = node.getAttributes().getNamedItem("sid").getNodeValue();
-            //Joint joint = new Joint(parent);
-            Matrix4f tm = null;
+            Matrix4f tm = new  Matrix4f().identity();
             List<Node> childs = new ArrayList<>();
             for (Node n : getListFromNodeList(node.getChildNodes())) {
                 if (n.getNodeName().equals("matrix")) {
-                    tm = readMatrix4f(n);
+                    tm.mul(readMatrix4f(n));
                 } else if (n.getNodeName().equals("rotate")) {
                     float[] rot = readFloat_array(n);
-                    Log.w(TAG,"todo nJr");
-                    //todo joint.rotateJoint(new Vector3f(rot[0], rot[1], rot[2]), rot[3]);
+                    tm.rotate((float) Math.toRadians(rot[3]), rot[0], rot[1], rot[2]);
                 } else if (n.getNodeName().equals("scale")) {
-                    float[] rot = readFloat_array(n);
-                    Log.w(TAG,"todo nJs");
-                    //joint.scaleJoint(new Vector3f(rot[0], rot[1], rot[2]));
+                    float[] sca = readFloat_array(n);
+                    tm.scale(sca[0], sca[1], sca[2]);
                 } else if (n.getNodeName().equals("translate")) {
-                    float[] rot = readFloat_array(n);
-                    Log.w(TAG,"todo nJt");
-                    //joint.translateJoint(new Vector3f(rot[0], rot[1], rot[2]));
+                    float[] trans = readFloat_array(n);
+                    tm.translate(trans[0], trans[1], trans[2]);
                 } else if (n.getNodeName().equals("node")) {
                     childs.add(n);
+                } else if (n.getNodeName().equals("extra")) {
+                    Log.d(TAG,"extra not implemented");
                 } else if (!n.getNodeName().equals("#text")) {
-                    Log.w(TAG, "unkn_n:" + n.getNodeName());
+                    Log.w(TAG, "unkn_node:" + n.getNodeName());
                 }
 
             }
@@ -637,12 +639,22 @@ public class ColladaLoader {
                 node(n,joint);
             }
         } else if (type.equals("NODE")) {
+            Matrix4f matrix = new Matrix4f().identity();
             for (Node n : getListFromNodeList(node.getChildNodes())) {
                 if (n.getNodeName().equals("instance_controller")) {
                     instance_controller(n);
                 } else if (n.getNodeName().equals("matrix")) {
-                    //nothing
-                } else if (n.getNodeName().equals("node")) {
+                    matrix.mul(readMatrix4f(n));
+                } else if (n.getNodeName().equals("rotate")) {
+                    float[] rot = readFloat_array(n);
+                    matrix.rotate((float) Math.toRadians(rot[3]), rot[0], rot[1], rot[2]);
+                } else if (n.getNodeName().equals("scale")) {
+                    float[] sca = readFloat_array(n);
+                    matrix.scale(sca[0], sca[1], sca[2]);
+                } else if (n.getNodeName().equals("translate")) {
+                    float[] trans = readFloat_array(n);
+                    matrix.translate(trans[0], trans[1], trans[2]);
+                }else if (n.getNodeName().equals("node")) {
                     node(n, null);
                 } else if (!n.getNodeName().equals("#text")) {
                     Log.w(TAG, "unkn_n:" + n.getNodeName());
