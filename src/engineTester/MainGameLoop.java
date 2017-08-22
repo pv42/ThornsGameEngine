@@ -101,7 +101,7 @@ public class MainGameLoop {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        List<TexturedModel> lara = pcl.loadColladaModelAnimated("Cowboy",matrix);
+        List<TexturedModel> lara = pcl.loadColladaModelAnimated("Laptop",matrix);
         List<TexturedModel> personModel = new ColladaLoader().loadColladaModelAnimated("Lara_Croft");
         Entity girl = new Entity(lara, new Vector3f(30,2,50),-90,0,0,2f);
         FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);

@@ -24,7 +24,7 @@ public class Material {
         material.setId(getAttribValue(node,"id"));
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("instance_effect")) {
-                material.setInstanceEffect(getAttribValue(n,"url"));
+                material.setInstanceEffect(getAttribValue(n,"url").replaceFirst("#",""));
             } else if (!(n.getNodeName().equals("#text") || n.getNodeName().equals("extra"))) {
                 Log.w(TAG, "unkn_rm:" + n.getNodeName());
             }
@@ -46,5 +46,13 @@ public class Material {
 
     private void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Material{" +
+                "instanceEffectId='" + instanceEffectId + '\'' +
+                ", id='" + id + '\'' +
+                '}';
     }
 }

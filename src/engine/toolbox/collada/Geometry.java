@@ -18,8 +18,7 @@ import static engine.toolbox.collada.ColladaUtil.*;
 
 public class Geometry {
     private static final String TAG = "COLLADA:geometry";
-
-
+    private String id;
     private float[][] position;
     private float[][] normal;
     private float[][] textureCoordinates;
@@ -34,23 +33,30 @@ public class Geometry {
         this.materialId = materialId;
     }
 
+    private void setId(String id) {
+        this.id = id;
+    }
 
     public RawModel getRawModel() {
         return Loader.loadToVAO(Util.get1DArray(position), Util.get1DArray(textureCoordinates), Util.get1DArray(normal), indices);
     }
 
 
-    public TexturedModel getTexturedModel(Map<String, Material> materials, Map<String, Effect> effects) {
-        String imageFile = getImageFile(materials,effects);
+    public TexturedModel getTexturedModel(Map<String, Material> materials, Map<String, Effect> effects, Map<String,
+            String> instanceEffects, Map<String, Image> images) {
+        String imageFile = getImageFile(materials, effects, instanceEffects, images);
         return new TexturedModel(getRawModel(), new ModelTexture(Loader.loadTexture(imageFile)));
     }
 
 
-    public String getImageFile(Map<String,Material> materials, Map<String, Effect> effects) {
-        System.out.println(materials);
-        System.out.println(materials.get(materialId));
-        return materials.get(materialId).getInstanceEffect(effects).getImage().replaceFirst("file:///","");
+    public String getImageFile(Map<String, Material> materials, Map<String, Effect> effects, Map<String,
+            String> instanceMaterials, Map<String, Image> images) {
+        return images.get(materials.get(instanceMaterials.get(materialId)).getInstanceEffect(effects).getImage()).getSource().replaceFirst("file:///", "");
 
+    }
+
+    public String getId() {
+        return id;
     }
 
     public int[] getIndices() {
@@ -87,15 +93,18 @@ public class Geometry {
 
 
     public static Geometry fromNode(Node node) {
+        if (!node.getNodeName().equals("geometry")) throw new RuntimeException("Node given must be an asset node");
+        Geometry geometry = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("mesh")) {
-                return readMesh(n);
+                geometry =  readMesh(n);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_g:" + n.getNodeName());
             }
         }
-        Log.e(TAG, "no mesh element found");
-        return null;
+        if(geometry == null) Log.e(TAG, "no mesh element found");
+        else geometry.setId(getAttribValue(node,"id"));
+        return geometry;
     }
 
     private static Geometry readMesh(Node node) {
@@ -129,8 +138,9 @@ public class Geometry {
         for (Node n : getListFromNodeList(triangles.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
                 String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
-                if (semantic.equals("VERTEX") && !vertices.getAttributes().getNamedItem("id").getNodeValue().equals(
-                        n.getAttributes().getNamedItem("source").getNodeValue())) {
+                if (semantic.equals("VERTEX") && !getAttribValue(vertices, "id").equals(
+                        getAttribValue(n, "source").replaceFirst("#", ""))
+                        ) {
                     throw new RuntimeException("vertices id and primitive source does not match");
                 }
                 //todo offset
@@ -140,7 +150,7 @@ public class Geometry {
                         break;
                     case "NORMAL":
                     case "TEXCOORD":
-                        Log.e(TAG,"todo_readT");
+                        Log.e(TAG, "todo_readT");
                         break;
                     default:
                         Log.w(TAG, "unkn_T_semantic" + semantic);
@@ -155,11 +165,11 @@ public class Geometry {
         return geometry;
     }
 
-    private static Geometry readVertices(Node node, String imageFile, Map<String, Node> sources) {
+    private static Geometry readVertices(Node node, String effectId, Map<String, Node> sources) {
         float[][] pos = null, normal = null, uv = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
-                String source = n.getAttributes().getNamedItem("source").getNodeValue();
+                String source = getAttribValue(n,"source").replaceFirst("#","");
                 String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
                 if (semantic.equals("POSITION")) {
                     pos = readSource(sources.get(source)).getFloatData();
@@ -172,8 +182,10 @@ public class Geometry {
                 Log.w(TAG, "unkn_vert:" + n.getNodeName());
             }
         }
-        return new Geometry(pos, normal, uv, null, imageFile);
+        return new Geometry(pos, normal, uv, null, effectId);
     }
+
+
 
     /*private Vertices readPolylist(Node node) {
         //String img = readImage(readMaterial(getIdElement(node.getAttributes().getNamedItem("material").getNodeValue())).getInstanceEffect().getImage());

@@ -58,6 +58,7 @@ public class ColladaUtil {
     }
 
     static Source readSource(Node node) {
+        assert node==null;
         List<Node> dataSources = new ArrayList<>();// e.g. float_arrays
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("technique_common")) {

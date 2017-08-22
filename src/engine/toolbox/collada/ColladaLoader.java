@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import static engine.toolbox.collada.ColladaUtil.getAttribValue;
 import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 
 /***
@@ -29,15 +30,15 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 public class ColladaLoader {
     private static final String TAG = "COLLADA";
     private Asset asset = null;
-    private Map<String,Image> images = new HashMap<>();
-    private Map<String, Material> materials = new HashMap<>();
-    private Map<String, Effect> effects = new HashMap<>();
-    private Map<String,Geometry> geometries = new HashMap<>();
+    private Map<String, Image> images;
+    private Map<String, Material> materials;
+    private Map<String, Effect> effects;
+    private Map<String, Geometry> geometries;
     private Map<String, Node> idElements = new HashMap<>();
-    private Map<String, Node> symbolElements = new HashMap<>();
     private List<TexturedModel> animatedTexturedModels = new ArrayList<>();
     private Map<String, Joint> allJoints = new HashMap<>();
     private List<Node> skinsToHandle = new ArrayList<>();
+    private Map<String, String> instanceMaterials = new HashMap<>();
 
     public List<TexturedModel> loadColladaModelAnimated(String filename) {
         return loadColladaModelAnimated(filename, null);
@@ -67,12 +68,11 @@ public class ColladaLoader {
                         materials = readMaterialLibrary(mainNodes.item(i));
                         break;
                     case "library_effects":
-                        effects= readEffectLibrary(mainNodes.item(i));
+                        effects = readEffectLibrary(mainNodes.item(i));
                         break;
                     case "library_geometries":
-                        readGeometryLibrary(mainNodes.item(i));
-                        //Geometry geometry = Geometry.fromNode(mainNodes.item(i));
-                        //geometry.get
+                        geometries = readGeometryLibrary(mainNodes.item(i));
+                        System.out.println(geometries);
                         break;
                     case "library_controllers":
                         library_controllers(mainNodes.item(i));
@@ -90,7 +90,8 @@ public class ColladaLoader {
             }
             Log.d(TAG, "loading data to VRAM");
             for (Node n : skinsToHandle) {
-                animatedTexturedModels.add(readSkin(n).getAnimatedTexturedModel(transformation,materials,effects));
+                animatedTexturedModels.add(readSkin(n, geometries)
+                        .getAnimatedTexturedModel(transformation, materials, effects, instanceMaterials, images));
             }
             Log.i(TAG, "file '" + filename + "' loaded");
         } catch (FileNotFoundException e) {
@@ -101,8 +102,13 @@ public class ColladaLoader {
         return animatedTexturedModels;
     }
 
-    private Map<String,Image> readImageLibrary(Node node) {
-        Map<String,Image> images = new HashMap<>();
+    /**
+     * reads a image library
+     * @param node library_images node to read from
+     * @return map of the images, with the images' ids as keys
+     */
+    private Map<String, Image> readImageLibrary(Node node) {
+        Map<String, Image> images = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("image")) {
                 Image image = Image.formNode(n);
@@ -114,6 +120,11 @@ public class ColladaLoader {
         return images;
     }
 
+    /**
+     * reads a material library
+     * @param node library_materials node to read from
+     * @return map of the materials, with the materials' ids as keys
+     */
     private Map<String, Material> readMaterialLibrary(Node node) {
         Map<String, Material> materials = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
@@ -127,15 +138,18 @@ public class ColladaLoader {
         return materials;
     }
 
-
-
+    /**
+     * reads a effect library
+     * @param node library_effects node to read from
+     * @return map of the effects, with the effects' ids as keys
+     */
     private Map<String, Effect> readEffectLibrary(Node node) {
         //Log.d(TAG,"library:effect");
         Map<String, Effect> effects = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("effect")) {
                 Effect effect = Effect.fromNode(n);
-                effects.put(effect.getId(),effect);
+                effects.put(effect.getId(), effect);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_le:" + n.getNodeName());
             }
@@ -143,37 +157,22 @@ public class ColladaLoader {
         return effects;
     }
 
-    private void readGeometryLibrary(Node node) {
+    /**
+     * reads a geometry library
+     * @param node library_geometries node to read from
+     * @return map of the geometries, with the geometries' ids as keys
+     */
+    private Map<String, Geometry> readGeometryLibrary(Node node) {
+        Map<String, Geometry> geometries = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("geometry")) {
-                geometry(n);
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_lg:" + n.getNodeName());
+                Geometry geometry = Geometry.fromNode(n);
+                geometries.put(geometry.getId(), geometry);
+            } else {
+                Log.w(TAG, "unknown_lg:" + n.getNodeName());
             }
         }
-    }
-
-    private void geometry(Node node) {
-        putIdElement(node);
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("mesh")) {
-                mesh(n);
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_g:" + n.getNodeName());
-            }
-        }
-    }
-
-    private void mesh(Node node) {
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("source")) {
-                source(n);
-            } else if (n.getNodeName().equals("vertices")) {
-                putIdElement(n);
-            } else if (!(n.getNodeName().equals("#text") || n.getNodeName().equals("triangles") || n.getNodeName().equals("polylist"))) {
-                Log.w(TAG, "unkn_m:" + n.getNodeName());
-            }
-        }
+        return geometries;
     }
 
     private void source(Node node) {
@@ -189,142 +188,9 @@ public class ColladaLoader {
         }
     }
 
-    private Geometry readGeometry(Node node) {
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("mesh")) {
-                return readMesh(n);
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_g:" + n.getNodeName());
-            }
-        }
-        Log.e(TAG, "no mesh element found");
-        return null;
-    }
-
-    private Geometry readMesh(Node node) {
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("triangles")) {
-                return readTriangles(n);
-            } else if (n.getNodeName().equals("polylist")) {
-                return readPolylist(n);
-            } else if (!(n.getNodeName().equals("#text") || n.getNodeName().equals("source") || n.getNodeName().equals("vertices"))) {
-                Log.w(TAG, "unkn_m:" + n.getNodeName());
-            }
-        }
-        Log.e(TAG, "no triangles Element found");
-        return null;
-    }
-
-    private Geometry readTriangles(Node node) {
-        String materialId = node.getAttributes().getNamedItem("material").getNodeValue().replaceFirst("#","");
-        //Material material = readMaterial(getSymbolElement(materialId));
-        //String imageFile = images.get(material.getInstanceEffect().getImage()).getSource().replaceFirst("file:///","");
-        Geometry vertices = null;
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("input")) {
-                Node inputnode = getIdElement(n.getAttributes().getNamedItem("source").getNodeValue()); //todo semantic, offset
-                String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
-                switch (semantic) {
-                    case "VERTEX":
-                        vertices = readVertices(inputnode,  materialId);
-                        break;
-                    case "NORMAL":
-                        vertices.setNormal(ColladaUtil.readSource(inputnode).getFloatData());
-                        break;
-                    case "TEXCOORD":
-                        vertices.setTextureCoordinates(ColladaUtil.readSource(inputnode).getFloatData());
-                        break;
-                    default:
-                        Log.w(TAG, "unkn_T_semantic" + semantic);
-                }
-            } else if (n.getNodeName().equals("p")) {
-                vertices.setIndices(ColladaUtil.readIntArray(n));
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_t:" + n.getNodeName());
-            }
-        }
-        assert vertices != null;
-        return vertices;
-    }
-
-    private Geometry readPolylist(Node node) {
-        //String img = readImage(readMaterial(getIdElement(node.getAttributes().getNamedItem("material").getNodeValue())).getInstanceEffect().getImage());
-        String img = "white.png";
-        float[][] normalData = null;
-        float[][] uvData = null;
-        int[] primitive = null;
-        int[] vcount = null;
-        int numberOfInputs = 0;
-        Geometry vertices = null;
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("input")) {
-                numberOfInputs++;
-                String source = n.getAttributes().getNamedItem("source").getNodeValue();
-                String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
-                switch (semantic) {
-                    case "VERTEX":
-                        vertices = readVertices(getIdElement(source), null);
-                        break;
-                    case "NORMAL":
-                        normalData = ColladaUtil.readSource(getIdElement(source)).getFloatData();
-                        break;
-                    case "TEXCOORD":
-                        uvData = ColladaUtil.readSource(getIdElement(source)).getFloatData();
-                        break;
-                    default:
-                        Log.w("unknown input type: " + semantic);
-                }
-            } else if (n.getNodeName().equals("vcount")) {
-                vcount = ColladaUtil.readIntArray(n);
-            } else if (n.getNodeName().equals("p")) {
-                primitive = ColladaUtil.readIntArray(n);
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_v:" + n.getNodeName());
-            }
-        }
-        if(primitive != null) {
-            float[][] pos  = new float[primitive.length / numberOfInputs][3];
-            float[][] norm = new float[primitive.length / numberOfInputs][3];
-            float[][] uv   = new float[primitive.length / numberOfInputs][2];
-            int[] indices = new int[primitive.length / numberOfInputs];
-            for (int i = 0; i < primitive.length / numberOfInputs; i++) {
-                pos[i] = vertices.getPosition()[primitive[numberOfInputs * i]];
-                norm[i] = normalData[primitive[numberOfInputs * i + 1]];
-                uv[i]  = uvData[primitive[numberOfInputs* i + 2]];
-                indices[i] = i;
-            }
-            vertices.setPosition(pos);
-            vertices.setNormal(norm);
-            vertices.setTextureCoordinates(uv);
-            vertices.setIndices(indices);
-        } else {
-            Log.w(TAG, "p is not set");
-        }
-        return vertices;
-    }
-
-    private Geometry readVertices(Node node, String materialId) {
-        float[][] pos = null, normal = null, uv = null;
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("input")) {
-                String source = n.getAttributes().getNamedItem("source").getNodeValue();
-                String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
-                if (semantic.equals("POSITION")) {
-                    pos = ColladaUtil.readSource(getIdElement(source)).getFloatData();
-                } else if (semantic.equals("NORMAL")) {
-                    normal = ColladaUtil.readSource(getIdElement(source)).getFloatData();
-                } else if (semantic.equals("TEXCOORD")) {
-                    uv = ColladaUtil.readSource(getIdElement(source)).getFloatData();
-                }
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_v:" + n.getNodeName());
-            }
-        }
-        return new Geometry(pos, normal, uv, null, materialId);
-    }
-
     /**
      * read a library_controllers node
+     *
      * @param node node to read
      */
     private void library_controllers(Node node) {
@@ -340,6 +206,7 @@ public class ColladaLoader {
 
     /**
      * reads a controller node
+     *
      * @param node node to read
      */
     private void controller(Node node) {
@@ -355,6 +222,7 @@ public class ColladaLoader {
 
     /**
      * reads a skin element (child element from controller)
+     *
      * @param node node to read
      */
     private void skin(Node node) {
@@ -365,18 +233,21 @@ public class ColladaLoader {
             } else if (n.getNodeName().equals("source")) {
                 source(n);
             } else if (n.getNodeName().equals("joints")) {
-                Log.w(TAG,"toto_sk:" +  n.getNodeName());
+                Log.w(TAG, "toto_sk:" + n.getNodeName());
             } else if (n.getNodeName().equals("vertex_weights")) {
-                Log.w(TAG,"toto_sk:" +  n.getNodeName());
+                Log.w(TAG, "toto_sk:" + n.getNodeName());
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_sk:" + n.getNodeName());
             }
         }
     }
 
-    private ColladaSkin readSkin(Node node) {
+    private ColladaSkin readSkin(Node node, Map<String, Geometry> geometries) {
         ColladaSkin skin = new ColladaSkin();
-        skin.setVsource(readGeometry(getIdElement(node.getAttributes().getNamedItem("source").getNodeValue())));
+        skin.setVsource(geometries.get(getAttribValue(node, "source").replaceFirst("#", "")));
+        //readGeometry(getIdElement(node.getAttributes().getNamedItem("source").getNodeValue())));
+        System.out.println(geometries);
+        System.out.println(getAttribValue(node, "source").replaceFirst("#", ""));
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("joints")) {
                 skin.setJoints(readJoints(n)); //store in joints global
@@ -487,7 +358,7 @@ public class ColladaLoader {
         if (type.equals("JOINT")) {
             String sid = node.getAttributes().getNamedItem("sid").getNodeValue();
             String name = node.getAttributes().getNamedItem("sid").getNodeValue();
-            Matrix4f tm = new  Matrix4f().identity();
+            Matrix4f tm = new Matrix4f().identity();
             List<Node> childs = new ArrayList<>();
             for (Node n : getListFromNodeList(node.getChildNodes())) {
                 if (n.getNodeName().equals("matrix")) {
@@ -510,11 +381,11 @@ public class ColladaLoader {
                 }
 
             }
-            if(tm == null) tm = new Matrix4f().identity();
-            Joint joint = new Joint(name,tm ,parent);
+            if (tm == null) tm = new Matrix4f().identity();
+            Joint joint = new Joint(name, tm, parent);
             allJoints.put(sid, joint);
-            for(Node n: childs) {
-                node(n,joint);
+            for (Node n : childs) {
+                node(n, joint);
             }
         } else if (type.equals("NODE")) {
             Matrix4f matrix = new Matrix4f().identity();
@@ -532,7 +403,7 @@ public class ColladaLoader {
                 } else if (n.getNodeName().equals("translate")) {
                     float[] trans = ColladaUtil.readFloatArray(n);
                     matrix.translate(trans[0], trans[1], trans[2]);
-                }else if (n.getNodeName().equals("node")) {
+                } else if (n.getNodeName().equals("node")) {
                     node(n, null);
                 } else if (!n.getNodeName().equals("#text")) {
                     Log.w(TAG, "unkn_n:" + n.getNodeName());
@@ -548,7 +419,7 @@ public class ColladaLoader {
                     if (n2.getNodeName().equals("technique_common")) {
                         for (Node n3 : getListFromNodeList(n2.getChildNodes())) {
                             if (n3.getNodeName().equals("instance_material")) {
-                                putSymbolElement(n3);
+                                instanceMaterials.put(getAttribValue(n3, "symbol"), getAttribValue(n3, "target").replaceFirst("#", ""));
                             } else if (!n3.getNodeName().equals("#text")) {
                                 Log.w(TAG, "unkn_tc:" + n3.getNodeName());
                             }
@@ -578,21 +449,10 @@ public class ColladaLoader {
         idElements.put(id, node);
     }
 
-    private void putSymbolElement(Node node) {
-
-        String symbol = node.getAttributes().getNamedItem("symbol").getNodeValue();
-        symbolElements.put(symbol, node);
-    }
-
     private Node getIdElement(String hashedId) {
         Node node = idElements.get(hashedId.replaceFirst("#", ""));
         if (node == null) Log.e(TAG, "id " + hashedId + " not found");
         return node;
     }
 
-    private Node getSymbolElement(String symbol) {
-        Node node = symbolElements.get(symbol.replaceFirst("#", ""));
-        if (node == null) Log.e(TAG, "symbol " + symbol + " not found");
-        return node;
-    }
 }
