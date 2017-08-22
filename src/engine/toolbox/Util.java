@@ -5,6 +5,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -108,4 +111,11 @@ public class Util {
         return new Vector2f(in.x/in.w,in.y/in.w);
     }
 
+    public static List<Node> getListFromNodeList(NodeList nodeList) {
+        List<Node> list = new ArrayList<>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            list.add(nodeList.item(i));
+        }
+        return list;
+    }
 }

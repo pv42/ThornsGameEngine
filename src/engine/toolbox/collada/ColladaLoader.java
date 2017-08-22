@@ -18,6 +18,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
+
+import static engine.toolbox.Util.getListFromNodeList;
 
 /***
  * Created by pv42 on 02.08.16.
@@ -25,6 +28,8 @@ import java.util.*;
 //todo prevent loading multiple collada files
 public class ColladaLoader {
     private static final String TAG = "COLLADA";
+    private Asset asset = null;
+    private Map<String,Image> images = new HashMap<>();
     private Map<String, Node> idElements = new HashMap<>();
     private Map<String, Node> symbolElements = new HashMap<>();
     private List<TexturedModel> animatedTexturedModels = new ArrayList<>();
@@ -50,10 +55,10 @@ public class ColladaLoader {
             for (int i = 0; i < mainNodes.getLength(); i++) {
                 switch (mainNodes.item(i).getNodeName()) {
                     case "asset":
-                        asset(mainNodes.item(i));
+                        asset = Asset.fromNode(mainNodes.item(i));
                         break;
                     case "library_images":
-                        library_images(mainNodes.item(i));
+                        images = readImageLibrary(mainNodes.item(i));
                         break;
                     case "library_materials":
                         library_materials(mainNodes.item(i));
@@ -78,6 +83,7 @@ public class ColladaLoader {
                         Log.i(TAG, "todo :" + mainNodes.item(i).getNodeName());
                 }
             }
+            Log.d(TAG, "Asset:" + asset);
             Log.d(TAG, "loading data to VRAM");
             for (Node n : skinsToHandle) {
                 animatedTexturedModels.add(readSkin(n).getAnimatedTexturedModel(transformation));
@@ -91,27 +97,17 @@ public class ColladaLoader {
         return animatedTexturedModels;
     }
 
-    private void library_images(Node node) {
-        //Log.d(TAG,"library:images");
+    private Map<String,Image> readImageLibrary(Node node) {
+        Map<String,Image> images = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("image")) {
-                putIdElement(n);
+                Image image = Image.formNode(n);
+                images.put(image.getId(), image);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.i(TAG, "unkn_li:" + n.getNodeName());
             }
         }
-    }
-
-    private String readImage(Node node) {
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("init_from")) {
-                return n.getTextContent().replaceFirst("file:///", "");
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_I:" + n.getNodeName());
-            }
-        }
-        Log.e(TAG, "no init_from found");
-        return null;
+        return images;
     }
 
     private void library_materials(Node node) {
@@ -179,7 +175,7 @@ public class ColladaLoader {
             if (n.getNodeName().equals("surface")) {
                 for (Node n2 : getListFromNodeList(n.getChildNodes())) {
                     if (n2.getNodeName().equals("init_from")) {
-                        effect.setImage(getIdElement(n2.getTextContent()));
+                        effect.setImage(n2.getTextContent());
                     } else if (n2.getNodeName().equals("format")) {
                         //nothing yet
                     } else if (!n2.getNodeName().equals("#text")) {
@@ -205,24 +201,7 @@ public class ColladaLoader {
         }
     }
 
-    private void asset(Node node) {
-        //Log.d(TAG,"asset");
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("created")) {
-                //Log.d(TAG," created:" +n.getTextContent());
-            } else if (n.getNodeName().equals("modified")) {
-                //Log.d(TAG," last modified:" +n.getTextContent());
-            } else if (n.getNodeName().equals("unit")) {
-                String unit = n.getAttributes().getNamedItem("name").getNodeValue();
-                Float value = Float.valueOf(n.getAttributes().getNamedItem("meter").getNodeValue());
-                //Log.d(TAG," unit: " +value + unit);
-            } else if (n.getNodeName().equals("up_axis")) {
-                //Log.d(TAG," up:" +n.getTextContent());
-            } else if (!n.getNodeName().equals("#text")) {
-                //Log.d(TAG," unkn_a:" + n.getNodeName());
-            }
-        }
-    }
+
 
     private void geometry(Node node) {
         putIdElement(node);
@@ -289,7 +268,8 @@ public class ColladaLoader {
     private Vertices readTriangles(Node node) {
         String materialName = node.getAttributes().getNamedItem("material").getNodeValue();
         Material material = readMaterial(getSymbolElement(materialName));
-        String imageFile = readImage(material.getInstanceEffect().getImage());
+        String imageFile = images.get(material.getInstanceEffect().getImage()).getSource().replaceFirst("file:///","");
+
         Vertices vertices = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
@@ -720,14 +700,6 @@ public class ColladaLoader {
         }
         matrix4f.set(array);
         return matrix4f;
-    }
-
-    private List<Node> getListFromNodeList(NodeList nodeList) {
-        List<Node> list = new ArrayList<>();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            list.add(nodeList.item(i));
-        }
-        return list;
     }
 
     private void putIdElement(Node node) {
