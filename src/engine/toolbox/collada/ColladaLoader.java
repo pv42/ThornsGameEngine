@@ -30,6 +30,8 @@ public class ColladaLoader {
     private static final String TAG = "COLLADA";
     private Asset asset = null;
     private Map<String,Image> images = new HashMap<>();
+    private Map<String, Material> materials = new HashMap<>();
+    private Map<String, Effect> effects = new HashMap<>();
     private Map<String,Geometry> geometries = new HashMap<>();
     private Map<String, Node> idElements = new HashMap<>();
     private Map<String, Node> symbolElements = new HashMap<>();
@@ -62,13 +64,15 @@ public class ColladaLoader {
                         images = readImageLibrary(mainNodes.item(i));
                         break;
                     case "library_materials":
-                        library_materials(mainNodes.item(i));
+                        materials = readMaterialLibrary(mainNodes.item(i));
                         break;
                     case "library_effects":
-                        library_effects(mainNodes.item(i));
+                        effects= readEffectLibrary(mainNodes.item(i));
                         break;
                     case "library_geometries":
                         readGeometryLibrary(mainNodes.item(i));
+                        //Geometry geometry = Geometry.fromNode(mainNodes.item(i));
+                        //geometry.get
                         break;
                     case "library_controllers":
                         library_controllers(mainNodes.item(i));
@@ -86,7 +90,7 @@ public class ColladaLoader {
             }
             Log.d(TAG, "loading data to VRAM");
             for (Node n : skinsToHandle) {
-                animatedTexturedModels.add(readSkin(n).getAnimatedTexturedModel(transformation));
+                animatedTexturedModels.add(readSkin(n).getAnimatedTexturedModel(transformation,materials,effects));
             }
             Log.i(TAG, "file '" + filename + "' loaded");
         } catch (FileNotFoundException e) {
@@ -110,84 +114,33 @@ public class ColladaLoader {
         return images;
     }
 
-    private void library_materials(Node node) {
-        //Log.d(TAG,"library:materials");
+    private Map<String, Material> readMaterialLibrary(Node node) {
+        Map<String, Material> materials = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("material")) {
-                putIdElement(n);
+                Material material = Material.fromNode(n);
+                materials.put(material.getId(), material);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_lm:" + n.getNodeName());
             }
         }
+        return materials;
     }
 
-    private Material readMaterial(Node node) {
-        if (node.getNodeName().equals("instance_material")) {
-            return readMaterial(getIdElement(readInstance_material(node)));
-        }
-        Material material = new Material();
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("instance_effect")) {
-                material.setInstanceEffect(readEffect(getIdElement(n.getAttributes().getNamedItem("url").getNodeValue())));
-            } else if (!(n.getNodeName().equals("#text") || n.getNodeName().equals("extra"))) {
-                Log.w(TAG, "unkn_rm:" + n.getNodeName());
-            }
-        }
-        if (material.getInstanceEffect() == null) Log.e(TAG, "ie == null : mat:" + node.getNodeName());
-        return material;
-    }
 
-    private void library_effects(Node node) {
+
+    private Map<String, Effect> readEffectLibrary(Node node) {
         //Log.d(TAG,"library:effect");
+        Map<String, Effect> effects = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("effect")) {
-                putIdElement(n);
+                Effect effect = Effect.fromNode(n);
+                effects.put(effect.getId(),effect);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_le:" + n.getNodeName());
             }
         }
-    }
-
-    private Effect readEffect(Node node) {
-        Effect effect = new Effect();
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("profile_COMMON")) {
-                for (Node n2 : getListFromNodeList(n.getChildNodes())) {
-                    if (n2.getNodeName().equals("newparam")) {
-                        readNewparam(n2, effect);
-                    } else if (n2.getNodeName().equals("technique")) {
-                        //todo
-                    } else if (!n2.getNodeName().equals("#text")) {
-                        Log.w(TAG, "unkn_pC:" + n.getNodeName());
-                    }
-                }
-            } else if (n.getNodeName().equals("extra")) {
-                //ignore extras
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_e:" + n.getNodeName());
-            }
-        }
-        return effect;
-    }
-
-    private void readNewparam(Node node, Effect effect) {
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
-            if (n.getNodeName().equals("surface")) {
-                for (Node n2 : getListFromNodeList(n.getChildNodes())) {
-                    if (n2.getNodeName().equals("init_from")) {
-                        effect.setImage(n2.getTextContent());
-                    } else if (n2.getNodeName().equals("format")) {
-                        //nothing yet
-                    } else if (!n2.getNodeName().equals("#text")) {
-                        Log.w(TAG, "unkn_sf:" + n2.getNodeName());
-                    }
-                }
-            } else if (n.getNodeName().equals("sampler2D")) {
-                //nothing yet
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_nP:" + n.getNodeName());
-            }
-        }
+        return effects;
     }
 
     private void readGeometryLibrary(Node node) {
@@ -199,8 +152,6 @@ public class ColladaLoader {
             }
         }
     }
-
-
 
     private void geometry(Node node) {
         putIdElement(node);
@@ -265,10 +216,9 @@ public class ColladaLoader {
     }
 
     private Geometry readTriangles(Node node) {
-        String materialName = node.getAttributes().getNamedItem("material").getNodeValue();
-        Material material = readMaterial(getSymbolElement(materialName));
-        String imageFile = images.get(material.getInstanceEffect().getImage()).getSource().replaceFirst("file:///","");
-
+        String materialId = node.getAttributes().getNamedItem("material").getNodeValue().replaceFirst("#","");
+        //Material material = readMaterial(getSymbolElement(materialId));
+        //String imageFile = images.get(material.getInstanceEffect().getImage()).getSource().replaceFirst("file:///","");
         Geometry vertices = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
@@ -276,7 +226,7 @@ public class ColladaLoader {
                 String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
                 switch (semantic) {
                     case "VERTEX":
-                        vertices = readVertices(inputnode,  imageFile);
+                        vertices = readVertices(inputnode,  materialId);
                         break;
                     case "NORMAL":
                         vertices.setNormal(ColladaUtil.readSource(inputnode).getFloatData());
@@ -353,7 +303,7 @@ public class ColladaLoader {
         return vertices;
     }
 
-    private Geometry readVertices(Node node, String imageFile) {
+    private Geometry readVertices(Node node, String materialId) {
         float[][] pos = null, normal = null, uv = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
@@ -370,7 +320,7 @@ public class ColladaLoader {
                 Log.w(TAG, "unkn_v:" + n.getNodeName());
             }
         }
-        return new Geometry(pos, normal, uv, null, imageFile);
+        return new Geometry(pos, normal, uv, null, materialId);
     }
 
     /**
@@ -554,7 +504,7 @@ public class ColladaLoader {
                 } else if (n.getNodeName().equals("node")) {
                     childs.add(n);
                 } else if (n.getNodeName().equals("extra")) {
-                    Log.d(TAG,"extra not implemented");
+                    //todo Log.d(TAG,"extra not implemented");
                 } else if (!n.getNodeName().equals("#text")) {
                     Log.w(TAG, "unkn_node:" + n.getNodeName());
                 }

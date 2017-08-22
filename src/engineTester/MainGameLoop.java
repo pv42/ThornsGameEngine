@@ -23,7 +23,7 @@ import engine.graphics.lights.Light;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.guis.GuiTexture;
-import engine.graphics.models.OBJLoader;
+import engine.toolbox.OBJLoader;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.*;
 import engine.graphics.renderEngine.*;

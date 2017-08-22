@@ -1,16 +1,50 @@
 package engine.toolbox.collada;
 
+import engine.toolbox.Log;
+import org.w3c.dom.Node;
+
+import java.util.Map;
+
+import static engine.toolbox.collada.ColladaUtil.getAttribValue;
+import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
+
 /***
  * Created by pv42 on 03.08.16.
  */
 public class Material {
-    private Effect instanceEffect = null;
+    private static final String TAG = "Collada:Material";
+    private String instanceEffectId;
+    private String id;
 
-    public void setInstanceEffect(Effect instanceEffect) {
-        this.instanceEffect = instanceEffect;
+    public static Material fromNode(Node node) {
+        if (node.getNodeName().equals("instance_material")) {
+            Log.w(TAG,"not yet implemented"); //todo implement right
+        }
+        Material material = new Material();
+        material.setId(getAttribValue(node,"id"));
+        for (Node n : getListFromNodeList(node.getChildNodes())) {
+            if (n.getNodeName().equals("instance_effect")) {
+                material.setInstanceEffect(getAttribValue(n,"url"));
+            } else if (!(n.getNodeName().equals("#text") || n.getNodeName().equals("extra"))) {
+                Log.w(TAG, "unkn_rm:" + n.getNodeName());
+            }
+        }
+        return material;
     }
 
-    public Effect getInstanceEffect() {
-        return instanceEffect;
+    private void setInstanceEffect(String instanceEffectId) {
+        this.instanceEffectId = instanceEffectId;
+    }
+
+    public Effect getInstanceEffect(Map<String,Effect> effectMap) {
+        return effectMap.get(instanceEffectId);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    private void setId(String id) {
+        this.id = id;
     }
 }

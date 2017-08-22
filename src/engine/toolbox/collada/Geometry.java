@@ -6,6 +6,7 @@ import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Log;
 import engine.toolbox.Util;
+import org.joml.Matrix4f;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
@@ -24,18 +25,8 @@ public class Geometry {
     private float[][] textureCoordinates;
     private int[] indices;
     private String materialId;
-    @Deprecated
-    private String imageFile;
 
-    public Geometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String imageFile) {
-        this.position = position;
-        this.normal = normal;
-        this.textureCoordinates = textureCoordinates;
-        this.indices = indices;
-        this.imageFile = imageFile;
-    }
-
-    public Geometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String materialId, Object placeholder) {
+    public Geometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String materialId) {
         this.position = position;
         this.normal = normal;
         this.textureCoordinates = textureCoordinates;
@@ -48,14 +39,18 @@ public class Geometry {
         return Loader.loadToVAO(Util.get1DArray(position), Util.get1DArray(textureCoordinates), Util.get1DArray(normal), indices);
     }
 
-    @Deprecated
-    public TexturedModel getTexturedModel() {
+
+    public TexturedModel getTexturedModel(Map<String, Material> materials, Map<String, Effect> effects) {
+        String imageFile = getImageFile(materials,effects);
         return new TexturedModel(getRawModel(), new ModelTexture(Loader.loadTexture(imageFile)));
     }
 
-    @Deprecated
-    public String getImageFile() {
-        return imageFile;
+
+    public String getImageFile(Map<String,Material> materials, Map<String, Effect> effects) {
+        System.out.println(materials);
+        System.out.println(materials.get(materialId));
+        return materials.get(materialId).getInstanceEffect(effects).getImage().replaceFirst("file:///","");
+
     }
 
     public int[] getIndices() {
@@ -88,11 +83,6 @@ public class Geometry {
 
     public void setIndices(int[] indices) {
         this.indices = indices;
-    }
-
-    @Deprecated
-    public void setImageFile(String imageFile) {
-        this.imageFile = imageFile;
     }
 
 
@@ -149,14 +139,8 @@ public class Geometry {
                         geometry = readVertices(vertices, materialName, sources);
                         break;
                     case "NORMAL":
-                        geometry.setNormal(readSource(sources.get(
-                                getAttribValue(n, "source").replaceFirst("#", "")
-                        )).getFloatData());
-                        break;
                     case "TEXCOORD":
-                        geometry.setTextureCoordinates(readSource(sources.get(
-                                getAttribValue(n, "source").replaceFirst("#", "")
-                        )).getFloatData());
+                        Log.e(TAG,"todo_readT");
                         break;
                     default:
                         Log.w(TAG, "unkn_T_semantic" + semantic);
@@ -185,7 +169,7 @@ public class Geometry {
                     uv = readSource(sources.get(source)).getFloatData();
                 }
             } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_v:" + n.getNodeName());
+                Log.w(TAG, "unkn_vert:" + n.getNodeName());
             }
         }
         return new Geometry(pos, normal, uv, null, imageFile);

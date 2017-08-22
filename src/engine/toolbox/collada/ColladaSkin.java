@@ -13,6 +13,7 @@ import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.joml.Matrix4fc.PROPERTY_IDENTITY;
 
@@ -42,10 +43,10 @@ public class ColladaSkin {
         this.joints = joints;
     }
 
-    public TexturedModel getAnimatedTexturedModel() {
-        return getAnimatedTexturedModel(null);
+    public TexturedModel getAnimatedTexturedModel(Map<String, Material> materials, Map<String, Effect> effects) {
+        return getAnimatedTexturedModel(null,materials, effects);
     }
-    public TexturedModel getAnimatedTexturedModel(Matrix4f transformation) {
+    public TexturedModel getAnimatedTexturedModel(Matrix4f transformation,Map<String, Material> materials, Map<String, Effect> effects) {
         if(vsource.getPosition() == null) Log.e(TAG,"pnull");
         if(vsource.getNormal() == null) Log.e(TAG,"nnull");
         if(vsource.getTextureCoordinates() == null) Log.e(TAG,"vnull");
@@ -73,7 +74,7 @@ public class ColladaSkin {
         float[] boneWeightArray = new float[uv.length * 2];
         fillBoneData(boneIndicesArray,boneWeightArray,vertexWeights.getIndices(),vertexWeights.getWeights());
         RawModel model  =  Loader.loadToVAOAnimated(pos, uv, norm, vsource.getIndices(), boneIndicesArray, boneWeightArray, joints);
-        ModelTexture texture = new ModelTexture(Loader.loadTexture(vsource.getImageFile()));
+        ModelTexture texture = new ModelTexture(Loader.loadTexture(vsource.getImageFile(materials,effects)));
         return new TexturedModel(model,texture,true);
     }
     private void fillBoneData(int[] bina, float[] bwea, List<List<Integer>> bin,List<List<Float>> bwe) {

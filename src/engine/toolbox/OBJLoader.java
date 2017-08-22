@@ -1,10 +1,10 @@
-package engine.graphics.models;
+package engine.toolbox;
 
 import engine.graphics.animation.Joint;
+import engine.graphics.models.RawModel;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import engine.graphics.renderEngine.Loader;
-import engine.toolbox.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -68,9 +68,9 @@ public class OBJLoader {
                 String[] vertex1 = currentLine[1].split("/");
                 String[] vertex2 = currentLine[2].split("/");
                 String[] vertex3 = currentLine[3].split("/");
-                processVertx(vertex1,indices,uvs,normals,textureArray,normalsArray);
-                processVertx(vertex2,indices,uvs,normals,textureArray,normalsArray);
-                processVertx(vertex3,indices,uvs,normals,textureArray,normalsArray);
+                processVertex(vertex1,indices,uvs,normals,textureArray,normalsArray);
+                processVertex(vertex2,indices,uvs,normals,textureArray,normalsArray);
+                processVertex(vertex3,indices,uvs,normals,textureArray,normalsArray);
                 line = reader.readLine();
             }
             reader.close();
@@ -154,9 +154,9 @@ public class OBJLoader {
                 String[] vertex1 = currentLine[1].split("/");
                 String[] vertex2 = currentLine[2].split("/");
                 String[] vertex3 = currentLine[3].split("/");
-                processVertxAnimated(vertex1,indices,uvs,normals,boneIndices,boneWeights,textureArray,normalsArray,boneIndicesArray,boneWeightArray);
-                processVertxAnimated(vertex2,indices,uvs,normals,boneIndices,boneWeights,textureArray,normalsArray,boneIndicesArray,boneWeightArray);
-                processVertxAnimated(vertex3,indices,uvs,normals,boneIndices,boneWeights,textureArray,normalsArray,boneIndicesArray,boneWeightArray);
+                processVertexAnimated(vertex1,indices,uvs,normals,boneIndices,boneWeights,textureArray,normalsArray,boneIndicesArray,boneWeightArray);
+                processVertexAnimated(vertex2,indices,uvs,normals,boneIndices,boneWeights,textureArray,normalsArray,boneIndicesArray,boneWeightArray);
+                processVertexAnimated(vertex3,indices,uvs,normals,boneIndices,boneWeights,textureArray,normalsArray,boneIndicesArray,boneWeightArray);
                 line = reader.readLine();
             }
             reader.close();
@@ -178,14 +178,14 @@ public class OBJLoader {
         }
         return Loader.loadToVAOAnimated(verticesArray,textureArray,normalsArray,indicesArray,boneIndicesArray,boneWeightArray, joints);
     }
-    private static void processVertx(String[] vertxData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals, float[] textureArray,float[] normalsArray) {
-        int currentVertexPointer = Integer.parseInt(vertxData[0]) - 1;
+    private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals, float[] textureArray, float[] normalsArray) {
+        int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
         indices.add(currentVertexPointer);
-        Vector2f currentTexture = textures.get(Integer.parseInt(vertxData[1]) - 1);
+        Vector2f currentTexture = textures.get(Integer.parseInt(vertexData[1]) - 1);
         textureArray[currentVertexPointer * 2] = currentTexture.x();
         textureArray[currentVertexPointer * 2 + 1] = currentTexture.y();
-        if(vertxData.length == 3) {
-            Vector3f currentNormal = normals.get(Integer.parseInt(vertxData[2]) - 1);
+        if(vertexData.length == 3) {
+            Vector3f currentNormal = normals.get(Integer.parseInt(vertexData[2]) - 1);
             normalsArray[currentVertexPointer * 3] = currentNormal.x();
             normalsArray[currentVertexPointer * 3 + 1] = currentNormal.y();
             normalsArray[currentVertexPointer * 3 + 2] = currentNormal.z();
@@ -193,19 +193,21 @@ public class OBJLoader {
             // no normal data in obj
         }
     }
-    private static void processVertxAnimated(String[] vertxData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals,List<Vector2f> boneIndices, List<Vector2f> boneWeights,
-                                             float[] textureArray,float[] normalsArray, int[] boneIndicesArray, float[] boneWeightArray) {
-        int currentVertexPointer = Integer.parseInt(vertxData[0]) - 1;
+
+    @Deprecated
+    private static void processVertexAnimated(String[] vertexData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals, List<Vector2f> boneIndices, List<Vector2f> boneWeights,
+                                              float[] textureArray, float[] normalsArray, int[] boneIndicesArray, float[] boneWeightArray) {
+        int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
         indices.add(currentVertexPointer);
-        Vector2f currentTexture = textures.get(Integer.parseInt(vertxData[1]) - 1);
+        Vector2f currentTexture = textures.get(Integer.parseInt(vertexData[1]) - 1);
         textureArray[currentVertexPointer * 2] = currentTexture.x();
         textureArray[currentVertexPointer * 2 + 1] = currentTexture.y();
         boneIndicesArray[currentVertexPointer * 2] = (int) boneIndices.get(currentVertexPointer).x;
         boneIndicesArray[currentVertexPointer * 2 + 1] = (int) boneIndices.get(currentVertexPointer).y;
         boneWeightArray[currentVertexPointer * 2] = boneWeights.get(currentVertexPointer).x;
         boneWeightArray[currentVertexPointer * 2 + 1] = boneIndices.get(currentVertexPointer).y;
-        if(vertxData.length == 3) {
-            Vector3f currentNormal = normals.get(Integer.parseInt(vertxData[2]) - 1);
+        if(vertexData.length == 3) {
+            Vector3f currentNormal = normals.get(Integer.parseInt(vertexData[2]) - 1);
             normalsArray[currentVertexPointer * 3] = currentNormal.x();
             normalsArray[currentVertexPointer * 3 + 1] = currentNormal.y();
             normalsArray[currentVertexPointer * 3 + 2] = currentNormal.z();

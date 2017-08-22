@@ -5,7 +5,7 @@ import engine.graphics.display.DisplayManager;
 import engine.graphics.cameras.StaticCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
-import engine.graphics.models.OBJLoader;
+import engine.toolbox.OBJLoader;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;

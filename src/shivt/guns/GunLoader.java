@@ -1,7 +1,7 @@
 package shivt.guns;
 
 import engine.graphics.models.MMTexturedModel;
-import engine.graphics.models.OBJLoader;
+import engine.toolbox.OBJLoader;
 import engine.graphics.models.RawModel;
 import engine.graphics.normalMappingObjConverter.NormalMappedObjLoader;
 import org.joml.Vector2f;
