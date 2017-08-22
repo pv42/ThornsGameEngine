@@ -3,7 +3,7 @@ package engine.toolbox.collada;
 import engine.toolbox.Log;
 import org.w3c.dom.Node;
 
-import static engine.toolbox.Util.getListFromNodeList;
+import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 
 public class Image {
     private static final String TAG = "COLLADA:Image";

@@ -151,6 +151,7 @@ public class Loader {
      * @param boneIndices bone indices
      * @param boneWeight bone weights for the indexed bones
      * @param indices indices array
+     * @param joints list of the joints/bones to use
      * @return rawmodel
      */
     public static RawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {

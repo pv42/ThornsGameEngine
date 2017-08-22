@@ -23,14 +23,14 @@ public class ColladaSkin {
     private static final String TAG = "ColladaSkin";
     private List<Joint> joints;
     private VertexWeights vertexWeights;
-    private Vertices vsource;
+    private Geometry vsource;
     private Matrix4f bindShapeMatrix;
     public ColladaSkin() {
 
     }
 
 
-    public void setVsource(Vertices vsource) {
+    public void setVsource(Geometry vsource) {
         this.vsource = vsource;
     }
 
@@ -48,7 +48,7 @@ public class ColladaSkin {
     public TexturedModel getAnimatedTexturedModel(Matrix4f transformation) {
         if(vsource.getPosition() == null) Log.e(TAG,"pnull");
         if(vsource.getNormal() == null) Log.e(TAG,"nnull");
-        if(vsource.getTexCoord() == null) Log.e(TAG,"vnull");
+        if(vsource.getTextureCoordinates() == null) Log.e(TAG,"vnull");
         if(transformation != null || ((bindShapeMatrix.properties() & PROPERTY_IDENTITY) != 0) ) {
             List<Vector4f> vertices = new ArrayList<>();
             List<Vector4f> normals = new ArrayList<>();
@@ -67,7 +67,7 @@ public class ColladaSkin {
             vsource.setNormal(Util.get2DArray(normals));
         }
         float[] pos = Util.get1DArray(vsource.getPosition());
-        float[] uv = Util.get1DArray(vsource.getTexCoord());
+        float[] uv = Util.get1DArray(vsource.getTextureCoordinates());
         float[] norm = Util.get1DArray(vsource.getNormal());
         int[] boneIndicesArray = new int[uv.length * 2];
         float[] boneWeightArray = new float[uv.length * 2];

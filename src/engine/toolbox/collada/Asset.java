@@ -6,7 +6,7 @@ import org.w3c.dom.Node;
 import java.util.HashMap;
 import java.util.Map;
 
-import static engine.toolbox.Util.getListFromNodeList;
+import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 
 /**
  * A COLLADA files assets similar to meta information

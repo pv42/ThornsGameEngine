@@ -111,11 +111,4 @@ public class Util {
         return new Vector2f(in.x/in.w,in.y/in.w);
     }
 
-    public static List<Node> getListFromNodeList(NodeList nodeList) {
-        List<Node> list = new ArrayList<>();
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            list.add(nodeList.item(i));
-        }
-        return list;
-    }
 }
