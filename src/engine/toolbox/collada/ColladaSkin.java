@@ -43,12 +43,12 @@ public class ColladaSkin {
         this.joints = joints;
     }
 
-    public TexturedModel getAnimatedTexturedModel(Map<String, Material> materials, Map<String, Effect> effects,
+    public TexturedModel getAnimatedTexturedModel(Map<String, Material> materials, Map<String, ColladaEffect> effects,
                                                   Map<String,String> instanceMaterials, Map<String, Image> images) {
         return getAnimatedTexturedModel(null,materials, effects,instanceMaterials, images);
     }
-    public TexturedModel getAnimatedTexturedModel(Matrix4f transformation,Map<String, Material> materials,
-                                                  Map<String, Effect> effects, Map<String,String> instanceMaterials,
+    public TexturedModel getAnimatedTexturedModel(Matrix4f transformation, Map<String, Material> materials,
+                                                  Map<String, ColladaEffect> effects, Map<String,String> instanceMaterials,
                                                   Map<String, Image> images) {
         if(vsource == null) Log.e(TAG, "vsnull");
         if(vsource.getPosition() == null) Log.e(TAG,"pnull");

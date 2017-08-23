@@ -10,6 +10,7 @@ import java.io.IOException;
  * Created by pv42 on 21.06.16.
  */
 public class Settings {
+
     private Settings() { // can not be created
     }
     //self
@@ -38,6 +39,7 @@ public class Settings {
     //debug
     public static boolean SHOW_DEBUG_LOG = true;
     public static final boolean WRITE_LOG_FILE = false;
+    public static boolean SHOW_EVENT_LOG = false;
     public static final String LOG_PATH = "log/log.txt";
     //network
     public static final int NETWORK_TIMEOUT = 20; //ms between nw syncs
@@ -60,6 +62,7 @@ public class Settings {
     private static final String KEY_AMBIENT = "ambient_light";
     private static final String SECTION_LOG = "log";
     private static final String KEY_SDL = "show_debug_log";
+    private static final String KEY_SEL = "show_event_log";
 
     public static void loadSettings() {
         ini = new Ini();
@@ -76,6 +79,7 @@ public class Settings {
         MAX_PARTICLE_INSTANCES = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MAX_PARTICLES, MAX_PARTICLE_INSTANCES));
         AMBIENT_LIGHT  = Float.parseFloat(     getSetting(SECTION_GRAPHIC, KEY_AMBIENT, AMBIENT_LIGHT));
         SHOW_DEBUG_LOG = Boolean.parseBoolean( getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
+        SHOW_EVENT_LOG = Boolean.parseBoolean( getSetting(SECTION_LOG, KEY_SEL, SHOW_EVENT_LOG));
         Log.d(TAG,"loaded settings");
         storeIni(f);
 

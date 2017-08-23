@@ -6,12 +6,9 @@ import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Log;
 import engine.toolbox.Util;
-import org.joml.Matrix4f;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static engine.toolbox.collada.ColladaUtil.*;
@@ -42,14 +39,14 @@ public class Geometry {
     }
 
 
-    public TexturedModel getTexturedModel(Map<String, Material> materials, Map<String, Effect> effects, Map<String,
+    public TexturedModel getTexturedModel(Map<String, Material> materials, Map<String, ColladaEffect> effects, Map<String,
             String> instanceEffects, Map<String, Image> images) {
         String imageFile = getImageFile(materials, effects, instanceEffects, images);
         return new TexturedModel(getRawModel(), new ModelTexture(Loader.loadTexture(imageFile)));
     }
 
 
-    public String getImageFile(Map<String, Material> materials, Map<String, Effect> effects, Map<String,
+    public String getImageFile(Map<String, Material> materials, Map<String, ColladaEffect> effects, Map<String,
             String> instanceMaterials, Map<String, Image> images) {
         return images.get(materials.get(instanceMaterials.get(materialId)).getInstanceEffect(effects).getImage()).getSource().replaceFirst("file:///", "");
 
@@ -81,10 +78,6 @@ public class Geometry {
 
     public void setNormal(float[][] normal) {
         this.normal = normal;
-    }
-
-    public void setTextureCoordinates(float[][] textureCoordinates) {
-        this.textureCoordinates = textureCoordinates;
     }
 
     public void setIndices(int[] indices) {

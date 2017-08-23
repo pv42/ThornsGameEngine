@@ -10,19 +10,24 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 /**
  * Created by pv42 on 03.08.16.
  */
-public class Effect {
-    private static final String TAG = "COLLADA:Effect";
+public class ColladaEffect {
+    private static final String TAG = "COLLADA:ColladaEffect";
     private String id;
     private String imageId;
 
-    public static Effect fromNode(Node node) {
-        Effect effect = new Effect();
-        effect.setId(getAttribValue(node,"id"));
+    /**
+     * loads a collada effect form an effect node
+     * @param node node to load from
+     * @return loaded effect
+     */
+    public static ColladaEffect fromNode(Node node) {
+        ColladaEffect colladaEffect = new ColladaEffect();
+        colladaEffect.setId(getAttribValue(node,"id"));
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("profile_COMMON")) {
                 for (Node n2 : getListFromNodeList(n.getChildNodes())) {
                     if (n2.getNodeName().equals("newparam")) {
-                        readNewparam(n2, effect);
+                        readNewparam(n2, colladaEffect);
                     } else if (n2.getNodeName().equals("technique")) {
                         //todo
                     } else if (!n2.getNodeName().equals("#text")) {
@@ -35,14 +40,15 @@ public class Effect {
                 Log.w(TAG, "unkn_e:" + n.getNodeName());
             }
         }
-        return effect;
+        return colladaEffect;
     }
-    private static void readNewparam(Node node, Effect effect) {
+
+    private static void readNewparam(Node node, ColladaEffect colladaEffect) {
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("surface")) {
                 for (Node n2 : getListFromNodeList(n.getChildNodes())) {
                     if (n2.getNodeName().equals("init_from")) {
-                        effect.setImage(n2.getTextContent());
+                        colladaEffect.setImage(n2.getTextContent());
                     } else if (n2.getNodeName().equals("format")) {
                         //nothing yet
                     } else if (!n2.getNodeName().equals("#text")) {
@@ -57,11 +63,15 @@ public class Effect {
         }
     }
 
+    /**
+     * gets the effect image
+     * @return effects image
+     */
     public String getImage() {
         return imageId;
     }
 
-    public void setImage(String imageId) {
+    private void setImage(String imageId) {
         this.imageId = imageId;
     }
 
@@ -69,7 +79,7 @@ public class Effect {
         return id;
     }
 
-    public void setId(String id) {
+    private void setId(String id) {
         this.id = id;
     }
 }

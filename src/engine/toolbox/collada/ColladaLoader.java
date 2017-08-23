@@ -29,10 +29,10 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 //todo prevent loading multiple collada files
 public class ColladaLoader {
     private static final String TAG = "COLLADA";
-    private Asset asset = null;
+    private ColladaAsset colladaAsset = null;
     private Map<String, Image> images;
     private Map<String, Material> materials;
-    private Map<String, Effect> effects;
+    private Map<String, ColladaEffect> effects;
     private Map<String, Geometry> geometries;
     private Map<String, Node> idElements = new HashMap<>();
     private List<TexturedModel> animatedTexturedModels = new ArrayList<>();
@@ -40,11 +40,23 @@ public class ColladaLoader {
     private List<Node> skinsToHandle = new ArrayList<>();
     private Map<String, String> instanceMaterials = new HashMap<>();
 
+    /**
+     * loads a collada files models into vram
+     * @param filename file to load from
+     * @return list of the models loaded
+     */
     public List<TexturedModel> loadColladaModelAnimated(String filename) {
         return loadColladaModelAnimated(filename, null);
     }
 
+    /**
+     * loads a collada files models into vram
+     * @param filename files name to load from
+     * @param transformation transformation to apply before loading into vram
+     * @return list of the models loaded
+     */
     public List<TexturedModel> loadColladaModelAnimated(String filename, Matrix4f transformation) {
+        List<TexturedModel> models = new ArrayList<>();
         try {
             filename = "res/meshs/" + filename + ".dae";
             Log.d(TAG, "loading file '" + filename + "'");
@@ -53,39 +65,57 @@ public class ColladaLoader {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document dom = builder.parse(file);
             Element root = dom.getDocumentElement();
-            root.normalize();
-            if (!root.getNodeName().equals("COLLADA")) Log.w(TAG, "root: " + root.getNodeName());
-            NodeList mainNodes = root.getChildNodes();
-            for (int i = 0; i < mainNodes.getLength(); i++) {
-                switch (mainNodes.item(i).getNodeName()) {
-                    case "asset":
-                        asset = Asset.fromNode(mainNodes.item(i));
-                        break;
-                    case "library_images":
-                        images = readImageLibrary(mainNodes.item(i));
-                        break;
-                    case "library_materials":
-                        materials = readMaterialLibrary(mainNodes.item(i));
-                        break;
-                    case "library_effects":
-                        effects = readEffectLibrary(mainNodes.item(i));
-                        break;
-                    case "library_geometries":
-                        geometries = readGeometryLibrary(mainNodes.item(i));
-                        System.out.println(geometries);
-                        break;
-                    case "library_controllers":
-                        library_controllers(mainNodes.item(i));
-                        break;
-                    case "library_visual_scenes":
-                        library_visual_scene(mainNodes.item(i));
-                        break;
-                    case "scene":
-                        break;
-                    case "#text":
-                        break;
-                    default:
-                        Log.i(TAG, "todo :" + mainNodes.item(i).getNodeName());
+            models =  loadColladaModelAnimated(root, transformation);
+            Log.i(TAG, "file '" + filename + "' loaded");
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "file '" + filename + "' not found");
+        } catch (ParserConfigurationException | SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return models;
+    }
+
+    /**
+     * loads a colladas models from a node
+     * @param root collada root node to load from
+     * @param transformation transformation to apply before loading into vram
+     * @return list of the models loaded
+     */
+    public List<TexturedModel> loadColladaModelAnimated(Node root, Matrix4f transformation) {
+        root.normalize();
+        if (!root.getNodeName().equals("COLLADA")) Log.w(TAG, "root: " + root.getNodeName());
+        NodeList mainNodes = root.getChildNodes();
+        for (int i = 0; i < mainNodes.getLength(); i++) {
+            switch (mainNodes.item(i).getNodeName()) {
+                case "asset":
+                    colladaAsset = ColladaAsset.fromNode(mainNodes.item(i));
+                    break;
+                case "library_images":
+                    images = readImageLibrary(mainNodes.item(i));
+                    break;
+                case "library_materials":
+                    materials = readMaterialLibrary(mainNodes.item(i));
+                    break;
+                case "library_effects":
+                    effects = readEffectLibrary(mainNodes.item(i));
+                    break;
+                case "library_geometries":
+                    geometries = readGeometryLibrary(mainNodes.item(i));
+                    break;
+                case "library_controllers":
+                    library_controllers(mainNodes.item(i));
+                    break;
+                case "library_visual_scenes":
+                    library_visual_scene(mainNodes.item(i));
+                    break;
+                case "scene":
+                    break;
+                case "#text":
+                    break;
+                default:
+                    Log.i(TAG, "todo :" + mainNodes.item(i).getNodeName());
                 }
             }
             Log.d(TAG, "loading data to VRAM");
@@ -93,12 +123,6 @@ public class ColladaLoader {
                 animatedTexturedModels.add(readSkin(n, geometries)
                         .getAnimatedTexturedModel(transformation, materials, effects, instanceMaterials, images));
             }
-            Log.i(TAG, "file '" + filename + "' loaded");
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, "file '" + filename + "' not found");
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-        }
         return animatedTexturedModels;
     }
 
@@ -143,13 +167,13 @@ public class ColladaLoader {
      * @param node library_effects node to read from
      * @return map of the effects, with the effects' ids as keys
      */
-    private Map<String, Effect> readEffectLibrary(Node node) {
+    private Map<String, ColladaEffect> readEffectLibrary(Node node) {
         //Log.d(TAG,"library:effect");
-        Map<String, Effect> effects = new HashMap<>();
+        Map<String, ColladaEffect> effects = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("effect")) {
-                Effect effect = Effect.fromNode(n);
-                effects.put(effect.getId(), effect);
+                ColladaEffect colladaEffect = ColladaEffect.fromNode(n);
+                effects.put(colladaEffect.getId(), colladaEffect);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_le:" + n.getNodeName());
             }
@@ -168,7 +192,7 @@ public class ColladaLoader {
             if (n.getNodeName().equals("geometry")) {
                 Geometry geometry = Geometry.fromNode(n);
                 geometries.put(geometry.getId(), geometry);
-            } else {
+            } else if(!n.getNodeName().equals("#text")){
                 Log.w(TAG, "unknown_lg:" + n.getNodeName());
             }
         }
@@ -206,7 +230,6 @@ public class ColladaLoader {
 
     /**
      * reads a controller node
-     *
      * @param node node to read
      */
     private void controller(Node node) {
@@ -222,7 +245,6 @@ public class ColladaLoader {
 
     /**
      * reads a skin element (child element from controller)
-     *
      * @param node node to read
      */
     private void skin(Node node) {
@@ -246,8 +268,6 @@ public class ColladaLoader {
         ColladaSkin skin = new ColladaSkin();
         skin.setVsource(geometries.get(getAttribValue(node, "source").replaceFirst("#", "")));
         //readGeometry(getIdElement(node.getAttributes().getNamedItem("source").getNodeValue())));
-        System.out.println(geometries);
-        System.out.println(getAttribValue(node, "source").replaceFirst("#", ""));
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("joints")) {
                 skin.setJoints(readJoints(n)); //store in joints global

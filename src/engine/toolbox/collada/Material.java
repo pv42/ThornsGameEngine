@@ -36,7 +36,7 @@ public class Material {
         this.instanceEffectId = instanceEffectId;
     }
 
-    public Effect getInstanceEffect(Map<String,Effect> effectMap) {
+    public ColladaEffect getInstanceEffect(Map<String,ColladaEffect> effectMap) {
         return effectMap.get(instanceEffectId);
     }
 

@@ -11,8 +11,8 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 /**
  * A COLLADA files assets similar to meta information
  */
-public class Asset {
-    private static final String TAG = "COLLADA:Asset";
+public class ColladaAsset {
+    private static final String TAG = "COLLADA:ColladaAsset";
     private Map<String,String> attributes = new HashMap<>();
 
     /**
@@ -21,9 +21,9 @@ public class Asset {
      * @throws IllegalArgumentException if the node given isn't an asset node
      * @return asset read from the node
      */
-    public static Asset fromNode(Node node) {
-        if(!node.getNodeName().equals("asset")) throw new IllegalArgumentException("Node given must be an asset node");
-        Asset asset = new Asset();
+    public static ColladaAsset fromNode(Node node) {
+        if(!node.getNodeName().equals("asset")) throw new IllegalArgumentException("Node given must be an colladaAsset node");
+        ColladaAsset asset = new ColladaAsset();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("created")) {
                 asset.setAttribute("created", n.getTextContent());
