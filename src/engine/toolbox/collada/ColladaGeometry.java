@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static engine.toolbox.collada.ColladaUtil.*;
 
-public class Geometry {
+public class ColladaGeometry {
     private static final String TAG = "COLLADA:geometry";
     private String id;
     private float[][] position;
@@ -22,7 +22,7 @@ public class Geometry {
     private int[] indices;
     private String materialId;
 
-    public Geometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String materialId) {
+    public ColladaGeometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String materialId) {
         this.position = position;
         this.normal = normal;
         this.textureCoordinates = textureCoordinates;
@@ -40,14 +40,14 @@ public class Geometry {
 
 
     public TexturedModel getTexturedModel(Map<String, Material> materials, Map<String, ColladaEffect> effects, Map<String,
-            String> instanceEffects, Map<String, Image> images) {
+            String> instanceEffects, Map<String, ColladaImage> images) {
         String imageFile = getImageFile(materials, effects, instanceEffects, images);
         return new TexturedModel(getRawModel(), new ModelTexture(Loader.loadTexture(imageFile)));
     }
 
 
     public String getImageFile(Map<String, Material> materials, Map<String, ColladaEffect> effects, Map<String,
-            String> instanceMaterials, Map<String, Image> images) {
+            String> instanceMaterials, Map<String, ColladaImage> images) {
         return images.get(materials.get(instanceMaterials.get(materialId)).getInstanceEffect(effects).getImage()).getSource().replaceFirst("file:///", "");
 
     }
@@ -84,10 +84,14 @@ public class Geometry {
         this.indices = indices;
     }
 
-
-    public static Geometry fromNode(Node node) {
+    /**
+     * loads a collada geometry from a collada node
+     * @param node node to load from
+     * @return loaded collada geometry
+     */
+    public static ColladaGeometry fromNode(Node node) {
         if (!node.getNodeName().equals("geometry")) throw new RuntimeException("Node given must be an asset node");
-        Geometry geometry = null;
+        ColladaGeometry geometry = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("mesh")) {
                 geometry =  readMesh(n);
@@ -100,7 +104,7 @@ public class Geometry {
         return geometry;
     }
 
-    private static Geometry readMesh(Node node) {
+    private static ColladaGeometry readMesh(Node node) {
         Map<String, Node> sources = new HashMap<>();
         Node primitive = null;
         Node vertices = null;
@@ -125,9 +129,9 @@ public class Geometry {
         return null;
     }
 
-    private static Geometry readTriangles(Node triangles, Node vertices, Map<String, Node> sources) {
+    private static ColladaGeometry readTriangles(Node triangles, Node vertices, Map<String, Node> sources) {
         String materialName = triangles.getAttributes().getNamedItem("material").getNodeValue();
-        Geometry geometry = null;
+        ColladaGeometry geometry = null;
         for (Node n : getListFromNodeList(triangles.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
                 String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
@@ -158,7 +162,7 @@ public class Geometry {
         return geometry;
     }
 
-    private static Geometry readVertices(Node node, String effectId, Map<String, Node> sources) {
+    private static ColladaGeometry readVertices(Node node, String effectId, Map<String, Node> sources) {
         float[][] pos = null, normal = null, uv = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
@@ -175,7 +179,7 @@ public class Geometry {
                 Log.w(TAG, "unkn_vert:" + n.getNodeName());
             }
         }
-        return new Geometry(pos, normal, uv, null, effectId);
+        return new ColladaGeometry(pos, normal, uv, null, effectId);
     }
 
 

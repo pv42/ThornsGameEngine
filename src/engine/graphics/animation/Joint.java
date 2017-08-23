@@ -15,12 +15,12 @@ public class Joint {
     private Matrix4f inverseBindMatrix;
     private final Matrix4f localTransformationMatrix;
     private Joint parent;
-    private String name;
+    private String id;
     private List<Joint> children = new ArrayList<>();
 
-    public Joint(String name, Matrix4f localTransformationMatrix, Joint parent) {
+    public Joint(String id, Matrix4f localTransformationMatrix, Joint parent) {
         this.parent = parent;
-        this.name = name;
+        this.id = id;
         this.localTransformationMatrix = localTransformationMatrix;
         if (hasParent()) parent.addChild(this);
     }
@@ -29,8 +29,8 @@ public class Joint {
         return parent;
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
     public boolean hasParent() {

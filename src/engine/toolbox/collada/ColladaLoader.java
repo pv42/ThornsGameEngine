@@ -30,10 +30,10 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 public class ColladaLoader {
     private static final String TAG = "COLLADA";
     private ColladaAsset colladaAsset = null;
-    private Map<String, Image> images;
+    private Map<String, ColladaImage> images;
     private Map<String, Material> materials;
     private Map<String, ColladaEffect> effects;
-    private Map<String, Geometry> geometries;
+    private Map<String, ColladaGeometry> geometries;
     private Map<String, Node> idElements = new HashMap<>();
     private List<TexturedModel> animatedTexturedModels = new ArrayList<>();
     private Map<String, Joint> allJoints = new HashMap<>();
@@ -105,7 +105,7 @@ public class ColladaLoader {
                     geometries = readGeometryLibrary(mainNodes.item(i));
                     break;
                 case "library_controllers":
-                    library_controllers(mainNodes.item(i));
+                    readControllerLibrary(mainNodes.item(i));
                     break;
                 case "library_visual_scenes":
                     library_visual_scene(mainNodes.item(i));
@@ -131,11 +131,11 @@ public class ColladaLoader {
      * @param node library_images node to read from
      * @return map of the images, with the images' ids as keys
      */
-    private Map<String, Image> readImageLibrary(Node node) {
-        Map<String, Image> images = new HashMap<>();
+    private Map<String, ColladaImage> readImageLibrary(Node node) {
+        Map<String, ColladaImage> images = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("image")) {
-                Image image = Image.formNode(n);
+                ColladaImage image = ColladaImage.formNode(n);
                 images.put(image.getId(), image);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.i(TAG, "unkn_li:" + n.getNodeName());
@@ -186,11 +186,11 @@ public class ColladaLoader {
      * @param node library_geometries node to read from
      * @return map of the geometries, with the geometries' ids as keys
      */
-    private Map<String, Geometry> readGeometryLibrary(Node node) {
-        Map<String, Geometry> geometries = new HashMap<>();
+    private Map<String, ColladaGeometry> readGeometryLibrary(Node node) {
+        Map<String, ColladaGeometry> geometries = new HashMap<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("geometry")) {
-                Geometry geometry = Geometry.fromNode(n);
+                ColladaGeometry geometry = ColladaGeometry.fromNode(n);
                 geometries.put(geometry.getId(), geometry);
             } else if(!n.getNodeName().equals("#text")){
                 Log.w(TAG, "unknown_lg:" + n.getNodeName());
@@ -217,7 +217,7 @@ public class ColladaLoader {
      *
      * @param node node to read
      */
-    private void library_controllers(Node node) {
+    private void readControllerLibrary(Node node) {
         //Log.d(TAG,"library:controllers");
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("controller")) {
@@ -264,7 +264,7 @@ public class ColladaLoader {
         }
     }
 
-    private ColladaSkin readSkin(Node node, Map<String, Geometry> geometries) {
+    private ColladaSkin readSkin(Node node, Map<String, ColladaGeometry> geometries) {
         ColladaSkin skin = new ColladaSkin();
         skin.setVsource(geometries.get(getAttribValue(node, "source").replaceFirst("#", "")));
         //readGeometry(getIdElement(node.getAttributes().getNamedItem("source").getNodeValue())));

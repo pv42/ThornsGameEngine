@@ -24,14 +24,14 @@ public class ColladaSkin {
     private static final String TAG = "ColladaSkin";
     private List<Joint> joints;
     private VertexWeights vertexWeights;
-    private Geometry vsource;
+    private ColladaGeometry vsource;
     private Matrix4f bindShapeMatrix;
     public ColladaSkin() {
 
     }
 
 
-    public void setVsource(Geometry vsource) {
+    public void setVsource(ColladaGeometry vsource) {
         this.vsource = vsource;
     }
 
@@ -44,12 +44,12 @@ public class ColladaSkin {
     }
 
     public TexturedModel getAnimatedTexturedModel(Map<String, Material> materials, Map<String, ColladaEffect> effects,
-                                                  Map<String,String> instanceMaterials, Map<String, Image> images) {
+                                                  Map<String,String> instanceMaterials, Map<String, ColladaImage> images) {
         return getAnimatedTexturedModel(null,materials, effects,instanceMaterials, images);
     }
     public TexturedModel getAnimatedTexturedModel(Matrix4f transformation, Map<String, Material> materials,
                                                   Map<String, ColladaEffect> effects, Map<String,String> instanceMaterials,
-                                                  Map<String, Image> images) {
+                                                  Map<String, ColladaImage> images) {
         if(vsource == null) Log.e(TAG, "vsnull");
         if(vsource.getPosition() == null) Log.e(TAG,"pnull");
         if(vsource.getNormal() == null) Log.e(TAG,"nnull");
@@ -77,7 +77,7 @@ public class ColladaSkin {
         int[] boneIndicesArray = new int[uv.length * 2];
         float[] boneWeightArray = new float[uv.length * 2];
         fillBoneData(boneIndicesArray,boneWeightArray,vertexWeights.getIndices(),vertexWeights.getWeights());
-        RawModel model  =  Loader.loadToVAOAnimated(pos, uv, norm, vsource.getIndices(), boneIndicesArray, boneWeightArray, joints);
+        RawModel model = Loader.loadToVAOAnimated(pos, uv, norm, vsource.getIndices(), boneIndicesArray, boneWeightArray, joints);
         ModelTexture texture = new ModelTexture(Loader.loadTexture(vsource.getImageFile(materials,effects, instanceMaterials, images)));
         return new TexturedModel(model,texture,true);
     }

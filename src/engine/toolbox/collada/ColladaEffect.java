@@ -21,6 +21,7 @@ public class ColladaEffect {
      * @return loaded effect
      */
     public static ColladaEffect fromNode(Node node) {
+        if(node.getNodeName().equals("effect"));
         ColladaEffect colladaEffect = new ColladaEffect();
         colladaEffect.setId(getAttribValue(node,"id"));
         for (Node n : getListFromNodeList(node.getChildNodes())) {
