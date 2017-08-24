@@ -38,14 +38,6 @@ public class ColladaGeometry {
         return Loader.loadToVAO(Util.get1DArray(position), Util.get1DArray(textureCoordinates), Util.get1DArray(normal), indices);
     }
 
-
-    public TexturedModel getTexturedModel(Map<String, Material> materials, Map<String, ColladaEffect> effects, Map<String,
-            String> instanceEffects, Map<String, ColladaImage> images) {
-        String imageFile = getImageFile(materials, effects, instanceEffects, images);
-        return new TexturedModel(getRawModel(), new ModelTexture(Loader.loadTexture(imageFile)));
-    }
-
-
     public String getImageFile(Map<String, Material> materials, Map<String, ColladaEffect> effects, Map<String,
             String> instanceMaterials, Map<String, ColladaImage> images) {
         return images.get(materials.get(instanceMaterials.get(materialId)).getInstanceEffect(effects).getImage()).getSource().replaceFirst("file:///", "");

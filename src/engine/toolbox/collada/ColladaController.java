@@ -22,7 +22,7 @@ public class ColladaController {
     private VertexWeights weights; //todo
     private String geometryId;
 
-    public static ColladaController fromNode(Node node) {
+    static ColladaController fromNode(Node node) {
         if(!node.getNodeName().equals("controller")) throw new IllegalArgumentException("Node given must be a controller node");
         Node controlElement = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
@@ -86,7 +86,7 @@ public class ColladaController {
                 Log.w(TAG, "unkn_J:" + n.getNodeName());
             }
         }
-        if (matrices == null || jointIds == null || jointIds.size() != matrices.size()) Log.e(TAG, "wrong joint data");
+        if (matrices == null || jointIds == null || jointIds.size() != matrices.size()) throw  new IllegalStateException("invalid joint data");
         Map<String,Joint> joints = new HashMap<>();
         for (int i = 0; i < matrices.size(); i++) {
             Joint joint = new Joint(jointIds.get(i),matrices.get(i));
@@ -98,7 +98,7 @@ public class ColladaController {
 
     private static VertexWeights readVertexWeights(Node node, Map<String, Node> sources) {
         List<Float> weights = null;
-        List<Integer> vcount = null;
+        List<Integer> vertexCounts = null;
         List<Integer> v = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
@@ -111,21 +111,21 @@ public class ColladaController {
                     Log.w("unkn_se: input::semantic" + n.getAttributes().getNamedItem("semantic"));
                 }
             } else if (n.getNodeName().equals("vcount")) {
-                vcount = Util.getList(ColladaUtil.readIntArray(n));
+                vertexCounts = Util.getList(ColladaUtil.readIntArray(n));
             } else if (n.getNodeName().equals("v")) {
                 v = Util.getList(ColladaUtil.readIntArray(n));
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_vw:" + n.getNodeName());
             }
         }
-        if (weights == null || v == null || vcount == null) Log.e("missing vertex_bones data");
+        if (weights == null || v == null || vertexCounts == null) throw new IllegalStateException("missing vertex_bones data");
         List<List<Float>> finalWeights = new ArrayList<>();
         List<List<Integer>> finalIndices = new ArrayList<>();
         int k = 0;
-        for (int i = 0; i < vcount.size(); i++) {
+        for (Integer vertexCount : vertexCounts) {
             List<Float> currentWeights = new ArrayList<>();
             List<Integer> currentIndices = new ArrayList<>();
-            for (int j = 0; j < vcount.get(i); j++) {
+            for (int j = 0; j < vertexCount; j++) {
                 currentIndices.add(v.get(k));
                 currentWeights.add(weights.get(v.get(k + 1)));
                 k += 2;
@@ -133,8 +133,6 @@ public class ColladaController {
             finalWeights.add(currentWeights);
             finalIndices.add(currentIndices);
         }
-        //Log.d(TAG,finalWeights.toString();
-        //Log.d(TAG,finalIndices.toString());)
         return new VertexWeights(finalWeights, finalIndices);
     }
 
@@ -158,10 +156,6 @@ public class ColladaController {
         this.id = id;
     }
 
-    public Matrix4f getBindShapeMatrix() {
-        return bindShapeMatrix;
-    }
-
     public Map<String, Joint> getJoints() {
         return joints;
     }
@@ -170,7 +164,7 @@ public class ColladaController {
         return weights;
     }
 
-    public String getGeometryId() {
+    String getGeometryId() {
         return geometryId;
     }
 
@@ -180,5 +174,9 @@ public class ColladaController {
 
     List<Joint> getJointList() {
         return new ArrayList<>(joints.values());
+    }
+
+    public Matrix4f getBindShapeMatrix() {
+        return bindShapeMatrix;
     }
 }
