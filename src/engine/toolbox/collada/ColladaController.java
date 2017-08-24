@@ -16,8 +16,9 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 
 public class ColladaController {
     private static final String TAG = "Collada:Controller";
+    private String id;
     private Matrix4f bindShapeMatrix;
-    private Map<String, Joint> bindPoses;
+    private Map<String, Joint> joints; //also with bind matrices
     private VertexWeights weights; //todo
 
     public static ColladaController fromNode(Node node) {
@@ -31,6 +32,7 @@ public class ColladaController {
             }
         }
         ColladaController controller = readSkin(controlElement);
+        controller.setId(getAttribValue(node,"id"));
         return controller;
     }
 
@@ -59,7 +61,7 @@ public class ColladaController {
         } else {
             controller.setBindShapeMatrix(new Matrix4f().identity());
         }
-        controller.setBindPoses(readJoints(jointsNode, sources));
+        controller.setJoints(readJoints(jointsNode, sources));
         controller.setWeights(readVertexWeights(vertexWeightNode, sources));
         return controller;
     }
@@ -136,11 +138,31 @@ public class ColladaController {
         this.bindShapeMatrix = bindShapeMatrix;
     }
 
-    private void setBindPoses(Map<String, Joint> bindPoses) {
-        this.bindPoses = bindPoses;
+    private void setJoints(Map<String, Joint> joints) {
+        this.joints = joints;
     }
 
     private void setWeights(VertexWeights weights) {
         this.weights = weights;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    private void setId(String id) {
+        this.id = id;
+    }
+
+    public Matrix4f getBindShapeMatrix() {
+        return bindShapeMatrix;
+    }
+
+    public Map<String, Joint> getJoints() {
+        return joints;
+    }
+
+    public VertexWeights getWeights() {
+        return weights;
     }
 }

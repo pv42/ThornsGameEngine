@@ -11,6 +11,7 @@ class ColladaNode {
     private String id;
     private String name;
     private String sid;
+    private ColladaVisualScene.ColladaInstanceController instanceController;
 
     public ColladaNode(String id, List<ColladaNode> children, Matrix4f translation, boolean isJoint) {
         this.children = children;
@@ -23,12 +24,27 @@ class ColladaNode {
         this.sid = sid;
     }
 
-
     public void setName(String name) {
         this.name = name;
     }
 
     public String getId() {
         return id;
+    }
+
+    ColladaVisualScene.ColladaInstanceController getInstanceController() {
+        return instanceController;
+    }
+
+    void setInstanceController(ColladaVisualScene.ColladaInstanceController instanceController) {
+        this.instanceController = instanceController;
+    }
+
+    public Matrix4f getTranslation() {
+        return translation;
+    }
+
+    public List<ColladaNode> getChildren() {
+        return children;
     }
 }

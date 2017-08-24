@@ -5,6 +5,7 @@ import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by pv42 on 27.07.16.
@@ -12,17 +13,15 @@ import java.util.List;
 public class Joint {
 
     private static final String TAG = "Joint";
-    private Matrix4f inverseBindMatrix;
-    private final Matrix4f localTransformationMatrix;
+    private Matrix4f inverseBindMatrix; // absolute
+    private Matrix4f poseTransformationMatrix; //relative to parent
     private Joint parent;
     private String id;
-    private List<Joint> children = new ArrayList<>();
 
-    public Joint(String id, Matrix4f localTransformationMatrix, Joint parent) {
+    public Joint(String id, Matrix4f poseTransformationMatrix, Joint parent) {
         this.parent = parent;
         this.id = id;
-        this.localTransformationMatrix = localTransformationMatrix;
-        if (hasParent()) parent.addChild(this);
+        this.poseTransformationMatrix = poseTransformationMatrix;
     }
 
     public Joint getParent() {
@@ -49,18 +48,15 @@ public class Joint {
         return matrix;
     }
 
-    private void addChild(Joint joint) {
-        children.add(joint);
-    }
-
-    public List<Joint> getChildren() {
-        return children;
-    }
 
     private Matrix4f getTransformationMatrix() {
-        Matrix4f matrix = new Matrix4f(localTransformationMatrix);
+        Matrix4f matrix = new Matrix4f(poseTransformationMatrix);
         if (hasParent()) matrix.mul(parent.getTransformationMatrix());
         return matrix;
+    }
+
+    public void setPoseTransformationMatrix(Matrix4f poseTransformationMatrix) {
+        this.poseTransformationMatrix = poseTransformationMatrix;
     }
 
     /**

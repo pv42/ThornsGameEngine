@@ -47,6 +47,7 @@ public class ColladaVisualScene {
         String sid = getAttribValue(node, "sid");
         Matrix4f matrix = new Matrix4f().identity();
         List<ColladaNode> nodes = new ArrayList<>();
+        ColladaInstanceController instanceController = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("node")) {
                 readNode(n,scene);
@@ -55,7 +56,7 @@ public class ColladaVisualScene {
             } else if (n.getNodeName().equals("scale") || n.getNodeName().equals("rotate") || n.getNodeName().equals("translate")) {
                 Log.w(TAG, "todo:sc/ro/tr");
             } else if (n.getNodeName().equals("instance_controller")) {
-                //todo -> load this shit
+                instanceController = readInstanceController(n);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_cvs_n " + n.getNodeName());
             }
@@ -63,6 +64,7 @@ public class ColladaVisualScene {
         ColladaNode colladaNode = new ColladaNode(id, nodes, matrix, isJoint);
         colladaNode.setName(name);
         colladaNode.setSid(sid);
+        colladaNode.setInstanceController(instanceController);
         scene.addNode(colladaNode);
         return colladaNode;
     }
@@ -86,7 +88,7 @@ public class ColladaVisualScene {
                         }
                     }
                 }
-            } else {
+            } else if(!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_ric " + n.getNodeName());
             }
         }
@@ -118,7 +120,7 @@ public class ColladaVisualScene {
         this.rootNodes.add(rootNode);
     }
 
-    private static class ColladaInstanceController {
+    static class ColladaInstanceController {
         private String url;
         private Map<String, String> bindMaterials;
         private String skeleton;
