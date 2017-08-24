@@ -72,15 +72,19 @@ public class ColladaGeometry {
         return position;
     }
 
-    public void setPosition(float[][] position) {
+    public String getMaterialId() {
+        return materialId;
+    }
+
+    void setPosition(float[][] position) {
         this.position = position;
     }
 
-    public void setNormal(float[][] normal) {
+    void setNormal(float[][] normal) {
         this.normal = normal;
     }
 
-    public void setIndices(int[] indices) {
+    private void setIndices(int[] indices) {
         this.indices = indices;
     }
 

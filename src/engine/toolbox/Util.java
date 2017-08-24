@@ -111,4 +111,23 @@ public class Util {
         return new Vector2f(in.x/in.w,in.y/in.w);
     }
 
+    public static int[] get1DArrayFromListListInteger(List<List<Integer>> in) {
+        int out[] = new int[in.size() * in.get(0).size()];
+        for(int i = 0; i < in.size(); i++) {
+            for (int j = 0; j < in.get(0).size(); j++) {
+                out[i + j * in.size()] = in.get(i).get(j);
+            }
+        }
+        return out;
+    }
+
+    public static float[] get1DArrayFromListListFloat(List<List<Float>> in) {
+        float out[] = new float[in.size() * in.get(0).size()];
+        for(int i = 0; i < in.size(); i++) {
+            for (int j = 0; j < in.get(0).size(); j++) {
+                out[i + j * in.size()] = in.get(i).get(j);
+            }
+        }
+        return out;
+    }
 }

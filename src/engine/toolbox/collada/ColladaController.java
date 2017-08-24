@@ -20,6 +20,7 @@ public class ColladaController {
     private Matrix4f bindShapeMatrix;
     private Map<String, Joint> joints; //also with bind matrices
     private VertexWeights weights; //todo
+    private String geometryId;
 
     public static ColladaController fromNode(Node node) {
         if(!node.getNodeName().equals("controller")) throw new IllegalArgumentException("Node given must be a controller node");
@@ -63,6 +64,7 @@ public class ColladaController {
         }
         controller.setJoints(readJoints(jointsNode, sources));
         controller.setWeights(readVertexWeights(vertexWeightNode, sources));
+        controller.setGeometryId(getAttribValue(node,"source").replaceFirst("#",""));
         return controller;
     }
 
@@ -72,9 +74,11 @@ public class ColladaController {
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
                 if (getAttribValue(n,"semantic").equals("JOINT")) {
-                    jointIds = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source").replaceFirst("#",""))).getStringData());
+                    jointIds = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
+                            .replaceFirst("#",""))).getStringData());
                 } else if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("INV_BIND_MATRIX")) {
-                    matrices = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source").replaceFirst("#",""))).getMatrix4Data());
+                    matrices = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
+                            .replaceFirst("#",""))).getMatrix4Data());
                 } else {
                     Log.w("unkn_s: input::semantic" + n.getAttributes().getNamedItem("semantic"));
                 }
@@ -85,7 +89,7 @@ public class ColladaController {
         if (matrices == null || jointIds == null || jointIds.size() != matrices.size()) Log.e(TAG, "wrong joint data");
         Map<String,Joint> joints = new HashMap<>();
         for (int i = 0; i < matrices.size(); i++) {
-            Joint joint = new Joint(jointIds.get(i),matrices.get(i), null);
+            Joint joint = new Joint(jointIds.get(i),matrices.get(i));
             joints.put(joint.getId(), joint);
         }
         return joints;
@@ -101,8 +105,8 @@ public class ColladaController {
                 if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("JOINT")) {
                     //todo worth it?
                 } else if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("WEIGHT")) {
-                    weights = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source").replaceFirst("#",""))).getFloatData());
-                    //todo weights = Util.getList(ColladaUtil.readSource(getIdElement(n.getAttributes().getNamedItem("source").getNodeValue())).getFloatData());
+                    weights = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
+                            .replaceFirst("#",""))).getFloatData());
                 } else {
                     Log.w("unkn_se: input::semantic" + n.getAttributes().getNamedItem("semantic"));
                 }
@@ -164,5 +168,17 @@ public class ColladaController {
 
     public VertexWeights getWeights() {
         return weights;
+    }
+
+    public String getGeometryId() {
+        return geometryId;
+    }
+
+    private void setGeometryId(String geometryId) {
+        this.geometryId = geometryId;
+    }
+
+    List<Joint> getJointList() {
+        return new ArrayList<>(joints.values());
     }
 }

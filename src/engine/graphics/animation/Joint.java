@@ -18,8 +18,7 @@ public class Joint {
     private Joint parent;
     private String id;
 
-    public Joint(String id, Matrix4f poseTransformationMatrix, Joint parent) {
-        this.parent = parent;
+    public Joint(String id, Matrix4f poseTransformationMatrix) {
         this.id = id;
         this.poseTransformationMatrix = poseTransformationMatrix;
     }
@@ -66,5 +65,9 @@ public class Joint {
     public void applyAnimation(Matrix4f matrix) {
         //todo
         Log.w(TAG,"todo");
+    }
+
+    public void setParent(Joint parent) {
+        this.parent = parent;
     }
 }

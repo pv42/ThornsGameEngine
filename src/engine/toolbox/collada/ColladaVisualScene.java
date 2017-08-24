@@ -78,7 +78,7 @@ public class ColladaVisualScene {
                 skeleton = n.getTextContent().replaceFirst("#", "");
             } else if (n.getNodeName().equals("bind_material")) {
                 for (Node n2 : getListFromNodeList(n.getChildNodes())) {
-                    if (n.getNodeName().equals("technique_common")) {
+                    if (n2.getNodeName().equals("technique_common")) {
                         for (Node n3 : getListFromNodeList(n2.getChildNodes())) {
                             if (n3.getNodeName().equals("instance_material")) {
                                 materials.put(getAttribValue(n3, "symbol"), getAttribValue(n3, "target").replaceFirst("#", ""));
@@ -86,6 +86,8 @@ public class ColladaVisualScene {
                                 Log.w(TAG, "unkn_ic:" + n3.getNodeName());
                             }
                         }
+                    } else if(!n2.getNodeName().equals("#text")){
+                        Log.w(TAG, "unkn_ic2:" + n2.getNodeName());
                     }
                 }
             } else if(!n.getNodeName().equals("#text")) {

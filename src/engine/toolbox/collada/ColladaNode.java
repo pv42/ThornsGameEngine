@@ -47,4 +47,8 @@ class ColladaNode {
     public List<ColladaNode> getChildren() {
         return children;
     }
+
+    public String getSid() {
+        return sid;
+    }
 }
