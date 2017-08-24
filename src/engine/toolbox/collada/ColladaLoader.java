@@ -34,6 +34,8 @@ public class ColladaLoader {
     private Map<String, Material> materials;
     private Map<String, ColladaEffect> effects;
     private Map<String, ColladaGeometry> geometries;
+    private List<ColladaController> controllers;
+    private Map<String, ColladaVisualScene> visualScenes;
     private Map<String, Node> idElements = new HashMap<>();
     private List<TexturedModel> animatedTexturedModels = new ArrayList<>();
     private Map<String, Joint> allJoints = new HashMap<>();
@@ -105,12 +107,14 @@ public class ColladaLoader {
                     geometries = readGeometryLibrary(mainNodes.item(i));
                     break;
                 case "library_controllers":
-                    readControllerLibrary(mainNodes.item(i));
+                    controllers = readControllerLibrary(mainNodes.item(i));
                     break;
                 case "library_visual_scenes":
+                    visualScenes = readVisualSceneLibrary(mainNodes.item(i));
                     library_visual_scene(mainNodes.item(i));
                     break;
                 case "scene":
+                    ColladaVisualScene scene = readScene(mainNodes.item(i), visualScenes);
                     break;
                 case "#text":
                     break;
@@ -123,7 +127,37 @@ public class ColladaLoader {
                 animatedTexturedModels.add(readSkin(n, geometries)
                         .getAnimatedTexturedModel(transformation, materials, effects, instanceMaterials, images));
             }
+            //new
+
         return animatedTexturedModels;
+    }
+
+    List<TexturedModel> processScene(ColladaVisualScene scene) {
+        List<TexturedModel> models = new ArrayList<>();
+        for(int i = 0; i < scene.getRootNodes().size(); i++) {
+            String nodeId = scene.getRootNodes().get(i);
+            ColladaNode node = scene.getNode(nodeId);
+
+        }
+        return models;
+    }
+
+    /**
+     * reads scene to use
+     * @param node scene node to read
+     * @param scenes visual_scenes library
+     * @return scene from the library
+     */
+    public ColladaVisualScene readScene(Node node, Map<String, ColladaVisualScene> scenes) {
+        for(Node n: getListFromNodeList(node.getChildNodes())) {
+            if(n.getNodeName().equals("instance_visual_scene")) {
+                return scenes.get(getAttribValue(n, "url"). replaceFirst("#",""));
+            } else if(!n.getNodeName().equals("#text")) {
+                Log.w(TAG,"unkn_sc" + n.getNodeName());
+            }
+        }
+        Log.e(TAG,"No instance_visual_scene found in scene node");
+        return null;
     }
 
     /**
@@ -144,6 +178,23 @@ public class ColladaLoader {
         return images;
     }
 
+    /**
+     *
+     * @param node
+     * @return
+     */
+    private Map<String, ColladaVisualScene> readVisualSceneLibrary(Node node) {
+        Map<String, ColladaVisualScene> visualScenes = new HashMap<>();
+        for (Node n : getListFromNodeList(node.getChildNodes())) {
+            if (n.getNodeName().equals("visual_scene")) {
+                ColladaVisualScene scene = ColladaVisualScene.fromNode(n);
+                visualScenes.put(scene.getId(), scene);
+            } else if (!n.getNodeName().equals("#text")) {
+                Log.w(TAG, "unkn_lvs:" + n.getNodeName());
+            }
+        }
+        return visualScenes;
+    }
     /**
      * reads a material library
      * @param node library_materials node to read from
@@ -217,15 +268,18 @@ public class ColladaLoader {
      *
      * @param node node to read
      */
-    private void readControllerLibrary(Node node) {
+    private List<ColladaController> readControllerLibrary(Node node) {
         //Log.d(TAG,"library:controllers");
+        List<ColladaController> controllers = new ArrayList<>();
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("controller")) {
+                controllers.add(ColladaController.fromNode(n));
                 controller(n);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_lc:" + n.getNodeName());
             }
         }
+        return controllers;
     }
 
     /**

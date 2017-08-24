@@ -22,7 +22,12 @@ public class ColladaUtil {
     }
 
     static String getAttribValue(Node node, String key) {
-        return node.getAttributes().getNamedItem(key).getNodeValue();
+        Node attrib =  node.getAttributes().getNamedItem(key);
+        if(attrib == null) {
+            return null;
+        } else {
+            return attrib.getNodeValue();
+        }
     }
 
     static int[] readIntArray(Node node) {

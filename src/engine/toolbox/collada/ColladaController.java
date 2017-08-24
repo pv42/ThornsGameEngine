@@ -21,7 +21,7 @@ public class ColladaController {
     private VertexWeights weights; //todo
 
     public static ColladaController fromNode(Node node) {
-        if(!node.getNodeName().equals("controller")) throw new IllegalArgumentException("Node given must be an image node");
+        if(!node.getNodeName().equals("controller")) throw new IllegalArgumentException("Node given must be a controller node");
         Node controlElement = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("skin")) {
@@ -60,7 +60,7 @@ public class ColladaController {
             controller.setBindShapeMatrix(new Matrix4f().identity());
         }
         controller.setBindPoses(readJoints(jointsNode, sources));
-        controller.setWeights(readVertexWeights(vertexWeightNode));
+        controller.setWeights(readVertexWeights(vertexWeightNode, sources));
         return controller;
     }
 
@@ -90,7 +90,7 @@ public class ColladaController {
 
     }
 
-    private static VertexWeights readVertexWeights(Node node) {
+    private static VertexWeights readVertexWeights(Node node, Map<String, Node> sources) {
         List<Float> weights = null;
         List<Integer> vcount = null;
         List<Integer> v = null;
@@ -99,7 +99,8 @@ public class ColladaController {
                 if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("JOINT")) {
                     //todo worth it?
                 } else if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("WEIGHT")) {
-                   //todo weights = Util.getList(ColladaUtil.readSource(getIdElement(n.getAttributes().getNamedItem("source").getNodeValue())).getFloatData());
+                    weights = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source").replaceFirst("#",""))).getFloatData());
+                    //todo weights = Util.getList(ColladaUtil.readSource(getIdElement(n.getAttributes().getNamedItem("source").getNodeValue())).getFloatData());
                 } else {
                     Log.w("unkn_se: input::semantic" + n.getAttributes().getNamedItem("semantic"));
                 }
