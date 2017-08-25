@@ -62,7 +62,7 @@ public class ColladaUtil {
         return matrix4f;
     }
 
-    static Source readSource(Node node) {
+    static ColladaSource readSource(Node node) {
         assert node==null;
         List<Node> dataSources = new ArrayList<>();// e.g. float_arrays
         for (Node n : getListFromNodeList(node.getChildNodes())) {
@@ -80,12 +80,10 @@ public class ColladaUtil {
                 Log.w(TAG, "unkn_S:" + n.getNodeName());
             }
         }
-        Log.e(TAG, "no technique_common found");
-        return null;
-
+        throw new RuntimeException("no technique_common found in source");
     }
 
-    private static Source readAccessor(Node node,List<Node> dataSources) {
+    private static ColladaSource readAccessor(Node node, List<Node> dataSources) {
         String source = node.getAttributes().getNamedItem("source").getNodeValue().replaceFirst("#","");
         int count = Integer.valueOf(node.getAttributes().getNamedItem("count").getNodeValue());
         int stride = Integer.valueOf(node.getAttributes().getNamedItem("stride").getNodeValue());
@@ -113,7 +111,7 @@ public class ColladaUtil {
                 System.exit(-1);
             }
         }
-        return new Source(data, params.get(0).getDataType());
+        return new ColladaSource(data, params.get(0).getDataType());
     }
 
     private static Param readParam(Node node) {

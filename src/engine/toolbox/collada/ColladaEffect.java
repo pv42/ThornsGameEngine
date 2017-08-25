@@ -10,9 +10,8 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 /**
  * Created by pv42 on 03.08.16.
  */
-public class ColladaEffect {
+public class ColladaEffect extends ColladaPrimaryElement{
     private static final String TAG = "COLLADA:ColladaEffect";
-    private String id;
     private String imageId;
 
     /**
@@ -68,19 +67,11 @@ public class ColladaEffect {
      * gets the effect image
      * @return effects image
      */
-    public String getImage() {
+    String getImage() {
         return imageId;
     }
 
     private void setImage(String imageId) {
         this.imageId = imageId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    private void setId(String id) {
-        this.id = id;
     }
 }

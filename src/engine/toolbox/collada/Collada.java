@@ -1,0 +1,138 @@
+package engine.toolbox.collada;
+
+import engine.graphics.animation.Joint;
+import engine.graphics.models.RawModel;
+import engine.graphics.models.TexturedModel;
+import engine.graphics.renderEngine.Loader;
+import engine.graphics.textures.ModelTexture;
+import engine.toolbox.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class Collada {
+    private ColladaAsset colladaAsset;
+    private Map<String, ColladaImage> images;
+    private Map<String, ColladaMaterial> materials;
+    private Map<String, ColladaEffect> effects;
+    private Map<String, ColladaGeometry> geometries;
+    private Map<String, ColladaController> controllers;
+    private Map<String, ColladaVisualScene> visualScenes;
+    private Map<String, ColladaAnimation> animations;
+    private ColladaVisualScene scene;
+
+    public ColladaAsset getColladaAsset() {
+        return colladaAsset;
+    }
+
+    public Map<String, ColladaImage> getImages() {
+        return images;
+    }
+
+    public Map<String, ColladaMaterial> getMaterials() {
+        return materials;
+    }
+
+    public Map<String, ColladaEffect> getEffects() {
+        return effects;
+    }
+
+    public Map<String, ColladaGeometry> getGeometries() {
+        return geometries;
+    }
+
+    public Map<String, ColladaController> getControllers() {
+        return controllers;
+    }
+
+    public Map<String, ColladaVisualScene> getVisualScenes() {
+        return visualScenes;
+    }
+
+    public Map<String, ColladaAnimation> getAnimations() {
+        return animations;
+    }
+
+    public ColladaVisualScene getScene() {
+        return scene;
+    }
+
+    void setAnimations(Map<String, ColladaAnimation> animations) {
+        this.animations = animations;
+    }
+
+    void setColladaAsset(ColladaAsset colladaAsset) {
+        this.colladaAsset = colladaAsset;
+    }
+
+    void setImages(Map<String, ColladaImage> images) {
+        this.images = images;
+    }
+
+    void setMaterials(Map<String, ColladaMaterial> materials) {
+        this.materials = materials;
+    }
+
+    void setEffects(Map<String, ColladaEffect> effects) {
+        this.effects = effects;
+    }
+
+    void setGeometries(Map<String, ColladaGeometry> geometries) {
+        this.geometries = geometries;
+    }
+
+    void setControllers(Map<String, ColladaController> controllers) {
+        this.controllers = controllers;
+    }
+
+    void setVisualScenes(Map<String, ColladaVisualScene> visualScenes) {
+        this.visualScenes = visualScenes;
+    }
+
+    void setScene(ColladaVisualScene scene) {
+        this.scene = scene;
+    }
+
+    public List<TexturedModel> getTexturedModels() {
+        List<TexturedModel> models = new ArrayList<>();
+        for (int i = 0; i < scene.getRootNodes().size(); i++) {
+            String nodeId = scene.getRootNodes().get(i);
+            ColladaNode cnode = scene.getNode(nodeId);
+            ColladaVisualScene.ColladaInstanceController ic = cnode.getInstanceController();
+            if (ic != null) {
+                ColladaController controller = controllers.get(ic.getUrl());
+                ColladaNode skeletonRoot = scene.getNode(ic.getSkeleton());
+                Map<String, Joint> joints = controller.getJoints();
+                processNode(skeletonRoot, joints, null); //apply poses to joints
+                ColladaGeometry geometry = geometries.get(controller.getGeometryId());
+                RawModel model = Loader.loadToVAOAnimated(
+                        Util.get1DArray(geometry.getPosition()),
+                        Util.get1DArray(geometry.getTextureCoordinates()),
+                        Util.get1DArray(geometry.getNormal()),
+                        geometry.getIndices(),
+                        Util.get1DArrayFromListListInteger(controller.getWeights().getIndices()),
+                        Util.get1DArrayFromListListFloat(controller.getWeights().getWeights()),
+                        controller.getJointList());
+                String materialId = geometry.getMaterialId();
+                materialId = ic.getBindMaterialId(materialId);
+                ColladaEffect effect = materials.get(materialId).getInstanceEffect(effects);
+                String imageFile = images.get(effect.getImage()).getSource();
+                TexturedModel texturedModel = new TexturedModel(model, new ModelTexture(Loader.loadTexture(
+                        imageFile.replaceFirst("file:///",""))));
+                models.add(texturedModel);
+            }
+        }
+        return models;
+    }
+
+    private void processNode(ColladaNode node, Map<String, Joint> joints, Joint parent) {
+        Joint joint = joints.get(node.getSid());
+        joint.setPoseTransformationMatrix(node.getTranslation());
+        joint.setParent(parent);
+        for (ColladaNode n : node.getChildren()) {
+            processNode(n, joints, joint);
+        }
+    }
+
+}

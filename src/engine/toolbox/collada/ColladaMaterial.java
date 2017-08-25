@@ -11,16 +11,15 @@ import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 /***
  * Created by pv42 on 03.08.16.
  */
-public class Material {
+public class ColladaMaterial extends ColladaPrimaryElement {
     private static final String TAG = "Collada:Material";
     private String instanceEffectId;
-    private String id;
 
-    public static Material fromNode(Node node) {
+    public static ColladaMaterial fromNode(Node node) {
         if (node.getNodeName().equals("instance_material")) {
             Log.w(TAG,"not yet implemented"); //todo implement right
         }
-        Material material = new Material();
+        ColladaMaterial material = new ColladaMaterial();
         material.setId(getAttribValue(node,"id"));
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("instance_effect")) {
@@ -40,19 +39,13 @@ public class Material {
         return effectMap.get(instanceEffectId);
     }
 
-    public String getId() {
-        return id;
-    }
 
-    private void setId(String id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
-        return "Material{" +
+        return "ColladaMaterial{" +
                 "instanceEffectId='" + instanceEffectId + '\'' +
-                ", id='" + id + '\'' +
+                ", id='" + getId() + '\'' +
                 '}';
     }
 }

@@ -5,10 +5,9 @@ import org.w3c.dom.Node;
 
 import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 
-public class ColladaImage {
+public class ColladaImage extends ColladaPrimaryElement{
     private static final String TAG = "COLLADA:Image";
     private String name;
-    private String id;
     private String source;
 
     /**
@@ -16,7 +15,7 @@ public class ColladaImage {
      * @param node node to load from
      * @return loaded image
      */
-    public static ColladaImage formNode(Node node) {
+    static ColladaImage formNode(Node node) {
         if(!node.getNodeName().equals("image")) throw new IllegalArgumentException("Node given must be an image node");
         ColladaImage image = new ColladaImage();
         image.setId(node.getAttributes().getNamedItem("id").getNodeValue());
@@ -43,14 +42,6 @@ public class ColladaImage {
     }
 
     /**
-     * gets images id
-     * @return images id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
      * gets image source determent through the init_from tag
      * @return images source
      */
@@ -64,9 +55,5 @@ public class ColladaImage {
 
     private void setName(String name) {
         this.name = name;
-    }
-
-    private void setId(String id) {
-        this.id = id;
     }
 }

@@ -13,9 +13,8 @@ import static engine.toolbox.collada.ColladaUtil.getAttribValue;
 import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 import static engine.toolbox.collada.ColladaUtil.readMatrix4f;
 
-public class ColladaVisualScene {
+public class ColladaVisualScene extends ColladaPrimaryElement{
     private static final String TAG = "Collada:VisualScene";
-    private String id;
     private Map<String, ColladaNode> nodes = new HashMap<>();
     private List<String> rootNodes = new ArrayList<>();
 
@@ -40,7 +39,7 @@ public class ColladaVisualScene {
         return colladaVisualScene;
     }
 
-    static ColladaNode readNode(Node node, ColladaVisualScene scene) {
+    private static ColladaNode readNode(Node node, ColladaVisualScene scene) {
         String id = getAttribValue(node, "id");
         String name = getAttribValue(node, "name");
         boolean isJoint = getAttribValue(node, "type").equals("JOINT");
@@ -57,6 +56,8 @@ public class ColladaVisualScene {
                 Log.w(TAG, "todo:sc/ro/tr");
             } else if (n.getNodeName().equals("instance_controller")) {
                 instanceController = readInstanceController(n);
+            } else if (n.getNodeName().equals("extra")) {
+                // ignore extra nodes
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_cvs_n " + n.getNodeName());
             }
@@ -69,7 +70,7 @@ public class ColladaVisualScene {
         return colladaNode;
     }
 
-    static ColladaInstanceController readInstanceController(Node node) {
+    private static ColladaInstanceController readInstanceController(Node node) {
         String url = getAttribValue(node, "url").replaceFirst("#", "");
         String skeleton = null;
         Map<String, String> materials = new HashMap<>();
@@ -97,21 +98,13 @@ public class ColladaVisualScene {
         return new ColladaInstanceController(url, materials, skeleton);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public ColladaNode getNode(String id) {
+    ColladaNode getNode(String id) {
         return nodes.get(id);
     }
 
 
-    public List<String> getRootNodes() {
+    List<String> getRootNodes() {
         return rootNodes;
-    }
-
-    private void setId(String id) {
-        this.id = id;
     }
 
     private void addNode(ColladaNode node) {
@@ -127,7 +120,7 @@ public class ColladaVisualScene {
         private Map<String, String> bindMaterials;
         private String skeleton;
 
-        public ColladaInstanceController(String url, Map<String, String> bindMaterials, String skeleton) {
+        ColladaInstanceController(String url, Map<String, String> bindMaterials, String skeleton) {
             this.url = url;
             this.bindMaterials = bindMaterials;
             this.skeleton = skeleton;

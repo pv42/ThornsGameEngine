@@ -9,6 +9,7 @@ import engine.graphics.display.DisplayManager;
 import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
+import engine.toolbox.collada.Collada;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -101,8 +102,8 @@ public class MainGameLoop {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        List<TexturedModel> lara = pcl.loadColladaModelAnimated("Laptop",matrix);
-        List<TexturedModel> personModel = new ColladaLoader().loadColladaModelAnimated("Lara_Croft");
+        List<TexturedModel> lara = ColladaLoader.loadCollada("Cowboy",matrix).getTexturedModels();
+        List<TexturedModel> personModel = ColladaLoader.loadCollada("Lara_Croft").getTexturedModels();
         Entity girl = new Entity(lara, new Vector3f(30,2,50),-90,0,0,2f);
         FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());

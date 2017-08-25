@@ -14,9 +14,8 @@ import java.util.Map;
 import static engine.toolbox.collada.ColladaUtil.getAttribValue;
 import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
 
-public class ColladaController {
+public class ColladaController extends ColladaPrimaryElement{
     private static final String TAG = "Collada:Controller";
-    private String id;
     private Matrix4f bindShapeMatrix;
     private Map<String, Joint> joints; //also with bind matrices
     private VertexWeights weights; //todo
@@ -146,14 +145,6 @@ public class ColladaController {
 
     private void setWeights(VertexWeights weights) {
         this.weights = weights;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    private void setId(String id) {
-        this.id = id;
     }
 
     public Map<String, Joint> getJoints() {

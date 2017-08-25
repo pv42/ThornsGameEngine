@@ -15,7 +15,7 @@ public class Beretta92 extends Gun{
     public Beretta92() {
         super(new GunLoader("Beretta92"));
         //soundBuffer = AudioMaster.loadSound("Beretta92");
-        //soundSource = new Source();
+        //soundSource = new ColladaSource();
     }
     @Override
     public boolean shot(Player player) {

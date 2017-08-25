@@ -7,14 +7,14 @@ import org.joml.Matrix4f;
 /**
  * Created by pv42 on 04.08.16.
  */
-public class Source {
+public class ColladaSource {
     public static final int UNKNOWN = -1;
     public static final int STRING = 13;
     public static final int FLOAT = 14;
     public static final int MATRIX = 15;
     private String[][] data;
     private int datatype;
-    public Source(String[][] data,String datatype) {
+    public ColladaSource(String[][] data, String datatype) {
         this.data = data;
         this.datatype = getDataType(datatype);
     }

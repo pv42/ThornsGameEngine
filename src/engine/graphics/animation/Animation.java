@@ -5,13 +5,16 @@ import org.joml.Quaterniond;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class Animation {
     private Map<Float, KeyFrame> keyframes;
+    private List<String> jointIds;
 
-    public Animation() {
+    public Animation(List<String> jointIds) {
+        jointIds = jointIds;
         keyframes = new HashMap<>();
     }
 

@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static engine.toolbox.collada.ColladaUtil.*;
 
-public class ColladaGeometry {
+public class ColladaGeometry extends ColladaPrimaryElement {
     private static final String TAG = "COLLADA:geometry";
     private String id;
     private float[][] position;
@@ -22,7 +22,7 @@ public class ColladaGeometry {
     private int[] indices;
     private String materialId;
 
-    public ColladaGeometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String materialId) {
+    private ColladaGeometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String materialId) {
         this.position = position;
         this.normal = normal;
         this.textureCoordinates = textureCoordinates;
@@ -30,29 +30,15 @@ public class ColladaGeometry {
         this.materialId = materialId;
     }
 
-    private void setId(String id) {
-        this.id = id;
-    }
-
     public RawModel getRawModel() {
         return Loader.loadToVAO(Util.get1DArray(position), Util.get1DArray(textureCoordinates), Util.get1DArray(normal), indices);
     }
 
-    public String getImageFile(Map<String, Material> materials, Map<String, ColladaEffect> effects, Map<String,
-            String> instanceMaterials, Map<String, ColladaImage> images) {
-        return images.get(materials.get(instanceMaterials.get(materialId)).getInstanceEffect(effects).getImage()).getSource().replaceFirst("file:///", "");
-
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public int[] getIndices() {
+    int[] getIndices() {
         return indices;
     }
 
-    public float[][] getTextureCoordinates() {
+    float[][] getTextureCoordinates() {
         return textureCoordinates;
     }
 
@@ -64,7 +50,7 @@ public class ColladaGeometry {
         return position;
     }
 
-    public String getMaterialId() {
+    String getMaterialId() {
         return materialId;
     }
 
@@ -80,23 +66,27 @@ public class ColladaGeometry {
         this.indices = indices;
     }
 
+    private void setTextureCoordinates(float[][] textureCoordinates) {
+        this.textureCoordinates = textureCoordinates;
+    }
     /**
      * loads a collada geometry from a collada node
+     *
      * @param node node to load from
      * @return loaded collada geometry
      */
-    public static ColladaGeometry fromNode(Node node) {
+    static ColladaGeometry fromNode(Node node) {
         if (!node.getNodeName().equals("geometry")) throw new RuntimeException("Node given must be an asset node");
         ColladaGeometry geometry = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("mesh")) {
-                geometry =  readMesh(n);
+                geometry = readMesh(n);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_g:" + n.getNodeName());
             }
         }
-        if(geometry == null) Log.e(TAG, "no mesh element found");
-        else geometry.setId(getAttribValue(node,"id"));
+        if (geometry == null) Log.e(TAG, "no mesh element found");
+        else geometry.setId(getAttribValue(node, "id"));
         return geometry;
     }
 
@@ -120,9 +110,8 @@ public class ColladaGeometry {
         if (primitive == null || vertices == null)
             throw new RuntimeException("Either no primitive or vertices element found");
         if (primitive.getNodeName().equals("triangles")) return readTriangles(primitive, vertices, sources);
-        //todo if(primitive.getNodeName().equals("polylist")) return readPolylist(primitive);
-        Log.e(TAG, "no primitive element found");
-        return null;
+        if (primitive.getNodeName().equals("polylist")) return readPolylist(primitive, vertices, sources);
+        throw new RuntimeException("no primitive element for mesh found");
     }
 
     private static ColladaGeometry readTriangles(Node triangles, Node vertices, Map<String, Node> sources) {
@@ -158,11 +147,11 @@ public class ColladaGeometry {
         return geometry;
     }
 
-    private static ColladaGeometry readVertices(Node node, String effectId, Map<String, Node> sources) {
+    private static ColladaGeometry readVertices(Node node, String materialId, Map<String, Node> sources) {
         float[][] pos = null, normal = null, uv = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
-                String source = getAttribValue(n,"source").replaceFirst("#","");
+                String source = getAttribValue(n, "source").replaceFirst("#", "");
                 String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
                 if (semantic.equals("POSITION")) {
                     pos = readSource(sources.get(source)).getFloatData();
@@ -175,64 +164,67 @@ public class ColladaGeometry {
                 Log.w(TAG, "unkn_vert:" + n.getNodeName());
             }
         }
-        return new ColladaGeometry(pos, normal, uv, null, effectId);
+        return new ColladaGeometry(pos, normal, uv, null, materialId);
     }
 
 
-
-    /*private Vertices readPolylist(Node node) {
+    private static ColladaGeometry readPolylist(Node polylist, Node vertices, Map<String, Node> sources) {
         //String img = readImage(readMaterial(getIdElement(node.getAttributes().getNamedItem("material").getNodeValue())).getInstanceEffect().getImage());
-        String img = "white.png";
+        String materialName = getAttribValue(polylist,"material");
         float[][] normalData = null;
         float[][] uvData = null;
         int[] primitive = null;
-        int[] vcount = null;
+        int[] vcounts = null;
         int numberOfInputs = 0;
-        Vertices vertices = null;
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
+        ColladaGeometry geometry = null;
+        for (Node n : getListFromNodeList(polylist.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
                 numberOfInputs++;
-                String source = n.getAttributes().getNamedItem("source").getNodeValue();
-                String semantic = n.getAttributes().getNamedItem("semantic").getNodeValue();
+                String sourceId = getAttribValue(n, "source").replaceFirst("#", "");
+                String semantic = getAttribValue(n, "semantic").replaceFirst("#", "");
+                // n.getAttributes().getNamedItem("semantic").getNodeValue();
                 switch (semantic) {
                     case "VERTEX":
-                        vertices = readVertices(getIdElement(source), null, null);
+                        geometry = readVertices(vertices, materialName, sources );
                         break;
                     case "NORMAL":
-                        normalData = readSource(getIdElement(source)).getFloatData();
+                        normalData = readSource(sources.get(sourceId)).getFloatData();
                         break;
                     case "TEXCOORD":
-                        uvData = readSource(getIdElement(source)).getFloatData();
+                        uvData = readSource(sources.get(sourceId)).getFloatData();
                         break;
                     default:
                         Log.w("unknown input type: " + semantic);
                 }
             } else if (n.getNodeName().equals("vcount")) {
-                vcount = readInt_array(n);
+                vcounts = readIntArray(n);
             } else if (n.getNodeName().equals("p")) {
-                primitive = readInt_array(n);
+                primitive = readIntArray(n);
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_v:" + n.getNodeName());
             }
         }
-        if(primitive != null) {
-            float[][] pos  = new float[primitive.length / numberOfInputs][3];
+        for(int vcount: vcounts) {
+            if(vcount != 3) throw new RuntimeException("Only 3 vertices supported per polygon");
+        }
+        if (primitive != null) {
+            float[][] pos = new float[primitive.length / numberOfInputs][3];
             float[][] norm = new float[primitive.length / numberOfInputs][3];
-            float[][] uv   = new float[primitive.length / numberOfInputs][2];
+            float[][] uv = new float[primitive.length / numberOfInputs][2];
             int[] indices = new int[primitive.length / numberOfInputs];
             for (int i = 0; i < primitive.length / numberOfInputs; i++) {
-                pos[i] = vertices.getPosition()[primitive[numberOfInputs * i]];
+                pos[i] = geometry.getPosition()[primitive[numberOfInputs * i]];
                 norm[i] = normalData[primitive[numberOfInputs * i + 1]];
-                uv[i]  = uvData[primitive[numberOfInputs* i + 2]];
+                uv[i] = uvData[primitive[numberOfInputs * i + 2]];
                 indices[i] = i;
             }
-            vertices.setPosition(pos);
-            vertices.setNormal(norm);
-            vertices.setTexCoord(uv);
-            vertices.setIndices(indices);
+            geometry.setPosition(pos);
+            geometry.setNormal(norm);
+            geometry.setTextureCoordinates(uv);
+            geometry.setIndices(indices);
         } else {
             Log.w(TAG, "p is not set");
         }
-        return vertices;
-    }*/
+        return geometry;
+    }
 }
