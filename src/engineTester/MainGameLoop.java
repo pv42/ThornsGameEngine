@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 import engine.EngineMaster;
+import engine.graphics.animation.Animation;
+import engine.graphics.animation.Animator;
 import engine.graphics.display.DisplayManager;
 import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
@@ -102,10 +104,13 @@ public class MainGameLoop {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        List<TexturedModel> lara = ColladaLoader.loadCollada("Cowboy",matrix).getTexturedModels();
-        List<TexturedModel> personModel = ColladaLoader.loadCollada("Lara_Croft").getTexturedModels();
-        Entity girl = new Entity(lara, new Vector3f(30,2,50),-90,0,0,2f);
-        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);
+        Collada cowboyCollada = ColladaLoader.loadCollada("Hot_Girl_01",matrix);
+        List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
+        //Animation cowboyAnimation = cowboyCollada.getAnimation();
+        //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
+        //List<TexturedModel> personModel = ColladaLoader.loadCollada("Lara_Croft").getTexturedModels();
+        Entity girl = new Entity(cowboy, new Vector3f(30,2,50),-90,0,0,2f);
+        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
@@ -117,6 +122,7 @@ public class MainGameLoop {
             //networkSender.start();
         }
         Log.i(TAG, "starting render");
+        float animationTime = 0;
         while (!DisplayManager.isCloseRequested()) { //actual MainGameLoop
             //game logic
             //FPS Updates
@@ -135,6 +141,9 @@ public class MainGameLoop {
             particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
             ParticleMaster.update();
             //animation
+            animationTime += DisplayManager.getFrameTimeSeconds() * 0.2;
+            animationTime %= 1;
+            //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
             //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
             processFirstPersonPlayer(player);

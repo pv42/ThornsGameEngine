@@ -66,7 +66,7 @@ public class ColladaLoader {
      * loads a colladas models from a node
      *
      * @param root           collada root node to load from
-     * @param transformation @ignored transformation to apply before loading into vram
+     * @param transformation ignored: transformation to apply before loading into vram
      * @return list of the models loaded
      */
     public static Collada loadCollada(Node root, Matrix4f transformation) {

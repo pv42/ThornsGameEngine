@@ -72,7 +72,7 @@ public class ColladaAnimation extends ColladaPrimaryElement {
                         break;
                     default: Log.w(TAG, "unkn_smp_i:" + semantic);
                 }
-            } else if(!n.getNodeName().equals("text")) {
+            } else if(!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_smp" + n.getNodeName());
             }
         }

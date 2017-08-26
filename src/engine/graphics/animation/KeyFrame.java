@@ -12,6 +12,7 @@ public class KeyFrame {
 
     public KeyFrame(float timeStamp) {
         this.jointData = new HashMap<>();
+        this.timestamp = timeStamp;
     }
 
     public void addJointData(String name, Matrix4f data) {
@@ -25,4 +26,6 @@ public class KeyFrame {
     public float getTimestamp() {
         return timestamp;
     }
+
+
 }

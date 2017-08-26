@@ -1,37 +1,42 @@
 package engine.graphics.animation;
 
+import engine.toolbox.Log;
 import org.joml.Matrix4f;
 import org.joml.Quaterniond;
 import org.joml.Vector3f;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Animation {
-    private Map<Float, KeyFrame> keyframes;
-    private List<String> jointIds;
+    private static final String TAG = "Animation";
+    private List<KeyFrame> keyframes;
 
-    public Animation(List<String> jointIds) {
-        jointIds = jointIds;
-        keyframes = new HashMap<>();
+    public Animation() {
+        keyframes = new ArrayList<>();
     }
 
     public void addKeyFrame(KeyFrame keyFrame) {
-        keyframes.put(keyFrame.getTimestamp(), keyFrame);
+        keyframes.add(keyFrame);
     }
 
     public Matrix4f getMatrix(float time, String jointName) {
-        Set<Float> timestamps = keyframes.keySet();
         float prevTS = 0, nextTS = Float.POSITIVE_INFINITY;
-        for(float timestamp: timestamps) {
-            if(timestamp > time && timestamp < nextTS) nextTS = timestamp;
-            if(timestamp < time && timestamp > prevTS) prevTS = timestamp;
+        Matrix4f nextMatrix = null;
+        Matrix4f prevMatrix = keyframes.get(0).getJointData().get(jointName);
+        for(KeyFrame frame: keyframes) {
+            float timestamp = frame.getTimestamp();
+            if(timestamp > time && timestamp < nextTS) {
+                nextTS = timestamp;
+                nextMatrix = frame.getJointData().get(jointName);
+
+            }
+            if(timestamp < time && timestamp > prevTS) {
+                prevTS = timestamp;
+                prevMatrix = frame.getJointData().get(jointName);
+            }
         }
+        if(nextTS == Float.POSITIVE_INFINITY) return prevMatrix;
         float progress = (time - prevTS)/(nextTS - prevTS);//0 .. 1
-        Matrix4f prevMatrix = keyframes.get(prevTS).getJointData().get(jointName);
-        Matrix4f nextMatrix = keyframes.get(nextTS).getJointData().get(jointName);
         Quaterniond prevQuat = new Quaterniond().setFromNormalized(prevMatrix);
         Quaterniond nextQuat = new Quaterniond().setFromNormalized(nextMatrix);
         Quaterniond rotation = new Quaterniond();

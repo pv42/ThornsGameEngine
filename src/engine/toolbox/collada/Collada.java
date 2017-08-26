@@ -1,10 +1,13 @@
 package engine.toolbox.collada;
 
+import engine.graphics.animation.Animation;
 import engine.graphics.animation.Joint;
+import engine.graphics.animation.KeyFrame;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.ModelTexture;
+import engine.toolbox.Log;
 import engine.toolbox.Util;
 
 import java.util.ArrayList;
@@ -135,4 +138,19 @@ public class Collada {
         }
     }
 
+    public Animation getAnimation() {
+        Animation animation = new Animation();
+        int index = 0;
+
+        for (float time : animations.values().iterator().next().getKeyFrameTimes()) {
+            KeyFrame keyFrame = new KeyFrame(time);
+            for(ColladaAnimation colladaAnimation : animations.values()) {
+                keyFrame.addJointData(colladaAnimation.getTarget(), colladaAnimation.getKeyFrameMatrices()[index]);
+            }
+            index++;
+            animation.addKeyFrame(keyFrame);
+        }
+        Log.d("Collada:AL", "::" + index);
+        return animation;
+    }
 }

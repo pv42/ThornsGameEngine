@@ -11,7 +11,7 @@ public class TexturedModel {
     private boolean isAnimated;
 
     public TexturedModel(RawModel rawmodel, ModelTexture texture) {
-        this(rawmodel,texture,false);
+        this(rawmodel,texture,!(rawmodel.getJoints() == null));
     }
 
     public TexturedModel(RawModel rawModel, ModelTexture texture, boolean isAnimated) {

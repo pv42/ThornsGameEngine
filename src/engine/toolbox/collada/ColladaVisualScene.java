@@ -9,9 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static engine.toolbox.collada.ColladaUtil.getAttribValue;
-import static engine.toolbox.collada.ColladaUtil.getListFromNodeList;
-import static engine.toolbox.collada.ColladaUtil.readMatrix4f;
+import static engine.toolbox.collada.ColladaUtil.*;
 
 public class ColladaVisualScene extends ColladaPrimaryElement{
     private static final String TAG = "Collada:VisualScene";
@@ -49,17 +47,26 @@ public class ColladaVisualScene extends ColladaPrimaryElement{
         ColladaInstanceController instanceController = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("node")) {
-                readNode(n,scene);
+                nodes.add(readNode(n,scene));
             } else if (n.getNodeName().equals("matrix")) {
                 matrix.mul(readMatrix4f(n));
-            } else if (n.getNodeName().equals("scale") || n.getNodeName().equals("rotate") || n.getNodeName().equals("translate")) {
-                Log.w(TAG, "todo:sc/ro/tr");
-            } else if (n.getNodeName().equals("instance_controller")) {
-                instanceController = readInstanceController(n);
-            } else if (n.getNodeName().equals("extra")) {
-                // ignore extra nodes
-            } else if (!n.getNodeName().equals("#text")) {
-                Log.w(TAG, "unkn_cvs_n " + n.getNodeName());
+            } else if (n.getNodeName().equals("scale")) {
+                float[] data = readFloatArray(n);
+                matrix.scale(data[0], data[1], data[2]);
+            } else if (n.getNodeName().equals("rotate")) {
+                float[] data = readFloatArray(n);
+                matrix.rotate(data[3], data[0], data[1], data[2]);
+            } else if (n.getNodeName().equals("translate")) {
+                float[] data = readFloatArray(n);
+                matrix.translate(data[0], data[1], data[2]);
+            } else {
+                if (n.getNodeName().equals("instance_controller")) {
+                    instanceController = readInstanceController(n);
+                } else if (n.getNodeName().equals("extra")) {
+                    // ignore extra nodes
+                } else if (!n.getNodeName().equals("#text")) {
+                    Log.w(TAG, "unkn_cvs_n " + n.getNodeName());
+                }
             }
         }
         ColladaNode colladaNode = new ColladaNode(id, nodes, matrix, isJoint);

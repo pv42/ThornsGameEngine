@@ -13,14 +13,14 @@ import java.util.Map;
 public class Joint {
 
     private static final String TAG = "Joint";
-    private Matrix4f inverseBindMatrix; // absolute
+    private final Matrix4f inverseBindMatrix; // absolute
     private Matrix4f poseTransformationMatrix; //relative to parent
     private Joint parent;
-    private String id;
+    private final String id;
 
-    public Joint(String id, Matrix4f poseTransformationMatrix) {
+    public Joint(String id, Matrix4f inverseBindMatrix) {
         this.id = id;
-        this.poseTransformationMatrix = poseTransformationMatrix;
+        this.inverseBindMatrix = inverseBindMatrix;
     }
 
     public Joint getParent() {
@@ -35,10 +35,10 @@ public class Joint {
         return parent != null;
     }
 
-    public void setInverseBindMatrix(Matrix4f inverseBindMatrix) {
-        this.inverseBindMatrix = new Matrix4f(inverseBindMatrix);
-    }
-
+    /**
+     * generates the matrix to use in the vertex shader for the actual animation
+     * @return generated joint matrix
+     */
     public Matrix4f getJointMatrix() {
 
         Matrix4f matrix = new Matrix4f().identity();
@@ -49,6 +49,10 @@ public class Joint {
 
 
     private Matrix4f getTransformationMatrix() {
+        if(poseTransformationMatrix == null) {
+            Log.w(TAG, "id:" + id);
+            return  new Matrix4f().identity();
+        }
         Matrix4f matrix = new Matrix4f(poseTransformationMatrix);
         if (hasParent()) matrix.mul(parent.getTransformationMatrix());
         return matrix;
@@ -58,14 +62,6 @@ public class Joint {
         this.poseTransformationMatrix = poseTransformationMatrix;
     }
 
-    /**
-     * applies a animation transformationMatrix
-     * @param matrix matrix to apply
-     */
-    public void applyAnimation(Matrix4f matrix) {
-        //todo
-        Log.w(TAG,"todo");
-    }
 
     public void setParent(Joint parent) {
         this.parent = parent;
