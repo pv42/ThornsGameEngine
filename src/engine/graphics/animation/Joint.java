@@ -42,8 +42,8 @@ public class Joint {
     public Matrix4f getJointMatrix() {
 
         Matrix4f matrix = new Matrix4f().identity();
-        //matrix.mul(getTransformationMatrix());
-        //matrix.mul(inverseBindMatrix);
+        matrix.mul(getTransformationMatrix());
+        matrix.mul(inverseBindMatrix);
         return matrix;
     }
 
@@ -55,8 +55,8 @@ public class Joint {
         }
         Matrix4f matrix;
         if (hasParent()) {
-            matrix = new Matrix4f(parent.getTransformationMatrix());
-            matrix.mul(poseTransformationMatrix);
+            matrix = new Matrix4f(poseTransformationMatrix);
+            matrix.mul(parent.getTransformationMatrix());
         } else {
             matrix = new Matrix4f(poseTransformationMatrix);
         }

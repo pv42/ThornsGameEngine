@@ -108,7 +108,7 @@ public class Collada {
 
     public List<TexturedModel> getTexturedModels() {
         List<TexturedModel> models = new ArrayList<>();
-        for (int i = 0; i < scene.getRootNodes().size(); i++) {
+        for (int i = 0; i < scene.getRootNodes().size(); i++) { //for models
             String nodeId = scene.getRootNodes().get(i);
             ColladaNode cnode = scene.getNode(nodeId);
             ColladaVisualScene.ColladaInstanceController ic = cnode.getInstanceController();
@@ -123,8 +123,8 @@ public class Collada {
                         Util.get1DArray(geometry.getTextureCoordinates()),
                         Util.get1DArray(geometry.getNormal()),
                         geometry.getIndices(),
-                        Util.get1DArrayFromListListInteger(controller.getWeights().getIndices()),
-                        Util.get1DArrayFromListListFloat(controller.getWeights().getWeights()),
+                        controller.getWeights().getIndicesData(),
+                        controller.getWeights().getWeightsData(),
                         controller.getJointList());
                 String materialId = geometry.getMaterialId();
                 materialId = ic.getBindMaterialId(materialId);

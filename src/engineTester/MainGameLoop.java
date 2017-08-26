@@ -100,11 +100,7 @@ public class MainGameLoop {
             entities.add(new Entity(texturedModel,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z),0,0,0,.8f));
         }
         //player
-        ColladaLoader pcl = new ColladaLoader();
-        Matrix4f matrix = new Matrix4f();
-        matrix.identity();
-        matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        Collada cowboyCollada = ColladaLoader.loadCollada("Laptop",matrix);
+        Collada cowboyCollada = ColladaLoader.loadCollada("cowboy");
         List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
         //Animation cowboyAnimation = cowboyCollada.getAnimation();
         //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
@@ -158,31 +154,6 @@ public class MainGameLoop {
             //post render
             timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
             framesSinceFPSUpdate ++;
-            //update Fullscreen
-            /*if(Keyboard.isKeyDown(Keyboard.KEY_F11)) {
-                fullscreen = !fullscreen;
-                if(fullscreen) {
-                    if(DisplayManager.updateDisplayMode(Settings.WIDTH_FULLSCREEN,Settings.HEIGHT_FULLSCREEN,true)) {
-                        MasterRenderer.init((float)Settings.WIDTH_FULLSCREEN/(float)Settings.HEIGHT_FULLSCREEN);
-                        GL11.glViewport(0,0,Settings.WIDTH_FULLSCREEN,Settings.HEIGHT_FULLSCREEN);
-                    } else {
-                        fullscreen = false;
-                    }
-                } else  {
-                    if(DisplayManager.updateDisplayMode(Settings.WIDTH,Settings.HEIGHT,false)) {
-                        MasterRenderer .init((float) Settings.WIDTH / (float) Settings.HEIGHT);
-                        GL11.glViewport(0, 0, Settings.WIDTH, Settings.HEIGHT);
-                    } else {
-                        fullscreen = true;
-                    }
-                }
-
-            //change Weapon
-            if(Keyboard.isKeyDown(Keyboard.KEY_1)) player.setGun(new KSR29());
-            if(Keyboard.isKeyDown(Keyboard.KEY_2)) player.setGun(new MP5());
-            if(Keyboard.isKeyDown(Keyboard.KEY_3)) player.setGun(new Beretta92());
-            if(Keyboard.isKeyDown(Keyboard.KEY_4)) player.setGun(new Blaster());
-            */
         }
         if(onlineMode && networkSender != null && client != null) {
             networkSender.end();
