@@ -104,12 +104,12 @@ public class MainGameLoop {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        Collada cowboyCollada = ColladaLoader.loadCollada("Hot_Girl_01",matrix);
+        Collada cowboyCollada = ColladaLoader.loadCollada("Laptop",matrix);
         List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
         //Animation cowboyAnimation = cowboyCollada.getAnimation();
         //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
         //List<TexturedModel> personModel = ColladaLoader.loadCollada("Lara_Croft").getTexturedModels();
-        Entity girl = new Entity(cowboy, new Vector3f(30,2,50),-90,0,0,2f);
+        Entity girl = new Entity(cowboy, new Vector3f(30,2,50),-90,0,0,5f);
         FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);

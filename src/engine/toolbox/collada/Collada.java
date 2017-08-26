@@ -23,6 +23,7 @@ public class Collada {
     private Map<String, ColladaController> controllers;
     private Map<String, ColladaVisualScene> visualScenes;
     private Map<String, ColladaAnimation> animations;
+    private Map<String, ColladaCamera> cameras;
     private ColladaVisualScene scene;
 
     public ColladaAsset getColladaAsset() {
@@ -55,6 +56,10 @@ public class Collada {
 
     public Map<String, ColladaAnimation> getAnimations() {
         return animations;
+    }
+
+    public Map<String, ColladaCamera> getCameras() {
+        return cameras;
     }
 
     public ColladaVisualScene getScene() {
@@ -95,6 +100,10 @@ public class Collada {
 
     void setScene(ColladaVisualScene scene) {
         this.scene = scene;
+    }
+
+    void setCameras(Map<String,ColladaCamera> cameras) {
+        this.cameras = cameras;
     }
 
     public List<TexturedModel> getTexturedModels() {

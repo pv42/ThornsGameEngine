@@ -19,7 +19,7 @@ public class Animation {
         keyframes.add(keyFrame);
     }
 
-    public Matrix4f getMatrix(float time, String jointName) {
+    Matrix4f getMatrix(float time, String jointName) {
         float prevTS = 0, nextTS = Float.POSITIVE_INFINITY;
         Matrix4f nextMatrix = null;
         Matrix4f prevMatrix = keyframes.get(0).getJointData().get(jointName);
