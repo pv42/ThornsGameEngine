@@ -18,14 +18,21 @@ public class VertexWeights {
         this.indices = indices;
     }
 
-    public void applyIndicesChange(int[] i1, int[] i2) { //for polylist
-        //...
-    }
+    float[] getWeightsData(int[] primitive) {
+        List<List<Float>> pWeights;
+        if(primitive != null) {
+            pWeights = new ArrayList<>();
+            for (int i = 0; i < primitive.length / 4; i++) {
+                Integer pi = primitive[i * 4];
+                pWeights.add(weights.get(pi));
 
-    float[] getWeightsData() {
-        float[] weightsData = new float[weights.size() * 4];
+            }
+        } else {
+            pWeights = weights;
+        }
+        float[] weightsData = new float[pWeights.size() * 4];
         int i = 0;
-        for(List<Float> weights_: weights) {
+        for(List<Float> weights_: pWeights) {
             for(int j = 0; j < MAX_BONES_PER_VERTEX; j++) {
                 float weight;
                 if(j < weights_.size()) {
@@ -40,10 +47,22 @@ public class VertexWeights {
         return weightsData;
     }
 
-    int[] getIndicesData() {
-        int[] indicesData = new int[indices.size() * 4];
+    int[] getIndicesData(int[] primitive) {
+        List<List<Integer>> pIndices;
+        if(primitive != null) {
+            pIndices = new ArrayList<>();
+            for (int i = 0; i < primitive.length / 4; i++) {
+                Integer pi = primitive[i * 4];
+                pIndices.add(indices.get(pi));
+
+            }
+        } else {
+            pIndices = indices;
+        }
+
+        int[] indicesData = new int[pIndices.size() * 4];
         int i = 0;
-        for(List<Integer> indices_: indices) {
+        for(List<Integer> indices_: pIndices) {
             for(int j = 0; j < MAX_BONES_PER_VERTEX; j++) {
                 int index;
                 if(j < indices_.size()) {

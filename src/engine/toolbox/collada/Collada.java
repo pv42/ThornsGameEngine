@@ -123,8 +123,8 @@ public class Collada {
                         Util.get1DArray(geometry.getTextureCoordinates()),
                         Util.get1DArray(geometry.getNormal()),
                         geometry.getIndices(),
-                        controller.getWeights().getIndicesData(),
-                        controller.getWeights().getWeightsData(),
+                        controller.getWeights().getIndicesData(geometry.getPolylistIndicesBase()),
+                        controller.getWeights().getWeightsData(geometry.getPolylistIndicesBase()),
                         controller.getJointList());
                 String materialId = geometry.getMaterialId();
                 materialId = ic.getBindMaterialId(materialId);
