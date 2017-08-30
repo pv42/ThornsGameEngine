@@ -4,66 +4,58 @@ import engine.toolbox.Maths;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+
 /***
  * Created by pv42 on 10.08.16.
  */
 public class MatrixCalc {
     public static void main(String args[]) {
-        Matrix4f tm = Maths.createTransformationMatrix(new Vector3f(9, 8, 5), 0, 90, 0, 1);
-        System.out.println(tm);
-        Vector3f transl = new Vector3f(1,0,0);
-        tm.translate(transl);
-        System.out.println(tm);
+        Matrix4f tm1 = loadMatrix("0 -1 -0.000153 0 -0.001205 0.000153 -0.999999 0 0.999999 0 -0.001205 0 0 0 0 1"); //tm
+        Matrix4f tm2 = loadMatrix("1 0 0 2.13821 0 1 0 0.000000 0 0 1 0 0 0 0 1");
+        Matrix4f tm3 = loadMatrix("0.997776 -0.000094 -0.066659 0.104977 0.000094 1 -0.000003 -0.000035 0.066659 -0.000003 0.997776 -0.006802 0 0 0 1");
+        Matrix4f ibm1 =  loadMatrix("0 -0.001205 0.999999 0 -1 0.000153 0 0 -0.000153 -0.999999 -0.001205 0 0 0 0 1"); //ibm
+        Matrix4f ibm2 = loadMatrix("0 -0.001205 0.999999 -2.13821 -1 0.000153 0 -0.000000 -0.000153 -0.999999 -0.001205 0 0 0 0 1");
+        Matrix4f ibm3 = loadMatrix("-0.000105 -0.067861 0.997695 -2.23774 -1 0.000156 -0.000094 0.000248 -0.000149 -0.997695 -0.067861 0.156315 0 0 0 1");
+        //
+        Matrix4f m1 = new Matrix4f().set(tm1).mul(ibm1);
+        //m2.transpose();
+        Matrix4f m2 = new Matrix4f().set(ibm2).mul(tm2).mul(tm1);
+        Matrix4f m3 = new Matrix4f().set(tm2).mul(tm1).mul(ibm2);
+        Matrix4f m4 = new Matrix4f().set(tm1).mul(ibm2).mul(tm2);
+        Matrix4f m5 = new Matrix4f().set(tm3).mul(tm2).mul(tm1).mul(ibm3);
 
+        System.out.println("\n1 " + calcIdentitarian(m1) + "\n" + ts(m1) + "2:" + calcIdentitarian(m2) +"\n" + ts(m2) +
+                "3:" + calcIdentitarian(m3) + "\n" + m3 + "4:"+ calcIdentitarian(m4) + "\n" + m4 +
+                "5:" + calcIdentitarian(m5) + "\n" + m5
+        );
         //Vector3f rot = Maths.getRotationComponent(tm);
 
         //System.out.println("\nx:" + Math.toDegrees(rot.x) + "\ny:" + Math.toDegrees(rot.y) + "\nz:" + Math.toDegrees(rot.z));
     }
-    /*private static Matrix4f readMatrix4f(String sin) {
-        Matrix4f matrix4f = new Matrix4f();
-        float[] array = new float[16];
+    private static Matrix4f loadMatrix(String data) {
+        String[] split = data.split(" ");
+        float[] values = new float[split.length];
         int i = 0;
-        for (String s:sin.split(" ")) {
-            array[i] = Float.valueOf(s);
+        for(String v : split) {
+            values[i] = Float.valueOf(v);
             i++;
         }
-        matrix4f.m00 = array[0];
-        matrix4f.m01 = array[1];
-        matrix4f.m02 = array[2];
-        matrix4f.m03 = array[3];
-        matrix4f.m10 = array[4];
-        matrix4f.m11 = array[5];
-        matrix4f.m12 = array[6];
-        matrix4f.m13 = array[7];
-        matrix4f.m20 = array[8];
-        matrix4f.m21 = array[9];
-        matrix4f.m22 = array[10];
-        matrix4f.m23 = array[11];
-        matrix4f.m30 = array[12];
-        matrix4f.m31 = array[13];
-        matrix4f.m32 = array[14];
-        matrix4f.m33 = array[15];
-        return matrix4f;
-    }*//*
-    static Matrix4f roundMatrix(Matrix4f src) {
-        Matrix4f dest = new Matrix4f();
-        dest.m00 = Math.round(src.m00);
-        dest.m01 = Math.round(src.m01);
-        dest.m02 = Math.round(src.m02);
-        dest.m03 = Math.round(src.m03);
-        dest.m10 = Math.round(src.m10);
-        dest.m11 = Math.round(src.m11);
-        dest.m12 = Math.round(src.m12);
-        dest.m13 = Math.round(src.m13);
-        dest.m20 = Math.round(src.m20);
-        dest.m21 = Math.round(src.m21);
-        dest.m22 = Math.round(src.m22);
-        dest.m23 = Math.round(src.m23);
-        dest.m30 = Math.round(src.m30);
-        dest.m31 = Math.round(src.m31);
-        dest.m32 = Math.round(src.m32);
-        dest.m33 = Math.round(src.m33);
-        return dest;
-    }*/
-
+        return new Matrix4f().set(values);
+    }
+    private static String ts(Matrix4f matrix4f) {
+        return matrix4f.toString(new DecimalFormat());
+    }
+    private static float calcIdentitarian(Matrix4f m) {
+        m = new Matrix4f(m).sub(new Matrix4f().identity());
+        float fl;
+        fl  = Math.abs(m.m00() + m.m10()) + Math.abs(m.m20() + m.m30());
+        fl += Math.abs(m.m01() + m.m11()) + Math.abs(m.m21() + m.m31());
+        fl += Math.abs(m.m02() + m.m12()) + Math.abs(m.m22() + m.m32());
+        fl += Math.abs(m.m03() + m.m13()) + Math.abs(m.m23() + m.m33());
+        return fl;
+    }
 }

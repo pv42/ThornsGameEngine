@@ -8,6 +8,10 @@ import engine.toolbox.Log;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
 
 /**
  * A openGL shader program with vertex and fragment shader
@@ -34,6 +38,8 @@ public abstract class ShaderProgram {
         bindAttributes();
         GL20.glLinkProgram(programID);
         GL20.glValidateProgram(programID);
+        int validate = GL20.glGetProgrami(programID,GL_VALIDATE_STATUS);
+        if(validate != GL_TRUE) Log.e("shader could not be validated");
         getAllUniformLocations();
     }
 
@@ -90,18 +96,6 @@ public abstract class ShaderProgram {
      */
     public int getUniformLocation(String uniformName) {
         return GL20.glGetUniformLocation(programID, uniformName);
-    }
-
-    /**
-     * get a shader's array uniform locations in the vram
-     * @param uniformName the uniform's variable name
-     * @param locations array to store the locations
-     * @param size arrays size
-     */
-    public void getUniformLocationsArray(String uniformName, int[] locations, int size) {
-        for( int i = 0; i < size; i++) {
-            locations[i] = getUniformLocation(uniformName + "[" + i + "]");
-        }
     }
 
     /**
@@ -174,6 +168,45 @@ public abstract class ShaderProgram {
     }
 
     /**
+     * loads a list of vectors to a array of vectors uniform in the VRAM
+     * @param location uniform location in the VRAM
+     * @param vectors vectors to load
+     * @param size uniform array size, max amount of vectors to load
+     */
+    protected void loadVectorArray(int location, List<Vector3f> vectors, int size) {
+        float data[] = new float[size*3];
+        for(int i = 0; i < size; i++) {
+            if (i < vectors.size()) {
+                data[3 * i] = vectors.get(i).x();
+                data[3 * i + 1] = vectors.get(i).y();
+                data[3 * i + 2] = vectors.get(i).z();
+            } else {
+                data[3 * i] = 0;
+                data[3 * i + 1] = 0;
+                data[3 * i + 2] = 0;
+
+            }
+        }
+        GL20.glUniform3fv(location, data);
+    }
+
+    /**
+     * loads a list of matrices to a array of matrices uniform in the VRAM
+     * @param location uniform location in the VRAM
+     * @param matrices matrices to load
+     * @param size uniform array size, max amount of matrices to load
+     */
+    protected void loadMatrixArray(int location, List<Matrix4f> matrices, int size) {
+        float data[] = new float[size * 16];
+        for(int i = 0; i < size; i++) {
+            if(i < matrices.size()) {
+                matrices.get(i).get(data,i * 16);
+            }
+        }
+        GL20.glUniformMatrix4fv(location, false, data);
+    }
+
+    /**
      * compiles and loads a glsl shader
      * @param file shader's source file path
      * @param type shader type e.g. vertex or fragment
@@ -203,4 +236,6 @@ public abstract class ShaderProgram {
         Log.d("shader '" + file + "' loaded");
         return shaderID;
     }
+
+
 }

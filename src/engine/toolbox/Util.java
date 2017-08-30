@@ -1,10 +1,13 @@
 package engine.toolbox;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,15 +65,15 @@ public class Util {
         }
         return out;
     }
-    public static List<Bone> getList(Bone[] in) {
-        List<Bone> out = new ArrayList<>();
+    public static List<Joint> getList(Joint[] in) {
+        List<Joint> out = new ArrayList<>();
         for (int i = 0; i < in.length; i++) {
             out.add(in[i]);
         }
         return out;
     }
-    public static List<Bone> getList(Map<String,Bone> in) {
-        List<Bone> out = new ArrayList<>(in.values());
+    public static List<Joint> getList(Map<String,Joint> in) {
+        List<Joint> out = new ArrayList<>(in.values());
         return out;
     }
     public static float[][] get2DArray(List<Vector4f> in) {
@@ -108,4 +111,23 @@ public class Util {
         return new Vector2f(in.x/in.w,in.y/in.w);
     }
 
+    public static int[] get1DArrayFromListListInteger(List<List<Integer>> in) {
+        int out[] = new int[in.size() * in.get(0).size()];
+        for(int i = 0; i < in.size(); i++) {
+            for (int j = 0; j < in.get(0).size(); j++) {
+                out[i + j * in.size()] = in.get(i).get(j);
+            }
+        }
+        return out;
+    }
+
+    public static float[] get1DArrayFromListListFloat(List<List<Float>> in) {
+        float out[] = new float[in.size() * in.get(0).size()];
+        for(int i = 0; i < in.size(); i++) {
+            for (int j = 0; j < in.get(0).size(); j++) {
+                out[i + j * in.size()] = in.get(i).get(j);
+            }
+        }
+        return out;
+    }
 }

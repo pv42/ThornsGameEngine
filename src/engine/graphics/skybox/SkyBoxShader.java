@@ -4,7 +4,7 @@ import engine.graphics.cameras.Camera;
 import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.shaders.ShaderProgram;
 import engine.toolbox.Maths;
 
@@ -12,9 +12,9 @@ import engine.toolbox.Maths;
    Created by pv42 on 21.06.16.
  */
 public class SkyBoxShader extends ShaderProgram {
-    private static final String FRAGMENT_FILE = "src/engine/graphics/skybox/skyboxFragment";
-    private static final String VERTEX_FILE = "src/engine/graphics/skybox/skyboxVertex";
-    private final float ROTATE_SPEED = 1f;
+    private static final String FRAGMENT_FILE = "src/engine/graphics/skybox/skyboxFragment.glsl";
+    private static final String VERTEX_FILE = "src/engine/graphics/skybox/skyboxVertex.glsl";
+    private final float ROTATE_SPEED = 0.5f;
     private int location_viewMatrix;
     private int location_projectionMatrix;
     private int location_fogColor;

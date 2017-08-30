@@ -15,12 +15,12 @@ uniform sampler2D bTexture;
 uniform sampler2D blendMap;
 
 uniform vec3 lightColor[4];
-uniform vec3 attenuation[4];
+uniform vec3 lightAttenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
 
-const float AMBIENT_LIGHT = 0.1;
+const float AMBIENT_LIGHT = 0.05;
 const float TILE_FACTOR = 40.0;
 const float CELL_SHADING_LEVELS = -1; // -1 to disable
 
@@ -43,8 +43,9 @@ void main(void) {
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     for(int i = 0; i < 4; i++) {
+        if(length(lightAttenuation[i]) == 0) break;
         float distance = length (toLightVector[i]);
-        float attFactor = attenuation[i].x + attenuation[i].y * distance + attenuation[i].z * distance * distance;
+        float attFactor = lightAttenuation[i].x + lightAttenuation[i].y * distance + lightAttenuation[i].z * distance * distance;
         vec3 unitLight = normalize(toLightVector[i]);
         float nDotl = dot(unitNormal, unitLight);
         float brightness = max(nDotl, 0.0);
@@ -67,6 +68,6 @@ void main(void) {
     }
     totalDiffuse = max(totalDiffuse , AMBIENT_LIGHT);
     out_Color = vec4(totalDiffuse,1.0) * totalColor + vec4( totalSpecular, 0.0);
-    out_Color = mix(vec4(skyColor,1.0), out_Color, visibility);
+    out_Color = mix(vec4(skyColor,1.0), out_Color, visibility); // calculates the fading out to horizon
 
 }

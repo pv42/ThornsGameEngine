@@ -2,7 +2,7 @@ package engine.graphics.particles;
 
 import org.joml.Vector3f;
 
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 
 public abstract class ParticleSystem {
 

@@ -12,7 +12,7 @@ uniform sampler2D diffTexture;
 uniform sampler2D specularMap;
 uniform float usesSpecularMap;
 uniform vec3 lightColor[4];
-uniform vec3 attenuation[4];
+uniform vec3 lightAttenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
@@ -27,8 +27,9 @@ void main(void) {
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     for (int i = 0; i < 4; i++) {
+        if(length(lightAttenuation[i]) == 0) break; //not a light
         float distance = length (toLightVector[i]);
-        float attFactor = attenuation[i].x + attenuation[i].y * distance + attenuation[i].z * distance * distance;
+        float attFactor = lightAttenuation[i].x + lightAttenuation[i].y * distance + lightAttenuation[i].z * distance * distance;
         vec3 unitLight = normalize(toLightVector[i]);
         float nDotl = dot(unitNormal, unitLight);
         float brightness = max(nDotl,0.0 );
@@ -36,7 +37,6 @@ void main(void) {
             float shivtLevel = floor(brightness * CELL_SHADING_LEVELS);
             brightness = shivtLevel / CELL_SHADING_LEVELS;
         }
-
 
         vec3 lightDirection = - unitLight;
         vec3 reflectedLightDirection = reflect(lightDirection,unitNormal);
@@ -52,7 +52,7 @@ void main(void) {
         totalSpecular = totalSpecular + (dampedFactor * lightColor[i] * reflectivity )/ attFactor;
     }
     totalDiffuse = max(totalDiffuse , ambient_light);
-
+    //totalDiffuse = vec3(0.5);
 
     vec4 textureColor = texture(diffTexture,pass_uv);
     if(textureColor.a < 0.5) {
@@ -65,4 +65,5 @@ void main(void) {
     }
     out_Color = vec4(totalDiffuse,1.0) * textureColor + vec4( totalSpecular, 0.0);
     out_Color = mix(vec4(skyColor,1.0), out_Color, visibility);
+    //out_Color = vec4(totalDiffuse, 1.0);
 }

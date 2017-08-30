@@ -14,7 +14,7 @@ import engine.graphics.renderEngine.Loader;
  * Created by pv42 on 21.06.16.
  */
 public class SkyboxRenderer {
-    private static final float SIZE = 1000f;
+    private static final float SIZE = 500f;
     private static final float[] VERTICES = {
             -SIZE, SIZE, -SIZE, //0
             -SIZE, -SIZE, -SIZE,
@@ -61,14 +61,18 @@ public class SkyboxRenderer {
     private RawModel cube;
     private static SkyBoxShader shader;
     private int texture;
-    public SkyboxRenderer(Matrix4f projectionMatrix,String textureFile) {
+    public SkyboxRenderer(Matrix4f projectionMatrix,String textureFile, String extension) {
         cube = Loader.loadToVAO(VERTICES, 3);
-        texture = Loader.loadCubeMapTexture(textureFile);
+        if (extension == null) extension = ".png";
+        texture = Loader.loadCubeMapTexture(textureFile, extension);
         shader = new SkyBoxShader();
         shader.start();
         shader.connectTextures();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
+    }
+    public SkyboxRenderer(Matrix4f projectionMatrix,String textureFile) {
+        this(projectionMatrix, textureFile, null);
     }
 
     public void updateProjectionMatrix(Matrix4f projectionMatrix) {

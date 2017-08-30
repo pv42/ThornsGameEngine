@@ -11,7 +11,7 @@ import engine.graphics.entities.Player;
 import org.joml.Vector3f;
 import engine.graphics.particles.Particle;
 import engine.graphics.particles.ParticleTexture;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 
 

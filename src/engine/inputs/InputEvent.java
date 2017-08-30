@@ -53,7 +53,6 @@ public class InputEvent {
         return eventData;
     }
 
-
     public long getEventTime() {
         return eventTime;
     }

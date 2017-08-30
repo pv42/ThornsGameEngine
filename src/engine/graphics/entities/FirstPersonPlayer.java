@@ -2,13 +2,13 @@ package engine.graphics.entities;
 
 import engine.graphics.models.TexturedModel;
 import engine.inputs.InputEvent;
-import engine.inputs.listeners.CursorListener;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
+import engine.toolbox.Log;
 import org.lwjgl.glfw.GLFW;
 import shivt.guns.Gun;
 import org.joml.Vector3f;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.terrains.Terrain;
 import engine.toolbox.Settings;
 
@@ -23,6 +23,7 @@ import static engine.toolbox.Settings.GRAVITY;
 public class FirstPersonPlayer extends Player{
     private static final float TURN_SPEED = Settings.MOUSE_SENSITIVITY;
     private static final float MAX_PITCH_ABS = 70;
+    private static final String TAG = "FPPlayer";
     private float currentSpeed;
     private float currentSideSpeed;
     private float heightAngle = 0;

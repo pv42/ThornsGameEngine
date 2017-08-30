@@ -10,7 +10,7 @@ import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import engine.graphics.shaders.TerrainShader;
+import engine.graphics.terrains.TerrainShader;
 import engine.graphics.terrains.Terrain;
 import engine.graphics.textures.TerrainTexturePack;
 import engine.toolbox.Maths;

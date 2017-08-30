@@ -8,6 +8,7 @@ import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Lighted3DShader extends ShaderProgram {
@@ -15,9 +16,9 @@ public abstract class Lighted3DShader extends ShaderProgram {
     private int location_transformationMatrix;
     private int location_projectionMatrix;
     private int location_viewMatrix;
-    private int[] locations_lightPosition;
-    private int[] locations_lightColor;
-    private int[] locations_attenuation;
+    private int locations_lightPosition;
+    private int locations_lightColor;
+    private int locations_attenuation;
     private int location_shineDamper;
     private int location_reflectivity;
     private int location_useFakeLightning;
@@ -42,12 +43,14 @@ public abstract class Lighted3DShader extends ShaderProgram {
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix");
-        locations_lightPosition = new int[MAX_LIGHTS];
-        locations_lightColor = new int[MAX_LIGHTS];
-        locations_attenuation = new int[MAX_LIGHTS];
-        super.getUniformLocationsArray("lightPosition", locations_lightPosition, MAX_LIGHTS);
+        locations_lightPosition = super.getUniformLocation("lightPosition");
+        locations_lightColor = super.getUniformLocation("lightColor");
+        locations_attenuation = super.getUniformLocation("lightAttenuation");
+
+        /*super.getUniformLocationsArray("lightPosition", locations_lightPosition, MAX_LIGHTS);
         super.getUniformLocationsArray("lightColor", locations_lightColor, MAX_LIGHTS);
         super.getUniformLocationsArray("attenuation", locations_attenuation, MAX_LIGHTS);
+        */
         /*for (int i = 0; i < 4; i++) {
             locations_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
             locations_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
@@ -74,17 +77,17 @@ public abstract class Lighted3DShader extends ShaderProgram {
     }
 
     public void loadLights(List<Light> lights) {
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (i < lights.size()) {
-                super.loadVector(locations_lightPosition[i], lights.get(i).getPosition());
-                super.loadVector(locations_lightColor[i], lights.get(i).getColor().getVector());
-                super.loadVector(locations_attenuation[i], lights.get(i).getAttenuation());
-            } else {
-                super.loadVector(locations_lightPosition[i], new Vector3f(0, 0, 0));
-                super.loadVector(locations_lightColor[i], new Vector3f(0, 0, 0));
-                super.loadVector(locations_attenuation[i], new Vector3f(1, 0, 0));
-            }
+        List<Vector3f> lightPositions = new ArrayList<>();
+        List<Vector3f> lightColors = new ArrayList<>();
+        List<Vector3f> attenuations = new ArrayList<>();
+        for (Light light: lights) {
+            lightPositions.add(light.getPosition());
+            lightColors.add(light.getColor().getVector());
+            attenuations.add(light.getAttenuation());
         }
+        super.loadVectorArray(locations_lightPosition, lightPositions, MAX_LIGHTS);
+        super.loadVectorArray(locations_lightColor, lightColors, MAX_LIGHTS);
+        super.loadVectorArray(locations_attenuation, attenuations, MAX_LIGHTS);
     }
 
     public void loadShineVariables(float shineDamper, float reflectivity) {

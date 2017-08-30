@@ -93,7 +93,7 @@ public class InputHandler {
             if (e.getEventType() == CURSOR_MOVE || e.getEventType() == SCROLL)
                 data = (int) e.getMousePosition().x + "," + (int) e.getMousePosition().y;
             if (data == null) data = e.getEventData() + "";
-            Log.d("InputEvent", source + "," + type + data);
+            Log.ev("InputEvent", source + "," + type + data);
         }
         // listeners
         if(e.getEventType() == CURSOR_MOVE && cursorListener != null) {

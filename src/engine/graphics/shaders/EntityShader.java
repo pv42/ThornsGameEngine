@@ -1,31 +1,35 @@
 package engine.graphics.shaders;
 
-import engine.graphics.cameras.Camera;
-import engine.graphics.lights.Light;
-import engine.toolbox.Color;
-import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import engine.toolbox.Maths;
 
 import java.util.List;
+
+import static engine.toolbox.Settings.MAX_BONES;
 
 /***
  * Created by pv42 on 17.06.16.
  */
-public class StaticShader extends Lighted3DShader {
-    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/vertexShader";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/fragmentShader";
+public class EntityShader extends Lighted3DShader {
+    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/vertexShader.glsl";
+    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/fragmentShader.glsl";
     private int location_numberOfRows;
     private int location_offset;
     private int location_specMap;
     private int location_usesSpecMap;
     private int location_texture;
-    private int locations_bone[];
+    private int location_bones; //todo
     private int location_useAnimation;
 
-    public StaticShader() {
+    /**
+     * shader for entities, supports:
+     * -texture atlases
+     * -bone animation
+     * -spec maps
+     * -lighting
+     * - ...
+     */
+    public EntityShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
 
@@ -46,42 +50,56 @@ public class StaticShader extends Lighted3DShader {
         location_usesSpecMap = super.getUniformLocation("usesSpecularMap");
         location_specMap = super.getUniformLocation("specularMap");
         location_texture = super.getUniformLocation("diffTexture");
-        locations_bone = new int[Settings.MAX_BONES];
-        super.getUniformLocationsArray("bone", locations_bone, Settings.MAX_BONES);
-        /*for (int i = 0; i < Settings.MAX_BONES; i++) {
-            locations_bone[i] = super.getUniformLocation("bone[" + i + "]");
-        }*/
+        location_bones = super.getUniformLocation("bone");
         location_useAnimation = super.getUniformLocation("useAnimation");
     }
 
+    /**
+     * connect the textures to the texture banks
+     */
     public void connectTextures() {
         super.loadInt(location_texture, 0);
         super.loadInt(location_specMap, 1);
     }
 
+    /**
+     * loads if a specular map should be used
+     * @param usesSpecMap should a spec. map be used
+     */
     public void loadUseSpecMap(boolean usesSpecMap) {
         super.loadBoolean(location_usesSpecMap, usesSpecMap);
     }
 
+    /**
+     * loads the number of rows if the texture is an atlas or 1
+     * @param numberOfRows the number of rows/cols the texture has
+     */
     public void loadNumberOfRows(int numberOfRows) {
         super.loadFloat(location_numberOfRows, numberOfRows);
     }
 
+    /**
+     * loads the texture offset in texture atlases
+     * @param offsetX textures x offset
+     * @param offsetY textures y offset
+     */
     public void loadOffset(float offsetX, float offsetY) {
         super.loadVector(location_offset, new Vector2f(offsetX, offsetY));
     }
 
+    /**
+     * load the bone matrices into the shader uniforms
+     * @param bones bone matrices to load
+     */
     public void loadBones(List<Matrix4f> bones) {
-        for (int i = 0; i < Settings.MAX_BONES; i++) {
-            if (i < bones.size()) {
-                super.loadMatrix(locations_bone[i], bones.get(i));
-            } else {
-                super.loadMatrix(locations_bone[i], new Matrix4f());
-            }
-        }
+        super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 
+    /**
+     * loads whether the rendered gpu should use bone animation
+     * @param useAnimation should animations be used
+     */
     public void loadUseAnimation(boolean useAnimation) {
-        super.loadBoolean(location_useAnimation, true);
+        super.loadBoolean(location_useAnimation, useAnimation);
     }
 }

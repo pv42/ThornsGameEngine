@@ -1,20 +1,18 @@
 package engineTester.graphicTest;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.cameras.FirstPersonCamera;
-import engine.graphics.cameras.StaticCamera;
+import engine.graphics.display.Window;
 import engine.graphics.entities.Entity;
-import engine.graphics.entities.FirstPersonPlayer;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
-import engine.graphics.shaders.SimpleShader;
 import engine.graphics.textures.ModelTexture;
 import engine.inputs.InputHandler;
 import engine.inputs.InputLoop;
+import engine.toolbox.collada.Collada;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -23,7 +21,7 @@ import shivt.ShivtCamera;
 public class Main {
     static boolean useEngine = true;
     public static void main(String args[]) {
-        long window = DisplayManager.createDisplay();
+        Window window = DisplayManager.createWindow();
         TestRender renderer = null;
         if (useEngine) {
             MasterRenderer.init();
@@ -32,7 +30,7 @@ public class Main {
         } else {
             renderer = new TestRender();
         }
-        InputHandler.init(window);
+        InputHandler.init(window.getId());
         float[] vertices = {
                 -0.5f, 0.5f, 0,
                 -0.5f, -0.5f, 0,
@@ -49,8 +47,7 @@ public class Main {
                 0, 0, 0
         };
         RawModel model = Loader.loadToVAO(vertices, textCoords, normal, indices);
-        ColladaLoader cl = new ColladaLoader();
-        Entity lara  = new Entity(cl.loadColladaModelAnimated("Lara_Croft"),new Vector3f(0,12.5f,0),80,0,0,1f);
+        Entity lara  = new Entity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0),80,0,0,1f);
         int texture = Loader.loadTexture("Screen_Dust_D.png");
         ModelTexture modelTexture = new ModelTexture(texture);
         TexturedModel texturedModel = new TexturedModel(model, modelTexture);

@@ -1,10 +1,7 @@
 package engine.toolbox;
 
-import engine.graphics.DisplayManager;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import engine.graphics.display.DisplayManager;
+import org.joml.*;
 
 /***
  * Created by pv42 on 21.07.16.
@@ -12,7 +9,7 @@ import org.joml.Vector4f;
 public class Conversion {
     private Conversion() {} //this can never be an object
     public static Vector2f pixelFromOpenGLSpace2D(Vector2f openGLSpace) {
-        Vector2f size = DisplayManager.getSize();
+        Vector2i size = DisplayManager.getSize();
         return new Vector2f((openGLSpace.x + 1)*.5f* size.x,(openGLSpace.y + 1)*.5f* size.y);
     }
     public static Vector3f getWorldRay(float pixelX,float pixelY,Matrix4f projectionMatrix, Matrix4f viewMatrix) {

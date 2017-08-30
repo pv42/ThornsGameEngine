@@ -26,7 +26,7 @@ uniform float useAnimation;
 uniform mat4 bone[250]; // Settings.MAX_BONES
 //
 
-const float density = 0.0015; //0.0035
+const float density = 0.0035; //0.0035
 const float gradient = 5.0;
 
 void main(void) {
@@ -54,9 +54,6 @@ void main(void) {
     }
     vec4 positionToCamera = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionToCamera;
-    //gl_Position = positionToCamera;
-    //gl_Position = worldPosition;
-    //gl_Position = vec4(position,1.0);
 
     pass_uv = (uv / numberOfRows) + offset;
 

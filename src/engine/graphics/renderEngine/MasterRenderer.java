@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import engine.graphics.DisplayManager;
-import engine.graphics.animation.*;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.fontMeshCreator.TextMeshData;
@@ -19,7 +18,7 @@ import engine.graphics.lines.LineModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.normalMappingRenderer.NormalMappingRenderer;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.shaders.TerrainShader;
+import engine.graphics.terrains.TerrainShader;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.Terrain;
 import engine.graphics.cameras.Camera;
@@ -32,7 +31,6 @@ import engine.toolbox.Time;
 
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import static engine.toolbox.Settings.SKY_COLOR;
@@ -138,7 +136,8 @@ public class MasterRenderer {
         terrainRenderer.render(terrains, camera, lights);
         terT = Time.getNanoTime();
         //skybox
-        //todo enble skybox skyboxRenderer.render(camera, SKY_COLOR);
+        //todo enble skybox
+        skyboxRenderer.render(camera, SKY_COLOR);
         skyT = Time.getNanoTime();
         //particles
         ParticleMaster.renderParticles(camera);
@@ -205,14 +204,6 @@ public class MasterRenderer {
             newBatch.add(entity);
             aniEntities.put(entityModel, newBatch);
         }
-        //add bones
-        if (Settings.SHOW_SKELETON_BONES) {
-            for (Bone b : entityModel.get(0).getRawModel().getBones()) {
-                b.getLine().setPosition(entity.getPosition());
-                b.getLine().setRotation(new Vector3f(entity.getRx(), entity.getRy(), entity.getRz()));
-                processLine(b.getLine());
-            }
-        }
     }
 
     public static void processLine(LineModel lineStripModel) {
@@ -233,7 +224,7 @@ public class MasterRenderer {
     }
 
     private static void prepare() {
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        //todo depth buffer seems not to work as intended GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(SKY_COLOR.getR(), SKY_COLOR.getG(), SKY_COLOR.getB(), 1);
     }

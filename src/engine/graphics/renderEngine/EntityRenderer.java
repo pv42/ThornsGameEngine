@@ -1,26 +1,26 @@
 package engine.graphics.renderEngine;
 
-import engine.graphics.animation.Bone;
+import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
+import engine.graphics.shaders.EntityShader;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
-import engine.graphics.shaders.StaticShader;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Maths;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_POSITION;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_UV;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_NORMAL;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONEINDICES;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONEWEIGHT;
+import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_INDICES;
+import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_WEIGHT;
 import static engine.toolbox.Settings.SKY_COLOR;
 
 
@@ -28,10 +28,10 @@ import static engine.toolbox.Settings.SKY_COLOR;
  * Created by pv42 on 17.06.16.
  */
 public class EntityRenderer {
-    private StaticShader shader;
+    private EntityShader shader;
 
     public EntityRenderer(Matrix4f projectionMatrix) {
-        this.shader = new StaticShader();
+        this.shader = new EntityShader();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextures();
@@ -64,19 +64,21 @@ public class EntityRenderer {
     private void prepareTexturedModel(TexturedModel model) {
 
         RawModel rawModel = model.getRawModel();
-        List<Bone> bones;
-        List<Matrix4f> boneMatrices = null;
+        List<Joint> joints;
+        List<Matrix4f> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
-            bones = rawModel.getBones();
-            boneMatrices = bones.stream().map(Bone::getTransformationMatrix).collect(Collectors.toList());
+            joints = rawModel.getJoints();
+            for(Joint joint : joints) {
+                boneMatrices.add(joint.getJointMatrix());
+            }
         }
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_POSITION);
         GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_UV);
         GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_NORMAL);
         if (model.isAnimated()) {
-            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEINDICES);
-            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEWEIGHT);
+            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_INDICES);
+            GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT);
         }
         ModelTexture texture = model.getTexture();
         shader.loadUseAnimation(model.isAnimated());
@@ -101,8 +103,8 @@ public class EntityRenderer {
         GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_POSITION);
         GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_UV);
         GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_NORMAL);
-        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEINDICES); //ani
-        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONEWEIGHT); //ani
+        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_INDICES); //ani
+        GL20.glDisableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT); //ani
         GL30.glBindVertexArray(0); //unbind vertex array
 
     }
@@ -149,7 +151,7 @@ public class EntityRenderer {
     }
 
     @Deprecated
-    public void render(Entity entity, StaticShader shader) {
+    public void render(Entity entity, EntityShader shader) {
         TexturedModel model = entity.getModels().get(0);
         RawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());

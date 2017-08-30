@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Random;
 
 import engine.EngineMaster;
-import engine.graphics.DisplayManager;
+import engine.graphics.animation.Animation;
+import engine.graphics.animation.Animator;
+import engine.graphics.display.DisplayManager;
 import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
+import engine.toolbox.collada.Collada;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -23,7 +26,7 @@ import engine.graphics.lights.Light;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.guis.GuiTexture;
-import engine.graphics.models.OBJLoader;
+import engine.toolbox.OBJLoader;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.*;
 import engine.graphics.renderEngine.*;
@@ -73,10 +76,9 @@ public class MainGameLoop {
         TexturedModel texturedModel2 = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern.png")));
         texturedModel2.getTexture().setHasTransparency(true);
         texturedModel2.getTexture().setUseFakeLightning(true);
-        Light sun = new Light(new Vector3f(30,20,30), new Color(.7,.7,1.0));
+        Light sun = new Light(new Vector3f(500,50000,500), new Color(1,1,.9), new Vector3f(1f,0.00f, 0.00f));
         List<Light> lights = new ArrayList<>();
         lights.add(sun);
-        Entity tree = new Entity(texturedModel,new Vector3f(),0,0,0, 1);
         //terrain engine.graphics.textures
         TerrainTexture bgT = new TerrainTexture(Loader.loadTexture("grass.png"));
         TerrainTexture rT = new TerrainTexture(Loader.loadTexture("dirt.png"));
@@ -85,7 +87,7 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(bgT,rT,bT,gT);
         TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap.png"));
         Terrain terrain = new Terrain(0,0,texturePack,blendMap,null);
-        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png"),4,true,true),1,3,3f,new Vector3f(20,10,25),new Vector3f(20f,10f,20f));
+        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png", false),4,true,true),1,1.3f,3f,new Vector3f(20,10,25),new Vector3f(2f,2f,2f));
         Random random = new Random();
         for(int i = 0; i<500; i++) {
             float x = random.nextFloat() * 800;
@@ -102,8 +104,13 @@ public class MainGameLoop {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        List<TexturedModel> personModel = pcl.loadColladaModelAnimated("Hot_Girl_01",matrix);
-        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,1.3f);
+        Collada cowboyCollada = ColladaLoader.loadCollada("Hot_Girl_01",matrix);
+        List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
+        //Animation cowboyAnimation = cowboyCollada.getAnimation();
+        //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
+        //List<TexturedModel> personModel = ColladaLoader.loadCollada("Lara_Croft").getTexturedModels();
+        Entity girl = new Entity(cowboy, new Vector3f(30,2,50),-90,0,0,2f);
+        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
@@ -115,6 +122,7 @@ public class MainGameLoop {
             //networkSender.start();
         }
         Log.i(TAG, "starting render");
+        float animationTime = 0;
         while (!DisplayManager.isCloseRequested()) { //actual MainGameLoop
             //game logic
             //FPS Updates
@@ -125,15 +133,19 @@ public class MainGameLoop {
                 timeSinceFPSUpdate = 0;
                 framesSinceFPSUpdate = 0;
             }
+            //girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
             MasterRenderer.processText(text);
+            MasterRenderer.processEntity(girl);
             player.move(terrain);
             camera.move();
             particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
             ParticleMaster.update();
             //animation
-            player.getModels().get(0).getRawModel().getBones().get(10).rotate(new Vector3f(0,1,0),1);
+            animationTime += DisplayManager.getFrameTimeSeconds() * 0.2;
+            animationTime %= 1;
+            //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
+            //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
-            MasterRenderer.processEntity(tree);
             processFirstPersonPlayer(player);
             MasterRenderer.processTerrain(terrain);
             guis.forEach(MasterRenderer::processGui);

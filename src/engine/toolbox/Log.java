@@ -15,7 +15,7 @@ public class Log {
     private static PrintStream err = System.err;
 
     /**
-     * sets the log output to a file
+     * sets the log output to a file rather than the STDOUT/STDERR
      */
     public static void connectLogFile() {
         try {
@@ -29,34 +29,87 @@ public class Log {
         }
     }
 
+    /**
+     * logs a debug message if enabled in the settings
+     * @param text message to log
+     */
     public static void d(String text) {
         if (Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:" + text);
     }
 
+    /**
+     * logs a debug message if enabled in the settings
+     * @param tag tag
+     * @param text message to log
+     */
     public static void d(String tag, String text) {
         if (Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:" + tag + " " + text);
     }
 
+    /**
+     * logs an events message if enabled in the settings
+     * @param text message to log
+     */
+    public static void ev(String text) {
+        if (Settings.SHOW_EVENT_LOG) out.println(new Date().toString() + " EVNT:" + text);
+    }
+
+    /**
+     * logs an event message if enabled in the settings
+     * @param tag tag...
+     * @param text message to log
+     */
+    public static void ev(String tag, String text) {
+        if (Settings.SHOW_EVENT_LOG) out.println(new Date().toString() + " EVNT:" + tag + " " + text);
+    }
+
+    /**
+     * logs an information
+     * @param text message to log
+     */
     public static void i(String text) {
         out.println(new Date().toString() + " INFO:" + text);
     }
 
+    /**
+     * logs an infomarion
+     * @param tag ---
+     * @param text message to log
+     */
     public static void i(String tag, String text) {
         out.println(new Date().toString() + " INFO:" + tag + " " + text);
     }
 
+    /**
+     * logs a warning
+     * @param text message to log
+     */
     public static void w(String text) {
         out.println(new Date().toString() + " WARN:" + text);
     }
 
+    /**
+     * logs a warning
+     * @param tag ...
+     * @param text message to log
+     */
     public static void w(String tag, String text) {
         out.println(new Date().toString() + " WARN:" + tag + " " + text);
     }
 
+    /**
+     * logs an error
+     * @param text message to log
+     */
     public static void e(String text) {
         err.println(new Date().toString() + " ERR :" + text);
     }
 
+    /**
+     * logs an error
+     * @param tag tag
+     * @param text message to log
+     */
     public static void e(String tag, String text) {
         err.println(new Date().toString() + " ERR :" + tag + " " + text);
     }

@@ -4,7 +4,7 @@ package shivt.guns;
 import engine.audio.Source;
 import engine.graphics.entities.Player;
 import org.joml.Vector3f;
-import engine.graphics.DisplayManager;
+import engine.graphics.display.DisplayManager;
 
 /**
  * Created by pv42 on 01.07.16.
@@ -15,7 +15,7 @@ public class Beretta92 extends Gun{
     public Beretta92() {
         super(new GunLoader("Beretta92"));
         //soundBuffer = AudioMaster.loadSound("Beretta92");
-        //soundSource = new Source();
+        //soundSource = new ColladaSource();
     }
     @Override
     public boolean shot(Player player) {
