@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Collada {
+public class Collada implements ICollada{
     private ColladaAsset colladaAsset;
     private Map<String, ColladaImage> images;
     private Map<String, ColladaMaterial> materials;
