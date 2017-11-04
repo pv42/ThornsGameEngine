@@ -102,11 +102,11 @@ public class MainGameLoop {
         //player
         Collada cowboyCollada = ColladaLoader.loadCollada("cowboy");
         List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
-        //Animation cowboyAnimation = cowboyCollada.getAnimation();
-        //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
-        //List<TexturedModel> personModel = ColladaLoader.loadCollada("Lara_Croft").getTexturedModels();
-        Entity girl = new Entity(cowboy, new Vector3f(30,2,50),-90,0,0,5f);
-        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0),0,0,0,0.8f);
+        Animation cowboyAnimation = cowboyCollada.getAnimation();
+        Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
+        List<TexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
+        Entity girl = new Entity(cowboy, new Vector3f(30,20,50),-90,0,0,5f);
+        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
@@ -139,7 +139,7 @@ public class MainGameLoop {
             //animation
             animationTime += DisplayManager.getFrameTimeSeconds() * 0.2;
             animationTime %= 1;
-            //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
+            Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
             //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
             processFirstPersonPlayer(player);

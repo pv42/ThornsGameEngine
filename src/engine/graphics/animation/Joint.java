@@ -15,6 +15,7 @@ public class Joint {
     private static final String TAG = "Joint";
     private final Matrix4f inverseBindMatrix; // absolute
     private Matrix4f poseTransformationMatrix; //relative to parent
+    private Matrix4f animationTransformationMatrix = new Matrix4f().identity();
     private Joint parent;
     private final String id;
 
@@ -42,8 +43,9 @@ public class Joint {
     public Matrix4f getJointMatrix() {
 
         Matrix4f matrix = new Matrix4f().identity();
-        matrix.mul(getTransformationMatrix());
         matrix.mul(inverseBindMatrix);
+        matrix.mul(getTransformationMatrix());
+        //matrix.mul(getAnimationTransformationMatrix);
         return matrix;
     }
 
@@ -56,9 +58,10 @@ public class Joint {
         Matrix4f matrix;
         if (hasParent()) {
             matrix = new Matrix4f(poseTransformationMatrix);
-            matrix.mul(parent.getTransformationMatrix());
+            matrix.mul(parent.getTransformationMatrix());matrix.mul(animationTransformationMatrix);
         } else {
             matrix = new Matrix4f(poseTransformationMatrix);
+            matrix.mul(animationTransformationMatrix);
         }
         return matrix;
     }
@@ -67,6 +70,9 @@ public class Joint {
         this.poseTransformationMatrix = poseTransformationMatrix;
     }
 
+    public void setAnimationTransformationMatrix(Matrix4f animationTransformationMatrix) {
+        this.animationTransformationMatrix = animationTransformationMatrix;
+    }
 
     public void setParent(Joint parent) {
         this.parent = parent;
