@@ -49,7 +49,6 @@ public class ShivtGameLoop {
         MasterRenderer.processText(fpsText);
         buttons.forEach(Button::processRender);
         MasterRenderer.render( camera, new Vector4f(0, -1, 0, 100000));
-        InputLoop.loopHandle();
         DisplayManager.updateDisplay();
         timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
         framesSinceFPSUpdate++;

@@ -38,6 +38,7 @@ import static engine.toolbox.Settings.SKY_COLOR;
 
 public class MasterRenderer {
     private static boolean enableSkybox = true;
+    private static boolean use2D;
     //default
     private static final String TAG = "Engine:MasterRenderer";
     private static Matrix4f projectionMatrix;
@@ -67,9 +68,10 @@ public class MasterRenderer {
     /**
      * initializes the MasterRender
      */
-    public static void init() {
+    public static void init( boolean use2D) {
         enableCulling();
-        createProjectionMatrix();
+        MasterRenderer.use2D = use2D;
+        createProjectionMatrix(use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
         normalRenderer = new NormalMappingRenderer(projectionMatrix);
@@ -89,7 +91,7 @@ public class MasterRenderer {
      */
     public static void init(float aspectRatio) {
         enableCulling();
-        createProjectionMatrix(aspectRatio);
+        createProjectionMatrix(aspectRatio,use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
         normalRenderer = new NormalMappingRenderer(projectionMatrix);
@@ -107,7 +109,7 @@ public class MasterRenderer {
      * @param zoom factor to zoom (1 is default)
      */
     public static void updateZoom(float zoom) {
-        createProjectionMatrix(zoom);
+        createProjectionMatrix(zoom,use2D);
         entityRenderer.updateProjectionMatrix(projectionMatrix);
         aniRenderer.updateProjectionMatrix(projectionMatrix);
         normalRenderer.updateProjectionMatrix(projectionMatrix);
@@ -172,6 +174,7 @@ public class MasterRenderer {
     public static void enableSkybox(boolean enable) {
         enableSkybox = enable;
     }
+
 
     public static void processTerrain(Terrain terrain) {
         terrains.add(terrain);
@@ -243,15 +246,15 @@ public class MasterRenderer {
      *
      * @param zoom zooms factor
      */
-    private static void createProjectionMatrix(float zoom) {
-        createProjectionMatrix(getAspectRatio(), zoom);
+    private static void createProjectionMatrix(float zoom, boolean use2D) {
+        createProjectionMatrix(getAspectRatio(), zoom, use2D);
     }
 
     /**
      * creates the projectionMatrix
      */
-    private static void createProjectionMatrix() {
-        createProjectionMatrix(getAspectRatio(), 1);
+    private static void createProjectionMatrix(boolean use2D) {
+        createProjectionMatrix(getAspectRatio(), 1, use2D);
     }
 
     /**
@@ -260,7 +263,8 @@ public class MasterRenderer {
      * @param zoom        zooms factor
      * @param aspectRatio windows aspect ratio
      */
-    private static void createProjectionMatrix(float aspectRatio, float zoom) {
+    private static void createProjectionMatrix(float aspectRatio, float zoom, boolean use2D) {
+
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.FOV / zoom / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = Settings.FAR_PLANE - Settings.NEAR_PLANE;
@@ -268,6 +272,7 @@ public class MasterRenderer {
         projectionMatrix = new Matrix4f();
         projectionMatrix.m00(x_scale);
         projectionMatrix.m11(y_scale);
+        if(use2D) return;
         projectionMatrix.m22(-((Settings.FAR_PLANE + Settings.NEAR_PLANE) / frustum_length));
         projectionMatrix.m23(-1);
         projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));

@@ -23,7 +23,7 @@ public class Main {
         Window window = DisplayManager.createWindow();
         TestRender renderer = null;
         if (useEngine) {
-            MasterRenderer.init();
+            MasterRenderer.init(false);
 
             ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         } else {
@@ -65,7 +65,6 @@ public class Main {
 
                 renderer.render(e, camera);
             }
-            InputLoop.loopHandle();
             DisplayManager.updateDisplay();
         }
         if(useEngine) {

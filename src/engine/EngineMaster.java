@@ -17,6 +17,9 @@ import org.lwjgl.glfw.GLFW;
 public class EngineMaster {
     private static final String TAG = "Engine";
     public static void init() {
+        init(false);
+    }
+    public static void init(boolean use2D) {
         Settings.loadSettings();
         if(Settings.WRITE_LOG_FILE) Log.connectLogFile();
         Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().getName());
@@ -24,9 +27,10 @@ public class EngineMaster {
         AudioMaster.init();
         DisplayManager.init();
         long windowID = DisplayManager.createWindow().getId();
-        MasterRenderer.init();
+        MasterRenderer.init(use2D);
         ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         InputLoop.init(windowID);
+        new Thread(InputLoop::run).start(); //starts input handling threat
     }
     public static void finish() {
         InputLoop.finish();

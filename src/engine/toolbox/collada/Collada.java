@@ -159,7 +159,6 @@ public class Collada implements ICollada{
             index++;
             animation.addKeyFrame(keyFrame);
         }
-        Log.d("Collada:AL", "::" + index);
         return animation;
     }
 }

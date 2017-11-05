@@ -108,6 +108,7 @@ public class MainGameLoop {
         Entity girl = new Entity(cowboy, new Vector3f(30,20,50),-90,0,0,5f);
         FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);
         player.setGun(new Beretta92());
+        Entity cube = new Entity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))),new Vector3f(),0,0,0,1);
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;
@@ -144,13 +145,13 @@ public class MainGameLoop {
             //game render
             processFirstPersonPlayer(player);
             MasterRenderer.processTerrain(terrain);
+            MasterRenderer.processEntity(cube);
             guis.forEach(MasterRenderer::processGui);
             entities.forEach(MasterRenderer::processEntity);
             lights.forEach(MasterRenderer::processLight);
 
             MasterRenderer.render(camera,new Vector4f(0, -1, 0, 100000));
             DisplayManager.updateDisplay();
-            InputLoop.loopHandle();
             //post render
             timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
             framesSinceFPSUpdate ++;
