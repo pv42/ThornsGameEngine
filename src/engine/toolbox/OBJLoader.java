@@ -16,10 +16,11 @@ import java.util.List;
 /**
  * Created by pv42 on 17.06.16.
  */
-//TODO download improoved fx! (tut16)
 public class OBJLoader {
+    private static final String TAG = "OBJLoader";
+
     public static RawModel loadObjModel(String filename) {
-        FileReader fr = null;
+        FileReader fr;
          try {
              fr = new FileReader(new File("res/meshs/" + filename + ".obj"));
          } catch (IOException e ){
@@ -91,6 +92,7 @@ public class OBJLoader {
         for(int index : indices) {
             indicesArray[pointer++] = index;
         }
+        Log.d(TAG, "mesh 'res/meshs/" + filename + ".obj' loaded");
         return Loader.loadToVAO(verticesArray,textureArray,normalsArray,indicesArray);
     }
     @Deprecated

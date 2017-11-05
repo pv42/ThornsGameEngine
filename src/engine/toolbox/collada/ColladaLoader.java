@@ -69,7 +69,7 @@ public class ColladaLoader {
                 case "library_animations":
                     collada.setAnimations(readAnimationLibrary(mainNodes.item(i)));
                     break;
-                case "library_camera":
+                case "library_cameras":
                     collada.setCameras(readCameraLibrary(mainNodes.item(i)));
                     break;
                 case "library_images":

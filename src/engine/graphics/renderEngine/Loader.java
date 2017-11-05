@@ -233,6 +233,7 @@ public class Loader {
             Log.i("anisotropic filterring is not supported or disabled!");
         }
         textures.add(texID);
+        Log.d(TAG, "texture 'res/textures/" + fileName + "' loaded");
         return texID;
     }
 
