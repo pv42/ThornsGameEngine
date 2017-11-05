@@ -1,7 +1,7 @@
 package shivt;
 
 import engine.EngineMaster;
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.inputs.InputLoop;
@@ -34,7 +34,7 @@ public class ShivtGameLoop {
         fpsText.setColor(0.3f, 0.3f, 0.4f);
         MasterRenderer.loadText(fpsText);
     }
-    public void loop(RenderLevel level,Camera camera) {
+    public void loop(RenderLevel level,ThreeDimensionCamera camera) {
         if (timeSinceFPSUpdate >= 1.7f) {
             fpsText = new GUIText((int) (framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps", 1, FONT, new Vector2f(), 1, false);
             fpsText.setColor(1.0f, 0.0f, 0.0f);

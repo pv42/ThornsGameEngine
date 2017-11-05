@@ -25,6 +25,7 @@ public class OBJLoader {
          } catch (IOException e ){
              Log.e("couldn't read OBJ '" + filename + "'");
              e.printStackTrace();
+             return new RawModel(0,0); //inv model with 0 vertices
          }
         BufferedReader reader = new BufferedReader(fr);
         String line;

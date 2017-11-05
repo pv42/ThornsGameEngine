@@ -1,6 +1,7 @@
 package engine.graphics.fontRendering;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.toolbox.Maths;
@@ -62,7 +63,7 @@ public class FontRenderer {
         shader.loadBorderWidth(text.getBorderWidth());
         Vector2f position = new Vector2f(text.getPosition());
         if (text.isUsePosition3D()) {
-            Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+            Matrix4f viewMatrix = camera.getViewMatrix();
             Vector4f worldPosition = Util.getVector4f(text.getPosition3D());
             Vector4f positionToCamera = viewMatrix.transform(worldPosition, new Vector4f());
             Vector2f positionOffset = Util.getVector2f(projectionMatrix.transform(positionToCamera, new Vector4f()));

@@ -1,6 +1,6 @@
 package engineTester.graphicTest;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.entities.Entity;
 import engine.graphics.models.RawModel;
@@ -12,7 +12,6 @@ import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
 import engine.inputs.InputHandler;
 import engine.inputs.InputLoop;
-import engine.toolbox.collada.Collada;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -52,7 +51,7 @@ public class Main {
         ModelTexture modelTexture = new ModelTexture(texture);
         TexturedModel texturedModel = new TexturedModel(model, modelTexture);
 
-        Camera camera = new ShivtCamera();
+        ThreeDimensionCamera camera = new ShivtCamera();
         Entity e = new Entity(texturedModel, new Vector3f(0,12.5f,1f), 0, 0, 0, 1f);
 
         while (!DisplayManager.isCloseRequested()) {

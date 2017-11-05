@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import engine.graphics.cameras.Camera;
 import engine.graphics.display.DisplayManager;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
@@ -21,7 +22,7 @@ import engine.graphics.particles.ParticleMaster;
 import engine.graphics.terrains.TerrainShader;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.Terrain;
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
 
@@ -36,6 +37,7 @@ import org.joml.Vector4f;
 import static engine.toolbox.Settings.SKY_COLOR;
 
 public class MasterRenderer {
+    private static boolean enableSkybox = true;
     //default
     private static final String TAG = "Engine:MasterRenderer";
     private static Matrix4f projectionMatrix;
@@ -136,8 +138,7 @@ public class MasterRenderer {
         terrainRenderer.render(terrains, camera, lights);
         terT = Time.getNanoTime();
         //skybox
-        //todo enble skybox
-        skyboxRenderer.render(camera, SKY_COLOR);
+        if(enableSkybox) skyboxRenderer.render(camera, SKY_COLOR);
         skyT = Time.getNanoTime();
         //particles
         ParticleMaster.renderParticles(camera);
@@ -162,6 +163,14 @@ public class MasterRenderer {
         double comT = 0.01 * (endT - startT);
 
         //System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
+    }
+
+    /**
+     * enables / disables the skybox
+     * @param enable state to set skybox enable
+     */
+    public static void enableSkybox(boolean enable) {
+        enableSkybox = enable;
     }
 
     public static void processTerrain(Terrain terrain) {

@@ -1,8 +1,8 @@
 package engineTester;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.StaticThreeDimensionCamera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.DisplayManager;
-import engine.graphics.cameras.StaticCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
 import engine.toolbox.OBJLoader;
@@ -43,7 +43,7 @@ public class EngineGraphicsTest {
         //int texture = Loader.loadTexture("grass.png");
         //TexturedModel model = new TexturedModel(OBJLoader.loadObjModel("dragon"), new ModelTexture(texture));
         //Entity entity = new Entity(model,new Vector3f(0,0,0),0,0,0,1);
-        //Camera camera = new StaticCamera(new Vector3f(-10,0,0), new Vector3f(0,0,0));
+        //ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(-10,0,0), new Vector3f(0,0,0));
         long window;
         GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint().set();
         if (!glfwInit()) {
@@ -64,7 +64,7 @@ public class EngineGraphicsTest {
         RawModel rawModel = OBJLoader.loadObjModel("barrel");
         createProjectionMatrix(1,1);
         EntityShader shader = new EntityShader();
-        Camera camera = new StaticCamera(new Vector3f(0,0,20), new Vector3f());
+        ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0,0,20), new Vector3f());
         Light cameraLight = new Light(new Vector3f(0,0,10), new Color(1.0,1.0,1.0));
         List<Light> lights = new ArrayList<>();
         lights.add(cameraLight);
@@ -102,9 +102,9 @@ public class EngineGraphicsTest {
 
 
 
-    public static void render(Entity entity, EntityShader shader, Camera camera, List<Light> lights) {
+    public static void render(Entity entity, EntityShader shader, ThreeDimensionCamera camera, List<Light> lights) {
         shader.start();
-        shader.loadViewMatrix(camera);
+        shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);
         shader.loadSkyColor(SKY_COLOR);
 

@@ -1,6 +1,6 @@
 package shivt;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import org.lwjgl.glfw.GLFW;
@@ -13,7 +13,7 @@ import static engine.inputs.InputEvent.KEY_REPEAT;
 /***
  * Created by pv42 on 18.09.2016.
  */
-public class ShivtCamera extends Camera {
+public class ShivtCamera extends ThreeDimensionCamera {
     public ShivtCamera() {
         setPosition(new Vector3f(0, 12.5f, 0));
         setYaw(180);

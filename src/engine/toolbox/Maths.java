@@ -1,6 +1,6 @@
 package engine.toolbox;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -33,18 +33,13 @@ public class Maths {
         return matrix;
     }
 
-    public static Matrix4f createViewMatrix(Camera camera) {
-        return createViewMatrix(camera, true);
-    }
-
-    public static Matrix4f createViewMatrix(Camera camera, boolean useRoll) {
+    @Deprecated
+    public static Matrix4f createViewMatrix(ThreeDimensionCamera camera) {
         Matrix4f viewMatrix = new Matrix4f();
         viewMatrix.identity();
         viewMatrix.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0));
         viewMatrix.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0));
-        if(useRoll) {
-            viewMatrix.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1));
-        }
+        viewMatrix.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1));
 
         Vector3f cameraPos = camera.getPosition();
         Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);

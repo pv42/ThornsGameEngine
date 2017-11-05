@@ -1,6 +1,7 @@
 package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -40,7 +41,7 @@ public class SkyBoxShader extends ShaderProgram {
         super.loadMatrix(location_projectionMatrix,projectionMatrix);
     }
     protected void loadViewMatrix(Camera camera) {
-        Matrix4f matrix = Maths.createViewMatrix(camera);
+        Matrix4f matrix = camera.getViewMatrix();
         matrix.m30(0);
         matrix.m31(0);
         matrix.m32(0);

@@ -1,6 +1,6 @@
 package engine.graphics.shaders;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.lights.Light;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
@@ -71,8 +71,7 @@ public abstract class Lighted3DShader extends ShaderProgram {
         super.loadMatrix(location_projectionMatrix, matrix);
     }
 
-    public void loadViewMatrix(Camera camera) {
-        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+    public void loadViewMatrix(Matrix4f viewMatrix) {
         super.loadMatrix(location_viewMatrix, viewMatrix);
     }
 

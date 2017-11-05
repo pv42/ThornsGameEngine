@@ -1,12 +1,11 @@
 package engine.graphics.cameras;
 
 import engine.graphics.entities.FirstPersonPlayer;
-import engine.toolbox.Log;
 
 /**
    Created by pv42 on 17.06.16.
  */
-public class FirstPersonCamera extends Camera{
+public class FirstPersonCamera extends ThreeDimensionCamera {
     private static float DISTANCE_MIN = -1;
     private static float DISTANCE_MAX = 100;
 

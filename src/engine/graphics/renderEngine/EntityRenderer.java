@@ -2,6 +2,7 @@ package engine.graphics.renderEngine;
 
 import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
@@ -120,7 +121,7 @@ public class EntityRenderer {
         shader.start();
         shader.loadSkyColor(SKY_COLOR);
         shader.loadLights(lights);
-        shader.loadViewMatrix(camera);
+        shader.loadViewMatrix(camera.getViewMatrix());
     }
 
     public void cleanUp() {

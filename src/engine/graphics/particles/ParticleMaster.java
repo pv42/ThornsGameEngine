@@ -1,6 +1,7 @@
 package engine.graphics.particles;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import org.joml.Matrix4f;
 
 import java.util.*;

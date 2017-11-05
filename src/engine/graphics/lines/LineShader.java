@@ -1,6 +1,7 @@
 package engine.graphics.lines;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.shaders.ShaderProgram;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
@@ -39,7 +40,7 @@ public class LineShader extends ShaderProgram {
         super.loadMatrix(location_projectionMatrix,matrix);
     }
     public void loadViewMatrix(Camera camera) {
-        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+        Matrix4f viewMatrix = camera.getViewMatrix();
         super.loadMatrix(location_viewMatrix,viewMatrix);
     }
     public void loadColor(Color color) {
