@@ -45,7 +45,8 @@ public class RenderLevel {
         for(Station station : level.getStations()) {
             TexturedModel texturedModel = new TexturedModel(OBJLoader.loadObjModel("spaceStation"),new ModelTexture(Loader.loadTexture("blue.png")));
             texturedModel.getTexture().setReflectivity(.1f);
-            Entity e = new Entity(texturedModel,station.getPosition(),0,0,0,.5f);
+            Entity e = new Entity(texturedModel,station.getPosition());
+            e.setScale(0.5f);
             entities.add(e);
             GUIText text = new GUIText(station.getTroopsStrength()  + "T",1,font,station.getPosition(),new Vector2f(1f,-1f),1,false);
             text.setColor(new Color(.3,.3,.3));

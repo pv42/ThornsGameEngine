@@ -70,7 +70,8 @@ public class EngineGraphicsTest {
         lights.add(cameraLight);
         ModelTexture texture = new ModelTexture(Loader.loadTexture("barrel.png"));
         TexturedModel texturedModel = new TexturedModel(rawModel,texture);
-        Entity entity = new Entity(texturedModel,new Vector3f(), 0,0,0,.2f);
+        Entity entity = new Entity(texturedModel,new Vector3f());
+        entity.setScale(.2f);
         prepareRenderer(shader,projectionMatrix);
         GL11.glEnable(GL_COLOR_BUFFER_BIT);
         GL11.glEnable(GL_DEPTH_TEST);

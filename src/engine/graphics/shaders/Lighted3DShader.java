@@ -1,9 +1,7 @@
 package engine.graphics.shaders;
 
-import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.lights.Light;
 import engine.toolbox.Color;
-import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -63,18 +61,34 @@ public abstract class Lighted3DShader extends ShaderProgram {
         location_ambientLight = super.getUniformLocation("ambient_light");
     }
 
+    /**
+     * load transformation matrix
+     * @param matrix transformation matrix to use
+     */
     public void loadTransformationMatrix(Matrix4f matrix) {
         super.loadMatrix(location_transformationMatrix, matrix);
     }
 
+    /**
+     * loads projection matrix
+     * @param matrix projection matrix
+     */
     public void loadProjectionMatrix(Matrix4f matrix) {
         super.loadMatrix(location_projectionMatrix, matrix);
     }
 
+    /**
+     * loads the view matrix usually produced by the camera
+     * @param viewMatrix view matrix to use
+     */
     public void loadViewMatrix(Matrix4f viewMatrix) {
         super.loadMatrix(location_viewMatrix, viewMatrix);
     }
 
+    /**
+     * loads light sources with position, color and attenuation
+     * @param lights light sources
+     */
     public void loadLights(List<Light> lights) {
         List<Vector3f> lightPositions = new ArrayList<>();
         List<Vector3f> lightColors = new ArrayList<>();
@@ -89,19 +103,38 @@ public abstract class Lighted3DShader extends ShaderProgram {
         super.loadVectorArray(locations_attenuation, attenuations, MAX_LIGHTS);
     }
 
+    /**
+     * loads materials shineDamper and reflectivity
+     * @param shineDamper shine damper value
+     * @param reflectivity reflectivity to use
+     */
     public void loadShineVariables(float shineDamper, float reflectivity) {
         super.loadFloat(location_shineDamper, shineDamper);
         super.loadFloat(location_reflectivity, reflectivity);
     }
 
+    /**
+     * loads if fake lightning should be used fake lightning overwrites the normals light calculation and
+     * always produces maximum brightness
+     * @param useFakeLightning use fake lightning ?
+     */
     public void loadFakeLightning(boolean useFakeLightning) {
         super.loadBoolean(location_useFakeLightning, useFakeLightning);
     }
 
+    /**
+     * loads the sky color to use for distance fog into sky blending
+     * @param skyColor sky color to use for the fog blending
+     */
     public void loadSkyColor(Color skyColor) {
         super.loadVector(location_skyColor, skyColor.getVector());
     }
 
+    /**
+     * loads the amount of ambient (minimal) light to use as a float from 0 to 1 with 0 equals no ambient light
+     * and 1 maximal brightness
+     * @param ambient amount of ambient light
+     */
     public void loadAmbientLight(float ambient) {
         super.loadFloat(location_ambientLight, ambient);
     }

@@ -17,8 +17,9 @@ public abstract class Player extends Entity{
     private static final float EYE_HEIGHT = 4.6f;
     float upwardSpeed;
     boolean isInAir;
-    public Player(List<TexturedModel> model, Vector3f position, float rx, float ry, float rz, float scale) {
-        super(model,position,rx,ry,rz,scale);
+    public Player(List<TexturedModel> model, Vector3f position) {
+        super(model,position);
+
     }
 
     public abstract void move(Terrain terrain);

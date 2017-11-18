@@ -16,8 +16,8 @@ public class ThirdPersonPlayer extends Player{
     private static final float TURN_SPEED = 160;
     private float currentSpeed;
     private float currentTurnSpeed;
-    public ThirdPersonPlayer(List<TexturedModel> model, Vector3f position, float rx, float ry, float rz, float scale) {
-        super(model,position,rx,ry,rz,scale);
+    public ThirdPersonPlayer(List<TexturedModel> model, Vector3f position) {
+        super(model,position);
     }
     @Override
     public void move(Terrain terrain) {

@@ -7,7 +7,6 @@ import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.ModelTexture;
-import engine.toolbox.Log;
 import engine.toolbox.Util;
 
 import java.util.ArrayList;

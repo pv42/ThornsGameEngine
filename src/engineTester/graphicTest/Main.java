@@ -46,13 +46,14 @@ public class Main {
                 0, 0, 0
         };
         RawModel model = Loader.loadToVAO(vertices, textCoords, normal, indices);
-        Entity lara  = new Entity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0),80,0,0,1f);
+        Entity lara  = new Entity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
+        lara.setRx(80);
         int texture = Loader.loadTexture("Screen_Dust_D.png");
         ModelTexture modelTexture = new ModelTexture(texture);
         TexturedModel texturedModel = new TexturedModel(model, modelTexture);
 
         ThreeDimensionCamera camera = new ShivtCamera();
-        Entity e = new Entity(texturedModel, new Vector3f(0,12.5f,1f), 0, 0, 0, 1f);
+        Entity e = new Entity(texturedModel, new Vector3f(0,12.5f,1f));
 
         while (!DisplayManager.isCloseRequested()) {
             if (useEngine) {

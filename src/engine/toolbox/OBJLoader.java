@@ -34,10 +34,10 @@ public class OBJLoader {
         List<Vector2f> uvs = new ArrayList<>();
         List<Vector3f> normals = new ArrayList<>();
         List<Integer> indices = new ArrayList<>();
-        float[] verticesArray = null;
+        float[] verticesArray;
         float[] normalsArray = null;
         float[] textureArray = null;
-        int[] indicesArray = null;
+        int[] indicesArray;
         int i = 0;
         try {
             while (true) {
@@ -97,12 +97,14 @@ public class OBJLoader {
     }
     @Deprecated
     public static RawModel loadObjModelAnimated(String filename, List<Joint> joints) {
-        FileReader fr = null;
+        FileReader fr;
         try {
             fr = new FileReader(new File("res/meshs/" + filename + ".obj"));
         } catch (IOException e ){
             Log.e("couldn't read OBJ '" + filename + "'");
+
             e.printStackTrace();
+            return null;
         }
         BufferedReader reader = new BufferedReader(fr);
         String line;
@@ -112,12 +114,12 @@ public class OBJLoader {
         List<Integer> indices = new ArrayList<>();
         List<Vector2f> boneIndices = new ArrayList<>();
         List<Vector2f> boneWeights = new ArrayList<>();
-        float[] verticesArray = null;
+        float[] verticesArray;
         float[] normalsArray = null;
         float[] textureArray = null;
         int[] boneIndicesArray = null;
         float[] boneWeightArray = null;
-        int[] indicesArray = null;
+        int[] indicesArray;
         int i = 0;
         try {
             while (true) {
@@ -192,9 +194,8 @@ public class OBJLoader {
             normalsArray[currentVertexPointer * 3] = currentNormal.x();
             normalsArray[currentVertexPointer * 3 + 1] = currentNormal.y();
             normalsArray[currentVertexPointer * 3 + 2] = currentNormal.z();
-        } else {
-            // no normal data in obj
-        }
+        } // else : no normal data in obj
+
     }
 
     @Deprecated
@@ -214,8 +215,6 @@ public class OBJLoader {
             normalsArray[currentVertexPointer * 3] = currentNormal.x();
             normalsArray[currentVertexPointer * 3 + 1] = currentNormal.y();
             normalsArray[currentVertexPointer * 3 + 2] = currentNormal.z();
-        } else {
-            // no normal data in obj
-        }
+        } // else : no normal data in obj
     }
 }

@@ -92,12 +92,14 @@ public class MainGameLoop {
         for(int i = 0; i<500; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
-            entities.add(new Entity(texturedModel2,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z),0,0,0,1));
+            entities.add(new Entity(texturedModel2,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z)));
         }
         for(int i = 0; i<300; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
-            entities.add(new Entity(texturedModel,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z),0,0,0,.8f));
+            Entity e = new Entity(texturedModel,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z));
+            e.setScale(.8f);
+            entities.add(e);
         }
         //player
         Collada cowboyCollada = ColladaLoader.loadCollada("cowboy");
@@ -105,10 +107,13 @@ public class MainGameLoop {
         Animation cowboyAnimation = cowboyCollada.getAnimation();
         Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
         List<TexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
-        Entity girl = new Entity(cowboy, new Vector3f(30,20,50),-90,0,0,5f);
-        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0),0,0,0,0.8f);
+        Entity girl = new Entity(cowboy, new Vector3f(30,20,50));
+        girl.setRx(-90);
+        girl.setScale(5f);
+        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0));
+        player.setScale(.8f);
         player.setGun(new Beretta92());
-        Entity cube = new Entity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))),new Vector3f(),0,0,0,1);
+        Entity cube = new Entity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))),new Vector3f());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;

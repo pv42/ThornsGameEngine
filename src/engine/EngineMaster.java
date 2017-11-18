@@ -19,10 +19,15 @@ public class EngineMaster {
     public static void init() {
         init(false);
     }
+
+    /**
+     * starts the engine, initialize components, opens window, start event handling
+     * @param use2D use flat projection
+     */
     public static void init(boolean use2D) {
         Settings.loadSettings();
         if(Settings.WRITE_LOG_FILE) Log.connectLogFile();
-        Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().getName());
+        Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().toString());
         Log.i(TAG, "lwjgl-version: " + Version.getVersion());
         AudioMaster.init();
         DisplayManager.init();
@@ -32,6 +37,10 @@ public class EngineMaster {
         InputLoop.init(windowID);
         new Thread(InputLoop::run).start(); //starts input handling threat
     }
+
+    /**
+     * stops the engine, frees resources, exits
+     */
     public static void finish() {
         InputLoop.finish();
         Log.i(TAG,"shutting down render ");

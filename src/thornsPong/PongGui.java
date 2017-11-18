@@ -9,9 +9,7 @@ import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
-import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
-import engine.inputs.InputLoop;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.OBJLoader;
 import org.joml.Vector3f;
@@ -28,24 +26,25 @@ public class PongGui {
     private boolean kru = false;
     private boolean krd = false;
     public PongGui() {
-        PongGame game = new PongGame();
+
         EngineMaster.init(true);
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
         ModelTexture texture = new ModelTexture(Loader.loadTexture("white.png"));
         RawModel model = OBJLoader.loadObjModel("cube");
         TexturedModel ballModel = new TexturedModel(model,texture);
         TexturedModel racketModel = new TexturedModel(model,texture);
-        Entity leftRacket = new Entity(racketModel, new Vector3f(),0,0,0,0.1f);
-        Entity rightRacket = new Entity(racketModel, new Vector3f(), 0, 0, 0, 0.1f);
-        Entity ball = new Entity(ballModel, new Vector3f(), 0,0,0, .03f);
+        Entity leftRacket = new Entity(racketModel, new Vector3f());
+        leftRacket.setScale(.1f);
+        Entity rightRacket = new Entity(racketModel, new Vector3f());
+        rightRacket.setScale(.1f);
+        Entity ball = new Entity(ballModel, new Vector3f());
+        ball.setScale(.03f);
         Vector4f clipPlane = new Vector4f();
         MasterRenderer.enableSkybox(false);
+        PongGame game = new PongGame(leftRacket, rightRacket, ball);
         initEventListeners();
         while(!DisplayManager.isCloseRequested()) {
             game.update(DisplayManager.getFrameTimeSeconds(),klu, kld, kru, krd);
-            leftRacket.setPosition(-0.75f, game.getLeft_y(),0);
-            rightRacket.setPosition(0.75f, game.getRight_y(),0);
-            ball.setPosition(game.getBallPosition().x(), game.getBallPosition().y(), 0);
             MasterRenderer.processEntity(leftRacket);
             MasterRenderer.processEntity(rightRacket);
             MasterRenderer.processEntity(ball);

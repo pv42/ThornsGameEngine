@@ -18,7 +18,7 @@ public class EntityShader extends Lighted3DShader {
     private int location_specMap;
     private int location_usesSpecMap;
     private int location_texture;
-    private int location_bones; //todo
+    private int location_bones;
     private int location_useAnimation;
 
     /**
