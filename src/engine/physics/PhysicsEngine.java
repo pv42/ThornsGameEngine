@@ -23,7 +23,7 @@ public class PhysicsEngine {
                 PhysicalEntity e0 = entities.get(i);
                 PhysicalEntity e1 = entities.get(j);
                 if(CollisionChecker.isColliding(e0.getHitBox(), e1.getHitBox(), e0.getPosition(), e1.getPosition())) {
-                    Log.d("Collision detected between");
+                    Log.d(TAG,"Collision detected");
                     if(false) {
                         Vector3f u = e0.getVelocity().mul(e0.getMass(), new Vector3f()).add(e1.getVelocity().mul(e1.getMass(), new Vector3f()))
                                 .mul(2 / (e0.getMass() + e1.getMass()));
