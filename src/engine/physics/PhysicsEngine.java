@@ -34,7 +34,7 @@ public class PhysicsEngine {
                         Vector3f vel = e0.getPosition().sub(e1.getPosition(), new Vector3f()).normalize().mul(v);
                         Log.i("vel:" +vel.toString() + " e0=" + e0.getMass() + " e1=" + e1.getMass());
                         e0.setVelocity(vel.mul(e1.getMass()/(e0.getMass() + e1.getMass()),new Vector3f()));
-                        e1.setVelocity(vel.mul( - e0.getMass()/(e0.getMass() + e1.getMass()),new Vector3f()));
+                        e1.setVelocity(vel.mul(- e0.getMass()/(e0.getMass() + e1.getMass()),new Vector3f()));
                     }
                 }
             }
