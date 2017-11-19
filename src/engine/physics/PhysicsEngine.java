@@ -23,15 +23,19 @@ public class PhysicsEngine {
                 PhysicalEntity e0 = entities.get(i);
                 PhysicalEntity e1 = entities.get(j);
                 if(CollisionChecker.isColliding(e0.getHitBox(), e1.getHitBox(), e0.getPosition(), e1.getPosition())) {
-                    Vector3f oldv0 = new Vector3f(e0.getVelocity());
-                    Vector3f oldv1 = new Vector3f(e1.getVelocity());
-                    Vector3f u = e0.getVelocity().mul(e0.getMass(), new Vector3f()).add(e1.getVelocity().mul(e1.getMass(), new Vector3f()))
-                            .mul(2/(e0.getMass()+ e1.getMass()));
-                    Log.i("Collision detected between");
-                    u.sub(e0.getVelocity(), e0.getVelocity());
-                    u.sub(e1.getVelocity(), e1.getVelocity());
-                    Log.i("e0:" + oldv0 + " -> " + e0.getVelocity());
-                    Log.i("e1:" + oldv1 + " -> " + e1.getVelocity());
+                    Log.d("Collision detected between");
+                    if(false) {
+                        Vector3f u = e0.getVelocity().mul(e0.getMass(), new Vector3f()).add(e1.getVelocity().mul(e1.getMass(), new Vector3f()))
+                                .mul(2 / (e0.getMass() + e1.getMass()));
+                        u.sub(e0.getVelocity(), e0.getVelocity());
+                        u.sub(e1.getVelocity(), e1.getVelocity());
+                    } else {
+                        float v = e0.getVelocity().length() + e1.getVelocity().length();
+                        Vector3f vel = e0.getPosition().sub(e1.getPosition(), new Vector3f()).normalize().mul(v);
+                        Log.i("vel:" +vel.toString() + " e0=" + e0.getMass() + " e1=" + e1.getMass());
+                        e0.setVelocity(vel.mul(e1.getMass()/(e0.getMass() + e1.getMass()),new Vector3f()));
+                        e1.setVelocity(vel.mul( - e0.getMass()/(e0.getMass() + e1.getMass()),new Vector3f()));
+                    }
                 }
             }
         }
