@@ -25,19 +25,18 @@ import java.util.List;
  */
 public class RenderLevel {
     private List<ParticleSystem> lines;
-    private List<Entity> entities;
     private List<GUIText> texts;
     private List<Vector3f> ends;
-    private Light sun;
+
     public RenderLevel(Level level, FontType font) {
         lines = new ArrayList<>();
-        entities = new ArrayList<>();
+        List<Entity> entities = new ArrayList<>();
         ends = new ArrayList<>();
         texts = new ArrayList<>();
         ParticleTexture pt = new ParticleTexture(Loader.loadTexture("frostfire.png"),4,true,true);
         for (Route route: level.getRoutes()) {
-            int start = route.getStations()[0],
-                    end = route.getStations()[1];
+            int start = route.getStations()[0];
+            int end = route.getStations()[1];
             ParticleSystem ps = new ParticleSystemStream(pt,30,1.7f,.5f,level.getStations().get(start).getPosition(),new Vector3f(.01f,.01f,.01f));
             lines.add(ps);
             ends.add(level.getStations().get(end).getPosition());
@@ -53,15 +52,15 @@ public class RenderLevel {
             texts.add(text);
             MasterRenderer.loadText(text);
         }
-        sun = new Light(new Vector3f(0,0,-20),new Color(1.0,1.0,1.0));
+        Light sun = new Light(new Vector3f(0, 0, -20), new Color(1.0, 1.0, 1.0));
+        entities.forEach(MasterRenderer::addEntity);
+        MasterRenderer.addLight(sun);
     }
     public void process() {
         for (int i = 0; i < lines.size(); i++) {
             lines.get(i).generateParticles(ends.get(i));
         }
         ParticleMaster.update();
-        entities.forEach(MasterRenderer::processEntity);
         texts.forEach(MasterRenderer::processText);
-        MasterRenderer.processLight(sun);
     }
 }

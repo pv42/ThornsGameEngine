@@ -85,7 +85,7 @@ public class MasterRenderer {
     }
 
     /**
-     * initializes the MasterRenderer with specific apspect ratio
+     * initializes the MasterRenderer with specific aspect ratio
      *
      * @param aspectRatio specific aspect ratio
      */
@@ -152,19 +152,21 @@ public class MasterRenderer {
         //text
         fontRenderer.render(texts, camera, projectionMatrix);
         guiT = Time.getNanoTime();
-        //cleanup
+        texts.clear();
+        endT = Time.getNanoTime();
+        double comT = 0.01 * (endT - startT);
+
+        //System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
+    }
+
+    public void clearAll() {
         guis.clear();
         terrains.clear();
         entities.clear();
         aniEntities.clear();
         lineStripModels.clear();
         //todo normalEntities.clear();
-        texts.clear();
         lights.clear();
-        endT = Time.getNanoTime();
-        double comT = 0.01 * (endT - startT);
-
-        //System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
     }
 
     /**
@@ -176,11 +178,11 @@ public class MasterRenderer {
     }
 
 
-    public static void processTerrain(Terrain terrain) {
+    public static void addTerrain(Terrain terrain) {
         terrains.add(terrain);
     }
 
-    public static void processEntity(Entity entity) {
+    public static void addEntity(Entity entity) {
         List<TexturedModel> entityModels = entity.getModels();
         if (true) {
             List<Entity> batch = entities.get(entityModels);
@@ -206,7 +208,7 @@ public class MasterRenderer {
         }
     }
 
-    public static void processAniEntity(Entity entity) {
+    public static void addAniEntity(Entity entity) {
         List<TexturedModel> entityModel = entity.getModels(); //// TODO: 10.08.16 ?
         List<Entity> batch = aniEntities.get(entityModel);
         if (batch != null) {
@@ -218,11 +220,11 @@ public class MasterRenderer {
         }
     }
 
-    public static void processLine(LineModel lineStripModel) {
+    public static void addLine(LineModel lineStripModel) {
         lineStripModels.add(lineStripModel);
     }
 
-    public static void processGui(GuiTexture gui) {
+    public static void addGui(GuiTexture gui) {
         guis.add(gui);
     }
 
@@ -312,7 +314,7 @@ public class MasterRenderer {
         textBatch.add(text);
     }
 
-    public static void processLight(Light light) {
+    public static void addLight(Light light) {
         lights.add(light);
     }
 

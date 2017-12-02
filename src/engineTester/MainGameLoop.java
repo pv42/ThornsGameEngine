@@ -12,7 +12,6 @@ import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
 import engine.toolbox.collada.Collada;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -125,6 +124,15 @@ public class MainGameLoop {
         }
         Log.i(TAG, "starting render");
         float animationTime = 0;
+
+        MasterRenderer.addEntity(girl);
+        MasterRenderer.addTerrain(terrain);
+        MasterRenderer.addEntity(cube);
+        lights.forEach(MasterRenderer::addLight);
+        guis.forEach(MasterRenderer::addGui);
+        entities.forEach(MasterRenderer::addEntity);
+
+
         while (!DisplayManager.isCloseRequested()) { //actual MainGameLoop
             //game logic
             //FPS Updates
@@ -135,9 +143,8 @@ public class MainGameLoop {
                 timeSinceFPSUpdate = 0;
                 framesSinceFPSUpdate = 0;
             }
-            //girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
             MasterRenderer.processText(text);
-            MasterRenderer.processEntity(girl);
+            //girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
             player.move(terrain);
             camera.move();
             particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
@@ -149,11 +156,6 @@ public class MainGameLoop {
             //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
             processFirstPersonPlayer(player);
-            MasterRenderer.processTerrain(terrain);
-            MasterRenderer.processEntity(cube);
-            guis.forEach(MasterRenderer::processGui);
-            entities.forEach(MasterRenderer::processEntity);
-            lights.forEach(MasterRenderer::processLight);
 
             MasterRenderer.render(camera,new Vector4f(0, -1, 0, 100000));
             DisplayManager.updateDisplay();
@@ -173,9 +175,9 @@ public class MainGameLoop {
         EngineMaster.finish();
     }
     private static void processFirstPersonPlayer(FirstPersonPlayer player) {
-        MasterRenderer.processAniEntity(player);
+        MasterRenderer.addAniEntity(player);
         if(player.getGun().getScope() != null && player.getGun().getScopingProgress() == 1.0f && player.getGun().getReloadCooldown() == 0) {
-            MasterRenderer.processGui(player.getGun().getScope());
+            MasterRenderer.addGui(player.getGun().getScope());
             MasterRenderer.updateZoom(4);
         } else {
             //todo MasterRenderer.processMMEntity(player.getGun());

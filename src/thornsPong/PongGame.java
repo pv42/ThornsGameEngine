@@ -14,7 +14,6 @@ public class PongGame {
     private static final float BALL_SPEED = 1f;
     private int score_left = 0;
     private int score_right = 0;
-    @Deprecated private Vector2f ballVelocity = new Vector2f();
     private Entity leftPaddle;
     private Entity rightPaddle;
     private PhysicalEntity ball;

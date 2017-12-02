@@ -11,7 +11,6 @@ import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
 import engine.inputs.InputHandler;
-import engine.inputs.InputLoop;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -57,8 +56,8 @@ public class Main {
 
         while (!DisplayManager.isCloseRequested()) {
             if (useEngine) {
-                MasterRenderer.processEntity(lara);
-                MasterRenderer.processEntity(e);
+                MasterRenderer.addEntity(lara);
+                MasterRenderer.addEntity(e);
                 MasterRenderer.render(camera, new Vector4f(0, -1, 0, 100000));
             } else {
                 renderer.prepare();

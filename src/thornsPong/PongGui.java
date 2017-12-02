@@ -3,7 +3,6 @@ package thornsPong;
 import engine.EngineMaster;
 import engine.graphics.cameras.TwoDimensionsCamera;
 import engine.graphics.display.DisplayManager;
-import engine.graphics.entities.Entity;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
@@ -30,7 +29,6 @@ public class PongGui {
     private boolean kru = false;
     private boolean krd = false;
     public PongGui() {
-
         EngineMaster.init(true);
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
         ModelTexture texture = new ModelTexture(Loader.loadTexture("white.png"));
@@ -42,28 +40,28 @@ public class PongGui {
         leftPaddle.setHitBox(paddleHitBox);
         leftPaddle.setScale(.1f);
         leftPaddle.setIgnoreGravity(true);
-        PhysicsEngine.addPhysicalEntity(leftPaddle);
+        PhysicsEngine.addPhysical(leftPaddle);
         PhysicalEntity rightPaddle = new PhysicalEntity(paddleModel, new Vector3f(),10);
         rightPaddle.setHitBox(paddleHitBox);
         rightPaddle.setScale(.1f);
         rightPaddle.setIgnoreGravity(true);
-        PhysicsEngine.addPhysicalEntity(rightPaddle);
+        PhysicsEngine.addPhysical(rightPaddle);
         HitBox ballHitBox = new CuboidHitBox(-.03f,.03f,-.03f,.03f,-.03f,.03f);
         PhysicalEntity ball = new PhysicalEntity(ballModel,new Vector3f(),0);
         ball.setHitBox(ballHitBox);
         ball.setScale(.03f);
         ball.setIgnoreGravity(true);
-        PhysicsEngine.addPhysicalEntity(ball);
+        PhysicsEngine.addPhysical(ball);
         Vector4f clipPlane = new Vector4f();
         MasterRenderer.enableSkybox(false);
         PongGame game = new PongGame(leftPaddle, rightPaddle, ball);
         initEventListeners();
+        MasterRenderer.addEntity(leftPaddle);
+        MasterRenderer.addEntity(rightPaddle);
+        MasterRenderer.addEntity(ball);
         while(!DisplayManager.isCloseRequested()) {
             game.update(DisplayManager.getFrameTimeSeconds(),klu, kld, kru, krd);
             PhysicsEngine.performStep(DisplayManager.getFrameTimeSeconds());
-            MasterRenderer.processEntity(leftPaddle);
-            MasterRenderer.processEntity(rightPaddle);
-            MasterRenderer.processEntity(ball);
             MasterRenderer.render(camera,clipPlane);
             DisplayManager.updateDisplay();
         }

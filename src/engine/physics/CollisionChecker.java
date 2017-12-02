@@ -2,9 +2,11 @@ package engine.physics;
 
 import org.joml.Vector3f;
 
-public class CollisionChecker {
-    public static boolean isColliding(HitBox h0, HitBox h1, Vector3f pos0, Vector3f pos1) {
-        if(h0 instanceof CuboidHitBox && h1 instanceof CuboidHitBox) {
+class CollisionChecker {
+    static boolean isColliding(Physical ht0, Physical ht1, Vector3f pos0, Vector3f pos1) {
+        HitBox h0 = ht0.getHitBox();
+        HitBox h1 = ht1.getHitBox();
+        if(ht0.getHitBox() instanceof CuboidHitBox && h1 instanceof CuboidHitBox) {
             float h0x0 = ((CuboidHitBox) h0).getX0() + pos0.x;
             float h0x1 = ((CuboidHitBox) h0).getX1() + pos0.x;
             float h1x0 = ((CuboidHitBox) h1).getX0() + pos1.x;

@@ -10,38 +10,42 @@ import static engine.toolbox.Settings.GRAVITY;
 
 public class PhysicsEngine {
     private static final String TAG ="PhysicsEngine";
-    private static List<PhysicalEntity> entities = new ArrayList<>();
-    public static void performStep(float timestep) {
-        for(PhysicalEntity entity: entities) {
-            if(!entity.isIgnoreGravity()) entity.accelerate(new Vector3f(0, - GRAVITY * timestep, 0));
-            entity.increasePosition(entity.getVelocity().x * timestep,
-                    entity.getVelocity().y * timestep, entity.getVelocity().z * timestep);
+    private static List<Physical> physicals = new ArrayList<>();
+    public static void performStep(float timeStep) {
+        for(Physical physical: physicals) { //applies gravity and velocity
+            if(!physical.isIgnoreGravity()) physical.accelerate(new Vector3f(0, - GRAVITY * timeStep, 0));
+            physical.increasePosition(physical.getVelocity().x * timeStep,
+                    physical.getVelocity().y * timeStep, physical.getVelocity().z * timeStep);
         }
-        for(int i = 0; i < entities.size(); i++) {
-            for(int j = i + 1; j < entities.size(); j++) {
-                // if the objects are clipping change velocity
-                PhysicalEntity e0 = entities.get(i);
-                PhysicalEntity e1 = entities.get(j);
-                if(CollisionChecker.isColliding(e0.getHitBox(), e1.getHitBox(), e0.getPosition(), e1.getPosition())) {
-                    Log.d(TAG,"Collision detected");
+        handleCollisions();
+    }
+    private static void handleCollisions() {
+        for(int i = 0; i < physicals.size(); i++) {
+            Physical physical0 = physicals.get(i);
+            if(physical0.ignoresCollision()) continue;
+            for(int j = i + 1; j < physicals.size(); j++) {
+                Physical physical1 = physicals.get(j);
+                if(physical1.ignoresCollision()) continue;
+                if(CollisionChecker.isColliding(physical0, physical1, physical0.getPosition(), physical1.getPosition())) {
                     if(false) {
-                        Vector3f u = e0.getVelocity().mul(e0.getMass(), new Vector3f()).add(e1.getVelocity().mul(e1.getMass(), new Vector3f()))
-                                .mul(2 / (e0.getMass() + e1.getMass()));
-                        u.sub(e0.getVelocity(), e0.getVelocity());
-                        u.sub(e1.getVelocity(), e1.getVelocity());
+                        // elastic hit
+                        Log.d(TAG,"Collision detected, performing elastic hit");
+                        Vector3f u = physical0.getImpulse().add(physical1.getImpulse()).mul(2 / (physical0.getMass() + physical1.getMass()));
+                        u.sub(physical0.getVelocity(), physical0.getVelocity());
+                        u.sub(physical1.getVelocity(), physical1.getVelocity());
                     } else {
-                        float v = e0.getVelocity().length() + e1.getVelocity().length();
-                        Vector3f vel = e0.getPosition().sub(e1.getPosition(), new Vector3f()).normalize().mul(v);
-                        Log.i("vel:" +vel.toString() + " e0=" + e0.getMass() + " e1=" + e1.getMass());
-                        e0.setVelocity(vel.mul(e1.getMass()/(e0.getMass() + e1.getMass()),new Vector3f()));
-                        e1.setVelocity(vel.mul(- e0.getMass()/(e0.getMass() + e1.getMass()),new Vector3f()));
+                        //pong hit
+                        Log.d(TAG, "Collision detected, performing pong hit");
+                        float v = physical0.getVelocity().length() + physical1.getVelocity().length();
+                        Vector3f vel = physical0.getPosition().sub(physical1.getPosition(), new Vector3f()).normalize().mul(v);
+                        physical0.setVelocity(vel.mul(physical1.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
+                        physical1.setVelocity(vel.mul(- physical0.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
                     }
                 }
             }
         }
     }
-
-    public static void addPhysicalEntity(PhysicalEntity entity) {
-        entities.add(entity);
+    public static void addPhysical(Physical entity) {
+        physicals.add(entity);
     }
 }
