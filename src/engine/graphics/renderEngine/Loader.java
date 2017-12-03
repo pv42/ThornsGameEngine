@@ -20,6 +20,11 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
+
 /***
  * Created by pv42 on 16.06.16.
  */
@@ -220,7 +225,7 @@ public class Loader {
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL_RGBA8, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
         //
         GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
@@ -242,7 +247,7 @@ public class Loader {
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL_RGBA8, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 
         GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
         //GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER,GL11.GL_LINEAR_MIPMAP_LINEAR);
@@ -250,6 +255,7 @@ public class Loader {
         textures.add(texID);
         return texID;
     }
+
 
     /**
      * loads a cubemap texture for skyboxes
@@ -260,16 +266,16 @@ public class Loader {
     public static int loadCubeMapTexture(String[] textureFiles, String fileExtension) {
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
+        GL11.glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
         for (int i = 0; i < textureFiles.length; i++) {
             TextureData date = decodeTextureFile("res/textures/" + textureFiles[i] + fileExtension, false);
-            GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, date.getHeight(), date.getWidth(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, date.getBuffer());
+            GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, date.getHeight(), date.getWidth(), 0, GL11.GL_RGBA, GL_UNSIGNED_BYTE, date.getBuffer());
         }
         //posX, negX, posY, negY, posZ, negZ
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR); //todo what does it tut27
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL12.GL_TEXTURE_WRAP_R, GL12.GL_CLAMP_TO_EDGE);
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //todo what does it tut27
+        GL11.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         textures.add(texID);
         return texID;
     }
@@ -291,6 +297,14 @@ public class Loader {
 
     public static FontType loadFont(String fontName) {
         return new FontType(loadFontTexture(fontName + ".png"), new File("res/fonts/" + fontName + ".fnt"));
+    }
+
+    public static int loadFontTextureToVRAM(TextureData fontTexture) {
+        int texID = GL11.glGenTextures();
+        GL11.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, fontTexture.getWidth(), fontTexture.getHeight(),0,GL_R, GL_UNSIGNED_BYTE, fontTexture.getBuffer());
+        //TODO witch format should i use
+        textures.add(texID);
+        return texID;
     }
 
     private static TextureData decodeTextureFile(String fileName, boolean flip) {

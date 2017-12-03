@@ -1,8 +1,8 @@
 package engineTester.fonts;
 
-import engine.graphics.nFontMeshCreator.FontTexture;
 import engine.graphics.nFontMeshCreator.FontTextureRenderer;
 import engine.graphics.nFontMeshCreator.TTFont;
+import engine.graphics.textures.TextureData;
 import engine.toolbox.IOUtil;
 import engine.toolbox.Log;
 import org.lwjgl.BufferUtils;
@@ -22,7 +22,7 @@ public class TextTester {
     private static void test1() throws IOException{
         String fontPath = "C:\\Windows\\Fonts\\Arial.ttf";
         File fontFile = new File(fontPath);
-        Log.i(TAG, "file ex.:" + fontFile.exists());
+        Log.d(TAG, "file ex.:" + fontFile.exists());
         ByteBuffer fontBytes = IOUtil.ioResourceToByteBuffer(fontPath, (int) fontFile.length());
         STBTTFontinfo fontinfo;
         fontinfo = STBTTFontinfo.create();
@@ -31,7 +31,7 @@ public class TextTester {
             //fontinfo.free();
             throw new IllegalStateException("failed to init! (adr= " + fontinfo.address() + ", size=" + fontinfo.sizeof() + ")");
         }
-        Log.i(TAG, "font loaded");
+        Log.d(TAG, "font loaded");
         int bitmapHeight = 512;
         int bitmapWidth = 4608;
         int lineHeight = 256;
@@ -59,16 +59,16 @@ public class TextTester {
             STBTruetype.stbtt_GetCodepointBitmapBox(fontinfo, c0, scale, scale, charX0, charY0, charX1, charY1);
             int y = asc[0] + charY0[0];
             int byteOffset = x + (y * bitmapWidth);
-            Log.i("byteO=" + byteOffset + " y=" + y + " x=" + x);
-            Log.i(TAG, "charX0=" + charX0[0] + " charY0=" + charX0[0] + " charX1=" + charX1[0] + " charY1=" + charY1[0] + " x=" +x);
+            Log.d("byteO=" + byteOffset + " y=" + y + " x=" + x);
+            Log.d(TAG, "charX0=" + charX0[0] + " charY0=" + charX0[0] + " charX1=" + charX1[0] + " charY1=" + charY1[0] + " x=" +x);
             STBTruetype.nstbtt_MakeCodepointBitmap(fontinfo.address(), MemoryUtil.memAddress(bitmap) + byteOffset, charX1[0]- charX0[0],charY1[0]-charY0[0],bitmapWidth,scale,scale,c0);
             int[] ax = new int[1];
             int[] idc = new int[1];
             STBTruetype.stbtt_GetCodepointHMetrics(fontinfo, c0, ax, idc);
-            Log.i(TAG, "ax=" + ax[0]);
+            Log.d(TAG, "ax=" + ax[0]);
             x+= ax[0] * scale;
             int kern = STBTruetype.stbtt_GetCodepointKernAdvance(fontinfo, c0, c1);
-            Log.i("kern "+ kern);
+            Log.d("kern "+ kern);
 
             x += kern * scale;
         }
@@ -80,10 +80,10 @@ public class TextTester {
         String fontPath = "C:\\Windows\\Fonts\\arial.ttf";
         TTFont font = TTFont.loadFromFile(fontPath);
         Log.i("rendering ... ");
-        FontTexture fontTexture = FontTextureRenderer.renderTextToBitmap(font,"Akgj^|Î#'?§â Dsu 45w e f6e35 sr t#a -wr!cv.", 256);
+        TextureData fontTexture = FontTextureRenderer.renderTextToBitmap(font,"Akgj^|Î#'?§â Dsu 45w e f6e35 sr t#a -wr!cv.", 256);
         Log.i("writing ...");
-        STBImageWrite.stbi_write_png("test2.png", fontTexture.getWidth(), fontTexture.getHeight(),1, fontTexture.getBitmap(),0);
-        STBImageWrite.stbi_write_bmp("test2.bmp", fontTexture.getWidth(), fontTexture.getHeight(),1, fontTexture.getBitmap());
+        STBImageWrite.stbi_write_png("test2.png", fontTexture.getWidth(), fontTexture.getHeight(),1, fontTexture.getBuffer(),0);
+        //STBImageWrite.stbi_write_bmp("test2.bmp", fontTexture.getWidth(), fontTexture.getHeight(),1, fontTexture.getBitmap());
         Log.i("done.");
     }
 }

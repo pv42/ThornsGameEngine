@@ -1,5 +1,6 @@
 package engine.graphics.nFontMeshCreator;
 
+import engine.graphics.textures.TextureData;
 import engine.toolbox.Log;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
@@ -8,12 +9,23 @@ import static org.lwjgl.stb.STBTruetype.*;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Used to render Font textures
+ * @author pv42
+ */
 public class FontTextureRenderer {
     private static final String TAG = "FontTextureRenderer";
 
-    public static FontTexture renderTextToBitmap(TTFont font, String text, int lineHeight) {
+    /**
+     * Renders a text in a specific font and size into a 1-lined, 8bit-Bitmap
+     * @param font font to use
+     * @param text text to render
+     * @param lineHeight line height of the rendered Text
+     * @return rendered Bitmap with height and width
+     */
+    public static TextureData renderTextToBitmap(TTFont font, String text, int lineHeight) {
         int bitmapWidth = 0;
-        int bitmapHeight = 0;
+        int bitmapHeight;
         float scale = stbtt_ScaleForPixelHeight(font.getInfo(), lineHeight);
         int dim[][] = new int[text.length()][5];
         for(int i = 0; i < text.length(); i++) {
@@ -30,26 +42,21 @@ public class FontTextureRenderer {
             stbtt_GetCodepointHMetrics(font.getInfo(), text.charAt(i), advanceW, idc);
             dim[i][3] = advanceW[0];
             int kern = i==0 ? 0 : stbtt_GetCodepointKernAdvance(font.getInfo(), text.charAt(i-1),text.charAt(i));
-            Log.i("kern "+ kern);
             dim[i][4] = kern;
             bitmapWidth += (kern + advanceW[0]) * scale;
         }
         bitmapHeight = (int) ((font.getAscend() - font.getDescent()) * scale);
-        Log.i("as=" + font.getAscend()*scale + " ds=" + font.getDescent()*scale);
-        Log.i(""+ bitmapWidth + "x"+ bitmapHeight);
         ByteBuffer bitmap = BufferUtils.createByteBuffer(bitmapWidth * bitmapHeight);
         long bitmapAddress = MemoryUtil.memAddress(bitmap);
         int x = 0;
         for(int i = 0; i < text.length(); i++) {
             int y = (int)(font.getAscend() * scale) + dim[i][2];
             int byteOffset = x + (y * bitmapWidth);
-            Log.i("byteO=" + byteOffset + " y=" + y + " x=" + x);
             x += dim[i][4] * scale;
             nstbtt_MakeCodepointBitmap(font.getInfo().address(), bitmapAddress + byteOffset,
                     dim[i][0], dim[i][1], bitmapWidth, scale, scale, text.charAt(i));
             x += dim[i][3] * scale;
         }
-        Log.i("sc:" + scale);
-        return new FontTexture(bitmap, bitmapWidth, bitmapHeight);
+        return new TextureData(bitmap, bitmapWidth, bitmapHeight);
     }
 }
