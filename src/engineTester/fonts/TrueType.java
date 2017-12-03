@@ -34,7 +34,7 @@ public final class TrueType extends FontDemo {
         super(24, filePath);
 
         try {
-            ttf = IOUtil.ioResourceToByteBuffer("C:\\Users\\pv42\\Downloads\\cmunrm.ttf", 512 * 1024);
+            ttf = IOUtil.ioResourceToByteBuffer("C:\\Windows\\Fonts\\Gabriola.ttf", 512 * 1024);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +61,7 @@ public final class TrueType extends FontDemo {
         String filePath;
         if (args.length == 0) {
             System.out.println("Use 'ant demo -Dclass=org.lwjgl.demo.stb.Truetype -Dargs=<path>' to load a different text file (must be UTF8-encoded).\n");
-            filePath = "C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\lib\\ini4j\\LICENSE.txt";
+            filePath = "C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\lib\\lwjgl\\openal_soft_license.txt";
         } else {
             filePath = args[0];
         }
