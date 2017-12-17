@@ -28,6 +28,8 @@ public class PongGui {
     private boolean kld = false;
     private boolean kru = false;
     private boolean krd = false;
+    private boolean flipPause = false;
+    private PongGame game;
     public PongGui() {
         EngineMaster.init(true);
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
@@ -54,14 +56,13 @@ public class PongGui {
         PhysicsEngine.addPhysical(ball);
         Vector4f clipPlane = new Vector4f();
         MasterRenderer.enableSkybox(false);
-        PongGame game = new PongGame(leftPaddle, rightPaddle, ball);
+        game = new PongGame(leftPaddle, rightPaddle, ball);
         initEventListeners();
         MasterRenderer.addEntity(leftPaddle);
         MasterRenderer.addEntity(rightPaddle);
         MasterRenderer.addEntity(ball);
         while(!DisplayManager.isCloseRequested()) {
-            game.update(DisplayManager.getFrameTimeSeconds(),klu, kld, kru, krd);
-            PhysicsEngine.performStep(DisplayManager.getFrameTimeSeconds());
+            game.update(DisplayManager.getFrameTimeSeconds(),klu, kld, kru, krd,flipPause);
             MasterRenderer.render(camera,clipPlane);
             DisplayManager.updateDisplay();
         }
@@ -114,6 +115,12 @@ public class PongGui {
             @Override
             public void onOccur() {
                 krd = false;
+            }
+        });
+        InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_RELEASE, GLFW.GLFW_KEY_SPACE) {
+            @Override
+            public void onOccur() {
+                game.flipPaused();
             }
         });
     }

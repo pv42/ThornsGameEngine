@@ -1,7 +1,9 @@
 package thornsPong;
 
+import engine.graphics.display.DisplayManager;
 import engine.graphics.entities.Entity;
 import engine.physics.PhysicalEntity;
+import engine.physics.PhysicsEngine;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -17,6 +19,7 @@ public class PongGame {
     private Entity leftPaddle;
     private Entity rightPaddle;
     private PhysicalEntity ball;
+    private boolean paused = false;
     public PongGame(Entity rightPaddle, Entity leftPaddle, PhysicalEntity ball) {
         this.leftPaddle = leftPaddle;
         this.rightPaddle = rightPaddle;
@@ -31,7 +34,10 @@ public class PongGame {
         rightPaddle.setPosition(0.75f,0,0);
     }
 
-    protected void update(float timeStep, boolean klu, boolean kld, boolean kru, boolean krd) {
+    protected void update(float timeStep, boolean klu, boolean kld, boolean kru, boolean krd, boolean flipPaused) {
+        if(flipPaused) paused = !paused;
+        if(paused) return;
+        PhysicsEngine.performStep(DisplayManager.getFrameTimeSeconds());
         if(klu) moveLeft(MOVESTEP * timeStep);
         if(kld) moveLeft(-MOVESTEP * timeStep);
         if(kru) moveRight(MOVESTEP * timeStep);
@@ -53,6 +59,10 @@ public class PongGame {
             score_right ++;
             resetBallAndPaddles();
         }
+    }
+
+    protected void flipPaused() {
+        paused = !paused;
     }
 
     private void moveLeft(float value) {
