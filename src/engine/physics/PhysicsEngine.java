@@ -31,15 +31,15 @@ public class PhysicsEngine {
                         // elastic hit
                         Log.d(TAG,"Collision detected, performing elastic hit");
                         Vector3f u = physical0.getImpulse().add(physical1.getImpulse()).mul(2 / (physical0.getMass() + physical1.getMass()));
-                        u.sub(physical0.getVelocity(), physical0.getVelocity());
-                        u.sub(physical1.getVelocity(), physical1.getVelocity());
+                        if(!physical0.isStatic()) u.sub(physical0.getVelocity(), physical0.getVelocity());
+                        if(!physical1.isStatic()) u.sub(physical1.getVelocity(), physical1.getVelocity());
                     } else {
                         //pong hit
                         Log.d(TAG, "Collision detected, performing pong hit");
                         float v = physical0.getVelocity().length() + physical1.getVelocity().length();
                         Vector3f vel = physical0.getPosition().sub(physical1.getPosition(), new Vector3f()).normalize().mul(v);
-                        physical0.setVelocity(vel.mul(physical1.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
-                        physical1.setVelocity(vel.mul(- physical0.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
+                        if(!physical0.isStatic()) physical0.setVelocity(vel.mul(physical1.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
+                        if(!physical1.isStatic()) physical1.setVelocity(vel.mul(- physical0.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
                     }
                 }
             }

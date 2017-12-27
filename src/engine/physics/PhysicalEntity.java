@@ -10,6 +10,7 @@ public class PhysicalEntity extends Entity implements Physical {
     private boolean ignoreGravity = false;
     private boolean ignoreCollision = false;
     private HitBox hitBox;
+    private boolean isStatic;
 
     //<init>
     public PhysicalEntity(TexturedModel model, Vector3f position, float mass) {
@@ -43,6 +44,9 @@ public class PhysicalEntity extends Entity implements Physical {
         this.hitBox = hitBox;
     }
 
+    public void setStatic(boolean stat) {
+        this.isStatic = stat;
+    }
     //getters
     public Vector3f getVelocity() {
         return velocity;
@@ -62,6 +66,10 @@ public class PhysicalEntity extends Entity implements Physical {
 
     public HitBox getHitBox() {
         return hitBox;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
     }
 
     //other methods

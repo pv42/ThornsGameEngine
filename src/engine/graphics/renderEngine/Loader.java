@@ -6,7 +6,7 @@ import engine.graphics.lines.Line;
 import engine.graphics.lines.LineModel;
 import engine.graphics.models.RawModel;
 import engine.toolbox.*;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.stb.STBImage;
@@ -143,7 +143,7 @@ public class Loader {
             indices[i] = i;
         }
         bindIndicesBuffer(indices);
-        storeDataInAttributeList(0, 3, Util.get1DArray(new Vector3f[]{line.getPoint1(), line.getPoint2()}));
+        storeDataInAttributeList(0, 3, StorageFormatUtil.get1DArray(new Vector3f[]{line.getPoint1(), line.getPoint2()}));
         unbindVAO();
         return new LineModel(vaoID, line.getColor(), 2);
     }

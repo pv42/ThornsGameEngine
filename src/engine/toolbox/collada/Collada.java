@@ -7,7 +7,7 @@ import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.ModelTexture;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,9 +118,9 @@ public class Collada implements ICollada{
                 processNode(skeletonRoot, joints, null); //apply poses to joints
                 ColladaGeometry geometry = geometries.get(controller.getGeometryId());
                 RawModel model = Loader.loadToVAOAnimated(
-                        Util.get1DArray(geometry.getPosition()),
-                        Util.get1DArray(geometry.getTextureCoordinates()),
-                        Util.get1DArray(geometry.getNormal()),
+                        StorageFormatUtil.get1DArray(geometry.getPosition()),
+                        StorageFormatUtil.get1DArray(geometry.getTextureCoordinates()),
+                        StorageFormatUtil.get1DArray(geometry.getNormal()),
                         geometry.getIndices(),
                         controller.getWeights().getIndicesData(geometry.getPolylistIndicesBase()),
                         controller.getWeights().getWeightsData(geometry.getPolylistIndicesBase()),

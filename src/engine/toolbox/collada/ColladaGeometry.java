@@ -1,11 +1,9 @@
 package engine.toolbox.collada;
 
 import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
-import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Log;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 import org.w3c.dom.Node;
 
 import java.util.HashMap;
@@ -32,7 +30,7 @@ public class ColladaGeometry extends ColladaPrimaryElement {
     }
 
     public RawModel getRawModel() {
-        return Loader.loadToVAO(Util.get1DArray(position), Util.get1DArray(textureCoordinates), Util.get1DArray(normal), indices);
+        return Loader.loadToVAO(StorageFormatUtil.get1DArray(position), StorageFormatUtil.get1DArray(textureCoordinates), StorageFormatUtil.get1DArray(normal), indices);
     }
 
     int[] getIndices() {

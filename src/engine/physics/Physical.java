@@ -6,6 +6,8 @@ public interface Physical {
     void setHitBox(HitBox hitBox);
     void setIgnoreCollision(boolean ignoreCollision);
     void setMass(float mass);
+    void setStatic(boolean stat);
+    boolean isStatic();
     void setVelocity(Vector3f velocity);
     void setIgnoreGravity(boolean ignoreGravity);
     Vector3f getVelocity();

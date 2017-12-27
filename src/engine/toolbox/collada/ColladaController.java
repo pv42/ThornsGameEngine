@@ -2,7 +2,7 @@ package engine.toolbox.collada;
 
 import engine.graphics.animation.Joint;
 import engine.toolbox.Log;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 import org.joml.Matrix4f;
 import org.w3c.dom.Node;
 
@@ -73,10 +73,10 @@ public class ColladaController extends ColladaPrimaryElement{
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
                 if (getAttribValue(n,"semantic").equals("JOINT")) {
-                    jointIds = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
+                    jointIds = StorageFormatUtil.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
                             .replaceFirst("#",""))).getStringData());
                 } else if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("INV_BIND_MATRIX")) {
-                    matrices = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
+                    matrices = StorageFormatUtil.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
                             .replaceFirst("#",""))).getMatrix4Data());
                 } else {
                     Log.w("unkn_s: input::semantic" + n.getAttributes().getNamedItem("semantic"));
@@ -104,15 +104,15 @@ public class ColladaController extends ColladaPrimaryElement{
                 if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("JOINT")) {
                     //todo worth it?
                 } else if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("WEIGHT")) {
-                    weights = Util.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
+                    weights = StorageFormatUtil.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
                             .replaceFirst("#",""))).getFloatData());
                 } else {
                     Log.w("unkn_se: input::semantic" + n.getAttributes().getNamedItem("semantic"));
                 }
             } else if (n.getNodeName().equals("vcount")) {
-                vertexCounts = Util.getList(ColladaUtil.readIntArray(n));
+                vertexCounts = StorageFormatUtil.getList(ColladaUtil.readIntArray(n));
             } else if (n.getNodeName().equals("v")) {
-                v = Util.getList(ColladaUtil.readIntArray(n));
+                v = StorageFormatUtil.getList(ColladaUtil.readIntArray(n));
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_vw:" + n.getNodeName());
             }

@@ -1,7 +1,7 @@
 package engine.toolbox.collada;
 
 import engine.toolbox.Log;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 import org.joml.Matrix4f;
 import org.w3c.dom.Node;
 
@@ -77,7 +77,7 @@ public class ColladaAnimation extends ColladaPrimaryElement {
             }
         }
         Matrix4f[] poses = readSource(sources.get(output)).getMatrix4Data();
-        float[] times = Util.get1DArray(readSource(sources.get(input)).getFloatData());
+        float[] times = StorageFormatUtil.get1DArray(readSource(sources.get(input)).getFloatData());
         return new ColladaAnimation(id, target, times, poses);
     }
 }
