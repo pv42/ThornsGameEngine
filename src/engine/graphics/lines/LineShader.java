@@ -12,8 +12,8 @@ import org.joml.Matrix4f;
  */
 public class LineShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/engine/graphics/lines/lineVertexShader";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/lines/lineFragmentShader";
+    private static final String VERTEX_FILE = "lineVertexShader";
+    private static final String FRAGMENT_FILE = "lineFragmentShader";
     private int location_transformationMatrix,
             location_projectionMatrix,
             location_viewMatrix,
