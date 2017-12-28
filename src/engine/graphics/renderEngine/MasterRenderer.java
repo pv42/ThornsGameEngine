@@ -326,4 +326,8 @@ public class MasterRenderer {
     public static float getAspectRatio() {
         return DisplayManager.getSize().x() / DisplayManager.getSize().y();
     }
+
+    public static void setAmbientLight(float ambientLight) {
+        entityRenderer.setAmbientLight(ambientLight);
+    }
 }

@@ -31,9 +31,6 @@ public abstract class Lighted3DShader extends ShaderProgram {
      */
     public Lighted3DShader(String vertexFile, String fragmentFile) {
         super(vertexFile, fragmentFile);
-        start();
-        loadAmbientLight(Settings.AMBIENT_LIGHT);
-        stop();
     }
 
     @Override
@@ -63,6 +60,7 @@ public abstract class Lighted3DShader extends ShaderProgram {
 
     /**
      * load transformation matrix
+     *
      * @param matrix transformation matrix to use
      */
     public void loadTransformationMatrix(Matrix4f matrix) {
@@ -71,6 +69,7 @@ public abstract class Lighted3DShader extends ShaderProgram {
 
     /**
      * loads projection matrix
+     *
      * @param matrix projection matrix
      */
     public void loadProjectionMatrix(Matrix4f matrix) {
@@ -79,6 +78,7 @@ public abstract class Lighted3DShader extends ShaderProgram {
 
     /**
      * loads the view matrix usually produced by the camera
+     *
      * @param viewMatrix view matrix to use
      */
     public void loadViewMatrix(Matrix4f viewMatrix) {
@@ -87,13 +87,14 @@ public abstract class Lighted3DShader extends ShaderProgram {
 
     /**
      * loads light sources with position, color and attenuation
+     *
      * @param lights light sources
      */
     public void loadLights(List<Light> lights) {
         List<Vector3f> lightPositions = new ArrayList<>();
         List<Vector3f> lightColors = new ArrayList<>();
         List<Vector3f> attenuations = new ArrayList<>();
-        for (Light light: lights) {
+        for (Light light : lights) {
             lightPositions.add(light.getPosition());
             lightColors.add(light.getColor().getVector());
             attenuations.add(light.getAttenuation());
