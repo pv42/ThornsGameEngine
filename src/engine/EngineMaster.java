@@ -50,6 +50,6 @@ public class EngineMaster {
         DisplayManager.destroyDisplay();
         AudioMaster.cleanUp();
         GLFW.glfwTerminate();
-        Log.i(TAG,"program ended");
+        Log.i(TAG,"program stopped");
     }
 }
