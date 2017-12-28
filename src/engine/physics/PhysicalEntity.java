@@ -57,7 +57,7 @@ public class PhysicalEntity extends Entity implements Physical {
     }
 
     public boolean isIgnoreGravity() {
-        return ignoreGravity;
+        return ignoreGravity || isStatic;
     }
 
     public boolean ignoresCollision() {
