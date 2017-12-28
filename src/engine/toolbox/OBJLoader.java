@@ -94,9 +94,6 @@ public class OBJLoader {
         }
 
         Log.d(TAG, "mesh 'res/meshs/" + filename + ".obj' loaded");
-        for(float v :normalsArray) {
-            System.out.print((int)(1.1*v) +",");
-        }
         return Loader.loadToVAO(verticesArray,textureArray,normalsArray,indicesArray);
     }
     @Deprecated
