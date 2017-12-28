@@ -8,7 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class PongGame {
-    static final float GAME_X_SIZE = 1.5f;
+    static final float GAME_X_SIZE = 1.4f;
     static final float GAME_Y_SIZE = 1.5f;
     static final float BALL_SIZE = 0.02f;
     private static final float REFLECT_SIZE = 0.2f;
@@ -43,14 +43,6 @@ public class PongGame {
         if(kru) moveRight(MOVESTEP * timeStep);
         if(krd) moveRight(-MOVESTEP * timeStep);
         Vector3f ballPosition = ball.getPosition();
-        if(ballPosition.y > GAME_Y_SIZE/2) {
-            ballPosition.y = GAME_Y_SIZE - ballPosition.y;
-            ball.getVelocity().y = - ball.getVelocity().y;
-        }
-        if(ballPosition.y < -GAME_Y_SIZE/2 ) {
-            ballPosition.y = -GAME_Y_SIZE - ballPosition.y;
-            ball.getVelocity().y = - ball.getVelocity().y;
-        }
         if(ballPosition.x > GAME_X_SIZE/2) {
             score_left ++;
             resetBallAndPaddles();

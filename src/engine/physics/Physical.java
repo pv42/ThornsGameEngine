@@ -21,4 +21,5 @@ public interface Physical {
     default Vector3f getImpulse() {
         return getVelocity().mul(getMass(), new Vector3f());
     }
+    int getCollisionType();
 }

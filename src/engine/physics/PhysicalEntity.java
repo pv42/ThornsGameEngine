@@ -4,6 +4,8 @@ import engine.graphics.entities.Entity;
 import engine.graphics.models.TexturedModel;
 import org.joml.Vector3f;
 
+import static engine.physics.PhysicsEngine.COLLISION_TYPE_ELASTIC;
+
 public class PhysicalEntity extends Entity implements Physical {
     private Vector3f velocity = new Vector3f();
     private float mass;
@@ -11,6 +13,7 @@ public class PhysicalEntity extends Entity implements Physical {
     private boolean ignoreCollision = false;
     private HitBox hitBox;
     private boolean isStatic;
+    private int collisionType = COLLISION_TYPE_ELASTIC;
 
     //<init>
     public PhysicalEntity(TexturedModel model, Vector3f position, float mass) {
@@ -75,5 +78,14 @@ public class PhysicalEntity extends Entity implements Physical {
     //other methods
     public void accelerate(Vector3f acceleration) {
         velocity.add(acceleration);
+    }
+
+    @Override
+    public int getCollisionType() {
+        return collisionType;
+    }
+
+    public void setCollisionType(int collisionType) {
+        this.collisionType = collisionType;
     }
 }
