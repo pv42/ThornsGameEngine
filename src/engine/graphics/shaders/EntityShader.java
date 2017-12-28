@@ -11,8 +11,8 @@ import static engine.toolbox.Settings.MAX_BONES;
  * Created by pv42 on 17.06.16.
  */
 public class EntityShader extends Lighted3DShader {
-    private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/vertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/shaders/glsl/fragmentShader.glsl";
+    private static final String VERTEX_FILE = "vertexShader";
+    private static final String FRAGMENT_FILE = "fragmentShader";
     private int location_numberOfRows;
     private int location_offset;
     private int location_specMap;

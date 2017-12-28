@@ -8,8 +8,8 @@ import engine.graphics.shaders.ShaderProgram;
 
 public class FontShader extends ShaderProgram{
 
-	private static final String VERTEX_FILE = "src/engine/graphics/fontRendering/fontVertex";
-	private static final String FRAGMENT_FILE = "src/engine/graphics/fontRendering/fontFragment";
+	private static final String VERTEX_FILE = "fontVertex";
+	private static final String FRAGMENT_FILE = "fontFragment";
 
 
 	private int location_color;
