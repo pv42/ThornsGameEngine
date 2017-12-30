@@ -8,6 +8,7 @@ import engine.toolbox.Log;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -217,7 +218,9 @@ public abstract class ShaderProgram {
     private static int loadShader(String shaderName, int type) {
         StringBuilder shaderSource = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(SHADER_LOCATION + shaderName + SHADER_NAME_EXTENSION));
+            /* [IF IDE|*] */ BufferedReader reader = new BufferedReader(new FileReader(SHADER_LOCATION + shaderName + SHADER_NAME_EXTENSION));
+            /* [IF JAR]    BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    ClassLoader.getSystemResourceAsStream(SHADER_LOCATION + shaderName + SHADER_NAME_EXTENSION))); //*/
             String line;
             while ((line = reader.readLine()) != null) {
                 shaderSource.append(line).append("//\n");

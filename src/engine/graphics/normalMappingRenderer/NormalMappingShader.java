@@ -58,7 +58,6 @@ public class NormalMappingShader extends ShaderProgram{
 		location_plane = super.getUniformLocation("plane");
 		location_modelTexture = super.getUniformLocation("modelTexture");
 		location_normalMap = super.getUniformLocation("normalMap");
-		
 		location_lightPositionEyeSpace = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
 		location_attenuation = new int[MAX_LIGHTS];
