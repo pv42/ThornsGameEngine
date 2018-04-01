@@ -6,16 +6,16 @@ import java.util.List;
 
 class ColladaNode {
     private List<ColladaNode> children;
-    private Matrix4f translation;
+    private Matrix4f transformation;
     private boolean isJoint;
     private String id;
     private String name;
     private String sid;
     private ColladaVisualScene.ColladaInstanceController instanceController;
 
-    public ColladaNode(String id, List<ColladaNode> children, Matrix4f translation, boolean isJoint) {
+    public ColladaNode(String id, List<ColladaNode> children, Matrix4f transformation, boolean isJoint) {
         this.children = children;
-        this.translation = translation;
+        this.transformation = transformation;
         this.isJoint = isJoint;
         this.id = id;
     }
@@ -40,8 +40,8 @@ class ColladaNode {
         this.instanceController = instanceController;
     }
 
-    public Matrix4f getTranslation() {
-        return translation;
+    public Matrix4f getTransformation() {
+        return transformation;
     }
 
     public List<ColladaNode> getChildren() {

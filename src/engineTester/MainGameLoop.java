@@ -109,7 +109,7 @@ public class MainGameLoop {
         Entity girl = new Entity(cowboy, new Vector3f(30,20,50));
         girl.setRx(-90);
         girl.setScale(5f);
-        FirstPersonPlayer player = new FirstPersonPlayer(personModel, new Vector3f(0,0,0));
+        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0));
         player.setScale(.8f);
         player.setGun(new Beretta92());
         Entity cube = new Entity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))),new Vector3f());

@@ -8,6 +8,7 @@ import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.shaders.EntityShader;
+import engineTester.Matrix4fDbg;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import engine.graphics.textures.ModelTexture;
@@ -67,11 +68,11 @@ public class EntityRenderer {
     private void prepareTexturedModel(TexturedModel model) {
         RawModel rawModel = model.getRawModel();
         List<Joint> joints;
-        List<Matrix4f> boneMatrices = new ArrayList<>();
+        List<Matrix4fDbg> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
             joints = rawModel.getJoints();
             for(Joint joint : joints) {
-                boneMatrices.add(joint.getJointMatrix());
+                boneMatrices.add(joint.getTransformationMatrix());
             }
         }
         GL30.glBindVertexArray(rawModel.getVaoID());

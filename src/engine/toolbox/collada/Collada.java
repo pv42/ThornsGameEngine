@@ -139,7 +139,7 @@ public class Collada implements ICollada{
 
     private void processNode(ColladaNode node, Map<String, Joint> joints, Joint parent) {
         Joint joint = joints.get(node.getSid());
-        joint.setPoseTransformationMatrix(node.getTranslation());
+        joint.setPoseTransformationMatrix(node.getTransformation());
         joint.setParent(parent);
         for (ColladaNode n : node.getChildren()) {
             processNode(n, joints, joint);

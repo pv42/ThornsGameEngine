@@ -20,30 +20,33 @@ public class Animation {
     }
 
     Matrix4f getMatrix(float time, String jointName) {
-        float prevTS = 0, nextTS = Float.POSITIVE_INFINITY;
+        float prevTS = 0;
+        float nextTS = Float.POSITIVE_INFINITY;
         Matrix4f nextMatrix = null;
         Matrix4f prevMatrix = keyframes.get(0).getJointData().get(jointName);
         for(KeyFrame frame: keyframes) {
             float timestamp = frame.getTimestamp();
-            if(timestamp > time && timestamp < nextTS) {
+            if(timestamp > time && timestamp < nextTS) { //find next timestamp
                 nextTS = timestamp;
                 nextMatrix = frame.getJointData().get(jointName);
 
             }
-            if(timestamp < time && timestamp > prevTS) {
+            if(timestamp < time && timestamp > prevTS) { // find prev timestamp
                 prevTS = timestamp;
                 prevMatrix = frame.getJointData().get(jointName);
             }
         }
-        if(nextTS == Float.POSITIVE_INFINITY) return prevMatrix;
-        float progress = (time - prevTS)/(nextTS - prevTS);//0 .. 1
+        if(nextTS == Float.POSITIVE_INFINITY) return prevMatrix; // past last timestamp
+        float progress = (time - prevTS)/(nextTS - prevTS);//between 0,1; current interpolate
+        //todo prevMatrix.normal()
         Quaterniond prevQuat = new Quaterniond().setFromNormalized(prevMatrix);
         Quaterniond nextQuat = new Quaterniond().setFromNormalized(nextMatrix);
         Quaterniond rotation = new Quaterniond();
         prevQuat.nlerp(nextQuat,progress,rotation);
-        Vector3f prevTranslation = new Vector3f(prevMatrix.m30(), prevMatrix.m31(), prevMatrix.m32());
-        Vector3f nextTranslation = new Vector3f(nextMatrix.m30(), nextMatrix.m31(), nextMatrix.m32());
-        prevTranslation.mul(prevTranslation);
+        Vector3f prevTranslation = prevMatrix.getTranslation(new Vector3f());
+        Vector3f nextTranslation = nextMatrix.getTranslation(new Vector3f());
+        // ?prevTranslation.mul(prevTranslation);
+        prevTranslation.mul(progress);
         nextTranslation.mul(1 - progress);
         prevTranslation.add(nextTranslation);
         Matrix4f matrix = new Matrix4f();

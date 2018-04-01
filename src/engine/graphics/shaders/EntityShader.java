@@ -1,5 +1,6 @@
 package engine.graphics.shaders;
 
+import engineTester.Matrix4fDbg;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
@@ -91,8 +92,12 @@ public class EntityShader extends Lighted3DShader {
      * load the bone matrices into the shader uniforms
      * @param bones bone matrices to load
      */
-    public void loadBones(List<Matrix4f> bones) {
-        super.loadMatrixArray(location_bones, bones, MAX_BONES);
+    public void loadBones(List<Matrix4fDbg> bones) {
+         for(Matrix4fDbg mat: bones) {
+             System.out.println(mat.getName());
+         }
+         System.out.println("END\n");
+         super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 
     /**
