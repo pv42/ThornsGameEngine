@@ -7,6 +7,7 @@ import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.ModelTexture;
+import engine.toolbox.Log;
 import engine.toolbox.StorageFormatUtil;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Collada implements ICollada{
+    private static final String TAG = "Collada";
     private ColladaAsset colladaAsset;
     private Map<String, ColladaImage> images;
     private Map<String, ColladaMaterial> materials;
@@ -106,6 +108,7 @@ public class Collada implements ICollada{
     }
 
     public List<TexturedModel> getTexturedModels() {
+        Log.d(TAG, "loading data to VRAM");
         List<TexturedModel> models = new ArrayList<>();
         for (int i = 0; i < scene.getRootNodes().size(); i++) { //for models
             String nodeId = scene.getRootNodes().get(i);

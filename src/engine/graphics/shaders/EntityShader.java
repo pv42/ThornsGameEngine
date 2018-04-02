@@ -93,10 +93,10 @@ public class EntityShader extends Lighted3DShader {
      * @param bones bone matrices to load
      */
     public void loadBones(List<Matrix4fDbg> bones) {
-         for(Matrix4fDbg mat: bones) {
+         /*for(Matrix4fDbg mat: bones) {
              System.out.println(mat.getName());
          }
-         System.out.println("END\n");
+         System.out.println("END\n");*/
          super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 

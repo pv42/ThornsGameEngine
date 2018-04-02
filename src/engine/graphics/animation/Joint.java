@@ -81,7 +81,7 @@ public class Joint {
 
     
     public void setAnimationTransformationMatrix(Matrix4f animationTransformationMatrix) {
-        this.animationTransformationMatrix = new Matrix4fDbg(CORRECTION.mul(animationTransformationMatrix.transpose(new Matrix4f()), new Matrix4f()), id + ".aTM");
+        this.animationTransformationMatrix = new Matrix4fDbg(CORRECTION.mul(animationTransformationMatrix, new Matrix4f()), id + ".aTM");
         this.animationTransformationMatrix.debugPrint();
     }
 

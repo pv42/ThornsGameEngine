@@ -99,7 +99,6 @@ public class ColladaLoader {
                     Log.w(TAG, "unkn :" + mainNodes.item(i).getNodeName());
             }
         }
-        Log.d(TAG, "loading data to VRAM");
         return collada;
     }
 
@@ -151,7 +150,7 @@ public class ColladaLoader {
     private static ColladaVisualScene readScene(Node node, Map<String, ColladaVisualScene> scenes) {
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("instance_visual_scene")) {
-                return scenes.get(getAttribValue(n, "url").replaceFirst("#", ""));
+                return scenes.get(Objects.requireNonNull(getAttribValue(n, "url")).replaceFirst("#", ""));
             } else if (!n.getNodeName().equals("#text")) {
                 Log.w(TAG, "unkn_sc" + n.getNodeName());
             }

@@ -20,6 +20,7 @@ public class Animation {
     }
 
     Matrix4f getMatrix(float time, String jointName) {
+        //if(0==0) return keyframes.get(0).getJointData().get(jointName); // todo remove
         float prevTS = 0;
         float nextTS = Float.POSITIVE_INFINITY;
         Matrix4f nextMatrix = null;
@@ -29,13 +30,13 @@ public class Animation {
             if(timestamp > time && timestamp < nextTS) { //find next timestamp
                 nextTS = timestamp;
                 nextMatrix = frame.getJointData().get(jointName);
-
             }
-            if(timestamp < time && timestamp > prevTS) { // find prev timestamp
+            if(timestamp <= time && timestamp >= prevTS) { // find prev timestamp
                 prevTS = timestamp;
                 prevMatrix = frame.getJointData().get(jointName);
             }
         }
+        //todo remove if(true) return prevMatrix;
         if(nextTS == Float.POSITIVE_INFINITY) return prevMatrix; // past last timestamp
         float progress = (time - prevTS)/(nextTS - prevTS);//between 0,1; current interpolate
         //todo prevMatrix.normal()
@@ -45,9 +46,8 @@ public class Animation {
         prevQuat.nlerp(nextQuat,progress,rotation);
         Vector3f prevTranslation = prevMatrix.getTranslation(new Vector3f());
         Vector3f nextTranslation = nextMatrix.getTranslation(new Vector3f());
-        // ?prevTranslation.mul(prevTranslation);
         prevTranslation.mul(progress);
-        nextTranslation.mul(1 - progress);
+        nextTranslation.mul(1f - progress);
         prevTranslation.add(nextTranslation);
         Matrix4f matrix = new Matrix4f();
         matrix.translate(prevTranslation);
