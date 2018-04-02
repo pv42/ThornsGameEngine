@@ -12,6 +12,20 @@ import java.util.Map;
 /**
  * Created by pv42 on 27.07.16.
  */
+/*
+ TARGET MATRICES ARE
+ float4x4 Torso.procT is (changes)
+0.99999994 0.0 0.0 0.0
+0.0 0.997907 -0.06466552 3.810999
+0.0 0.06466542 0.997907 -1.6658406E-7
+0.0 0.0 0.0 1.0
+
+float4x4 Torso.mjd is (static)
+0.99999994 0.0 0.0 0.0
+0.0 0.997907 -0.06466552 3.210999
+0.0 0.06466542 0.997907 -1.4035723E-7
+0.0 0.0 0.0 1.0
+ */
 public class Joint {
     private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0));
 
