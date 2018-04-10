@@ -3,6 +3,7 @@ package thornsPong;
 import engine.EngineMaster;
 import engine.graphics.cameras.TwoDimensionsCamera;
 import engine.graphics.display.DisplayManager;
+import engine.graphics.display.Window;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
@@ -18,6 +19,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
+
 import static engine.inputs.InputEvent.KEY_EVENT;
 import static engine.inputs.InputEvent.KEY_PRESS;
 import static engine.inputs.InputEvent.KEY_RELEASE;
@@ -32,7 +34,7 @@ public class PongGui {
     private boolean flipPause = false;
     private PongGame game;
     public PongGui() {
-        EngineMaster.init(true);
+        Window window = EngineMaster.init(true);
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
         ModelTexture texture = new ModelTexture(Loader.loadTexture("white.png"));
         //boundings
@@ -83,7 +85,7 @@ public class PongGui {
         while(!DisplayManager.isCloseRequested()) {
             game.update(DisplayManager.getFrameTimeSeconds(),klu, kld, kru, krd,flipPause);
             MasterRenderer.render(camera,clipPlane);
-            DisplayManager.updateDisplay();
+            DisplayManager.updateDisplay(window);
         }
         EngineMaster.finish();
     }

@@ -161,8 +161,8 @@ public class EngineGraphicsTest {
         GL20.glEnableVertexAttribArray(2);
         ModelTexture texture = model.getTexture();
         shader.loadUseAnimation(model.isAnimated());
-        shader.loadNumberOfRows(texture.getNumberOfRows());
-        if (texture.isHasTransparency()) {
+        shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
+        if (texture.hasTransparency()) {
             MasterRenderer.disableCulling();
         }
         shader.loadFakeLightning(texture.isUseFakeLightning());

@@ -1,5 +1,7 @@
 package engine.graphics.textures;
 
+import engine.toolbox.Log;
+
 /**
  * Created by pv42 on 17.06.16.
  */
@@ -7,7 +9,7 @@ package engine.graphics.textures;
 public class ModelTexture {
 
     private int textureID;
-    private int normalMapID = -1;
+    private final int normalMapID = -1;
     private int specularMapID;
 
     private float shineDamper = 1;
@@ -25,7 +27,7 @@ public class ModelTexture {
         this.hasTransparency = hasTransparency;
     }
 
-    public boolean isHasTransparency() {
+    public boolean hasTransparency() {
         return hasTransparency;
     }
 
@@ -34,7 +36,8 @@ public class ModelTexture {
     }
 
     public void setNormalMapID(int normalMapID) {
-        this.normalMapID = normalMapID;
+        //todo this.normalMapID = normalMapID;
+        Log.w("ModelT", "nomal map not supported");
     }
 
     public void setSpecularMapID(int specularMapID) {
@@ -87,5 +90,9 @@ public class ModelTexture {
 
     public void setNumberOfRows(int numberOfRows) {
         this.numberOfRows = numberOfRows;
+    }
+
+    public boolean isHasTransparency() {
+        return hasTransparency;
     }
 }

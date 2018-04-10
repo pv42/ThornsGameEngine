@@ -13,6 +13,7 @@ import org.joml.Vector4f;
 import shivt.guiElements.Button;
 import shivt.levels.RenderLevel;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +27,9 @@ public class ShivtGameLoop {
     private float timeSinceFPSUpdate = 0;
     private int framesSinceFPSUpdate = 0;
     private GUIText fpsText;
+    private engine.graphics.display.Window window;
     public ShivtGameLoop() {
-        EngineMaster.init();
+        engine.graphics.display.Window window = EngineMaster.init();
         buttons = new ArrayList<>();
         FONT = Loader.loadFont("courier_df");
         fpsText = new GUIText("loading", 1, FONT, new Vector2f(0, 0), 1, false);
@@ -49,7 +51,7 @@ public class ShivtGameLoop {
         MasterRenderer.processText(fpsText);
         buttons.forEach(Button::processRender);
         MasterRenderer.render( camera, new Vector4f(0, -1, 0, 100000));
-        DisplayManager.updateDisplay();
+        DisplayManager.updateDisplay(window);
         timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
         framesSinceFPSUpdate++;
         //System.out.println(Conversion.normalizedDeviceCoordsFromPixelCoods(Mouse.getX(), Mouse.getY()));

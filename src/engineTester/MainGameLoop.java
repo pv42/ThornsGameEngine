@@ -8,6 +8,7 @@ import engine.EngineMaster;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.Animator;
 import engine.graphics.display.DisplayManager;
+import engine.graphics.display.Window;
 import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
@@ -35,7 +36,6 @@ import engine.graphics.textures.TerrainTexture;
 import engine.graphics.textures.TerrainTexturePack;
 import engine.toolbox.Settings;
 import engine.toolbox.Log;
-import shivt.guns.*;
 
 /***
  * Created by pv42 on 16.06.16.
@@ -46,8 +46,9 @@ public class MainGameLoop {
     private static final String TAG = "GameLoop";
     private static final float FONT_SIZE = 1;
     private static boolean onlineMode = false;
+    private static Window window;
     public static void main(String args[]) throws InterruptedException {
-        EngineMaster.init();
+        window = EngineMaster.init();
         GameClient client = null;
         if(onlineMode) client = new GameClient();
         if(onlineMode) onlineMode = client.connect();
@@ -109,9 +110,8 @@ public class MainGameLoop {
         Entity girl = new Entity(cowboy, new Vector3f(30,20,50));
         girl.setRx(-90);
         girl.setScale(5f);
-        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0));
+        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0),window);
         player.setScale(.8f);
-        player.setGun(new Beretta92());
         Entity cube = new Entity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))),new Vector3f());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
@@ -158,7 +158,7 @@ public class MainGameLoop {
             processFirstPersonPlayer(player);
 
             MasterRenderer.render(camera,new Vector4f(0, -1, 0, 100000));
-            DisplayManager.updateDisplay();
+            DisplayManager.updateDisplay(window);
             //post render
             timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
             framesSinceFPSUpdate ++;
@@ -176,12 +176,5 @@ public class MainGameLoop {
     }
     private static void processFirstPersonPlayer(FirstPersonPlayer player) {
         MasterRenderer.addAniEntity(player);
-        if(player.getGun().getScope() != null && player.getGun().getScopingProgress() == 1.0f && player.getGun().getReloadCooldown() == 0) {
-            MasterRenderer.addGui(player.getGun().getScope());
-            MasterRenderer.updateZoom(4);
-        } else {
-            //todo MasterRenderer.processMMEntity(player.getGun());
-            MasterRenderer.updateZoom(1 + player.getGun().getScopingProgress() * .5f);
-        }
     }
 }

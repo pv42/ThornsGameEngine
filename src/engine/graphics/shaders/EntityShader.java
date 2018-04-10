@@ -75,7 +75,7 @@ public class EntityShader extends Lighted3DShader {
      * loads the number of rows if the texture is an atlas or 1
      * @param numberOfRows the number of rows/cols the texture has
      */
-    public void loadNumberOfRows(int numberOfRows) {
+    public void loadTextureAtlasNumberOfRows(int numberOfRows) {
         super.loadFloat(location_numberOfRows, numberOfRows);
     }
 
@@ -99,6 +99,14 @@ public class EntityShader extends Lighted3DShader {
          System.out.println("END\n");*/
          super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
+
+    /**
+     *
+     */
+    public void loadNumberOfRows(int numberOfRows) {
+        super.loadInt(location_numberOfRows, numberOfRows);
+    }
+
 
     /**
      * loads whether the rendered gpu should use bone animation

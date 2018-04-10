@@ -32,7 +32,7 @@ const float gradient = 5.0;
 void main(void) {
     vec4 worldPosition;
     vec3 actualNormal;
-    if(useAnimation < 0.5) {
+    if(/*useAnimation < 0.5*/ true ) {
         worldPosition = transformationMatrix * vec4(position,1.0);
         actualNormal = normal;
     } else {

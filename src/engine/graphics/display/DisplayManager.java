@@ -16,7 +16,8 @@ public class DisplayManager {
     private static final String TAG = "Engine:DisplayManager";
     private static long lastFrameEnd;
     private static float delta;
-    private static Window window;
+    private static Window activeWindow;
+    //private static Window window;
 
     /**
      * creates a GLFW window
@@ -24,9 +25,11 @@ public class DisplayManager {
      * @return windowID
      */
     public static Window createWindow() {
-        window = Window.createWindow();
+        Window window = Window.createWindow();
         lastFrameEnd = getTime();
-        Log.i(TAG,"Display created");
+        Log.i(TAG,"Window created");
+        Log.d(TAG, "windowId=" + window.getId());
+        activeWindow = window;
         return window;
     }
 
@@ -41,7 +44,7 @@ public class DisplayManager {
     /**
      * updates the windows
      */
-    public static void updateDisplay() {
+    public static void updateDisplay(Window window) {
         GLFW.glfwSwapBuffers(window.getId());
         GLFW.glfwPollEvents();
         long currentFrameTime = getTime();
@@ -50,13 +53,13 @@ public class DisplayManager {
     }
 
     /**
-     * destroys the GLFW window
+     * destroys the GLFW context
      */
-    public static void destroyDisplay() {
-        window.destroy();
+    public static void destroy() {
         GLFW.glfwTerminate();
         GLFW.glfwSetErrorCallback(null).free();
         Log.i(TAG,"Display destroyed");
+        activeWindow = null;
     }
 
     /**
@@ -135,23 +138,17 @@ public class DisplayManager {
      * @return {@code true} if a close request was send to the GLFW window
      */
     public static boolean isCloseRequested() {
-        return window.isCloseRequested();
+        return false ;//window.isCloseRequested();
     }
 
-    /**
-     * gets the window size
-     * @return the window size as Vector2D
-     */
-    public static Vector2i getSize() {
-        return window.getSize();
-    }
+
 
     /**
      * (un-)grabbes the mouse
      * @param b {@code false} enable the courser (default)
      *          {@code true} disable the courser
      */
-    public static void setMouseGrabbed(boolean b) {
+    public static void setMouseGrabbed(boolean b, Window window) {
         if(b) {
             GLFW.glfwSetInputMode(window.getId(),GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_DISABLED);
         } else {
@@ -159,4 +156,7 @@ public class DisplayManager {
         }
     }
 
+    public static Window getActiveWindow() {
+        return activeWindow;
+    }
 }

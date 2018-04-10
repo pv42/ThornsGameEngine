@@ -42,8 +42,8 @@ public class Log {
      * @param tag tag
      * @param text message to log
      */
-    public static void d(String tag, String text) {
-        if (Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:" + tag + " " + text);
+    public static void d(String tag, Object text) {
+        if (Settings.SHOW_DEBUG_LOG) out.println(new Date().toString() + " DBUG:" + tag + " " + text.toString());
     }
 
     /**

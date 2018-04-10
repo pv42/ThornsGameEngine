@@ -25,7 +25,9 @@ public class Window {
 
     public static Window createWindow() throws RuntimeException{
         Window window = new Window(GLFW.glfwCreateWindow(WIDTH,HEIGHT,TITLE, MemoryUtil.NULL,MemoryUtil.NULL));
-        if(window.getId() == MemoryUtil.NULL) throw new IllegalStateException("Windows creation failed");
+        if(window.getId() == MemoryUtil.NULL){
+            throw new IllegalStateException("Windows creation failed");
+        }
         window.makeCurrentContext();
         GLFW.glfwSwapInterval(LIMIT_FPS);
         window.show();
@@ -66,5 +68,8 @@ public class Window {
     }
     public void setSize(int width, int height) {
         GLFW.glfwSetWindowSize(id, width, height);
+    }
+    public void setTitle(String title) {
+        GLFW.glfwSetWindowTitle(id, title);
     }
 }

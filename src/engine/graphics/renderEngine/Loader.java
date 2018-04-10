@@ -14,6 +14,7 @@ import org.joml.Vector3f;
 import engine.graphics.textures.TextureData;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -221,7 +222,13 @@ public class Loader {
             fileName = "white.png";
             Log.w(TAG,"tried to load null texture");
         }
-        TextureData data = decodeTextureFile("res/textures/" + fileName, flip);
+        TextureData data;
+        try {
+            data = decodeTextureFile("res/textures/" + fileName, flip);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return 0;
+        }
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
@@ -243,7 +250,13 @@ public class Loader {
     }
 
     private static int loadFontTexture(String fileName) {
-        TextureData data = decodeTextureFile("res/fonts/" + fileName, false);
+        TextureData data;
+        try {
+            data = decodeTextureFile("res/fonts/" + fileName, false);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return 0;
+        }
         int texID = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
@@ -268,7 +281,12 @@ public class Loader {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
         for (int i = 0; i < textureFiles.length; i++) {
-            TextureData date = decodeTextureFile("res/textures/" + textureFiles[i] + fileExtension, false);
+            TextureData date = null;
+            try {
+                date = decodeTextureFile("res/textures/" + textureFiles[i] + fileExtension, false);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
             GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, date.getHeight(), date.getWidth(), 0, GL11.GL_RGBA, GL_UNSIGNED_BYTE, date.getBuffer());
         }
         //posX, negX, posY, negY, posZ, negZ
@@ -307,14 +325,14 @@ public class Loader {
         return texID;
     }
 
-    private static TextureData decodeTextureFile(String fileName, boolean flip) {
+    private static TextureData decodeTextureFile(String fileName, boolean flip) throws FileNotFoundException {
         IntBuffer h = BufferUtils.createIntBuffer(1);
         IntBuffer w = BufferUtils.createIntBuffer(1);
         IntBuffer comp = BufferUtils.createIntBuffer(1);
         STBImage.stbi_set_flip_vertically_on_load(flip);
         ByteBuffer image = STBImage.stbi_load(fileName, w, h, comp, 4);
         if (image == null) {
-            throw new RuntimeException("Failed to load a texture file! (" + fileName + ")\n" + STBImage.stbi_failure_reason());
+            throw new FileNotFoundException("Failed to load a texture file! (" + fileName + ")\n" + STBImage.stbi_failure_reason());
         }
         return new TextureData(image, w.get(), h.get());
     }

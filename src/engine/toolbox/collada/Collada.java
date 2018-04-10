@@ -133,7 +133,7 @@ public class Collada implements ICollada{
                 ColladaEffect effect = materials.get(materialId).getInstanceEffect(effects);
                 String imageFile = images.get(effect.getImage()).getSource();
                 TexturedModel texturedModel = new TexturedModel(model, new ModelTexture(Loader.loadTexture(
-                        imageFile.replaceFirst("file:///",""))));
+                        imageFile.replaceFirst("file:///","").replaceAll("%20", " "))));
                 models.add(texturedModel);
             }
         }

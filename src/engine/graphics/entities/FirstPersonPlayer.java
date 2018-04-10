@@ -1,12 +1,12 @@
 package engine.graphics.entities;
 
+import engine.graphics.display.Window;
 import engine.graphics.models.TexturedModel;
 import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Log;
 import org.lwjgl.glfw.GLFW;
-import shivt.guns.Gun;
 import org.joml.Vector3f;
 import engine.graphics.display.DisplayManager;
 import engine.graphics.terrains.Terrain;
@@ -27,12 +27,11 @@ public class FirstPersonPlayer extends Player{
     private float currentSpeed;
     private float currentSideSpeed;
     private float heightAngle = 0;
-    private Gun gun;
     private boolean sprinting;
-    public FirstPersonPlayer(List<TexturedModel> model, Vector3f position) {
+    public FirstPersonPlayer(List<TexturedModel> model, Vector3f position, Window window) {
         super(model,position);
         sprinting = false;
-        registerEvents();
+        registerEvents(window);
     }
     @Override
     public void move(Terrain terrain) {
@@ -56,13 +55,9 @@ public class FirstPersonPlayer extends Player{
             super.getPosition().y = terrainHeight;
             isInAir = false;
         }
-        //gun
-        if(gun != null) {
-            getGun().update(this);
-        }
     }
-    private void registerEvents() {
-        DisplayManager.setMouseGrabbed(true);
+    private void registerEvents(Window window) {
+        DisplayManager.setMouseGrabbed(true, window);
         InputHandler.setMouseBound(true);
         InputHandler.setCursorListener((x, y) -> {
             // todo  implement
@@ -143,16 +138,5 @@ public class FirstPersonPlayer extends Player{
     }
     public float getHeightAngle() {
         return heightAngle;
-    }
-
-    public Gun getGun() {
-        return gun;
-    }
-
-    public void setGun(Gun gun) {
-        this.gun = gun;
-    }
-    public Player getThis() {
-        return this;
     }
 }

@@ -1,6 +1,7 @@
 package engine.toolbox;
 
 import engine.graphics.display.DisplayManager;
+import engine.graphics.display.Window;
 import org.joml.*;
 
 /***
@@ -9,7 +10,7 @@ import org.joml.*;
 public class Conversion {
     private Conversion() {} //this can never be an object
     public static Vector2f pixelFromOpenGLSpace2D(Vector2f openGLSpace) {
-        Vector2i size = DisplayManager.getSize();
+        Vector2i size = DisplayManager.getActiveWindow().getSize();
         return new Vector2f((openGLSpace.x + 1)*.5f* size.x,(openGLSpace.y + 1)*.5f* size.y);
     }
     public static Vector3f getWorldRay(float pixelX,float pixelY,Matrix4f projectionMatrix, Matrix4f viewMatrix) {

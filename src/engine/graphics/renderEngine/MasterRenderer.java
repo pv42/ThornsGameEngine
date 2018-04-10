@@ -7,6 +7,7 @@ import java.util.Map;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.display.DisplayManager;
+import engine.graphics.display.Window;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.fontMeshCreator.TextMeshData;
@@ -17,7 +18,6 @@ import engine.graphics.guis.GuiTexture;
 import engine.graphics.lines.LineRenderer;
 import engine.graphics.lines.LineModel;
 import engine.graphics.models.TexturedModel;
-import engine.graphics.normalMappingRenderer.NormalMappingRenderer;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.terrains.TerrainShader;
 import engine.graphics.skybox.SkyboxRenderer;
@@ -45,7 +45,6 @@ public class MasterRenderer {
     //renderers
     private static EntityRenderer entityRenderer;
     private static EntityRenderer aniRenderer;
-    private static NormalMappingRenderer normalRenderer;
     private static TerrainRenderer terrainRenderer;
     private static TerrainShader terrainShader = new TerrainShader();
     private static SkyboxRenderer skyboxRenderer;
@@ -74,7 +73,6 @@ public class MasterRenderer {
         createProjectionMatrix(use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
-        normalRenderer = new NormalMappingRenderer(projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
@@ -94,12 +92,12 @@ public class MasterRenderer {
         createProjectionMatrix(aspectRatio,use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
-        normalRenderer = new NormalMappingRenderer(projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
         guiRenderer = new GuiRenderer(aspectRatio); // todo
         fontRenderer = new FontRenderer(aspectRatio);
+
         Log.i(TAG, " initialised");
     }
 
@@ -112,7 +110,6 @@ public class MasterRenderer {
         createProjectionMatrix(zoom,use2D);
         entityRenderer.updateProjectionMatrix(projectionMatrix);
         aniRenderer.updateProjectionMatrix(projectionMatrix);
-        normalRenderer.updateProjectionMatrix(projectionMatrix);
         terrainRenderer.updateProjectionMatrix(projectionMatrix);
         lineRenderer.updateProjectionMatrix(projectionMatrix);
         skyboxRenderer.updateProjectionMatrix(projectionMatrix);
@@ -234,7 +231,6 @@ public class MasterRenderer {
         terrainShader.cleanUp();
         guiShader.cleanUp();
         fontRenderer.cleanUp();
-        normalRenderer.cleanUp();
     }
 
     private static void prepare() {
@@ -268,9 +264,8 @@ public class MasterRenderer {
     private static void createProjectionMatrix(float aspectRatio, float zoom, boolean use2D) {
 
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.FOV / zoom / 2f))));
-        float x_scale = y_scale / aspectRatio;
+        float x_scale = y_scale * aspectRatio;
         float frustum_length = Settings.FAR_PLANE - Settings.NEAR_PLANE;
-
         projectionMatrix = new Matrix4f();
         projectionMatrix.m00(x_scale);
         projectionMatrix.m11(y_scale);
@@ -324,7 +319,7 @@ public class MasterRenderer {
      * @return the current aspect ratio
      */
     public static float getAspectRatio() {
-        return DisplayManager.getSize().x() / DisplayManager.getSize().y();
+        return (float)DisplayManager.getActiveWindow().getSize().x() / (float)DisplayManager.getActiveWindow().getSize().y();
     }
 
     public static void setAmbientLight(float ambientLight) {

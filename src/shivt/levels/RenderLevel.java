@@ -28,7 +28,7 @@ public class RenderLevel {
     private List<GUIText> texts;
     private List<Vector3f> ends;
 
-    public RenderLevel(Level level, FontType font) {
+    public RenderLevel(ShivtLevel level, FontType font) {
         lines = new ArrayList<>();
         List<Entity> entities = new ArrayList<>();
         ends = new ArrayList<>();

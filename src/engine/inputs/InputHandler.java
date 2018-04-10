@@ -37,7 +37,7 @@ public class InputHandler {
                 mouseY = (int)v1;
             }
         });
-        GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
+        /*GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
                 eventQ.add(new InputEvent(MOUSE_EVENT,action,button, Time.getTime(),new Vector2f(mouseX,mouseY)));
@@ -56,7 +56,7 @@ public class InputHandler {
             public void invoke(long window, double xoffset, double yoffset) {
                 eventQ.add(new InputEvent(MOUSE_EVENT,SCROLL,0, Time.getTime(),new Vector2f((float) xoffset,(float) yoffset)));
             }
-        });
+        });*/
     }
     static boolean hasNextEvent() {
         return !eventQ.isEmpty();

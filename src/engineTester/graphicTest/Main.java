@@ -65,7 +65,8 @@ public class Main {
 
                 renderer.render(e, camera);
             }
-            DisplayManager.updateDisplay();
+            window.destroy();
+            DisplayManager.destroy();
         }
         if(useEngine) {
             MasterRenderer.cleanUp();
@@ -74,7 +75,8 @@ public class Main {
             Loader.cleanUp();
         }
 
-        DisplayManager.destroyDisplay();
+        window.destroy();
+        DisplayManager.destroy();
 
     }
 }
