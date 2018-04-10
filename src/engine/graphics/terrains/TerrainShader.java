@@ -7,8 +7,8 @@ import engine.graphics.shaders.Lighted3DShader;
   Created by pv42 on 18.06.16.
  */
 public class TerrainShader extends Lighted3DShader {
-    private static final String VERTEX_FILE = "src/engine/graphics/terrains/terrainVertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/terrains/terrainFragmentShader.glsl";
+    private static final String VERTEX_FILE = "terrainVertexShader";
+    private static final String FRAGMENT_FILE = "terrainFragmentShader";
     private int location_bgTexture,
             location_rTexture,
             location_gTexture,

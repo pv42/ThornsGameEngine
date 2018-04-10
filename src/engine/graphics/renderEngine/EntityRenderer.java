@@ -2,11 +2,13 @@ package engine.graphics.renderEngine;
 
 import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.shaders.EntityShader;
+import engineTester.Matrix4fDbg;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import engine.graphics.textures.ModelTexture;
@@ -21,6 +23,7 @@ import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_UV;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_NORMAL;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_INDICES;
 import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_WEIGHT;
+import static engine.toolbox.Settings.AMBIENT_LIGHT;
 import static engine.toolbox.Settings.SKY_COLOR;
 
 
@@ -29,6 +32,7 @@ import static engine.toolbox.Settings.SKY_COLOR;
  */
 public class EntityRenderer {
     private EntityShader shader;
+    private float ambientLight = AMBIENT_LIGHT;
 
     public EntityRenderer(Matrix4f projectionMatrix) {
         this.shader = new EntityShader();
@@ -62,14 +66,13 @@ public class EntityRenderer {
     }
 
     private void prepareTexturedModel(TexturedModel model) {
-
         RawModel rawModel = model.getRawModel();
         List<Joint> joints;
-        List<Matrix4f> boneMatrices = new ArrayList<>();
+        List<Matrix4fDbg> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
             joints = rawModel.getJoints();
             for(Joint joint : joints) {
-                boneMatrices.add(joint.getJointMatrix());
+                boneMatrices.add(joint.getTransformationMatrix());
             }
         }
         GL30.glBindVertexArray(rawModel.getVaoID());
@@ -119,8 +122,9 @@ public class EntityRenderer {
     private void prepare(List<Light> lights, Camera camera) {
         shader.start();
         shader.loadSkyColor(SKY_COLOR);
+        shader.loadAmbientLight(ambientLight);
         shader.loadLights(lights);
-        shader.loadViewMatrix(camera);
+        shader.loadViewMatrix(camera.getViewMatrix());
     }
 
     public void cleanUp() {
@@ -169,5 +173,9 @@ public class EntityRenderer {
         GL20.glDisableVertexAttribArray(1);
         GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
+    }
+
+    public void setAmbientLight(float ambientLight) {
+        this.ambientLight = ambientLight;
     }
 }

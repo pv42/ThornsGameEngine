@@ -86,7 +86,7 @@ public class Button extends Clickable {
         return text;
     }
     public void processRender() {
-        MasterRenderer.processGui(gui);
+        MasterRenderer.addGui(gui);
         MasterRenderer.processText(text);
     }
 }

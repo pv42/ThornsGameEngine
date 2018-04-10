@@ -1,6 +1,6 @@
 package engine.toolbox;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -31,25 +31,6 @@ public class Maths {
         matrix.rotate((float) Math.toRadians(rz), new Vector3f(0, 0, 1));
         matrix.scale(scale);
         return matrix;
-    }
-
-    public static Matrix4f createViewMatrix(Camera camera) {
-        return createViewMatrix(camera, true);
-    }
-
-    public static Matrix4f createViewMatrix(Camera camera, boolean useRoll) {
-        Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.identity();
-        viewMatrix.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0));
-        viewMatrix.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0));
-        if(useRoll) {
-            viewMatrix.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0, 0, 1));
-        }
-
-        Vector3f cameraPos = camera.getPosition();
-        Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-        viewMatrix.translate(negativeCameraPos);
-        return viewMatrix;
     }
 
     public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) { //todo do not work

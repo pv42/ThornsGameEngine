@@ -12,7 +12,6 @@ import engine.inputs.*;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
 import engine.toolbox.collada.Collada;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -92,26 +91,28 @@ public class MainGameLoop {
         for(int i = 0; i<500; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
-            entities.add(new Entity(texturedModel2,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z),0,0,0,1));
+            entities.add(new Entity(texturedModel2,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z)));
         }
         for(int i = 0; i<300; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
-            entities.add(new Entity(texturedModel,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z),0,0,0,.8f));
+            Entity e = new Entity(texturedModel,new Vector3f(x,terrain.getHeightOfTerrain(x,z),z));
+            e.setScale(.8f);
+            entities.add(e);
         }
         //player
-        ColladaLoader pcl = new ColladaLoader();
-        Matrix4f matrix = new Matrix4f();
-        matrix.identity();
-        matrix.rotate((float) Math.toRadians(-90),new Vector3f(1,0,0));
-        Collada cowboyCollada = ColladaLoader.loadCollada("Hot_Girl_01",matrix);
+        Collada cowboyCollada = ColladaLoader.loadCollada("cowboy");
         List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
-        //Animation cowboyAnimation = cowboyCollada.getAnimation();
-        //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
-        //List<TexturedModel> personModel = ColladaLoader.loadCollada("Lara_Croft").getTexturedModels();
-        Entity girl = new Entity(cowboy, new Vector3f(30,2,50),-90,0,0,2f);
-        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0),0,0,0,0.8f);
+        Animation cowboyAnimation = cowboyCollada.getAnimation();
+        Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
+        List<TexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
+        Entity girl = new Entity(cowboy, new Vector3f(30,20,50));
+        girl.setRx(-90);
+        girl.setScale(5f);
+        FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0,0,0));
+        player.setScale(.8f);
         player.setGun(new Beretta92());
+        Entity cube = new Entity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))),new Vector3f());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;
@@ -123,6 +124,15 @@ public class MainGameLoop {
         }
         Log.i(TAG, "starting render");
         float animationTime = 0;
+
+        MasterRenderer.addEntity(girl);
+        MasterRenderer.addTerrain(terrain);
+        MasterRenderer.addEntity(cube);
+        lights.forEach(MasterRenderer::addLight);
+        guis.forEach(MasterRenderer::addGui);
+        entities.forEach(MasterRenderer::addEntity);
+
+
         while (!DisplayManager.isCloseRequested()) { //actual MainGameLoop
             //game logic
             //FPS Updates
@@ -133,9 +143,8 @@ public class MainGameLoop {
                 timeSinceFPSUpdate = 0;
                 framesSinceFPSUpdate = 0;
             }
-            //girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
             MasterRenderer.processText(text);
-            MasterRenderer.processEntity(girl);
+            //girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
             player.move(terrain);
             camera.move();
             particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
@@ -143,46 +152,16 @@ public class MainGameLoop {
             //animation
             animationTime += DisplayManager.getFrameTimeSeconds() * 0.2;
             animationTime %= 1;
-            //Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
+            Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
             //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
             processFirstPersonPlayer(player);
-            MasterRenderer.processTerrain(terrain);
-            guis.forEach(MasterRenderer::processGui);
-            entities.forEach(MasterRenderer::processEntity);
-            lights.forEach(MasterRenderer::processLight);
 
             MasterRenderer.render(camera,new Vector4f(0, -1, 0, 100000));
             DisplayManager.updateDisplay();
-            InputLoop.loopHandle();
             //post render
             timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
             framesSinceFPSUpdate ++;
-            //update Fullscreen
-            /*if(Keyboard.isKeyDown(Keyboard.KEY_F11)) {
-                fullscreen = !fullscreen;
-                if(fullscreen) {
-                    if(DisplayManager.updateDisplayMode(Settings.WIDTH_FULLSCREEN,Settings.HEIGHT_FULLSCREEN,true)) {
-                        MasterRenderer.init((float)Settings.WIDTH_FULLSCREEN/(float)Settings.HEIGHT_FULLSCREEN);
-                        GL11.glViewport(0,0,Settings.WIDTH_FULLSCREEN,Settings.HEIGHT_FULLSCREEN);
-                    } else {
-                        fullscreen = false;
-                    }
-                } else  {
-                    if(DisplayManager.updateDisplayMode(Settings.WIDTH,Settings.HEIGHT,false)) {
-                        MasterRenderer .init((float) Settings.WIDTH / (float) Settings.HEIGHT);
-                        GL11.glViewport(0, 0, Settings.WIDTH, Settings.HEIGHT);
-                    } else {
-                        fullscreen = true;
-                    }
-                }
-
-            //change Weapon
-            if(Keyboard.isKeyDown(Keyboard.KEY_1)) player.setGun(new KSR29());
-            if(Keyboard.isKeyDown(Keyboard.KEY_2)) player.setGun(new MP5());
-            if(Keyboard.isKeyDown(Keyboard.KEY_3)) player.setGun(new Beretta92());
-            if(Keyboard.isKeyDown(Keyboard.KEY_4)) player.setGun(new Blaster());
-            */
         }
         if(onlineMode && networkSender != null && client != null) {
             networkSender.end();
@@ -196,9 +175,9 @@ public class MainGameLoop {
         EngineMaster.finish();
     }
     private static void processFirstPersonPlayer(FirstPersonPlayer player) {
-        MasterRenderer.processAniEntity(player);
+        MasterRenderer.addAniEntity(player);
         if(player.getGun().getScope() != null && player.getGun().getScopingProgress() == 1.0f && player.getGun().getReloadCooldown() == 0) {
-            MasterRenderer.processGui(player.getGun().getScope());
+            MasterRenderer.addGui(player.getGun().getScope());
             MasterRenderer.updateZoom(4);
         } else {
             //todo MasterRenderer.processMMEntity(player.getGun());

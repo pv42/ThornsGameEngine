@@ -1,6 +1,7 @@
 package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -12,8 +13,8 @@ import engine.toolbox.Maths;
    Created by pv42 on 21.06.16.
  */
 public class SkyBoxShader extends ShaderProgram {
-    private static final String FRAGMENT_FILE = "src/engine/graphics/skybox/skyboxFragment.glsl";
-    private static final String VERTEX_FILE = "src/engine/graphics/skybox/skyboxVertex.glsl";
+    private static final String FRAGMENT_FILE = "skyboxFragment";
+    private static final String VERTEX_FILE = "skyboxVertex";
     private final float ROTATE_SPEED = 0.5f;
     private int location_viewMatrix;
     private int location_projectionMatrix;
@@ -40,7 +41,7 @@ public class SkyBoxShader extends ShaderProgram {
         super.loadMatrix(location_projectionMatrix,projectionMatrix);
     }
     protected void loadViewMatrix(Camera camera) {
-        Matrix4f matrix = Maths.createViewMatrix(camera);
+        Matrix4f matrix = camera.getViewMatrix();
         matrix.m30(0);
         matrix.m31(0);
         matrix.m32(0);

@@ -1,6 +1,6 @@
 package engineTester.graphicTest;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.entities.Entity;
 import engine.graphics.models.RawModel;
@@ -11,8 +11,6 @@ import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
 import engine.inputs.InputHandler;
-import engine.inputs.InputLoop;
-import engine.toolbox.collada.Collada;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -24,7 +22,7 @@ public class Main {
         Window window = DisplayManager.createWindow();
         TestRender renderer = null;
         if (useEngine) {
-            MasterRenderer.init();
+            MasterRenderer.init(false);
 
             ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         } else {
@@ -47,18 +45,19 @@ public class Main {
                 0, 0, 0
         };
         RawModel model = Loader.loadToVAO(vertices, textCoords, normal, indices);
-        Entity lara  = new Entity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0),80,0,0,1f);
+        Entity lara  = new Entity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
+        lara.setRx(80);
         int texture = Loader.loadTexture("Screen_Dust_D.png");
         ModelTexture modelTexture = new ModelTexture(texture);
         TexturedModel texturedModel = new TexturedModel(model, modelTexture);
 
-        Camera camera = new ShivtCamera();
-        Entity e = new Entity(texturedModel, new Vector3f(0,12.5f,1f), 0, 0, 0, 1f);
+        ThreeDimensionCamera camera = new ShivtCamera();
+        Entity e = new Entity(texturedModel, new Vector3f(0,12.5f,1f));
 
         while (!DisplayManager.isCloseRequested()) {
             if (useEngine) {
-                MasterRenderer.processEntity(lara);
-                MasterRenderer.processEntity(e);
+                MasterRenderer.addEntity(lara);
+                MasterRenderer.addEntity(e);
                 MasterRenderer.render(camera, new Vector4f(0, -1, 0, 100000));
             } else {
                 renderer.prepare();
@@ -66,7 +65,6 @@ public class Main {
 
                 renderer.render(e, camera);
             }
-            InputLoop.loopHandle();
             DisplayManager.updateDisplay();
         }
         if(useEngine) {

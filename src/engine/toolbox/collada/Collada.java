@@ -8,13 +8,14 @@ import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Log;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Collada {
+public class Collada implements ICollada{
+    private static final String TAG = "Collada";
     private ColladaAsset colladaAsset;
     private Map<String, ColladaImage> images;
     private Map<String, ColladaMaterial> materials;
@@ -23,6 +24,7 @@ public class Collada {
     private Map<String, ColladaController> controllers;
     private Map<String, ColladaVisualScene> visualScenes;
     private Map<String, ColladaAnimation> animations;
+    private Map<String, ColladaCamera> cameras;
     private ColladaVisualScene scene;
 
     public ColladaAsset getColladaAsset() {
@@ -55,6 +57,10 @@ public class Collada {
 
     public Map<String, ColladaAnimation> getAnimations() {
         return animations;
+    }
+
+    public Map<String, ColladaCamera> getCameras() {
+        return cameras;
     }
 
     public ColladaVisualScene getScene() {
@@ -97,9 +103,14 @@ public class Collada {
         this.scene = scene;
     }
 
+    void setCameras(Map<String,ColladaCamera> cameras) {
+        this.cameras = cameras;
+    }
+
     public List<TexturedModel> getTexturedModels() {
+        Log.d(TAG, "loading data to VRAM");
         List<TexturedModel> models = new ArrayList<>();
-        for (int i = 0; i < scene.getRootNodes().size(); i++) {
+        for (int i = 0; i < scene.getRootNodes().size(); i++) { //for models
             String nodeId = scene.getRootNodes().get(i);
             ColladaNode cnode = scene.getNode(nodeId);
             ColladaVisualScene.ColladaInstanceController ic = cnode.getInstanceController();
@@ -110,12 +121,12 @@ public class Collada {
                 processNode(skeletonRoot, joints, null); //apply poses to joints
                 ColladaGeometry geometry = geometries.get(controller.getGeometryId());
                 RawModel model = Loader.loadToVAOAnimated(
-                        Util.get1DArray(geometry.getPosition()),
-                        Util.get1DArray(geometry.getTextureCoordinates()),
-                        Util.get1DArray(geometry.getNormal()),
+                        StorageFormatUtil.get1DArray(geometry.getPosition()),
+                        StorageFormatUtil.get1DArray(geometry.getTextureCoordinates()),
+                        StorageFormatUtil.get1DArray(geometry.getNormal()),
                         geometry.getIndices(),
-                        Util.get1DArrayFromListListInteger(controller.getWeights().getIndices()),
-                        Util.get1DArrayFromListListFloat(controller.getWeights().getWeights()),
+                        controller.getWeights().getIndicesData(geometry.getPolylistIndicesBase()),
+                        controller.getWeights().getWeightsData(geometry.getPolylistIndicesBase()),
                         controller.getJointList());
                 String materialId = geometry.getMaterialId();
                 materialId = ic.getBindMaterialId(materialId);
@@ -131,7 +142,7 @@ public class Collada {
 
     private void processNode(ColladaNode node, Map<String, Joint> joints, Joint parent) {
         Joint joint = joints.get(node.getSid());
-        joint.setPoseTransformationMatrix(node.getTranslation());
+        joint.setPoseTransformationMatrix(node.getTransformation());
         joint.setParent(parent);
         for (ColladaNode n : node.getChildren()) {
             processNode(n, joints, joint);
@@ -150,7 +161,6 @@ public class Collada {
             index++;
             animation.addKeyFrame(keyFrame);
         }
-        Log.d("Collada:AL", "::" + index);
         return animation;
     }
 }

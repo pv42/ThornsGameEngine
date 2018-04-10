@@ -1,6 +1,7 @@
 package engineTester.graphicTest;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
@@ -43,7 +44,7 @@ public class TestRender {
     }
     public void render(Entity entity, Camera camera) {
         if(f) {
-            System.out.println("VM:\n" + Maths.createViewMatrix(camera));
+            System.out.println("VM:\n" + camera.getViewMatrix());
             System.out.println("TM:\n" + Maths.createTransformationMatrix(entity.getPosition(),
                     entity.getRx(), entity.getRy(), entity.getRz(), 1));
             f = false;
@@ -52,7 +53,7 @@ public class TestRender {
         TexturedModel texturedModel = entity.getModels().get(0);
         RawModel model = texturedModel.getRawModel();
         shader.loadProjectionMatrix(projectionMatrix);
-        shader.loadViewMatrix(camera);
+        shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadTransformationMatrix(Maths.createTransformationMatrix(entity.getPosition(),
                 entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale()));
         GL30.glBindVertexArray(model.getVaoID());

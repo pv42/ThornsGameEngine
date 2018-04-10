@@ -1,6 +1,7 @@
 package engine.graphics.lines;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.shaders.ShaderProgram;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
@@ -11,8 +12,8 @@ import org.joml.Matrix4f;
  */
 public class LineShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/engine/graphics/lines/lineVertexShader";
-    private static final String FRAGMENT_FILE = "src/engine/graphics/lines/lineFragmentShader";
+    private static final String VERTEX_FILE = "lineVertexShader";
+    private static final String FRAGMENT_FILE = "lineFragmentShader";
     private int location_transformationMatrix,
             location_projectionMatrix,
             location_viewMatrix,
@@ -39,7 +40,7 @@ public class LineShader extends ShaderProgram {
         super.loadMatrix(location_projectionMatrix,matrix);
     }
     public void loadViewMatrix(Camera camera) {
-        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+        Matrix4f viewMatrix = camera.getViewMatrix();
         super.loadMatrix(location_viewMatrix,viewMatrix);
     }
     public void loadColor(Color color) {

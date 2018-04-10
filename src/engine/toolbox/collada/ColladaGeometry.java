@@ -1,11 +1,9 @@
 package engine.toolbox.collada;
 
 import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
-import engine.graphics.textures.ModelTexture;
 import engine.toolbox.Log;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 import org.w3c.dom.Node;
 
 import java.util.HashMap;
@@ -20,6 +18,7 @@ public class ColladaGeometry extends ColladaPrimaryElement {
     private float[][] normal;
     private float[][] textureCoordinates;
     private int[] indices;
+    private int[] polylistIndicesBase;
     private String materialId;
 
     private ColladaGeometry(float[][] position, float[][] normal, float[][] textureCoordinates, int[] indices, String materialId) {
@@ -31,7 +30,7 @@ public class ColladaGeometry extends ColladaPrimaryElement {
     }
 
     public RawModel getRawModel() {
-        return Loader.loadToVAO(Util.get1DArray(position), Util.get1DArray(textureCoordinates), Util.get1DArray(normal), indices);
+        return Loader.loadToVAO(StorageFormatUtil.get1DArray(position), StorageFormatUtil.get1DArray(textureCoordinates), StorageFormatUtil.get1DArray(normal), indices);
     }
 
     int[] getIndices() {
@@ -132,7 +131,7 @@ public class ColladaGeometry extends ColladaPrimaryElement {
                         break;
                     case "NORMAL":
                     case "TEXCOORD":
-                        Log.e(TAG, "todo_readT");
+                        Log.e(TAG, "todo_readN/T");
                         break;
                     default:
                         Log.w(TAG, "unkn_T_semantic" + semantic);
@@ -212,12 +211,15 @@ public class ColladaGeometry extends ColladaPrimaryElement {
             float[][] norm = new float[primitive.length / numberOfInputs][3];
             float[][] uv = new float[primitive.length / numberOfInputs][2];
             int[] indices = new int[primitive.length / numberOfInputs];
+
             for (int i = 0; i < primitive.length / numberOfInputs; i++) {
                 pos[i] = geometry.getPosition()[primitive[numberOfInputs * i]];
                 norm[i] = normalData[primitive[numberOfInputs * i + 1]];
                 uv[i] = uvData[primitive[numberOfInputs * i + 2]];
                 indices[i] = i;
+
             }
+            geometry.setPolylistIndicesBase(primitive);
             geometry.setPosition(pos);
             geometry.setNormal(norm);
             geometry.setTextureCoordinates(uv);
@@ -226,5 +228,13 @@ public class ColladaGeometry extends ColladaPrimaryElement {
             Log.w(TAG, "p is not set");
         }
         return geometry;
+    }
+
+    public int[] getPolylistIndicesBase() {
+        return polylistIndicesBase;
+    }
+
+    private void setPolylistIndicesBase(int[] polylistIndicesBase) {
+        this.polylistIndicesBase = polylistIndicesBase;
     }
 }

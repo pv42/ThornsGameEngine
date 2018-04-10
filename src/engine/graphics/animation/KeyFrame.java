@@ -17,6 +17,7 @@ public class KeyFrame {
 
     public void addJointData(String name, Matrix4f data) {
         jointData.put(name,data);
+        data.transpose(); // todo move this
     }
 
     public Map<String, Matrix4f> getJointData() {

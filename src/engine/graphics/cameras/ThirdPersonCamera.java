@@ -5,7 +5,7 @@ import engine.graphics.entities.Player;
 /**
    Created by pv42 on 17.06.16.
  */
-public class ThirdPersonCamera  extends Camera{
+public class ThirdPersonCamera  extends ThreeDimensionCamera {
     private static float DISTANCE_MIN = 0;
     private static float DISTANCE_MAX = 100;
     private Player player;

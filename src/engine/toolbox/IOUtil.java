@@ -22,9 +22,7 @@ public class IOUtil {
         if (Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
                 buffer = createByteBuffer((int) fc.size() + 1);
-                while (fc.read(buffer) != -1) {
-                    ;
-                }
+                while (fc.read(buffer) != -1);
             }
         } else {
             try (

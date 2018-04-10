@@ -1,6 +1,6 @@
 package engine.inputs.clickAreas;
 
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.toolbox.Conversion;
 import engine.toolbox.Maths;
@@ -12,9 +12,9 @@ import org.joml.Vector3f;
  */
 public class ClickBox3D implements ClickArea {
     private float xmin,ymin,zmin,xmax,ymax,zmax;
-    private Camera camera;
+    private ThreeDimensionCamera camera;
     private Vector3f pA,pB,pC,pD,pE,pF,pG,pH, I = new Vector3f();
-    public ClickBox3D(Camera camera, Vector3f min, Vector3f max) {
+    public ClickBox3D(ThreeDimensionCamera camera, Vector3f min, Vector3f max) {
         this.camera = camera;
         xmin = min.x;
         ymin = min.y;
@@ -33,7 +33,7 @@ public class ClickBox3D implements ClickArea {
     }
     @Override
     public boolean isPointIn(Vector2f point) {
-        Vector3f v = Conversion.getWorldRay(point.x, point.y, MasterRenderer.getProjectionMatrix(), Maths.createViewMatrix(camera));
+        Vector3f v = Conversion.getWorldRay(point.x, point.y, MasterRenderer.getProjectionMatrix(), camera.getViewMatrix());
         //points;
         /*
              y
@@ -63,7 +63,7 @@ public class ClickBox3D implements ClickArea {
             if(i == 2) quad = new Vector3f[] {pA,pE,pH,pD};
             if(i == 3) quad = new Vector3f[] {pE,pF,pG,pH};
             if(i == 4) quad = new Vector3f[] {pD,pC,pG,pH};
-            if(i == 5) quad = new Vector3f[] {pB,pF,pG,pC};
+            if(i == 5) quad = new Vector3f[] {pB,pF,pG,pC}; //not necessary since any Point hits the box at least twice
             I = Maths.intersectLinePlane(camera.getPosition(),v,quad[0],quad[1],quad[2]);
             if(Maths.isPointInQuad(I,quad)) return true;
         }

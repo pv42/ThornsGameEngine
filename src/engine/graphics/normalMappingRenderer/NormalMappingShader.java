@@ -15,8 +15,8 @@ public class NormalMappingShader extends ShaderProgram{
 	
 	private static final int MAX_LIGHTS = 4;
 	
-	private static final String VERTEX_FILE = "src/engine/graphics/normalMappingRenderer/normalMapVShader.txt";
-	private static final String FRAGMENT_FILE = "src/engine/graphics/normalMappingRenderer/normalMapFShader.txt";
+	private static final String VERTEX_FILE = "normalMapVShader";
+	private static final String FRAGMENT_FILE = "normalMapFShader";
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
@@ -58,7 +58,6 @@ public class NormalMappingShader extends ShaderProgram{
 		location_plane = super.getUniformLocation("plane");
 		location_modelTexture = super.getUniformLocation("modelTexture");
 		location_normalMap = super.getUniformLocation("normalMap");
-		
 		location_lightPositionEyeSpace = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
 		location_attenuation = new int[MAX_LIGHTS];

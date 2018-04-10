@@ -1,6 +1,7 @@
 package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.models.RawModel;
 import engine.toolbox.Color;
 import org.lwjgl.opengl.GL11;

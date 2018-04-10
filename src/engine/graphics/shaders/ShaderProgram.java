@@ -8,6 +8,7 @@ import engine.toolbox.Log;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -19,6 +20,8 @@ import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
  * @author pv42
  */
 public abstract class ShaderProgram {
+    private static final String SHADER_LOCATION = "src/engine/graphics/shaders/glsl/";
+    private static final Object SHADER_NAME_EXTENSION = ".glsl";
     private int programID;
     private int vertexShaderID;
     private int fragmentShaderID;
@@ -26,12 +29,12 @@ public abstract class ShaderProgram {
 
     /**
      * creates a shader program from vertex and fragment file
-     * @param vertexFile vertex file location
-     * @param fragmentFile fragment file location
+     * @param vertexShaderName vertex file name
+     * @param fragmentShaderName fragment file name
      */
-    public ShaderProgram(String vertexFile, String fragmentFile) {
-        vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
-        fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
+    public ShaderProgram(String vertexShaderName, String fragmentShaderName) {
+        vertexShaderID = loadShader(vertexShaderName, GL20.GL_VERTEX_SHADER);
+        fragmentShaderID = loadShader(fragmentShaderName, GL20.GL_FRAGMENT_SHADER);
         programID = GL20.glCreateProgram();
         GL20.glAttachShader(programID, vertexShaderID);
         GL20.glAttachShader(programID, fragmentShaderID);
@@ -196,7 +199,7 @@ public abstract class ShaderProgram {
      * @param matrices matrices to load
      * @param size uniform array size, max amount of matrices to load
      */
-    protected void loadMatrixArray(int location, List<Matrix4f> matrices, int size) {
+    protected void loadMatrixArray(int location, List<? extends Matrix4f> matrices, int size) {
         float data[] = new float[size * 16];
         for(int i = 0; i < size; i++) {
             if(i < matrices.size()) {
@@ -208,32 +211,34 @@ public abstract class ShaderProgram {
 
     /**
      * compiles and loads a glsl shader
-     * @param file shader's source file path
+     * @param shaderName shader's source file path
      * @param type shader type e.g. vertex or fragment
      * @return the shaderID or 0 if the loading failed
      */
-    private static int loadShader(String file, int type) {
+    private static int loadShader(String shaderName, int type) {
         StringBuilder shaderSource = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            /* [IF IDE|*] */ BufferedReader reader = new BufferedReader(new FileReader(SHADER_LOCATION + shaderName + SHADER_NAME_EXTENSION));
+            /* [IF JAR]    BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    ClassLoader.getSystemResourceAsStream(SHADER_LOCATION + shaderName + SHADER_NAME_EXTENSION))); //*/
             String line;
             while ((line = reader.readLine()) != null) {
                 shaderSource.append(line).append("//\n");
             }
             reader.close();
         } catch (IOException e) {
-            Log.e("failed loading shader from '" + file + "'");
+            Log.e("failed loading shader from '" + shaderName + "'");
             return 0;
         }
         int shaderID = GL20.glCreateShader(type);
         GL20.glShaderSource(shaderID, shaderSource);
         GL20.glCompileShader(shaderID);
         if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-            Log.e("Could not compile shader : '" + file + "':");
+            Log.e("Could not compile shader : '" + shaderName + "':");
             System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
             return 0;
         }
-        Log.d("shader '" + file + "' loaded");
+        Log.d("shader '" + shaderName + "' loaded");
         return shaderID;
     }
 

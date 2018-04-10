@@ -10,7 +10,7 @@ public class InputLoop {
     public static void init(long windowID) {
         InputHandler.init(windowID);
     }
-    public void run () {
+    public static void run () {
         while (!finish) {
             loop();
         }
@@ -26,7 +26,7 @@ public class InputLoop {
         }
         if(!noNextEvent) loopHandle();
     }
-    public static void loopHandle() {
+    private static void loopHandle() {
         while(InputHandler.hasNextEvent() ) InputHandler.handleNextEvent();
     }
     public static void finish() {

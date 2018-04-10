@@ -1,6 +1,7 @@
 package engine.graphics.particles;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.models.RawModel;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
@@ -24,13 +25,12 @@ public class ParticleRenderer {
     private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH );
     private RawModel quad;
     private ParticleShader shader;
-    private Loader loader;
     private int vbo;
     private int pointer = 0;
     protected ParticleRenderer( Matrix4f projectionMatrix) {
          //quad ...
-        this.vbo = loader.createEmptyVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
-        quad = loader.loadToVAO(VERTECIS,2);
+        this.vbo = Loader.createEmptyVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
+        quad = Loader.loadToVAO(VERTECIS,2);
         Loader.addInstancesAttribute(quad.getVaoID(), vbo, 1 , 4, INSTANCE_DATA_LENGTH, 0);
         Loader.addInstancesAttribute(quad.getVaoID(), vbo, 2 , 4, INSTANCE_DATA_LENGTH, 4);
         Loader.addInstancesAttribute(quad.getVaoID(), vbo, 3 , 4, INSTANCE_DATA_LENGTH, 8);
@@ -43,7 +43,7 @@ public class ParticleRenderer {
         shader.stop();
     }
     protected void render (Map<ParticleTexture,List<Particle>> particles, Camera camera) {
-        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+        Matrix4f viewMatrix = camera.getViewMatrix();
         prepare();
         for (ParticleTexture texture: particles.keySet()) {
             bindTexture(texture); //// TODO: 23.06.16
@@ -54,7 +54,7 @@ public class ParticleRenderer {
                 updateModelViewMatrix(particle.getPosition(),particle.getRotation(),particle.getScale(),viewMatrix,vboData);
                 updateUVInfo(particle,vboData);
             }
-            loader.updateVbo(vbo,vboData,buffer);
+            Loader.updateVbo(vbo, vboData, buffer);
             GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP,0,quad.getVertexCount(),particleList.size());
         }
         finishrendering();

@@ -4,10 +4,7 @@ import engine.toolbox.Log;
 import org.joml.Matrix4f;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static engine.toolbox.collada.ColladaUtil.*;
 
@@ -40,7 +37,7 @@ public class ColladaVisualScene extends ColladaPrimaryElement{
     private static ColladaNode readNode(Node node, ColladaVisualScene scene) {
         String id = getAttribValue(node, "id");
         String name = getAttribValue(node, "name");
-        boolean isJoint = getAttribValue(node, "type").equals("JOINT");
+        boolean isJoint = Objects.equals(getAttribValue(node, "type"), "JOINT");
         String sid = getAttribValue(node, "sid");
         Matrix4f matrix = new Matrix4f().identity();
         List<ColladaNode> nodes = new ArrayList<>();

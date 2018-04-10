@@ -23,7 +23,7 @@ public class Window {
 
     private long id;
 
-    public static Window createWindow() {
+    public static Window createWindow() throws RuntimeException{
         Window window = new Window(GLFW.glfwCreateWindow(WIDTH,HEIGHT,TITLE, MemoryUtil.NULL,MemoryUtil.NULL));
         if(window.getId() == MemoryUtil.NULL) throw new IllegalStateException("Windows creation failed");
         window.makeCurrentContext();

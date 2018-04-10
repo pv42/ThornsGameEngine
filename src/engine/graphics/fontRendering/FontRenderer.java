@@ -4,7 +4,7 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.toolbox.Maths;
-import engine.toolbox.Util;
+import engine.toolbox.StorageFormatUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -62,10 +62,10 @@ public class FontRenderer {
         shader.loadBorderWidth(text.getBorderWidth());
         Vector2f position = new Vector2f(text.getPosition());
         if (text.isUsePosition3D()) {
-            Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-            Vector4f worldPosition = Util.getVector4f(text.getPosition3D());
+            Matrix4f viewMatrix = camera.getViewMatrix();
+            Vector4f worldPosition = StorageFormatUtil.getVector4f(text.getPosition3D());
             Vector4f positionToCamera = viewMatrix.transform(worldPosition, new Vector4f());
-            Vector2f positionOffset = Util.getVector2f(projectionMatrix.transform(positionToCamera, new Vector4f()));
+            Vector2f positionOffset = StorageFormatUtil.getVector2f(projectionMatrix.transform(positionToCamera, new Vector4f()));
             position.add(positionOffset, position);
             //todo !!
         }

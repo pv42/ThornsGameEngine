@@ -29,8 +29,8 @@ public class FirstPersonPlayer extends Player{
     private float heightAngle = 0;
     private Gun gun;
     private boolean sprinting;
-    public FirstPersonPlayer(List<TexturedModel> model, Vector3f position, float rx, float ry, float rz, float scale) {
-        super(model,position,rx,ry,rz,scale);
+    public FirstPersonPlayer(List<TexturedModel> model, Vector3f position) {
+        super(model,position);
         sprinting = false;
         registerEvents();
     }

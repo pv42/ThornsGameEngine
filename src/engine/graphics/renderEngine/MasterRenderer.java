@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import engine.graphics.cameras.Camera;
 import engine.graphics.display.DisplayManager;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
@@ -21,7 +22,7 @@ import engine.graphics.particles.ParticleMaster;
 import engine.graphics.terrains.TerrainShader;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.Terrain;
-import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.entities.Entity;
 import engine.graphics.lights.Light;
 
@@ -36,6 +37,8 @@ import org.joml.Vector4f;
 import static engine.toolbox.Settings.SKY_COLOR;
 
 public class MasterRenderer {
+    private static boolean enableSkybox = true;
+    private static boolean use2D;
     //default
     private static final String TAG = "Engine:MasterRenderer";
     private static Matrix4f projectionMatrix;
@@ -65,9 +68,10 @@ public class MasterRenderer {
     /**
      * initializes the MasterRender
      */
-    public static void init() {
+    public static void init( boolean use2D) {
         enableCulling();
-        createProjectionMatrix();
+        MasterRenderer.use2D = use2D;
+        createProjectionMatrix(use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
         normalRenderer = new NormalMappingRenderer(projectionMatrix);
@@ -81,13 +85,13 @@ public class MasterRenderer {
     }
 
     /**
-     * initializes the MasterRenderer with specific apspect ratio
+     * initializes the MasterRenderer with specific aspect ratio
      *
      * @param aspectRatio specific aspect ratio
      */
     public static void init(float aspectRatio) {
         enableCulling();
-        createProjectionMatrix(aspectRatio);
+        createProjectionMatrix(aspectRatio,use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
         normalRenderer = new NormalMappingRenderer(projectionMatrix);
@@ -105,7 +109,7 @@ public class MasterRenderer {
      * @param zoom factor to zoom (1 is default)
      */
     public static void updateZoom(float zoom) {
-        createProjectionMatrix(zoom);
+        createProjectionMatrix(zoom,use2D);
         entityRenderer.updateProjectionMatrix(projectionMatrix);
         aniRenderer.updateProjectionMatrix(projectionMatrix);
         normalRenderer.updateProjectionMatrix(projectionMatrix);
@@ -136,8 +140,7 @@ public class MasterRenderer {
         terrainRenderer.render(terrains, camera, lights);
         terT = Time.getNanoTime();
         //skybox
-        //todo enble skybox
-        skyboxRenderer.render(camera, SKY_COLOR);
+        if(enableSkybox) skyboxRenderer.render(camera, SKY_COLOR);
         skyT = Time.getNanoTime();
         //particles
         ParticleMaster.renderParticles(camera);
@@ -149,26 +152,37 @@ public class MasterRenderer {
         //text
         fontRenderer.render(texts, camera, projectionMatrix);
         guiT = Time.getNanoTime();
-        //cleanup
-        guis.clear();
-        terrains.clear();
-        entities.clear();
-        aniEntities.clear();
-        lineStripModels.clear();
-        //todo normalEntities.clear();
         texts.clear();
-        lights.clear();
         endT = Time.getNanoTime();
         double comT = 0.01 * (endT - startT);
 
         //System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
     }
 
-    public static void processTerrain(Terrain terrain) {
+    public void clearAll() {
+        guis.clear();
+        terrains.clear();
+        entities.clear();
+        aniEntities.clear();
+        lineStripModels.clear();
+        //todo normalEntities.clear();
+        lights.clear();
+    }
+
+    /**
+     * enables / disables the skybox
+     * @param enable state to set skybox enable
+     */
+    public static void enableSkybox(boolean enable) {
+        enableSkybox = enable;
+    }
+
+
+    public static void addTerrain(Terrain terrain) {
         terrains.add(terrain);
     }
 
-    public static void processEntity(Entity entity) {
+    public static void addEntity(Entity entity) {
         List<TexturedModel> entityModels = entity.getModels();
         if (true) {
             List<Entity> batch = entities.get(entityModels);
@@ -194,7 +208,7 @@ public class MasterRenderer {
         }
     }
 
-    public static void processAniEntity(Entity entity) {
+    public static void addAniEntity(Entity entity) {
         List<TexturedModel> entityModel = entity.getModels(); //// TODO: 10.08.16 ?
         List<Entity> batch = aniEntities.get(entityModel);
         if (batch != null) {
@@ -206,11 +220,11 @@ public class MasterRenderer {
         }
     }
 
-    public static void processLine(LineModel lineStripModel) {
+    public static void addLine(LineModel lineStripModel) {
         lineStripModels.add(lineStripModel);
     }
 
-    public static void processGui(GuiTexture gui) {
+    public static void addGui(GuiTexture gui) {
         guis.add(gui);
     }
 
@@ -234,15 +248,15 @@ public class MasterRenderer {
      *
      * @param zoom zooms factor
      */
-    private static void createProjectionMatrix(float zoom) {
-        createProjectionMatrix(getAspectRatio(), zoom);
+    private static void createProjectionMatrix(float zoom, boolean use2D) {
+        createProjectionMatrix(getAspectRatio(), zoom, use2D);
     }
 
     /**
      * creates the projectionMatrix
      */
-    private static void createProjectionMatrix() {
-        createProjectionMatrix(getAspectRatio(), 1);
+    private static void createProjectionMatrix(boolean use2D) {
+        createProjectionMatrix(getAspectRatio(), 1, use2D);
     }
 
     /**
@@ -251,7 +265,8 @@ public class MasterRenderer {
      * @param zoom        zooms factor
      * @param aspectRatio windows aspect ratio
      */
-    private static void createProjectionMatrix(float aspectRatio, float zoom) {
+    private static void createProjectionMatrix(float aspectRatio, float zoom, boolean use2D) {
+
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.FOV / zoom / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = Settings.FAR_PLANE - Settings.NEAR_PLANE;
@@ -259,6 +274,7 @@ public class MasterRenderer {
         projectionMatrix = new Matrix4f();
         projectionMatrix.m00(x_scale);
         projectionMatrix.m11(y_scale);
+        if(use2D) return;
         projectionMatrix.m22(-((Settings.FAR_PLANE + Settings.NEAR_PLANE) / frustum_length));
         projectionMatrix.m23(-1);
         projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));
@@ -298,7 +314,7 @@ public class MasterRenderer {
         textBatch.add(text);
     }
 
-    public static void processLight(Light light) {
+    public static void addLight(Light light) {
         lights.add(light);
     }
 
@@ -309,5 +325,9 @@ public class MasterRenderer {
      */
     public static float getAspectRatio() {
         return DisplayManager.getSize().x() / DisplayManager.getSize().y();
+    }
+
+    public static void setAmbientLight(float ambientLight) {
+        entityRenderer.setAmbientLight(ambientLight);
     }
 }
