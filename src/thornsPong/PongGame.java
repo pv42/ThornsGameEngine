@@ -4,7 +4,6 @@ import engine.graphics.display.DisplayManager;
 import engine.graphics.entities.Entity;
 import engine.physics.PhysicalEntity;
 import engine.physics.PhysicsEngine;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class PongGame {
@@ -14,8 +13,8 @@ public class PongGame {
     private static final float REFLECT_SIZE = 0.2f;
     private static final float MOVESTEP = 0.5f;
     private static final float BALL_SPEED = 1f;
-    private int score_left = 0;
-    private int score_right = 0;
+    private int leftScore = 0;
+    private int rightScore = 0;
     private Entity leftPaddle;
     private Entity rightPaddle;
     private PhysicalEntity ball;
@@ -44,41 +43,41 @@ public class PongGame {
         if(krd) moveRight(-MOVESTEP * timeStep);
         Vector3f ballPosition = ball.getPosition();
         if(ballPosition.x > GAME_X_SIZE/2) {
-            score_left ++;
+            leftScore++;
             resetBallAndPaddles();
         }
         if(ballPosition.x < - GAME_X_SIZE/2) {
-            score_right ++;
+            rightScore++;
             resetBallAndPaddles();
         }
     }
 
-    protected void flipPaused() {
+    void flipPaused() {
         paused = !paused;
     }
 
     private void moveLeft(float value) {
-        leftPaddle.increasePosition(0, value,0);
-        if(leftPaddle.getPosition().y() < REFLECT_SIZE /2 - GAME_Y_SIZE/2)
-            leftPaddle.setPositionElement(REFLECT_SIZE /2 - GAME_Y_SIZE/2, 1);
-        if(leftPaddle.getPosition().y() > -REFLECT_SIZE /2 + GAME_Y_SIZE/2)
-            leftPaddle.setPositionElement(- REFLECT_SIZE /2 + GAME_Y_SIZE/2, 1);
+        movePaddle(leftPaddle, value);
     }
 
     private void moveRight(float value) {
-        rightPaddle.increasePosition(0, value,0);
-        if(rightPaddle.getPosition().y() < REFLECT_SIZE /2 - GAME_Y_SIZE/2)
-            rightPaddle.setPositionElement(REFLECT_SIZE /2 - GAME_Y_SIZE/2, 1);
-        if(rightPaddle.getPosition().y() > -REFLECT_SIZE /2 + GAME_Y_SIZE/2)
-            rightPaddle.setPositionElement(- REFLECT_SIZE /2 + GAME_Y_SIZE/2,1);
+        movePaddle(rightPaddle, value);
     }
 
-    public int getScore_left() {
-        return score_left;
+    private void movePaddle(Entity paddle, float value) {
+        paddle.increasePosition(0, value,0);
+        if(paddle.getPosition().y() < REFLECT_SIZE /2 - GAME_Y_SIZE/2)
+            paddle.setPositionElement(REFLECT_SIZE /2 - GAME_Y_SIZE/2, 1);
+        if(paddle.getPosition().y() > -REFLECT_SIZE /2 + GAME_Y_SIZE/2)
+            paddle.setPositionElement(- REFLECT_SIZE /2 + GAME_Y_SIZE/2,1);
     }
 
-    public int getScore_right() {
-        return score_right;
+    public int getLeftScore() {
+        return leftScore;
+    }
+
+    public int getRightScore() {
+        return rightScore;
     }
 
 }

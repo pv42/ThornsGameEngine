@@ -1,23 +1,17 @@
 package engine.graphics.display;
 
 import engine.toolbox.Log;
-import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryUtil;
-import org.joml.Vector2f;
 
-import static engine.toolbox.Settings.*;
-import static engine.toolbox.Time.getTime;
+import static engine.toolbox.Time.getNanoTime;
 
 public class DisplayManager {
     private static final String TAG = "Engine:DisplayManager";
     private static long lastFrameEnd;
     private static float delta;
     private static Window activeWindow;
-    //private static Window window;
 
     /**
      * creates a GLFW window
@@ -26,7 +20,8 @@ public class DisplayManager {
      */
     public static Window createWindow() {
         Window window = Window.createWindow();
-        lastFrameEnd = getTime();
+        window.show();
+        lastFrameEnd = getNanoTime();
         Log.i(TAG,"Window created");
         Log.d(TAG, "windowId=" + window.getId());
         activeWindow = window;
@@ -47,8 +42,8 @@ public class DisplayManager {
     public static void updateDisplay(Window window) {
         GLFW.glfwSwapBuffers(window.getId());
         GLFW.glfwPollEvents();
-        long currentFrameTime = getTime();
-        delta = (currentFrameTime - lastFrameEnd)/1000f;
+        long currentFrameTime = getNanoTime();
+        delta = (currentFrameTime - lastFrameEnd)/1000000000f;
         lastFrameEnd = currentFrameTime;
     }
 
@@ -132,15 +127,6 @@ public class DisplayManager {
         Log.i(TAG,String.format("Display updated: %dx%d fs=%s", width, height, fullscreen));*/
         return true;
     }
-
-    /**
-     *  checks if the windows close was requested
-     * @return {@code true} if a close request was send to the GLFW window
-     */
-    public static boolean isCloseRequested() {
-        return false ;//window.isCloseRequested();
-    }
-
 
 
     /**

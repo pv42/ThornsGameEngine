@@ -1,5 +1,6 @@
 package engineTester.graphicTest;
 
+import engine.EngineMaster;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.entities.Entity;
@@ -15,11 +16,12 @@ import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import shivt.ShivtCamera;
-
+// todo fixme
 public class Main {
-    static boolean useEngine = true;
+    static boolean useEngine = false;
     public static void main(String args[]) {
-        Window window = DisplayManager.createWindow();
+        Window window = EngineMaster.init();
+
         TestRender renderer = null;
         if (useEngine) {
             MasterRenderer.init(false);
@@ -54,7 +56,7 @@ public class Main {
         ThreeDimensionCamera camera = new ShivtCamera();
         Entity e = new Entity(texturedModel, new Vector3f(0,12.5f,1f));
 
-        while (!DisplayManager.isCloseRequested()) {
+        while (!window.isCloseRequested()) {
             if (useEngine) {
                 MasterRenderer.addEntity(lara);
                 MasterRenderer.addEntity(e);
@@ -65,8 +67,8 @@ public class Main {
 
                 renderer.render(e, camera);
             }
-            window.destroy();
-            DisplayManager.destroy();
+            //window.destroy();
+            //DisplayManager.destroy();
         }
         if(useEngine) {
             MasterRenderer.cleanUp();

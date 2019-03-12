@@ -21,13 +21,12 @@ public class OBJLoader {
 
     public static RawModel loadObjModel(String filename) {
         FileReader fr;
-         try {
+        try {
              fr = new FileReader(new File("res/meshs/" + filename + ".obj"));
-         } catch (IOException e ){
+        } catch (IOException e ){
              Log.e("couldn't read OBJ '" + filename + "'");
-             e.printStackTrace();
              return new RawModel(0,0); //inv model with 0 vertices
-         }
+        }
         BufferedReader reader = new BufferedReader(fr);
         String line;
         List<Vector3f> vertices = new ArrayList<>();

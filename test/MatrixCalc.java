@@ -1,5 +1,3 @@
-package engineTester;
-
 import engine.toolbox.Maths;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

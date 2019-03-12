@@ -1,5 +1,3 @@
-package engineTester;
-
 import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.DisplayManager;
@@ -38,7 +36,7 @@ public class EngineGraphicsTest {
     private static Matrix4f projectionMatrix;
     private static int progress = 1;
     private static float time = 1;
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         //EngineMaster.init();
         //int texture = Loader.loadTexture("grass.png");
         //TexturedModel model = new TexturedModel(OBJLoader.loadObjModel("dragon"), new ModelTexture(texture));
@@ -62,6 +60,7 @@ public class EngineGraphicsTest {
 
         glClearColor(43f / 255f, 43f / 255f, 43f / 255f, 0f); // BG color
         RawModel rawModel = OBJLoader.loadObjModel("barrel");
+        //RawModel rawModel = OBJLoader.loadObjModel("bunny");
         createProjectionMatrix(1,1);
         EntityShader shader = new EntityShader();
         ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0,0,20), new Vector3f());
@@ -71,25 +70,23 @@ public class EngineGraphicsTest {
         ModelTexture texture = new ModelTexture(Loader.loadTexture("barrel.png"));
         TexturedModel texturedModel = new TexturedModel(rawModel,texture);
         Entity entity = new Entity(texturedModel,new Vector3f());
-        entity.setScale(.2f);
+        //entity.setScale(.2f);
+        entity.setPosition(0,-1,-1);
         prepareRenderer(shader,projectionMatrix);
         GL11.glEnable(GL_COLOR_BUFFER_BIT);
         GL11.glEnable(GL_DEPTH_TEST);
-        GL11.glDepthFunc(GL11.GL_GEQUAL);
+        GL11.glDepthFunc(GL_LEQUAL);
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             glClearDepth(1.0);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.1f,0.4f,0.7f, 0.5f);
-            entity.increaseRotation(.1f,.07f,.03f);
-
+            entity.increaseRotation(new Vector3f(.1f,.07f,.03f).mul(.1f));
             render(entity,shader,camera,lights);
-
             glfwSwapBuffers(window);
         }
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
-
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
@@ -108,17 +105,13 @@ public class EngineGraphicsTest {
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);
         shader.loadSkyColor(SKY_COLOR);
-
         prepareTexturedModel(entity.getModels().get(0), shader);
         shader.loadTransformationMatrix(Maths.createTransformationMatrix(entity.getPosition(),
                 entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale()));
         GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModels().get(0).getRawModel().getVertexCount(),
                     GL11.GL_UNSIGNED_INT, 0);
         unbindTexturedModel();
-
         shader.stop();
-        //
-
     }
 
     private static void unbindTexturedModel() {

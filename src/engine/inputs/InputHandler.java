@@ -31,32 +31,32 @@ public class InputHandler {
         GLFW.glfwSetCursorPosCallback(windowID, new GLFWCursorPosCallback() {
             @Override
             public void invoke(long l, double v, double v1) {
-                if(isMouseBound) eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getTime(),new Vector2f((float) v-mouseX,(float) v1-mouseY )));
-                else eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getTime(),new Vector2f((float) v,(float) v1 )));
+                if(isMouseBound) eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getMilliTime(),new Vector2f((float) v-mouseX,(float) v1-mouseY )));
+                else eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getMilliTime(),new Vector2f((float) v,(float) v1 )));
                 mouseX = (int)v;
                 mouseY = (int)v1;
             }
         });
-        /*GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
+        GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
-                eventQ.add(new InputEvent(MOUSE_EVENT,action,button, Time.getTime(),new Vector2f(mouseX,mouseY)));
+                eventQ.add(new InputEvent(MOUSE_EVENT,action,button, Time.getMilliTime(),new Vector2f(mouseX,mouseY)));
             }
         });
         GLFW.glfwSetKeyCallback(windowID, new GLFWKeyCallback() {
             @Override
             public void invoke(long windowID, int key, int scancode, int action, int mods) {
                 if(key != 0)  {
-                    eventQ.add(new InputEvent(KEY_EVENT,action,key, Time.getTime()));
+                    eventQ.add(new InputEvent(KEY_EVENT,action,key, Time.getMilliTime()));
                 }
             }
         });
         GLFW.glfwSetScrollCallback(windowID, new GLFWScrollCallback() {
             @Override
             public void invoke(long window, double xoffset, double yoffset) {
-                eventQ.add(new InputEvent(MOUSE_EVENT,SCROLL,0, Time.getTime(),new Vector2f((float) xoffset,(float) yoffset)));
+                eventQ.add(new InputEvent(MOUSE_EVENT,SCROLL,0, Time.getMilliTime(),new Vector2f((float) xoffset,(float) yoffset)));
             }
-        });*/
+        });
     }
     static boolean hasNextEvent() {
         return !eventQ.isEmpty();
@@ -86,7 +86,7 @@ public class InputHandler {
                 default:
                     type = "err";
             }
-            String data = "■";
+            String data;
             if (e.getEventSource() == InputEvent.MOUSE_EVENT)
                 data = e.getEventData() == 0 ? "L_MOUSE" : e.getEventData() == 1 ? "R_MOUSE" : "M_MOUSE";
             else data = GLFW.glfwGetKeyName(e.getEventData(), 0);

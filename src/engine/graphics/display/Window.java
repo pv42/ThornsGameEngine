@@ -1,8 +1,6 @@
 package engine.graphics.display;
 
-import engine.toolbox.Log;
-import org.joml.Vector2d;
-import org.joml.Vector2f;
+
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -13,7 +11,6 @@ import org.lwjgl.system.MemoryUtil;
 import static engine.toolbox.Settings.HEIGHT;
 import static engine.toolbox.Settings.LIMIT_FPS;
 import static engine.toolbox.Settings.WIDTH;
-import static engine.toolbox.Time.getTime;
 
 
 
@@ -23,21 +20,20 @@ public class Window {
 
     private long id;
 
-    public static Window createWindow() throws RuntimeException{
+    static Window createWindow() throws RuntimeException{
         Window window = new Window(GLFW.glfwCreateWindow(WIDTH,HEIGHT,TITLE, MemoryUtil.NULL,MemoryUtil.NULL));
         if(window.getId() == MemoryUtil.NULL){
             throw new IllegalStateException("Windows creation failed");
         }
         window.makeCurrentContext();
         GLFW.glfwSwapInterval(LIMIT_FPS);
-        window.show();
         GLCapabilities capabilities = GL.createCapabilities();
         GL11.glViewport(0,0,WIDTH,HEIGHT);
         GL11.glOrtho(0,WIDTH,HEIGHT, 0.0, -1.0, 1.0);
         return window;
     }
 
-    protected Window(long id) {
+    private Window(long id) {
         this.id = id;
     }
 

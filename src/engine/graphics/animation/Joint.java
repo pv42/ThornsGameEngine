@@ -1,13 +1,9 @@
 package engine.graphics.animation;
 
 import engine.toolbox.Log;
-import engineTester.Matrix4fDbg;
+import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by pv42 on 27.07.16.

@@ -108,11 +108,7 @@ public class Loader {
      * @return rawmodel
      */
     public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
-        int vaoID = createVAO();
-        bindIndicesBuffer(indices);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_NORMAL, 3, normals);
+        int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
         unbindVAO();
         return new RawModel(vaoID, indices.length);
     }
@@ -126,12 +122,8 @@ public class Loader {
      * @param indices indices array
      * @return rawmodel
      */
-    public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, float tangents[], int[] indices) {
-        int vaoID = createVAO();
-        bindIndicesBuffer(indices);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_NORMAL, 3, normals);
+    public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, float[] tangents, int[] indices) {
+        int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_TANGENTS, 3, tangents);
         unbindVAO();
         return new RawModel(vaoID, indices.length);
@@ -161,15 +153,20 @@ public class Loader {
      * @return rawmodel
      */
     public static RawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
+        int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_INDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
+        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
+        unbindVAO();
+        return new RawModel(vaoID, indices.length, joints);
+    }
+
+    private static int createTexturedLightedVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_NORMAL, 3, normals);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_INDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
-        storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
-        unbindVAO();
-        return new RawModel(vaoID, indices.length, joints);
+        return vaoID;
     }
 
     public static int createEmptyVbo(int floatCount) {

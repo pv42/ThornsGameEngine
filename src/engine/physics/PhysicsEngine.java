@@ -45,7 +45,7 @@ public class PhysicsEngine {
                         if(!physical0.isStatic()) physical0.setVelocity(vel.mul(physical1.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
                         if(!physical1.isStatic()) physical1.setVelocity(vel.mul(- physical0.getMass()/(physical0.getMass() + physical1.getMass()),new Vector3f()));
                     } else if(physical0.getCollisionType() == COLLISION_TYPE_INV_Y || physical1.getCollisionType() == COLLISION_TYPE_INV_Y) {
-                        Log.d(TAG, "Collision detected, performing inv_y hit");
+                        Log.d(TAG, "Collision detected, performing inv_y hit " +physical0.getPosition().y + "," +physical1.getPosition().y );
                         if(!physical0.isStatic()) physical0.getVelocity().y = - physical0.getVelocity().y;
                         if(!physical1.isStatic()) physical1.getVelocity().y = - physical1.getVelocity().y;
                     } else {

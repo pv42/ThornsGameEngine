@@ -37,7 +37,7 @@ public class EngineMaster {
         MasterRenderer.init(use2D);
         ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         InputLoop.init(window.getId());
-        //new Thread(InputLoop::run).start(); //starts input handling threat
+        new Thread(InputLoop::run).start(); //starts input handling threat
         return window;
     }
 

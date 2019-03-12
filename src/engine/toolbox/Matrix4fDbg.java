@@ -1,4 +1,4 @@
-package engineTester;
+package engine.toolbox;
 
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
@@ -20,6 +20,10 @@ public class Matrix4fDbg extends Matrix4f {
 
     public Matrix4fDbg(Matrix4fDbg matrix) {
         this(matrix, matrix.name);
+    }
+
+    public Matrix4fDbg() {
+        throw new UnsupportedOperationException();
     }
 
 

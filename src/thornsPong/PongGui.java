@@ -57,7 +57,7 @@ public class PongGui {
         PhysicalEntity leftPaddle = new PhysicalEntity(paddleModel, new Vector3f(),1);
         leftPaddle.setStatic(true);
         leftPaddle.setCollisionType(COLLISION_TYPE_PONG);
-        leftPaddle.setHitBox(paddleHitBox);;
+        leftPaddle.setHitBox(paddleHitBox);
         PhysicsEngine.addPhysical(leftPaddle);
         //right paddle
         PhysicalEntity rightPaddle = new PhysicalEntity(paddleModel, new Vector3f(),1);
@@ -82,7 +82,7 @@ public class PongGui {
         MasterRenderer.addEntity(leftPaddle);
         MasterRenderer.addEntity(rightPaddle);
         MasterRenderer.addEntity(ball);
-        while(!DisplayManager.isCloseRequested()) {
+        while(!DisplayManager.getActiveWindow().isCloseRequested()) {
             game.update(DisplayManager.getFrameTimeSeconds(),klu, kld, kru, krd,flipPause);
             MasterRenderer.render(camera,clipPlane);
             DisplayManager.updateDisplay(window);

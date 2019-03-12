@@ -30,7 +30,7 @@ public class AnimationTest {
         Camera camera = new ShivtCamera();
         InputHandler.init(window.getId());
         MasterRenderer.addEntity(entity);
-        while (!DisplayManager.isCloseRequested()) {
+        while (!DisplayManager.getActiveWindow().isCloseRequested()) {
             MasterRenderer.render(camera,new Vector4f());
             DisplayManager.updateDisplay(window);
             try {

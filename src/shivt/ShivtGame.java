@@ -35,7 +35,7 @@ public class ShivtGame {
         camera = new ShivtCamera();
         ShivtLevel level = ShivtLevel.readFromFile("test");
         RenderLevel renderLevel = new RenderLevel(level,Loader.loadFont("courier_df"));
-        while (!DisplayManager.isCloseRequested()) {
+        while (!DisplayManager.getActiveWindow().isCloseRequested()) {
             gameLoop.loop(renderLevel,camera);
             applyGameState();
         }
@@ -54,12 +54,7 @@ public class ShivtGame {
     private void mainMenu() {
         Button startBtn = new Button(new Vector2f(),new Vector2f(.7f,.3f),"start");
         guiClickController.addClickable(startBtn);
-        startBtn.addOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick() {
-                requestedGameState(GAME_STATE_LEVEL);
-            }
-        });
+        startBtn.addOnClickListener(() -> requestedGameState(GAME_STATE_LEVEL));
         gameLoop.addButton(startBtn);
     }
     private void loadLevel(int i) {
