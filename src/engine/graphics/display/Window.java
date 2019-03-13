@@ -26,6 +26,15 @@ public interface Window {
 
     void setSize(int width, int height);
 
+    void setTitle(String title);
+
     void setPosition(int x, int y);
+
+    /**
+     * returns the time between the last 2 frames displayed in seconds
+     *
+     * @return the time between the last 2 frames displayed in seconds
+     */
+    float getLastFrameTime();
 
 }

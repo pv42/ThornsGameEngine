@@ -1,12 +1,12 @@
 package engine.physics;
 
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.models.TexturedModel;
 import org.joml.Vector3f;
 
 import static engine.physics.PhysicsEngine.COLLISION_TYPE_ELASTIC;
 
-public class PhysicalEntity extends Entity implements Physical {
+public class PhysicalEntity extends GLEntity implements Physical {
     private Vector3f velocity = new Vector3f();
     private float mass;
     private boolean ignoreGravity = false;

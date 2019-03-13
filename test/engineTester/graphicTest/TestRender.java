@@ -1,8 +1,7 @@
 package engineTester.graphicTest;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.shaders.EntityShader;
@@ -42,7 +41,7 @@ public class TestRender {
         GL11.glClearColor(.4f,0.2f,0,1);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     }
-    public void render(Entity entity, Camera camera) {
+    public void render(GLEntity entity, Camera camera) {
         if(f) {
             System.out.println("VM:\n" + camera.getViewMatrix());
             System.out.println("TM:\n" + Maths.createTransformationMatrix(entity.getPosition(),

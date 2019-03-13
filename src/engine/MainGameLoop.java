@@ -1,13 +1,11 @@
 package engine;
 
-import engine.EngineMaster;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.Animator;
 import engine.graphics.cameras.FirstPersonCamera;
-import engine.graphics.display.DisplayManager;
-import engine.graphics.display.Window;
-import engine.graphics.entities.Entity;
-import engine.graphics.entities.FirstPersonPlayer;
+import engine.graphics.glglfwImplementation.display.GLFWWindow;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.guis.GuiTexture;
@@ -29,12 +27,10 @@ import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
-import engine.toolbox.Settings;
 import engine.toolbox.collada.Collada;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +47,7 @@ public class MainGameLoop {
     private static boolean onlineMode = false;
 
     public static void main(String args[]) {
-        Window window = EngineMaster.init();
+        GLFWWindow window = EngineMaster.init();
         InputHandler.addListener(new InputEventListener(InputEvent.MOUSE_EVENT, InputEvent.KEY_PRESS, InputEvent.L_MOUSE) {
             @Override
             public void onOccur() {
@@ -66,9 +62,9 @@ public class MainGameLoop {
         GUIText text = new GUIText("loading", FONT_SIZE, font, new Vector2f(0, 0), 1, false);
         text.setColor(0.3f, 0.3f, 0.4f);
         MasterRenderer.loadText(text);
-        List<Entity> entities = new ArrayList<>();
+        List<GLEntity> entities = new ArrayList<>();
         List<GuiTexture> guis = new ArrayList<>();
-        GuiTexture gui = new GuiTexture(Loader.loadTexture("cross.png"), new Vector2f(0f, 0f), new Vector2f(.04f, .04f));
+        GuiTexture gui = new GuiTexture(Loader.loadTexture("cross.png"), new Vector2f(0f, 0f), new Vector2f(.04f, .04f), window);
         guis.add(gui);
         TexturedModel texturedModel = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree"), new ModelTexture(Loader.loadTexture("lowPolyTree.png")));
         texturedModel.getTexture().setReflectivity(.1f);
@@ -91,12 +87,12 @@ public class MainGameLoop {
         for (int i = 0; i < 500; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
-            entities.add(new Entity(texturedModel2, new Vector3f(x, terrain.getHeightOfTerrain(x, z), z)));
+            entities.add(new GLEntity(texturedModel2, new Vector3f(x, terrain.getHeightOfTerrain(x, z), z)));
         }
         for (int i = 0; i < 300; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
-            Entity e = new Entity(texturedModel, new Vector3f(x, terrain.getHeightOfTerrain(x, z), z));
+            GLEntity e = new GLEntity(texturedModel, new Vector3f(x, terrain.getHeightOfTerrain(x, z), z));
             e.setScale(.8f);
             entities.add(e);
         }
@@ -106,12 +102,12 @@ public class MainGameLoop {
         Animation cowboyAnimation = cowboyCollada.getAnimation();
         Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
         List<TexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
-        Entity girl = new Entity(cowboy, new Vector3f(30, 20, 50));
+        GLEntity girl = new GLEntity(cowboy, new Vector3f(30, 20, 50));
         girl.setRx(-90);
         girl.setScale(5f);
         FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0, 0, 0), window);
         player.setScale(.8f);
-        Entity cube = new Entity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))), new Vector3f());
+        GLEntity cube = new GLEntity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))), new Vector3f());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;
@@ -128,7 +124,7 @@ public class MainGameLoop {
         entities.forEach(MasterRenderer::addEntity);
 
 
-        while (!DisplayManager.getActiveWindow().isCloseRequested()) { //actual MainGameLoop
+        while (!window.isCloseRequested()) { //actual MainGameLoop
             //game logic
             //FPS Updates
             if (timeSinceFPSUpdate >= 1.7f) {
@@ -140,22 +136,22 @@ public class MainGameLoop {
             }
             MasterRenderer.processText(text);
             //girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
-            player.move(terrain);
+            player.move(terrain, window.getLastFrameTime());
             camera.move();
-            particleSystem.generateParticles(new Vector3f(player.getEyePosition()));
-            ParticleMaster.update();
+            particleSystem.generateParticles(new Vector3f(player.getEyePosition()), window.getLastFrameTime());
+            ParticleMaster.update(window.getLastFrameTime());
             //animation
-            animationTime += DisplayManager.getFrameTimeSeconds() * 0.2;
+            animationTime += window.getLastFrameTime() * 0.2;
             animationTime %= 1;
             Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
             //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
             processFirstPersonPlayer(player);
 
-            MasterRenderer.render(camera, new Vector4f(0, -1, 0, 100000));
-            DisplayManager.updateDisplay(window);
+            MasterRenderer.render(camera);
+            window.update();
             //post render
-            timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
+            timeSinceFPSUpdate += window.getLastFrameTime();
             framesSinceFPSUpdate++;
         }
 

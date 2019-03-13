@@ -1,14 +1,12 @@
-package engine.graphics.entities;
+package engine.graphics.glglfwImplementation.entities;
 
-import engine.graphics.display.Window;
+import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.models.TexturedModel;
 import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
-import engine.toolbox.Log;
 import org.lwjgl.glfw.GLFW;
 import org.joml.Vector3f;
-import engine.graphics.display.DisplayManager;
 import engine.graphics.terrains.Terrain;
 import engine.toolbox.Settings;
 
@@ -28,27 +26,27 @@ public class FirstPersonPlayer extends Player{
     private float currentSideSpeed;
     private float heightAngle = 0;
     private boolean sprinting;
-    public FirstPersonPlayer(List<TexturedModel> model, Vector3f position, Window window) {
+    public FirstPersonPlayer(List<TexturedModel> model, Vector3f position, GLFWWindow window) {
         super(model,position);
         sprinting = false;
         registerEvents(window);
     }
     @Override
-    public void move(Terrain terrain) {
+    public void move(Terrain terrain, float timeDelta) {
         heightAngle = getRx();
         heightAngle = Math.max(Math.min(heightAngle,MAX_PITCH_ABS),-MAX_PITCH_ABS);
         float bothFact = 1;
         if(currentSideSpeed != 0 && currentSpeed != 0) {
             bothFact = 1f / (float) Math.sqrt(2);
         }
-        float distance = currentSpeed *( sprinting ? SPRINT_FACTOR : 1) * bothFact * DisplayManager.getFrameTimeSeconds();
+        float distance = currentSpeed *( sprinting ? SPRINT_FACTOR : 1) * bothFact * timeDelta;
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRy())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRy())));
-        float distanceSide = currentSideSpeed * ( sprinting ? SPRINT_FACTOR : 1) * bothFact * DisplayManager.getFrameTimeSeconds();
+        float distanceSide = currentSideSpeed * ( sprinting ? SPRINT_FACTOR : 1) * bothFact * timeDelta;
         dx += (float) (distanceSide * Math.cos(Math.toRadians(super.getRy())));
         dz -= (float) (distanceSide * Math.sin(Math.toRadians(super.getRy())));
-        upwardSpeed -= GRAVITY * DisplayManager.getFrameTimeSeconds();
-        super.increasePosition(dx, upwardSpeed * DisplayManager.getFrameTimeSeconds(), dz);
+        upwardSpeed -= GRAVITY * timeDelta; // todo move to physics
+        super.increasePosition(dx, upwardSpeed * timeDelta, dz);
         float terrainHeight = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
         if (getPosition().y < terrainHeight) {
             upwardSpeed = 0;
@@ -56,8 +54,8 @@ public class FirstPersonPlayer extends Player{
             isInAir = false;
         }
     }
-    private void registerEvents(Window window) {
-        DisplayManager.setMouseGrabbed(true, window);
+    private void registerEvents(GLFWWindow window) {
+        window.setMouseGrabbed(true, window);
         InputHandler.setMouseBound(true);
         InputHandler.setCursorListener((x, y) -> {
             // todo  implement

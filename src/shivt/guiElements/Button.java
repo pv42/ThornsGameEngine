@@ -1,5 +1,6 @@
 package shivt.guiElements;
 
+import engine.graphics.display.Window;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.guis.GuiTexture;
 import engine.inputs.Clickable;
@@ -32,9 +33,9 @@ public class Button extends Clickable {
         textClickColor = textColor;
         setListeners();
     }
-    public Button(Vector2f position, Vector2f scale,String text) {
-        super(new RectangleClickArea(Maths.getAreaFromPositionAndScale(position,scale))); //todo
-        this.gui = new GuiTexture(Loader.loadTexture("path_cs.png"),position,scale);
+    public Button(Vector2f position, Vector2f scale, String text, Window window) {
+        super(new RectangleClickArea(Maths.getAreaFromPositionAndScale(window, position,scale))); //todo
+        this.gui = new GuiTexture(Loader.loadTexture("path_cs.png"),position,scale, window);
         this.text = new GUIText(text,scale.y * 22,Loader.loadFont("courier_df"),new Vector2f(position.x,position.y),1,false);
         this.text.setColor(new Color(0.0,1.0,0.0));
         this.text.setBorderColor(0,1,0);

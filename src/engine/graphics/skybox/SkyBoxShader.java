@@ -1,13 +1,11 @@
 package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import engine.graphics.display.DisplayManager;
+import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.shaders.ShaderProgram;
-import engine.toolbox.Maths;
 
 /**
    Created by pv42 on 21.06.16.
@@ -40,12 +38,12 @@ public class SkyBoxShader extends ShaderProgram {
     protected void loadProjectionMatrix(Matrix4f projectionMatrix) {
         super.loadMatrix(location_projectionMatrix,projectionMatrix);
     }
-    protected void loadViewMatrix(Camera camera) {
+    protected void loadViewMatrix(Camera camera, float timeDelta) {
         Matrix4f matrix = camera.getViewMatrix();
         matrix.m30(0);
         matrix.m31(0);
         matrix.m32(0);
-        rotation += ROTATE_SPEED * DisplayManager.getFrameTimeSeconds();
+        rotation += ROTATE_SPEED * timeDelta;
         matrix.rotate((float) Math.toRadians(rotation), new Vector3f(0,1,0));
         super.loadMatrix(location_viewMatrix, matrix);
     }

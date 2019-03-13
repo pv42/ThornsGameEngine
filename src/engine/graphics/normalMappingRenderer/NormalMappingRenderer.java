@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL30;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
@@ -40,13 +40,13 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<Entity>> entities, Vector4f clipPlane, List<Light> lights, ThreeDimensionCamera camera) {
+	public void render(Map<TexturedModel, List<GLEntity>> entities, Vector4f clipPlane, List<Light> lights, ThreeDimensionCamera camera) {
 		shader.start();
 		prepare(clipPlane, lights, camera);
 		for (TexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
-			List<Entity> batch = entities.get(model);
-			for (Entity entity : batch) {
+			List<GLEntity> batch = entities.get(model);
+			for (GLEntity entity : batch) {
 				prepareInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
             }
@@ -88,7 +88,7 @@ public class NormalMappingRenderer {
 		GL30.glBindVertexArray(0);
 	}
 
-	private void prepareInstance(Entity entity) {
+	private void prepareInstance(GLEntity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRx(),
 				entity.getRy(), entity.getRz(), entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);

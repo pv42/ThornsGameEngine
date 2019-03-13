@@ -1,6 +1,6 @@
 package engine.graphics.cameras;
 
-import engine.graphics.entities.Player;
+import engine.graphics.glglfwImplementation.entities.Player;
 
 /**
    Created by pv42 on 17.06.16.

@@ -15,14 +15,14 @@ public class ParticleMaster {
     public static void init( Matrix4f projectionMatrix) {
         renderer = new ParticleRenderer(projectionMatrix);
     }
-    public static void update() {
+    public static void update(float timeDelta) {
         Iterator<Map.Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
         while (mapIterator.hasNext()) {
             List<Particle> list = mapIterator.next().getValue();
             Iterator<Particle> iterator = list.iterator();
             while (iterator.hasNext()) {
                 Particle p = iterator.next();
-                boolean stillAlive = p.update();
+                boolean stillAlive = p.update(timeDelta);
                 if(!stillAlive) {
                     iterator.remove();
                     if(list.isEmpty()) {

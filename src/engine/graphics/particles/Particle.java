@@ -3,7 +3,7 @@ package engine.graphics.particles;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import engine.graphics.display.DisplayManager;
+import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.toolbox.Settings;
 
 public class Particle {
@@ -45,13 +45,13 @@ public class Particle {
     public float getScale() {
         return scale;
     }
-    protected boolean update() {
-        velocity.y -= Settings.GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
+    protected boolean update(float timeDelta) {
+        velocity.y -= Settings.GRAVITY * gravityEffect * timeDelta;
         Vector3f change = new Vector3f(velocity);
-        change.mul(DisplayManager.getFrameTimeSeconds());
+        change.mul(timeDelta);
         position.add(change);
         updateTextureCoordsInfo();
-        elapsedTime += DisplayManager.getFrameTimeSeconds();
+        elapsedTime += timeDelta;
         return elapsedTime < lifeLength; //todo
     }
 

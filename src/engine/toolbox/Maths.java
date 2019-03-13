@@ -1,6 +1,7 @@
 package engine.toolbox;
 
 import engine.graphics.cameras.ThreeDimensionCamera;
+import engine.graphics.display.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -120,9 +121,9 @@ public class Maths {
         return new Vector3f(in.x / in.w, in.y / in.w, in.z / in.w);
     }
 
-    public static Vector4f getAreaFromPositionAndScale(Vector2f pos, Vector2f scale) {
-        Vector2f min = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.x() - scale.x(), pos.y() - scale.y()));
-        Vector2f max = Conversion.pixelFromOpenGLSpace2D(new Vector2f(pos.x() + scale.x(), pos.y() + scale.y()));
+    public static Vector4f getAreaFromPositionAndScale(Window window, Vector2f pos, Vector2f scale) {
+        Vector2f min = Conversion.pixelFromOpenGLSpace2D(window, new Vector2f(pos.x() - scale.x(), pos.y() - scale.y()));
+        Vector2f max = Conversion.pixelFromOpenGLSpace2D(window, new Vector2f(pos.x() + scale.x(), pos.y() + scale.y()));
         return new Vector4f(min.x, min.y, max.x, max.y);
     }
 }

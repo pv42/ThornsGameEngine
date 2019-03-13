@@ -2,12 +2,11 @@ package engine.graphics.renderEngine;
 
 import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.shaders.EntityShader;
-import engine.toolbox.Log;
 import engine.toolbox.Matrix4fDbg;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
@@ -48,13 +47,13 @@ public class EntityRenderer {
         shader.stop();
     }
 
-    public void render(Map<List<TexturedModel>, List<Entity>> entities, List<Light> lights, Camera camera) {
+    public void render(Map<List<TexturedModel>, List<GLEntity>> entities, List<Light> lights, Camera camera) {
         prepare(lights, camera);
         for (List<TexturedModel> models : entities.keySet()) {
             for (TexturedModel model : models) {
                 prepareTexturedModel(model);
-                List<Entity> batch = entities.get(models);
-                for (Entity entity : batch) {
+                List<GLEntity> batch = entities.get(models);
+                for (GLEntity entity : batch) {
                     prepareInstance(entity);
                     GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
                             GL11.GL_UNSIGNED_INT, 0);
@@ -83,9 +82,10 @@ public class EntityRenderer {
             GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_INDICES);
             GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT);
         }
+
         ModelTexture texture = model.getTexture();
         shader.loadUseAnimation(model.isAnimated());
-        shader.loadNumberOfRows(texture.getNumberOfRows());
+        shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
         if (texture.isHasTransparency()) {
             MasterRenderer.disableCulling();
         }
@@ -112,7 +112,7 @@ public class EntityRenderer {
 
     }
 
-    private void prepareInstance(Entity entity) {
+    private void prepareInstance(GLEntity entity) {
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(),
                 entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale());
         shader.loadTransformationMatrix(transformationMatrix);
@@ -155,7 +155,7 @@ public class EntityRenderer {
     }
 
     @Deprecated
-    public void render(Entity entity, EntityShader shader) {
+    public void render(GLEntity entity, EntityShader shader) {
         TexturedModel model = entity.getModels().get(0);
         RawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());

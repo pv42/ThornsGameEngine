@@ -1,8 +1,7 @@
-package engine.graphics.entities;
+package engine.graphics.glglfwImplementation.entities;
 
 import engine.graphics.models.TexturedModel;
 import org.joml.Vector3f;
-import engine.graphics.display.DisplayManager;
 import engine.graphics.terrains.Terrain;
 
 import java.util.List;
@@ -20,15 +19,15 @@ public class ThirdPersonPlayer extends Player{
         super(model,position);
     }
     @Override
-    public void move(Terrain terrain) {
+    public void move(Terrain terrain, float timeDelta) {
         checkInputs();
-        super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+        super.increaseRotation(0, currentTurnSpeed * timeDelta, 0);
+        float distance = currentSpeed * timeDelta;
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRy())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRy())));
-        upwardSpeed -= GRAVITY * DisplayManager.getFrameTimeSeconds();
+        upwardSpeed -= GRAVITY * timeDelta; // todo move to physics
 
-        super.increasePosition(dx, upwardSpeed * DisplayManager.getFrameTimeSeconds(), dz);
+        super.increasePosition(dx, upwardSpeed * timeDelta, dz);
         float terrainHeigt = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
         if (getPosition().y < terrainHeigt) { //todo !!!!!!
             upwardSpeed = 0;

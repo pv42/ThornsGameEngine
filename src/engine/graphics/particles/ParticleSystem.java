@@ -2,7 +2,7 @@ package engine.graphics.particles;
 
 import org.joml.Vector3f;
 
-import engine.graphics.display.DisplayManager;
+import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 
 public abstract class ParticleSystem {
 
@@ -18,9 +18,8 @@ public abstract class ParticleSystem {
         this.scale = scale;
     }
 
-    public void generateParticles(Vector3f systemCenter){
-        float delta = DisplayManager.getFrameTimeSeconds();
-        float particlesToCreate = pps * delta;
+    public void generateParticles(Vector3f systemCenter, float timeDelta){
+        float particlesToCreate = pps * timeDelta;
         int count = (int) Math.floor(particlesToCreate);
         float partialParticle = particlesToCreate % 1;
         for(int i=0;i<count;i++){

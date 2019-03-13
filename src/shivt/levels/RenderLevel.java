@@ -1,6 +1,6 @@
 package shivt.levels;
 
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
@@ -30,7 +30,7 @@ public class RenderLevel {
 
     public RenderLevel(ShivtLevel level, FontType font) {
         lines = new ArrayList<>();
-        List<Entity> entities = new ArrayList<>();
+        List<GLEntity> entities = new ArrayList<>();
         ends = new ArrayList<>();
         texts = new ArrayList<>();
         ParticleTexture pt = new ParticleTexture(Loader.loadTexture("frostfire.png"),4,true,true);
@@ -44,7 +44,7 @@ public class RenderLevel {
         for(Station station : level.getStations()) {
             TexturedModel texturedModel = new TexturedModel(OBJLoader.loadObjModel("spaceStation"),new ModelTexture(Loader.loadTexture("blue.png")));
             texturedModel.getTexture().setReflectivity(.1f);
-            Entity e = new Entity(texturedModel,station.getPosition());
+            GLEntity e = new GLEntity(texturedModel,station.getPosition());
             e.setScale(0.5f);
             entities.add(e);
             GUIText text = new GUIText(station.getTroopsStrength()  + "T",1,font,station.getPosition(),new Vector2f(1f,-1f),1,false);
@@ -56,11 +56,11 @@ public class RenderLevel {
         entities.forEach(MasterRenderer::addEntity);
         MasterRenderer.addLight(sun);
     }
-    public void process() {
+    public void process(float timeDelta) {
         for (int i = 0; i < lines.size(); i++) {
-            lines.get(i).generateParticles(ends.get(i));
+            lines.get(i).generateParticles(ends.get(i), timeDelta);
         }
-        ParticleMaster.update();
+        ParticleMaster.update(timeDelta);
         texts.forEach(MasterRenderer::processText);
     }
 }

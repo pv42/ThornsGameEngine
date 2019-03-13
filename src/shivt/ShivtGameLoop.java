@@ -2,10 +2,12 @@ package shivt;
 
 import engine.EngineMaster;
 import engine.graphics.cameras.ThreeDimensionCamera;
+import engine.graphics.display.Window;
+import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
+import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.inputs.InputLoop;
-import engine.graphics.display.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import org.joml.Vector2f;
@@ -13,7 +15,6 @@ import org.joml.Vector4f;
 import shivt.guiElements.Button;
 import shivt.levels.RenderLevel;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,9 @@ public class ShivtGameLoop {
     private float timeSinceFPSUpdate = 0;
     private int framesSinceFPSUpdate = 0;
     private GUIText fpsText;
-    private engine.graphics.display.Window window;
+    private Window window;
     public ShivtGameLoop() {
-        engine.graphics.display.Window window = EngineMaster.init();
+        Window window = EngineMaster.init();
         buttons = new ArrayList<>();
         FONT = Loader.loadFont("courier_df");
         fpsText = new GUIText("loading", 1, FONT, new Vector2f(0, 0), 1, false);
@@ -47,12 +48,12 @@ public class ShivtGameLoop {
             timeSinceFPSUpdate = 0;
             framesSinceFPSUpdate = 0;
         }
-        if(level != null) level.process();
+        if(level != null) level.process(window.getLastFrameTime());
         MasterRenderer.processText(fpsText);
         buttons.forEach(Button::processRender);
-        MasterRenderer.render( camera, new Vector4f(0, -1, 0, 100000));
-        DisplayManager.updateDisplay(window);
-        timeSinceFPSUpdate += DisplayManager.getFrameTimeSeconds();
+        MasterRenderer.render( camera);
+        window.update();
+        timeSinceFPSUpdate += window.getLastFrameTime();
         framesSinceFPSUpdate++;
         //System.out.println(Conversion.normalizedDeviceCoordsFromPixelCoods(Mouse.getX(), Mouse.getY()));
     }
@@ -66,5 +67,11 @@ public class ShivtGameLoop {
     void removeAll() {
         buttons.clear();
     }
+    boolean isCloseRequested() {
+        return window.isCloseRequested();
+    }
 
+    public Window getWindow() {
+        return window;
+    }
 }

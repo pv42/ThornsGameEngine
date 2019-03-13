@@ -17,13 +17,14 @@ public class Settings {
     private static final String CONFIG_FILE = "conf.ini";
     private static final String TAG = "Settings";
     //graphics
-    public static int LIMIT_FPS = 0;
-    public static int WIDTH = 600; //not fullscreen
-    public static int HEIGHT = 600;
+    public static int LIMIT_FPS = 0; // no limit
+    public static int DEFAULT_WIDTH = 600; //not fullscreen
+    public static int DEFAULT_HEIGHT = 600;
     public static int ANISOTROPIC_FILTERING = 1;
     public static int MAX_PARTICLE_INSTANCES = 10000;
     public static float AMBIENT_LIGHT = .1f;
     public static Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
+    public static Integer MSAA = 2;
     //environment
     public static final float GRAVITY = 10; //ms^-2
     //input
@@ -55,6 +56,7 @@ public class Settings {
     private static Ini ini;
     private static final String SECTION_GRAPHIC = "graphic";
     private static final String KEY_VSYNC = "vsync";
+    private static final String KEY_MSAA = "msaa";
     private static final String KEY_WIDTH = "width";
     private static final String KEY_HEIGHT = "height";
     private static final String KEY_ANIF = "anisotropic_filtering";
@@ -72,14 +74,15 @@ public class Settings {
         } else {
             Log.i(TAG,"settings don't exist creating");
         }
-        LIMIT_FPS      = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_VSYNC, LIMIT_FPS));
-        WIDTH          = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_WIDTH, WIDTH));
-        HEIGHT         = Integer.parseInt(    getSetting(SECTION_GRAPHIC, KEY_HEIGHT, HEIGHT));
+        MSAA = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MSAA, MSAA));
+        LIMIT_FPS      = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_VSYNC, LIMIT_FPS));
+        DEFAULT_WIDTH = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_WIDTH, DEFAULT_WIDTH));
+        DEFAULT_HEIGHT = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_HEIGHT, DEFAULT_HEIGHT));
         ANISOTROPIC_FILTERING = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_ANIF, ANISOTROPIC_FILTERING));
         MAX_PARTICLE_INSTANCES = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_MAX_PARTICLES, MAX_PARTICLE_INSTANCES));
-        AMBIENT_LIGHT  = Float.parseFloat(     getSetting(SECTION_GRAPHIC, KEY_AMBIENT, AMBIENT_LIGHT));
-        SHOW_DEBUG_LOG = Boolean.parseBoolean( getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
-        SHOW_EVENT_LOG = Boolean.parseBoolean( getSetting(SECTION_LOG, KEY_SEL, SHOW_EVENT_LOG));
+        AMBIENT_LIGHT  = Float.parseFloat(getSetting(SECTION_GRAPHIC, KEY_AMBIENT, AMBIENT_LIGHT));
+        SHOW_DEBUG_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
+        SHOW_EVENT_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SEL, SHOW_EVENT_LOG));
         Log.d(TAG,"loaded settings");
         storeIni(f);
 

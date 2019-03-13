@@ -1,11 +1,10 @@
-package engine.graphics.display;
+package engine.graphics.glglfwImplementation.display;
 
+import engine.graphics.display.DisplayManager;
 import engine.toolbox.Log;
-import engine.toolbox.Settings;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -17,8 +16,9 @@ import org.lwjgl.system.MemoryUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static engine.toolbox.Settings.DEFAULT_HEIGHT;
 import static engine.toolbox.Settings.MSAA;
-import static engine.toolbox.Time.getNanoTime;
+import static engine.toolbox.Settings.DEFAULT_WIDTH;
 import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
 import static org.lwjgl.opengl.GL13.GL_SAMPLES;
 
@@ -27,14 +27,14 @@ import static org.lwjgl.opengl.GL13.GL_SAMPLES;
  *
  * @author pv42
  */
-public class GLFWDisplayManager {
+public class GLFWDisplayManager implements DisplayManager {
     private static final String TAG = "Engine:DisplayManager";
     private static final String DEFAULT_TITLE = "Thorns";
-    private static int NV_BUFFER_USE_VRAM = 0x20071; // nVidia driver's OpenGL debug id for using vram for vaos
-    private static long lastFrameEnd;
-    private static float delta;
+    private static final int NV_BUFFER_USE_VRAM = 0x20071; // nVidia driver's OpenGL debug id for using vram for vaos
+    private static final boolean OPENGL_REDUCED_ERROR_OUTPUT = false; // requires more work
     private static List<GLFWWindow> windows = new ArrayList<>();
-    private static GLFWWindow activeWindow;
+    private static String lastOpenGLError;
+    private static int lastErrorCount;
 
     /**
      * initialize GLFW, setting up the error callback and some settings
@@ -42,7 +42,7 @@ public class GLFWDisplayManager {
     public GLFWDisplayManager() {
         GLFWErrorCallback.createPrint(System.err).set();
         if (!GLFW.glfwInit()) {
-            if (!GLFW.glfwInit()) throw new IllegalStateException("GLFW init failed");
+            throw new IllegalStateException("Couldn't initialize GLFW");
         }
         GLFW.glfwWindowHint(GLFW_SAMPLES, MSAA);
         Log.i(TAG, "initialized");
@@ -67,15 +67,22 @@ public class GLFWDisplayManager {
                  * address and length, freeing this memory is handled by openGL
                  */
                 String message = GLDebugMessageCallback.getMessage(length, msg);
-                if (id == NV_BUFFER_USE_VRAM) { // NVIDIA drives are quite chatty and provide how they store their VAOs
-                    Log.d("openGL", "from " + getGLDebugSourceString(source) + " in " + getGLDebugTypeString(type) +
-                            " (id:x" + Integer.toString(id, 16) + ") severity " + getGLDebugSeverityString(severity) +
-                            " : " + message);
+                String output = "from " + getGLDebugSourceString(source) + " in " + getGLDebugTypeString(type) +
+                        " (id:x" + Integer.toString(id, 16) + ") severity " + getGLDebugSeverityString(severity) +
+                        " : " + message;
+                if(output.equals(lastOpenGLError) && lastErrorCount < 255 && OPENGL_REDUCED_ERROR_OUTPUT) {
+                    lastErrorCount ++;
                 } else {
-                    Log.w("openGL", "from " + getGLDebugSourceString(source) + " in " + getGLDebugTypeString(type) +
-                            " (id:x" + Integer.toString(id, 16) + ") severity " + getGLDebugSeverityString(severity) +
-                            " : " + message);
+                    if(lastErrorCount > 1) Log.w("openGL", lastErrorCount + " more of the same error");
+                    lastOpenGLError = output;
+                    lastErrorCount = 1;
+                    if (id == NV_BUFFER_USE_VRAM) { // NVIDIA drives are quite chatty and provide how they store their VAOs
+                        Log.d("openGL", output);
+                    } else {
+                        Log.w("openGL", output);
+                    }
                 }
+
             }, 0);
         } else {
             Log.i(TAG, "openGL version < 4.3, disabling openGL debugs");
@@ -131,117 +138,6 @@ public class GLFWDisplayManager {
     }
 
     /**
-     * updates the windows
-     */
-    public static void updateDisplay(GLFWWindow window) {
-        GLFW.glfwSwapBuffers(window.getId());
-        GLFW.glfwPollEvents();
-        long currentFrameTime = getNanoTime();
-        delta = (currentFrameTime - lastFrameEnd) / 1000000000f;
-        lastFrameEnd = currentFrameTime;
-    }
-
-    /**
-     * destroys the GLFW context
-     */
-    public static void destroy() {
-        GLFW.glfwTerminate();
-        GLFW.glfwSetErrorCallback(null).free();
-        Log.i(TAG, "Display destroyed");
-        activeWindow = null;
-    }
-
-    /**
-     * gets the time between the last two display updates
-     *
-     * @return time between the last two updateDisplay() calls in s
-     */
-    public static float getFrameTimeSeconds() {
-        return delta;
-    }
-
-    @Deprecated
-    public static void printDisplayModes() {
-        long monitor = GLFW.glfwGetPrimaryMonitor();
-        GLFWVidMode.Buffer vmodes = GLFW.glfwGetVideoModes(monitor);
-        String modes = "";
-        for (int i = 0; i < vmodes.limit(); i++) {
-            GLFWVidMode vidMode = vmodes.get(i);
-            modes += vidMode.height() + "x" + vidMode.width() + "@" + vidMode.refreshRate() + "; ";
-        }
-        Log.d(TAG, "Monitor " + GLFW.glfwGetMonitorName(monitor) + " supports following vidModes:" + modes);
-    }
-
-    /**
-     * Updates the windows dimension and fullscreen state
-     *
-     * @return {@code true} if a valid setting was found.
-     */
-    public static boolean updateDisplayMode(int width, int height, boolean fullscreen) {
-        //todo implement
-        /*if (Display.getDisplayMode().getWidth() == width &&
-                Display.getDisplayMode().getHeight() == height &&
-                Display.isFullscreen() == fullscreen) return true;
-        try {
-            DisplayMode targetDM = null;
-            if(fullscreen) {
-                DisplayMode[] modes = Display.getAvailableDisplayModes();
-                int freq = 0;
-                for (int i = 0; i < modes.length; i++) {
-                    DisplayMode currentDM = modes[i];
-                    if (currentDM.getWidth() == width && currentDM.getHeight() == height) {
-                        if (targetDM == null || currentDM.getFrequency() >= freq) {
-                            if (targetDM == null || currentDM.getBitsPerPixel() >= targetDM.getBitsPerPixel()) {
-                                targetDM = currentDM;
-                                freq = currentDM.getFrequency();
-                            }
-                        }
-                        if (currentDM.getBitsPerPixel() == Display.getDesktopDisplayMode().getBitsPerPixel() &&
-                                currentDM.getFrequency() == Display.getDesktopDisplayMode().getFrequency()) {
-                            targetDM = currentDM;
-                            break;
-                        }
-                    }
-                }
-            } else {
-                targetDM = new DisplayMode(width,height);
-            }
-            if(targetDM == null) {
-                Log.w(TAG,"failed to find value mode: " + width + "x" + height  + ", fs=" + fullscreen);
-                return false;
-            }
-            Display.setDisplayMode(targetDM);
-            Display.setFullscreen(fullscreen);
-            Display.setTitle(TITLE);
-            if(MULTI_SAMPLE_ANTI_ALIASING > 1) GL11.glEnable(GL13.GL_MULTISAMPLE);
-        }catch (LWJGLException e) {
-            Log.e(TAG,"unable to  setup displaymode:");
-            e.printStackTrace();
-            return false;
-        }
-        Log.i(TAG,String.format("Display updated: %dx%d fs=%s", width, height, fullscreen));*/
-        return true;
-    }
-
-    /**
-     * (un-)grabbes the mouse
-     *
-     * @param b {@code false} enable the courser (default)
-     *          {@code true} disable the courser
-     */
-    public static void setMouseGrabbed(boolean b, GLFWWindow window) {
-        if (b) {
-            GLFW.glfwSetInputMode(window.getId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
-        } else {
-            GLFW.glfwSetInputMode(window.getId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-        }
-    }
-
-    public static GLFWWindow getActiveWindow() {
-        return activeWindow;
-    }
-
-    /**
      * creates a GLFW window
      *
      * @param height windows height in pxl
@@ -252,7 +148,7 @@ public class GLFWDisplayManager {
     public GLFWWindow createWindow(int width, int height, String title) throws IllegalStateException {
         long id = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
         if (id == MemoryUtil.NULL) {
-            throw new IllegalStateException("GLFWWindow creation failed");
+            throw new IllegalStateException("Window creation failed");
         }
         GLFWWindow window = new GLFWWindow(id, new Vector2i(width, height), this);
         GLFW.glfwMakeContextCurrent(id);
@@ -265,7 +161,7 @@ public class GLFWDisplayManager {
         }
         GL11.glViewport(0, 0, width, height);
         GL11.glOrtho(0, width, height, 0.0, -1.0, 1.0);
-        Log.i(TAG, "GLFWWindow created with MSAA x" + GL11.glGetInteger(GL_SAMPLES));
+        Log.i(TAG, "Window created with MSAA x" + GL11.glGetInteger(GL_SAMPLES));
         windows.add(window);
         return window;
     }
@@ -276,7 +172,7 @@ public class GLFWDisplayManager {
      * @return the created GLFW window
      */
     public GLFWWindow createWindow() throws IllegalStateException {
-        return createWindow(Settings.WIDTH, Settings.HEIGHT);
+        return createWindow(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     /**
@@ -290,5 +186,26 @@ public class GLFWDisplayManager {
         return createWindow(width, height, DEFAULT_TITLE);
     }
 
+    /**
+     * cleans up by destroying all windows and unbinding the error callback
+     */
+    public void cleanUp() {
+        for (GLFWWindow window : windows) {
+            window.destroyUnsafe();
+        }
+        windows.clear();
+        GLFW.glfwTerminate();
+        GL11.glDisable(GL43.GL_DEBUG_OUTPUT);
+        Log.i(TAG, "cleaned up");
+    }
 
+    /**
+     * removes window from the windows list, called if window is destroyed by Window.destroy, to prevent destroying it a
+     * second time, resulting in a crash
+     *
+     * @param window window to remove
+     */
+    void removeWindow(GLFWWindow window) {
+        windows.remove(window);
+    }
 }

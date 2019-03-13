@@ -2,29 +2,27 @@ package engineTester.graphicTest;
 
 import engine.EngineMaster;
 import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.display.Window;
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.display.GLFWWindow;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.display.DisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.textures.ModelTexture;
 import engine.inputs.InputHandler;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import shivt.ShivtCamera;
 // todo fixme
 public class Main {
     static boolean useEngine = false;
     public static void main(String args[]) {
-        Window window = EngineMaster.init();
+        GLFWWindow window = EngineMaster.init();
 
         TestRender renderer = null;
         if (useEngine) {
-            MasterRenderer.init(false);
+            MasterRenderer.init(window, false);
 
             ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         } else {
@@ -47,20 +45,20 @@ public class Main {
                 0, 0, 0
         };
         RawModel model = Loader.loadToVAO(vertices, textCoords, normal, indices);
-        Entity lara  = new Entity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
+        GLEntity lara  = new GLEntity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
         lara.setRx(80);
         int texture = Loader.loadTexture("Screen_Dust_D.png");
         ModelTexture modelTexture = new ModelTexture(texture);
         TexturedModel texturedModel = new TexturedModel(model, modelTexture);
 
         ThreeDimensionCamera camera = new ShivtCamera();
-        Entity e = new Entity(texturedModel, new Vector3f(0,12.5f,1f));
+        GLEntity e = new GLEntity(texturedModel, new Vector3f(0,12.5f,1f));
 
         while (!window.isCloseRequested()) {
             if (useEngine) {
                 MasterRenderer.addEntity(lara);
                 MasterRenderer.addEntity(e);
-                MasterRenderer.render(camera, new Vector4f(0, -1, 0, 100000));
+                MasterRenderer.render(camera);
             } else {
                 renderer.prepare();
                 renderer.render(lara, camera);
@@ -68,7 +66,7 @@ public class Main {
                 renderer.render(e, camera);
             }
             //window.destroy();
-            //DisplayManager.destroy();
+            //GLFWDisplayManager.destroy();
         }
         if(useEngine) {
             MasterRenderer.cleanUp();
@@ -78,7 +76,7 @@ public class Main {
         }
 
         window.destroy();
-        DisplayManager.destroy();
+        EngineMaster.finish();
 
     }
 }

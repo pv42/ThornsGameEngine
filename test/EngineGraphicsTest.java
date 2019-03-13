@@ -1,7 +1,7 @@
 import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.display.DisplayManager;
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
 import engine.toolbox.OBJLoader;
 import engine.graphics.models.RawModel;
@@ -27,7 +27,6 @@ import static engine.toolbox.Settings.SKY_COLOR;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBEasyFont.stb_easy_font_print;
 
 /**
  * Created by pv42 on 11.07.2017.
@@ -40,15 +39,15 @@ public class EngineGraphicsTest {
         //EngineMaster.init();
         //int texture = Loader.loadTexture("grass.png");
         //TexturedModel model = new TexturedModel(OBJLoader.loadObjModel("dragon"), new ModelTexture(texture));
-        //Entity entity = new Entity(model,new Vector3f(0,0,0),0,0,0,1);
+        //GLEntity entity = new GLEntity(model,new Vector3f(0,0,0),0,0,0,1);
         //ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(-10,0,0), new Vector3f(0,0,0));
         long window;
         GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint().set();
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
-        DisplayManager.init();
-        window = DisplayManager.createWindow().getId();
+        GLFWDisplayManager displayManager = new GLFWDisplayManager();
+        window = displayManager.createWindow().getId();
         //glMatrixMode(GL_PROJECTION);
         //glLoadIdentity();
         glMatrixMode(GL_MODELVIEW);
@@ -69,7 +68,7 @@ public class EngineGraphicsTest {
         lights.add(cameraLight);
         ModelTexture texture = new ModelTexture(Loader.loadTexture("barrel.png"));
         TexturedModel texturedModel = new TexturedModel(rawModel,texture);
-        Entity entity = new Entity(texturedModel,new Vector3f());
+        GLEntity entity = new GLEntity(texturedModel,new Vector3f());
         //entity.setScale(.2f);
         entity.setPosition(0,-1,-1);
         prepareRenderer(shader,projectionMatrix);
@@ -79,9 +78,9 @@ public class EngineGraphicsTest {
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
             glClearDepth(1.0);
-            glClear(GL_COLOR_BUFFER_BIT  | GL_DEPTH_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.1f,0.4f,0.7f, 0.5f);
-            entity.increaseRotation(new Vector3f(.1f,.07f,.03f).mul(.1f));
+            entity.increaseRotation(new Vector3f(.1f,.07f,.03f).mul(1.f));
             render(entity,shader,camera,lights);
             glfwSwapBuffers(window);
         }
@@ -100,7 +99,7 @@ public class EngineGraphicsTest {
 
 
 
-    public static void render(Entity entity, EntityShader shader, ThreeDimensionCamera camera, List<Light> lights) {
+    public static void render(GLEntity entity, EntityShader shader, ThreeDimensionCamera camera, List<Light> lights) {
         shader.start();
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);
@@ -124,8 +123,6 @@ public class EngineGraphicsTest {
         GL30.glBindVertexArray(0); //unbind vertex array
 
     }
-
-
 
     private static void bindTextures(ModelTexture modelTexture) {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);

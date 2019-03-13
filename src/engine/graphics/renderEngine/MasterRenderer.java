@@ -1,13 +1,8 @@
 package engine.graphics.renderEngine;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import engine.graphics.cameras.Camera;
-import engine.graphics.display.DisplayManager;
 import engine.graphics.display.Window;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.fontMeshCreator.TextMeshData;
@@ -15,32 +10,32 @@ import engine.graphics.fontRendering.FontRenderer;
 import engine.graphics.guis.GuiRenderer;
 import engine.graphics.guis.GuiShader;
 import engine.graphics.guis.GuiTexture;
-import engine.graphics.lines.LineRenderer;
+import engine.graphics.lights.Light;
 import engine.graphics.lines.LineModel;
+import engine.graphics.lines.LineRenderer;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.terrains.TerrainShader;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.Terrain;
-import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.entities.Entity;
-import engine.graphics.lights.Light;
-
+import engine.graphics.terrains.TerrainShader;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.Time;
-
-import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static engine.toolbox.Settings.SKY_COLOR;
 
 public class MasterRenderer {
-    private static boolean enableSkybox = true;
-    private static boolean use2D;
     //default
     private static final String TAG = "Engine:MasterRenderer";
+    private static boolean enableSkybox = true;
+    private static boolean use2D;
     private static Matrix4f projectionMatrix;
     //renderers
     private static EntityRenderer entityRenderer;
@@ -53,21 +48,24 @@ public class MasterRenderer {
     private static GuiShader guiShader = new GuiShader();
     private static FontRenderer fontRenderer;
     //rendering objects
-    private static Map<List<TexturedModel>, List<Entity>> entities = new HashMap<>();
-    private static Map<List<TexturedModel>, List<Entity>> aniEntities = new HashMap<>();
-    //private static Map<TexturedModel,List<Entity>> normalEntities = new HashMap<>();
+    private static Map<List<TexturedModel>, List<GLEntity>> entities = new HashMap<>();
+    private static Map<List<TexturedModel>, List<GLEntity>> aniEntities = new HashMap<>();
+    //private static Map<TexturedModel,List<GLEntity>> normalEntities = new HashMap<>();
     private static List<Terrain> terrains = new ArrayList<>();
     private static List<LineModel> lineStripModels = new ArrayList<>();
     private static List<GuiTexture> guis = new ArrayList<>();
     private static Map<FontType, List<GUIText>> texts = new HashMap<>();
     private static List<Light> lights;
+    //
+    private static Window window;
     //performance calc
     private static long startT, preT, entT, normT, terT, skyT, partT, guiT, endT;
 
     /**
      * initializes the MasterRender
      */
-    public static void init( boolean use2D) {
+    public static void init(Window window, boolean use2D) {
+        MasterRenderer.window = window;
         enableCulling();
         MasterRenderer.use2D = use2D;
         createProjectionMatrix(use2D);
@@ -85,18 +83,19 @@ public class MasterRenderer {
     /**
      * initializes the MasterRenderer with specific aspect ratio
      *
-     * @param aspectRatio specific aspect ratio
+     * @param window to render in
      */
-    public static void init(float aspectRatio) {
+    public static void init(Window window) {
+        MasterRenderer.window = window;
         enableCulling();
-        createProjectionMatrix(aspectRatio,use2D);
+        createProjectionMatrix(getAspectRatio(), use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
-        guiRenderer = new GuiRenderer(aspectRatio); // todo
-        fontRenderer = new FontRenderer(aspectRatio);
+        guiRenderer = new GuiRenderer(getAspectRatio()); // todo
+        fontRenderer = new FontRenderer(getAspectRatio());
 
         Log.i(TAG, " initialised");
     }
@@ -107,7 +106,7 @@ public class MasterRenderer {
      * @param zoom factor to zoom (1 is default)
      */
     public static void updateZoom(float zoom) {
-        createProjectionMatrix(zoom,use2D);
+        createProjectionMatrix(zoom, use2D);
         entityRenderer.updateProjectionMatrix(projectionMatrix);
         aniRenderer.updateProjectionMatrix(projectionMatrix);
         terrainRenderer.updateProjectionMatrix(projectionMatrix);
@@ -118,10 +117,9 @@ public class MasterRenderer {
     /**
      * Renders the scene
      *
-     * @param camera    camera to use for render
-     * @param clipPlane clipPlane for Water shading
+     * @param camera camera to use for render
      */
-    public static void render(Camera camera, Vector4f clipPlane) {
+    public static void render(Camera camera) {
         startT = Time.getNanoTime();
         prepare();
         preT = Time.getNanoTime();
@@ -137,7 +135,7 @@ public class MasterRenderer {
         terrainRenderer.render(terrains, camera, lights);
         terT = Time.getNanoTime();
         //skybox
-        if(enableSkybox) skyboxRenderer.render(camera, SKY_COLOR);
+        if (enableSkybox) skyboxRenderer.render(camera, SKY_COLOR, window.getLastFrameTime());
         skyT = Time.getNanoTime();
         //particles
         ParticleMaster.renderParticles(camera);
@@ -156,62 +154,52 @@ public class MasterRenderer {
         //System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
     }
 
-    public void clearAll() {
-        guis.clear();
-        terrains.clear();
-        entities.clear();
-        aniEntities.clear();
-        lineStripModels.clear();
-        //todo normalEntities.clear();
-        lights.clear();
-    }
-
     /**
      * enables / disables the skybox
+     *
      * @param enable state to set skybox enable
      */
     public static void enableSkybox(boolean enable) {
         enableSkybox = enable;
     }
 
-
     public static void addTerrain(Terrain terrain) {
         terrains.add(terrain);
     }
 
-    public static void addEntity(Entity entity) {
+    public static void addEntity(GLEntity entity) {
         List<TexturedModel> entityModels = entity.getModels();
         if (true) {
-            List<Entity> batch = entities.get(entityModels);
+            List<GLEntity> batch = entities.get(entityModels);
             if (batch != null) {
                 batch.add(entity);
             } else {
-                List<Entity> newBatch = new ArrayList<>();
+                List<GLEntity> newBatch = new ArrayList<>();
                 newBatch.add(entity);
                 entities.put(entityModels, newBatch);
             }
         } else {
             //todo normal entities
             /*
-            List<Entity> batch = normalEntities.get(entityModel);
+            List<GLEntity> batch = normalEntities.get(entityModel);
             if(batch!=null){
 
                 batch.add(entity);
             }else{
-                List<Entity> newBatch = new ArrayList<>();
+                List<GLEntity> newBatch = new ArrayList<>();
                 newBatch.add(entity);
                 normalEntities.put(entityModel, newBatch);
             }*/
         }
     }
 
-    public static void addAniEntity(Entity entity) {
+    public static void addAniEntity(GLEntity entity) {
         List<TexturedModel> entityModel = entity.getModels(); //// TODO: 10.08.16 ?
-        List<Entity> batch = aniEntities.get(entityModel);
+        List<GLEntity> batch = aniEntities.get(entityModel);
         if (batch != null) {
             batch.add(entity);
         } else {
-            List<Entity> newBatch = new ArrayList<>();
+            List<GLEntity> newBatch = new ArrayList<>();
             newBatch.add(entity);
             aniEntities.put(entityModel, newBatch);
         }
@@ -264,12 +252,12 @@ public class MasterRenderer {
     private static void createProjectionMatrix(float aspectRatio, float zoom, boolean use2D) {
 
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.FOV / zoom / 2f))));
-        float x_scale = y_scale * aspectRatio;
+        float x_scale = y_scale / aspectRatio;
         float frustum_length = Settings.FAR_PLANE - Settings.NEAR_PLANE;
         projectionMatrix = new Matrix4f();
         projectionMatrix.m00(x_scale);
         projectionMatrix.m11(y_scale);
-        if(use2D) return;
+        if (use2D) return;
         projectionMatrix.m22(-((Settings.FAR_PLANE + Settings.NEAR_PLANE) / frustum_length));
         projectionMatrix.m23(-1);
         projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));
@@ -319,10 +307,20 @@ public class MasterRenderer {
      * @return the current aspect ratio
      */
     public static float getAspectRatio() {
-        return (float)DisplayManager.getActiveWindow().getSize().x() / (float)DisplayManager.getActiveWindow().getSize().y();
+        return MasterRenderer.window.getAspectRatio();
     }
 
     public static void setAmbientLight(float ambientLight) {
         entityRenderer.setAmbientLight(ambientLight);
+    }
+
+    public void clearAll() {
+        guis.clear();
+        terrains.clear();
+        entities.clear();
+        aniEntities.clear();
+        lineStripModels.clear();
+        //todo normalEntities.clear();
+        lights.clear();
     }
 }

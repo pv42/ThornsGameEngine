@@ -1,16 +1,15 @@
-package engine.graphics.entities;
+package engine.graphics.glglfwImplementation.entities;
 
 import engine.graphics.models.TexturedModel;
 import org.joml.Vector3f;
 import engine.graphics.terrains.Terrain;
-import engine.toolbox.Settings;
 
 import java.util.List;
 
 /***
  * Created by pv42 on 20.06.16.
  */
-public abstract class Player extends Entity{
+public abstract class Player extends GLEntity {
     static final float RUN_SPEED = 30;
     static final float SPRINT_FACTOR = 1.5f;
     private static final float JUMP_POWER = 20;
@@ -22,7 +21,7 @@ public abstract class Player extends Entity{
 
     }
 
-    public abstract void move(Terrain terrain);
+    public abstract void move(Terrain terrain, float timeDelta);
     void jump() {
         if(!isInAir) {
             this.upwardSpeed = JUMP_POWER;

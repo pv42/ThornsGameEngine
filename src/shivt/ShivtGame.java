@@ -1,8 +1,7 @@
 package shivt;
 
 import engine.inputs.GuiClickController;
-import engine.inputs.listeners.OnClickListener;
-import engine.graphics.display.DisplayManager;
+import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Log;
 import org.joml.Vector2f;
@@ -35,7 +34,7 @@ public class ShivtGame {
         camera = new ShivtCamera();
         ShivtLevel level = ShivtLevel.readFromFile("test");
         RenderLevel renderLevel = new RenderLevel(level,Loader.loadFont("courier_df"));
-        while (!DisplayManager.getActiveWindow().isCloseRequested()) {
+        while (!gameLoop.isCloseRequested()) {
             gameLoop.loop(renderLevel,camera);
             applyGameState();
         }
@@ -52,14 +51,14 @@ public class ShivtGame {
         gameState = requestedGameState;
     }
     private void mainMenu() {
-        Button startBtn = new Button(new Vector2f(),new Vector2f(.7f,.3f),"start");
+        Button startBtn = new Button(new Vector2f(),new Vector2f(.7f,.3f),"start", gameLoop.getWindow());
         guiClickController.addClickable(startBtn);
         startBtn.addOnClickListener(() -> requestedGameState(GAME_STATE_LEVEL));
         gameLoop.addButton(startBtn);
     }
     private void loadLevel(int i) {
         gameLoop.removeAll();
-        Button menuBtn = new Button(new Vector2f(-.8f,-.8f),new Vector2f(0.1f,0.1f),"Menu");
+        Button menuBtn = new Button(new Vector2f(-.8f,-.8f),new Vector2f(0.1f,0.1f),"Menu", gameLoop.getWindow());
         gameLoop.addButton(menuBtn);
     }
 }
