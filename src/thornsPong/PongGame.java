@@ -1,7 +1,6 @@
 package thornsPong;
 
-import engine.graphics.display.DisplayManager;
-import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.physics.PhysicalEntity;
 import engine.physics.PhysicsEngine;
 import org.joml.Vector3f;
@@ -15,11 +14,11 @@ public class PongGame {
     private static final float BALL_SPEED = 1f;
     private int leftScore = 0;
     private int rightScore = 0;
-    private Entity leftPaddle;
-    private Entity rightPaddle;
+    private GLEntity leftPaddle;
+    private GLEntity rightPaddle;
     private PhysicalEntity ball;
     private boolean paused = false;
-    public PongGame(Entity rightPaddle, Entity leftPaddle, PhysicalEntity ball) {
+    public PongGame(GLEntity rightPaddle, GLEntity leftPaddle, PhysicalEntity ball) {
         this.leftPaddle = leftPaddle;
         this.rightPaddle = rightPaddle;
         this.ball = ball;
@@ -36,7 +35,7 @@ public class PongGame {
     protected void update(float timeStep, boolean klu, boolean kld, boolean kru, boolean krd, boolean flipPaused) {
         if(flipPaused) paused = !paused;
         if(paused) return;
-        PhysicsEngine.performStep(DisplayManager.getFrameTimeSeconds());
+        PhysicsEngine.performStep(timeStep);
         if(klu) moveLeft(MOVESTEP * timeStep);
         if(kld) moveLeft(-MOVESTEP * timeStep);
         if(kru) moveRight(MOVESTEP * timeStep);
@@ -64,7 +63,7 @@ public class PongGame {
         movePaddle(rightPaddle, value);
     }
 
-    private void movePaddle(Entity paddle, float value) {
+    private void movePaddle(GLEntity paddle, float value) {
         paddle.increasePosition(0, value,0);
         if(paddle.getPosition().y() < REFLECT_SIZE /2 - GAME_Y_SIZE/2)
             paddle.setPositionElement(REFLECT_SIZE /2 - GAME_Y_SIZE/2, 1);

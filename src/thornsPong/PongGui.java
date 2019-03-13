@@ -2,8 +2,8 @@ package thornsPong;
 
 import engine.EngineMaster;
 import engine.graphics.cameras.TwoDimensionsCamera;
-import engine.graphics.display.DisplayManager;
-import engine.graphics.display.Window;
+import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
+import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
@@ -34,7 +34,7 @@ public class PongGui {
     private boolean flipPause = false;
     private PongGame game;
     public PongGui() {
-        Window window = EngineMaster.init(true);
+        GLFWWindow window = EngineMaster.init(true);
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
         ModelTexture texture = new ModelTexture(Loader.loadTexture("white.png"));
         //boundings
@@ -72,7 +72,6 @@ public class PongGui {
         ball.setHitBox(ballHitBox);
         ball.setIgnoreGravity(true);
         PhysicsEngine.addPhysical(ball);
-        Vector4f clipPlane = new Vector4f();
         MasterRenderer.enableSkybox(false);
         game = new PongGame(leftPaddle, rightPaddle, ball);
         initEventListeners();
@@ -82,10 +81,10 @@ public class PongGui {
         MasterRenderer.addEntity(leftPaddle);
         MasterRenderer.addEntity(rightPaddle);
         MasterRenderer.addEntity(ball);
-        while(!DisplayManager.getActiveWindow().isCloseRequested()) {
-            game.update(DisplayManager.getFrameTimeSeconds(),klu, kld, kru, krd,flipPause);
-            MasterRenderer.render(camera,clipPlane);
-            DisplayManager.updateDisplay(window);
+        while(!window.isCloseRequested()) {
+            game.update(window.getLastFrameTime(),klu, kld, kru, krd,flipPause);
+            MasterRenderer.render(camera);
+            window.update();
         }
         EngineMaster.finish();
     }

@@ -1,5 +1,6 @@
 package engine.graphics.shaders;
 
+import engine.toolbox.Log;
 import engine.toolbox.Matrix4fDbg;
 import org.joml.Vector2f;
 
@@ -75,7 +76,7 @@ public class EntityShader extends Lighted3DShader {
      * @param numberOfRows the number of rows/cols the texture has
      */
     public void loadTextureAtlasNumberOfRows(int numberOfRows) {
-        super.loadFloat(location_numberOfRows, numberOfRows);
+        super.loadInt(location_numberOfRows, numberOfRows);
     }
 
     /**
@@ -99,12 +100,6 @@ public class EntityShader extends Lighted3DShader {
          super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 
-    /**
-     *
-     */
-    public void loadNumberOfRows(int numberOfRows) {
-        super.loadInt(location_numberOfRows, numberOfRows);
-    }
 
 
     /**

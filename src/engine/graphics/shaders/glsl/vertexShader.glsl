@@ -15,7 +15,7 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
 uniform float useFakeLightning;
-uniform float numberOfRows;
+uniform int numberOfRows;
 uniform vec2 offset;
 
 //animation:

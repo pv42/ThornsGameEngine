@@ -200,7 +200,7 @@ public abstract class ShaderProgram {
      * @param size uniform array size, max amount of matrices to load
      */
     protected void loadMatrixArray(int location, List<? extends Matrix4f> matrices, int size) {
-        float data[] = new float[size * 16];
+        float[] data = new float[size * 16];
         for(int i = 0; i < size; i++) {
             if(i < matrices.size()) {
                 matrices.get(i).get(data,i * 16);
