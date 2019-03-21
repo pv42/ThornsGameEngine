@@ -67,7 +67,7 @@ public class GLFWDisplayManager implements DisplayManager {
                  * address and length, freeing this memory is handled by openGL
                  */
                 String message = GLDebugMessageCallback.getMessage(length, msg);
-                String output = "from " + getGLDebugSourceString(source) + " in " + getGLDebugTypeString(type) +
+                String output = "from " + getGLDebugSourceString(source) + " type " + getGLDebugTypeString(type) +
                         " (id:x" + Integer.toString(id, 16) + ") severity " + getGLDebugSeverityString(severity) +
                         " : " + message;
                 if(output.equals(lastOpenGLError) && lastErrorCount < 255 && OPENGL_REDUCED_ERROR_OUTPUT) {
@@ -77,7 +77,8 @@ public class GLFWDisplayManager implements DisplayManager {
                     lastOpenGLError = output;
                     lastErrorCount = 1;
 
-                    if (severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION ||severity == GL43.GL_DEBUG_SEVERITY_LOW) {
+                    if (severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION || severity == GL43.GL_DEBUG_SEVERITY_LOW
+                            ||severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
                         if( id == NV_BUFFER_USE_VRAM) { // NVIDIA drives are quite chatty and provide how they store their VAOs
                             Log.d("openGL", output);
                         } else {
@@ -120,10 +121,11 @@ public class GLFWDisplayManager implements DisplayManager {
      */
     private static String getGLDebugTypeString(int type) {
         String typeStr = "x" + Integer.toString(type, 16);
-        if (type == GL43.GL_DEBUG_TYPE_ERROR) typeStr = "Error (" + typeStr + ")";
+        if (type == GL43.GL_DEBUG_TYPE_ERROR) typeStr = "error (" + typeStr + ")";
         if (type == GL43.GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR) typeStr = "deprecated (" + typeStr + ")";
         if (type == GL43.GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR) typeStr = "undefined (" + typeStr + ")";
-        if (type == GL43.GL_DEBUG_TYPE_OTHER) typeStr = "Other (" + typeStr + ")";
+        if (type == GL43.GL_DEBUG_TYPE_OTHER) typeStr = "other (" + typeStr + ")";
+        if (type == GL43.GL_DEBUG_TYPE_PERFORMANCE) typeStr = "performance (" + typeStr + ")";
         return typeStr;
     }
 

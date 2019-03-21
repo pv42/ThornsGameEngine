@@ -1,4 +1,4 @@
-package engine.graphics.renderEngine;
+package engine.graphics.glglfwImplementation.entities;
 
 import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
@@ -6,7 +6,9 @@ import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
+import engine.graphics.renderEngine.MasterRenderer;
 import engine.graphics.shaders.EntityShader;
+import engine.toolbox.Log;
 import engine.toolbox.Matrix4fDbg;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
@@ -28,12 +30,14 @@ import static engine.toolbox.Settings.SKY_COLOR;
 
 /***
  * Created by pv42 on 17.06.16.
+ *
+ * @author pv42
  */
-public class EntityRenderer {
+public class GLEntityRenderer {
     private EntityShader shader;
     private float ambientLight = AMBIENT_LIGHT;
 
-    public EntityRenderer(Matrix4f projectionMatrix) {
+    public GLEntityRenderer(Matrix4f projectionMatrix) {
         this.shader = new EntityShader();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -48,6 +52,7 @@ public class EntityRenderer {
     }
 
     public void render(Map<List<TexturedModel>, List<GLEntity>> entities, List<Light> lights, Camera camera) {
+        Log.i("ENTS", "= " + entities.size());
         prepare(lights, camera);
         for (List<TexturedModel> models : entities.keySet()) {
             for (TexturedModel model : models) {

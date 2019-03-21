@@ -14,7 +14,6 @@ import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.LinkedList;
 import java.util.List;

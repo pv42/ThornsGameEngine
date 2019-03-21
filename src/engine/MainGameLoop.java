@@ -4,11 +4,11 @@ import engine.graphics.animation.Animation;
 import engine.graphics.animation.Animator;
 import engine.graphics.cameras.FirstPersonCamera;
 import engine.graphics.entities.Entity;
-import engine.graphics.fontMeshCreator.FontType;
-import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.text.GLGuiText;
+import engine.graphics.glglfwImplementation.text.GLTTFont;
 import engine.graphics.guis.GuiTexture;
 import engine.graphics.lights.Light;
 import engine.graphics.models.TexturedModel;
@@ -44,7 +44,7 @@ import java.util.Random;
 public class MainGameLoop {
     private static final String FONT = "courier_df";
     private static final String TAG = "GameLoop";
-    private static final float FONT_SIZE = 1;
+    private static final float FONT_SIZE = 0.00005f;
 
     public static void main(String[] args) {
         GLFWWindow window = EngineMaster.init();
@@ -54,12 +54,12 @@ public class MainGameLoop {
                 Log.i("EVENT_TESTER", "It works");
             }
         });
+        window.setVSync(false);
         //todo AudioMaster.setListenerData();
-        FontType font = Loader.loadFont(FONT);
+        GLTTFont font = new GLTTFont("res/fonts/arial.ttf", 64);
         ParticleMaster.init(MasterRenderer.getProjectionMatrix());
-        GUIText text = new GUIText("loading", FONT_SIZE, font, new Vector2f(0, 0), 1, false);
-        text.setColor(0.3f, 0.3f, 0.4f);
-        MasterRenderer.loadText(text);
+        GLGuiText text = new GLGuiText(font, "loading", FONT_SIZE, new Color(0.3f, 0.3f, 0.4f), new Vector2f(0, 0));
+        MasterRenderer.addText(text);
         List<GLEntity> entities = new ArrayList<>();
         List<GuiTexture> guis = new ArrayList<>();
         GuiTexture gui = new GuiTexture(Loader.loadTexture("cross.png"), new Vector2f(0f, 0f), new Vector2f(.04f, .04f), window);
@@ -125,13 +125,10 @@ public class MainGameLoop {
             //game logic
             //FPS Updates
             if (timeSinceFPSUpdate >= 1.7f) {
-                text = new GUIText((int) (framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps", FONT_SIZE, font, new Vector2f(0f, 0f), 1, false);
-                text.setColor(1.0f, 1.0f, 0.0f);
-                MasterRenderer.loadText(text);
+                text.setString((int) (framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps");
                 timeSinceFPSUpdate = 0;
                 framesSinceFPSUpdate = 0;
             }
-            MasterRenderer.processText(text);
             //girl.getModels().get(0).getRawModel().getJoints().get(10).rotate(0.0f,0.03f,0);
             player.move(terrain, window.getLastFrameTime());
             camera.move();

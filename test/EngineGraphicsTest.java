@@ -3,6 +3,7 @@ import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
+import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
 import engine.graphics.models.RawModel;
 import engine.graphics.models.TexturedModel;
@@ -15,6 +16,7 @@ import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.junit.jupiter.api.Test;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static engine.toolbox.Settings.SKY_COLOR;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -35,7 +38,8 @@ public class EngineGraphicsTest {
     private static Matrix4f projectionMatrix;
     private static int progress = 1;
     private static float time = 1;
-    public static void main(String[] args) {
+    @Test
+    public void main() {
         //EngineMaster.init();
         //int texture = Loader.loadTexture("grass.png");
         //TexturedModel model = new TexturedModel(OBJLoader.loadObjModel("dragon"), new ModelTexture(texture));
@@ -75,7 +79,8 @@ public class EngineGraphicsTest {
         GL11.glEnable(GL_COLOR_BUFFER_BIT);
         GL11.glEnable(GL_DEPTH_TEST);
         GL11.glDepthFunc(GL_LEQUAL);
-        while (!glfwWindowShouldClose(window)) {
+        int count = 0;
+        while (!glfwWindowShouldClose(window) && count < 60) {
             glfwPollEvents();
             glClearDepth(1.0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -83,14 +88,18 @@ public class EngineGraphicsTest {
             entity.increaseRotation(new Vector3f(.1f,.07f,.03f).mul(1.f));
             render(entity,shader,camera,lights);
             glfwSwapBuffers(window);
+            count ++;
         }
+        displayManager.cleanUp();
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+        assertEquals(0, Log.getErrorNumber());
+        assertEquals(0, Log.getWarningNumber());
     }
 
-    private static void prepareRenderer(EntityShader shader, Matrix4f projectionMatrix) {
+    private void prepareRenderer(EntityShader shader, Matrix4f projectionMatrix) {
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextures();
@@ -99,7 +108,7 @@ public class EngineGraphicsTest {
 
 
 
-    public static void render(GLEntity entity, EntityShader shader, ThreeDimensionCamera camera, List<Light> lights) {
+    public void render(GLEntity entity, EntityShader shader, ThreeDimensionCamera camera, List<Light> lights) {
         shader.start();
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);
@@ -113,7 +122,7 @@ public class EngineGraphicsTest {
         shader.stop();
     }
 
-    private static void unbindTexturedModel() {
+    private void unbindTexturedModel() {
         MasterRenderer.enableCulling();
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
@@ -129,7 +138,7 @@ public class EngineGraphicsTest {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, modelTexture.getID());
     }
 
-    private static void createProjectionMatrix(float aspectRatio, float zoom) {
+    private void createProjectionMatrix(float aspectRatio, float zoom) {
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.FOV / zoom / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = Settings.FAR_PLANE - Settings.NEAR_PLANE;

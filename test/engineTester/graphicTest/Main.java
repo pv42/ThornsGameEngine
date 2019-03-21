@@ -16,7 +16,7 @@ import org.joml.Vector3f;
 import shivt.ShivtCamera;
 // todo fixme
 public class Main {
-    static boolean useEngine = false;
+    static boolean useEngine = true;
     public static void main(String args[]) {
         GLFWWindow window = EngineMaster.init();
 

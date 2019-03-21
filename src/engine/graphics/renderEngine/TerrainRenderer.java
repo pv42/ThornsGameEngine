@@ -6,6 +6,7 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.lights.Light;
 import engine.graphics.models.RawModel;
 
+import engine.toolbox.Log;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -37,6 +38,7 @@ public class TerrainRenderer {
     }
 
     public void render(List<Terrain> terrains, Camera camera, List<Light> lights) {
+        Log.i("TERA", "" + terrains.size());
         shader.start();
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);

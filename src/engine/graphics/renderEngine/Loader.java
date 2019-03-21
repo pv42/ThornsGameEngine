@@ -1,19 +1,26 @@
 package engine.graphics.renderEngine;
 
 import engine.graphics.animation.Joint;
-import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.lines.Line;
 import engine.graphics.lines.LineModel;
 import engine.graphics.models.RawModel;
-import engine.toolbox.*;
-import engine.toolbox.StorageFormatUtil;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.*;
-import org.lwjgl.stb.STBImage;
-import org.joml.Vector3f;
 import engine.graphics.textures.TextureData;
+import engine.toolbox.Log;
+import engine.toolbox.Settings;
+import engine.toolbox.StorageFormatUtil;
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL14;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL33;
+import org.lwjgl.stb.STBImage;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -21,7 +28,12 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_RGBA8;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
@@ -30,12 +42,12 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
  * Created by pv42 on 16.06.16.
  */
 public class Loader {
-    static final int VERTEX_ATTRIB_ARRAY_POSITION = 0;
-    static final int VERTEX_ATTRIB_ARRAY_UV = 1;
-    static final int VERTEX_ATTRIB_ARRAY_NORMAL = 2;
+    public static final int VERTEX_ATTRIB_ARRAY_POSITION = 0;
+    public static final int VERTEX_ATTRIB_ARRAY_UV = 1;
+    public static final int VERTEX_ATTRIB_ARRAY_NORMAL = 2;
+    public static final int VERTEX_ATTRIB_ARRAY_BONE_INDICES = 3; // todo both tangents and animation
+    public static final int VERTEX_ATTRIB_ARRAY_BONE_WEIGHT = 4;
     static final int VERTEX_ATTRIB_ARRAY_TANGENTS = 3;
-    static final int VERTEX_ATTRIB_ARRAY_BONE_INDICES = 3; // todo both tangents and animation
-    static final int VERTEX_ATTRIB_ARRAY_BONE_WEIGHT = 4;
     private static final float ANISOTROPIC_FILTERING = Settings.ANISOTROPIC_FILTERING;
     private static final String TAG = "Loader";
     private static List<Integer> vaos = new ArrayList<>();
@@ -44,6 +56,7 @@ public class Loader {
 
     /**
      * loads a rawmodel with only a position array in 2D or 3D
+     *
      * @param positions positions array
      * @param dimension coordinate dimension
      * @return rawmodel
@@ -57,8 +70,9 @@ public class Loader {
 
     /**
      * loads a rawmodel with positions and indices
+     *
      * @param positions positions array
-     * @param indices indices array
+     * @param indices   indices array
      * @return rawmodel
      */
     public static RawModel loadToVAO(float[] positions, int[] indices) {
@@ -71,8 +85,9 @@ public class Loader {
 
     /**
      * loads a rawmodel with positions and indices
+     *
      * @param positions positions array
-     * @param uv texture coordinates array
+     * @param uv        texture coordinates array
      * @return rawmodel
      */
     public static int loadToVAO(float[] positions, float[] uv) {
@@ -85,9 +100,10 @@ public class Loader {
 
     /**
      * loads a rawmodel with positions, texture coordinates and indices
+     *
      * @param positions positions array
-     * @param uv texture coordinates array
-     * @param indices indices array
+     * @param uv        texture coordinates array
+     * @param indices   indices array
      * @return rawmodel
      */
     public static RawModel loadToVAO(float[] positions, float[] uv, int[] indices) {
@@ -101,10 +117,11 @@ public class Loader {
 
     /**
      * loads a rawmodel with positions, texture coordinates, normals and indices
+     *
      * @param positions positions array
-     * @param uv texture coordinates array
-     * @param normals surface normal array
-     * @param indices indices array
+     * @param uv        texture coordinates array
+     * @param normals   surface normal array
+     * @param indices   indices array
      * @return rawmodel
      */
     public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
@@ -115,11 +132,12 @@ public class Loader {
 
     /**
      * loads a rawmodel with positions, texture coordinates, normals, tangents and indices
+     *
      * @param positions positions array
-     * @param uv texture coordinates array
-     * @param normals surface normal array
-     * @param tangents surface tangents array
-     * @param indices indices array
+     * @param uv        texture coordinates array
+     * @param normals   surface normal array
+     * @param tangents  surface tangents array
+     * @param indices   indices array
      * @return rawmodel
      */
     public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, float[] tangents, int[] indices) {
@@ -143,13 +161,14 @@ public class Loader {
 
     /**
      * loads a animated rawmodel with positions, texture coordinates, normals, boneIndices, boneWeights and indices
-     * @param positions positions array
-     * @param uv texture coordinates array
-     * @param normals surface normal array
+     *
+     * @param positions   positions array
+     * @param uv          texture coordinates array
+     * @param normals     surface normal array
      * @param boneIndices bone indices
-     * @param boneWeight bone weights for the indexed bones
-     * @param indices indices array
-     * @param joints list of the joints/bones to use
+     * @param boneWeight  bone weights for the indexed bones
+     * @param indices     indices array
+     * @param joints      list of the joints/bones to use
      * @return rawmodel
      */
     public static RawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
@@ -201,23 +220,25 @@ public class Loader {
 
     /**
      * loads a texture file to VRAM
+     *
      * @param fileName textures filename including extension
      * @return texture id
      */
     public static int loadTexture(String fileName) {
-        return loadTexture(fileName,true);
+        return loadTexture(fileName, true);
     }
 
     /**
      * loads a texture file to VRAM
+     *
      * @param fileName textures filename including extension
-     * @param flip if true flips the texture after loading
+     * @param flip     if true flips the texture after loading
      * @return texture id
      */
     public static int loadTexture(String fileName, boolean flip) {
-        if(fileName == null) {
+        if (fileName == null) {
             fileName = "white.png";
-            Log.w(TAG,"tried to load null texture");
+            Log.w(TAG, "tried to load null texture");
         }
         TextureData data;
         try {
@@ -269,7 +290,8 @@ public class Loader {
 
     /**
      * loads a cubemap texture for skyboxes
-     * @param textureFiles filenames without extensions, in order pos. X, neg. X, pos./neg. Y, pos./neg. Z
+     *
+     * @param textureFiles  filenames without extensions, in order pos. X, neg. X, pos./neg. Y, pos./neg. Z
      * @param fileExtension filenames file extensions like ".png"
      * @return texture id
      */
@@ -297,7 +319,8 @@ public class Loader {
 
     /**
      * loads a cubemap texture for skyboxes
-     * @param textureFile filename without extensions and postfix, the actual textures must be named filename + "_rt"/"_lf"/"_up"/"_dn"/"_bk"/"_ft"
+     *
+     * @param textureFile   filename without extensions and postfix, the actual textures must be named filename + "_rt"/"_lf"/"_up"/"_dn"/"_bk"/"_ft"
      * @param fileExtension filenames file extensions like ".png"
      * @return texture id
      */
@@ -308,18 +331,6 @@ public class Loader {
             fileNames[i] = textureFile + postfix[i];
         }
         return loadCubeMapTexture(fileNames, fileExtension);
-    }
-
-    public static FontType loadFont(String fontName) {
-        return new FontType(loadFontTexture(fontName + ".png"), new File("res/fonts/" + fontName + ".fnt"));
-    }
-
-    public static int loadFontTextureToVRAM(TextureData fontTexture) {
-        int texID = GL11.glGenTextures();
-        GL11.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, fontTexture.getWidth(), fontTexture.getHeight(),0,GL_R, GL_UNSIGNED_BYTE, fontTexture.getBuffer());
-        //TODO witch format should i use
-        textures.add(texID);
-        return texID;
     }
 
     private static TextureData decodeTextureFile(String fileName, boolean flip) throws FileNotFoundException {
@@ -336,6 +347,7 @@ public class Loader {
 
     /**
      * creates and binds a vertex array object
+     *
      * @return vao id
      */
     private static int createVAO() {

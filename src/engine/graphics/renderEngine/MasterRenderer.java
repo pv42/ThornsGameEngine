@@ -3,11 +3,10 @@ package engine.graphics.renderEngine;
 import engine.graphics.cameras.Camera;
 import engine.graphics.display.Window;
 import engine.graphics.entities.Entity;
-import engine.graphics.fontMeshCreator.FontType;
-import engine.graphics.fontMeshCreator.GUIText;
-import engine.graphics.fontMeshCreator.TextMeshData;
-import engine.graphics.fontRendering.FontRenderer;
+import engine.graphics.glglfwImplementation.entities.GLEntityRenderer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.text.GLGuiText;
+import engine.graphics.glglfwImplementation.text.GLTextRenderer;
 import engine.graphics.guis.GuiRenderer;
 import engine.graphics.guis.GuiShader;
 import engine.graphics.guis.GuiTexture;
@@ -39,15 +38,15 @@ public class MasterRenderer {
     private static boolean use2D;
     private static Matrix4f projectionMatrix;
     //renderers
-    private static EntityRenderer entityRenderer;
-    private static EntityRenderer aniRenderer;
+    private static GLEntityRenderer entityRenderer;
+    private static GLEntityRenderer aniRenderer;
     private static TerrainRenderer terrainRenderer;
     private static TerrainShader terrainShader;
     private static SkyboxRenderer skyboxRenderer;
     private static LineRenderer lineRenderer;
     private static GuiRenderer guiRenderer;
     private static GuiShader guiShader = new GuiShader();
-    private static FontRenderer fontRenderer;
+    private static GLTextRenderer textRenderer;
     //rendering objects
     private static Map<List<TexturedModel>, List<GLEntity>> entities = new HashMap<>();
     private static Map<List<TexturedModel>, List<GLEntity>> aniEntities = new HashMap<>();
@@ -55,7 +54,7 @@ public class MasterRenderer {
     private static List<Terrain> terrains = new ArrayList<>();
     private static List<LineModel> lineStripModels = new ArrayList<>();
     private static List<GuiTexture> guis = new ArrayList<>();
-    private static Map<FontType, List<GUIText>> texts = new HashMap<>();
+    private static List<GLGuiText> texts = new ArrayList<>();
     private static List<Light> lights;
     //
     private static Window window;
@@ -70,14 +69,14 @@ public class MasterRenderer {
         enableCulling();
         MasterRenderer.use2D = use2D;
         createProjectionMatrix(use2D);
-        entityRenderer = new EntityRenderer(projectionMatrix);
-        aniRenderer = new EntityRenderer(projectionMatrix);
+        entityRenderer = new GLEntityRenderer(projectionMatrix);
+        aniRenderer = new GLEntityRenderer(projectionMatrix);
         terrainShader = new TerrainShader();
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
         guiRenderer = new GuiRenderer(getAspectRatio()); // todo
-        fontRenderer = new FontRenderer(getAspectRatio());
+        textRenderer = new GLTextRenderer();
         lights = new ArrayList<>();
         Log.i(TAG, "initialised");
     }
@@ -91,14 +90,14 @@ public class MasterRenderer {
         MasterRenderer.window = window;
         enableCulling();
         createProjectionMatrix(getAspectRatio(), use2D);
-        entityRenderer = new EntityRenderer(projectionMatrix);
-        aniRenderer = new EntityRenderer(projectionMatrix);
+        entityRenderer = new GLEntityRenderer(projectionMatrix);
+        aniRenderer = new GLEntityRenderer(projectionMatrix);
         terrainShader = new TerrainShader();
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
         guiRenderer = new GuiRenderer(getAspectRatio()); // todo
-        fontRenderer = new FontRenderer(getAspectRatio());
+        textRenderer = new GLTextRenderer();
 
         Log.i(TAG, " initialised");
     }
@@ -148,9 +147,10 @@ public class MasterRenderer {
         //gui
         guiRenderer.render(guis);
         //text
-        fontRenderer.render(texts, camera, projectionMatrix);
+        for (GLGuiText text: texts) {
+            textRenderer.renderText(text, getAspectRatio());
+        }
         guiT = Time.getNanoTime();
-        texts.clear();
         endT = Time.getNanoTime();
         double comT = 0.01 * (endT - startT);
 
@@ -225,7 +225,7 @@ public class MasterRenderer {
         aniRenderer.cleanUp();
         terrainShader.cleanUp();
         guiShader.cleanUp();
-        fontRenderer.cleanUp();
+        textRenderer.cleanUp();
         skyboxRenderer.cleanUp();
         lineRenderer.cleanUp();
     }
@@ -291,18 +291,10 @@ public class MasterRenderer {
         GL11.glDisable(GL11.GL_CULL_FACE);
     }
 
-    public static void loadText(GUIText text) {
-        FontType font = text.getFont();
-        TextMeshData data = font.loadText(text);
-        int vao = Loader.loadToVAO(data.getVertexPositions(), data.getTextureCoords());
-        text.setMeshInfo(vao, data.getVertexCount());
+    public static void addText(GLGuiText text) {
+        texts.add(text);
     }
 
-    public static void processText(GUIText text) {
-        FontType font = text.getFont();
-        List<GUIText> textBatch = texts.computeIfAbsent(font, k -> new ArrayList<>());
-        textBatch.add(text);
-    }
 
     public static void addLight(Light light) {
         lights.add(light);
@@ -328,6 +320,7 @@ public class MasterRenderer {
         aniEntities.clear();
         lineStripModels.clear();
         //todo normalEntities.clear();
+        texts.clear();
         lights.clear();
     }
 }
