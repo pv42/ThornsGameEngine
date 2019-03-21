@@ -60,4 +60,8 @@ public class LineRenderer {
                 lineStripModel.getPosition(), lineStripModel.getRotation(), lineStripModel.getScale());
         shader.loadTransformationMatrix(transformationMatrix.mul(lineStripModel.getTransformation(),new Matrix4f()));
     }
+
+    public void cleanUp() {
+        shader.cleanUp();
+    }
 }

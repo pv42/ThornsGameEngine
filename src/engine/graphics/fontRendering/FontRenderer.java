@@ -19,6 +19,7 @@ import java.util.Map;
 /***
  * Created by pv42 on 21.06.16.
  */
+@Deprecated
 public class FontRenderer {
 
     private FontShader shader;

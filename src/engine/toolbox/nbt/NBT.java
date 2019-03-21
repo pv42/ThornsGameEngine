@@ -1,5 +1,6 @@
 package engine.toolbox.nbt;
 
+import engine.toolbox.Log;
 import shivt.levels.ShivtLevel;
 
 import java.io.*;
@@ -19,28 +20,24 @@ public class NBT {
         String f3 = "C:\\Users\\pv42\\Documents\\IDEA\\GameEngine\\test.nbt";
         //FileInputStream in = new FileInputStream(f1);
         //Log.i(read(in).toString());
-
         ShivtLevel.writeToFile("test", ShivtLevel.demoLevel());
+        Log.i("wrote");
         ShivtLevel l = ShivtLevel.readFromFile("test");
+        Log.i("read");
         System.out.println(l);
     }
-    public static Compound readFromFile(String path) throws FileNotFoundException {
+    public static Compound read(String path) throws IOException {
         return read(new FileInputStream(path));
     }
-    public static Compound read(InputStream in) {
-        try {
-            if(COMPRESS) {
-                GZIPInputStream gzipInputStream = new GZIPInputStream(in);
-                readType(gzipInputStream);
-                return readCompound(gzipInputStream, true);
-            } else {
-                readType(in);
-                return readCompound(in,true);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static Compound read(InputStream in) throws IOException {
+        if(COMPRESS) {
+            GZIPInputStream gzipInputStream = new GZIPInputStream(in);
+            readType(gzipInputStream);
+            return readCompound(gzipInputStream, true);
+        } else {
+            readType(in);
+            return readCompound(in,true);
         }
-        return null;
     }
     public static void write(Compound compound, OutputStream outputStream) {
         try {
@@ -264,7 +261,7 @@ public class NBT {
             out.writeInt(d);
         }
     }
-    private static void writeString(String data,OutputStream out) throws IOException {
+    private static void writeString(String data, OutputStream out) throws IOException {
         short length = (short) data.length();
         out.write((byte)(length/256));
         out.write((byte)(length%256));
@@ -272,7 +269,7 @@ public class NBT {
             out.write(data.charAt(i));
         }
     }
-    private static void writeList(NBTList data,DataOutputStream out) throws IOException {
+    private static void writeList(NBTList data, DataOutputStream out) throws IOException {
         byte dataType = data.getDataType();
         out.writeByte(dataType);
         out.writeInt(data.size());

@@ -22,23 +22,30 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class AudioMaster {
     private static final String TAG = "Engine:AudioMaster";
     private static List<Integer> buffers = new ArrayList<>();
-    private static ALCCapabilities alcCapabilities;
     private static long context;
     private static long device;
 
     public static void init() {
         Log.i(TAG, "initialising");
         try {
+            try {
+                ALC.getFunctionProvider(); //test if OpenAL is initialized
+
+            } catch (IllegalStateException ex) {
+                ALC.create();
+                Log.i(TAG, "reinitialized OpenAL");
+            }
             device = openDefaultDevice();
-            alcCapabilities = ALC.createCapabilities(device);
+            //ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
             context = ALC10.alcCreateContext(device, (IntBuffer)null);
             if (context == NULL) {
                 throw new IllegalStateException("Failed to create an OpenAL context.");
             }
             EXTThreadLocalContext.alcSetThreadContext(context);
-            AL.createCapabilities(alcCapabilities);
+            AL.createCapabilities(ALC.createCapabilities(device));
 
         } catch (Exception e) {
+            Log.e(TAG, "could not initialize audio");
             e.printStackTrace();
         }
     }
@@ -80,11 +87,20 @@ public class AudioMaster {
             AL10.alDeleteBuffers(buffer);
         }
         ALC10.alcCloseDevice(device);
+        ALC10.alcDestroyContext(context);
+
+        EXTThreadLocalContext.alcSetThreadContext(0);
         ALC.destroy();
     }
 
     private static long openDefaultDevice() {
-        long device = ALC10.alcOpenDevice((ByteBuffer) null);
+        long device;
+        try {
+             device = ALC10.alcOpenDevice((ByteBuffer) null);
+        } catch (NullPointerException ex) {
+            throw new IllegalStateException("Failed to open the default device.");
+        }
+        //long device = ALC10.alcOpenDevice("");
         if (device == NULL) {
             throw new IllegalStateException("Failed to open the default device.");
         }

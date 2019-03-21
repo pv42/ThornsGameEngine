@@ -8,14 +8,19 @@ import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.models.TexturedModel;
 import engine.graphics.renderEngine.MasterRenderer;
 import engine.inputs.InputHandler;
+import engine.toolbox.Log;
 import engine.toolbox.collada.Collada;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
+import org.junit.jupiter.api.Test;
 import shivt.ShivtCamera;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class AnimationTest {
-    public static void main(String args[]) {
+    @Test
+    void testAnimation() {
         GLFWWindow window = EngineMaster.init();
         Collada collada = ColladaLoader.loadCollada("cowboy");
         TexturedModel cowboyModel = collada.getTexturedModels().get(0);
@@ -24,7 +29,8 @@ public class AnimationTest {
         Camera camera = new ShivtCamera();
         InputHandler.init(window.getId());
         MasterRenderer.addEntity(entity);
-        while (!window.isCloseRequested()) {
+        int count = 0;
+        while (!window.isCloseRequested() && count < 10) {
             MasterRenderer.render(camera);
             window.update();
             try {
@@ -32,7 +38,11 @@ public class AnimationTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            count++;
         }
         EngineMaster.finish();
+        assertEquals(0, Log.getErrorNumber());
+        //TODO fix warnings
+        assertEquals(0, Log.getWarningNumber());
     }
 }

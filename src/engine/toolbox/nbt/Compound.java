@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by pv42 on 26.09.2016.
  */
-public class Compound  extends Tag<List<Tag>> {
+public class Compound extends Tag<List<Tag>> {
 
     public Compound() {
         super("", new ArrayList<>(), DATATYPE_COMPOUND);

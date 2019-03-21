@@ -2,11 +2,12 @@ package engine.graphics.renderEngine;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.display.Window;
-import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.entities.Entity;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
 import engine.graphics.fontMeshCreator.TextMeshData;
 import engine.graphics.fontRendering.FontRenderer;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.guis.GuiRenderer;
 import engine.graphics.guis.GuiShader;
 import engine.graphics.guis.GuiTexture;
@@ -41,7 +42,7 @@ public class MasterRenderer {
     private static EntityRenderer entityRenderer;
     private static EntityRenderer aniRenderer;
     private static TerrainRenderer terrainRenderer;
-    private static TerrainShader terrainShader = new TerrainShader();
+    private static TerrainShader terrainShader;
     private static SkyboxRenderer skyboxRenderer;
     private static LineRenderer lineRenderer;
     private static GuiRenderer guiRenderer;
@@ -71,6 +72,7 @@ public class MasterRenderer {
         createProjectionMatrix(use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
+        terrainShader = new TerrainShader();
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
@@ -91,6 +93,7 @@ public class MasterRenderer {
         createProjectionMatrix(getAspectRatio(), use2D);
         entityRenderer = new EntityRenderer(projectionMatrix);
         aniRenderer = new EntityRenderer(projectionMatrix);
+        terrainShader = new TerrainShader();
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
@@ -167,15 +170,19 @@ public class MasterRenderer {
         terrains.add(terrain);
     }
 
-    public static void addEntity(GLEntity entity) {
-        List<TexturedModel> entityModels = entity.getModels();
+    public static void addEntity(Entity entity) {
+        if (!(entity instanceof GLEntity)) {
+            throw new UnsupportedOperationException("Can't process none GL entities");
+        }
+        GLEntity glEntity = (GLEntity) entity;
+        List<TexturedModel> entityModels = glEntity.getModels();
         if (true) {
             List<GLEntity> batch = entities.get(entityModels);
             if (batch != null) {
-                batch.add(entity);
+                batch.add(glEntity);
             } else {
                 List<GLEntity> newBatch = new ArrayList<>();
-                newBatch.add(entity);
+                newBatch.add(glEntity);
                 entities.put(entityModels, newBatch);
             }
         } else {
@@ -219,6 +226,8 @@ public class MasterRenderer {
         terrainShader.cleanUp();
         guiShader.cleanUp();
         fontRenderer.cleanUp();
+        skyboxRenderer.cleanUp();
+        lineRenderer.cleanUp();
     }
 
     private static void prepare() {
@@ -250,7 +259,6 @@ public class MasterRenderer {
      * @param aspectRatio windows aspect ratio
      */
     private static void createProjectionMatrix(float aspectRatio, float zoom, boolean use2D) {
-
         float y_scale = (float) ((1f / Math.tan(Math.toRadians(Settings.FOV / zoom / 2f))));
         float x_scale = y_scale / aspectRatio;
         float frustum_length = Settings.FAR_PLANE - Settings.NEAR_PLANE;
@@ -262,7 +270,6 @@ public class MasterRenderer {
         projectionMatrix.m23(-1);
         projectionMatrix.m32(-((2 * Settings.NEAR_PLANE * Settings.FAR_PLANE) / frustum_length));
         projectionMatrix.m33(0);
-
     }
 
     public static Matrix4f getProjectionMatrix() {

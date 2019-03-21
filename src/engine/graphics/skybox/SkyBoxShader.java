@@ -2,6 +2,7 @@ package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
 import engine.toolbox.Color;
+import engine.toolbox.Log;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
@@ -13,6 +14,7 @@ import engine.graphics.shaders.ShaderProgram;
 public class SkyBoxShader extends ShaderProgram {
     private static final String FRAGMENT_FILE = "skyboxFragment";
     private static final String VERTEX_FILE = "skyboxVertex";
+    private static final String TAG = "skyboxshader";
     private final float ROTATE_SPEED = 0.5f;
     private int location_viewMatrix;
     private int location_projectionMatrix;
@@ -21,6 +23,7 @@ public class SkyBoxShader extends ShaderProgram {
     private float rotation = 0;
     public SkyBoxShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
+        Log.i(TAG, "loaded");
     }
 
     @Override

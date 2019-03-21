@@ -30,11 +30,11 @@ public class InputHandler {
         mouseY = 0;
         GLFW.glfwSetCursorPosCallback(windowID, new GLFWCursorPosCallback() {
             @Override
-            public void invoke(long l, double v, double v1) {
-                if(isMouseBound) eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getMilliTime(),new Vector2f((float) v-mouseX,(float) v1-mouseY )));
-                else eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getMilliTime(),new Vector2f((float) v,(float) v1 )));
-                mouseX = (int)v;
-                mouseY = (int)v1;
+            public void invoke(long l, double x, double y) {
+                if(isMouseBound) eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getMilliTime(),new Vector2f((float) x-mouseX,(float) y-mouseY )));
+                else eventQ.add(new InputEvent(MOUSE_EVENT,CURSOR_MOVE,0, Time.getMilliTime(),new Vector2f((float) x,(float) y)));
+                mouseX = (int)x;
+                mouseY = (int)y;
             }
         });
         GLFW.glfwSetMouseButtonCallback(windowID, new GLFWMouseButtonCallback() {
@@ -107,7 +107,7 @@ public class InputHandler {
 
     }
     public static void addListener(InputEventListener listener) {
-        // TODO: 12.09.2016 //
+
         listeners.put(listener.getDataID(), listener);
     }
     public static void setCursorListener(CursorListener cursorListener) {

@@ -76,8 +76,13 @@ public class GLFWDisplayManager implements DisplayManager {
                     if(lastErrorCount > 1) Log.w("openGL", lastErrorCount + " more of the same error");
                     lastOpenGLError = output;
                     lastErrorCount = 1;
-                    if (id == NV_BUFFER_USE_VRAM) { // NVIDIA drives are quite chatty and provide how they store their VAOs
-                        Log.d("openGL", output);
+
+                    if (severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION ||severity == GL43.GL_DEBUG_SEVERITY_LOW) {
+                        if( id == NV_BUFFER_USE_VRAM) { // NVIDIA drives are quite chatty and provide how they store their VAOs
+                            Log.d("openGL", output);
+                        } else {
+                            Log.i("openGL", output);
+                        }
                     } else {
                         Log.w("openGL", output);
                     }
@@ -133,7 +138,7 @@ public class GLFWDisplayManager implements DisplayManager {
         if (severity == GL43.GL_DEBUG_SEVERITY_HIGH) severityStr = "high(" + severityStr + ")";
         if (severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) severityStr = "medium(" + severityStr + ")";
         if (severity == GL43.GL_DEBUG_SEVERITY_LOW) severityStr = "low(" + severityStr + ")";
-        if (severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION) severityStr = "high (" + severityStr + ")";
+        if (severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION) severityStr = "notification (" + severityStr + ")";
         return severityStr;
     }
 
@@ -150,7 +155,7 @@ public class GLFWDisplayManager implements DisplayManager {
         if (id == MemoryUtil.NULL) {
             throw new IllegalStateException("Window creation failed");
         }
-        GLFWWindow window = new GLFWWindow(id, new Vector2i(width, height), this);
+        GLFWWindow window = new GLFWWindow(id, this);
         GLFW.glfwMakeContextCurrent(id);
         try {
             createGLContext();

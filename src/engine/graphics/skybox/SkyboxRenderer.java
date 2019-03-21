@@ -99,4 +99,7 @@ public class SkyboxRenderer {
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture);
     }
 
+    public void cleanUp() {
+        shader.cleanUp();
+    }
 }

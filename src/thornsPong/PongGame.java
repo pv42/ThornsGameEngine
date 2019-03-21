@@ -1,5 +1,6 @@
 package thornsPong;
 
+import engine.graphics.entities.Entity;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.physics.PhysicalEntity;
 import engine.physics.PhysicsEngine;
@@ -14,8 +15,8 @@ public class PongGame {
     private static final float BALL_SPEED = 1f;
     private int leftScore = 0;
     private int rightScore = 0;
-    private GLEntity leftPaddle;
-    private GLEntity rightPaddle;
+    private Entity leftPaddle;
+    private Entity rightPaddle;
     private PhysicalEntity ball;
     private boolean paused = false;
     public PongGame(GLEntity rightPaddle, GLEntity leftPaddle, PhysicalEntity ball) {
@@ -63,7 +64,7 @@ public class PongGame {
         movePaddle(rightPaddle, value);
     }
 
-    private void movePaddle(GLEntity paddle, float value) {
+    private void movePaddle(Entity paddle, float value) {
         paddle.increasePosition(0, value,0);
         if(paddle.getPosition().y() < REFLECT_SIZE /2 - GAME_Y_SIZE/2)
             paddle.setPositionElement(REFLECT_SIZE /2 - GAME_Y_SIZE/2, 1);

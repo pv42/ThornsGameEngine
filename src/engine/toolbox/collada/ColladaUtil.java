@@ -63,7 +63,7 @@ public class ColladaUtil {
     }
 
     static ColladaSource readSource(Node node) {
-        assert node==null;
+        // todo why was this here assert node==null;
         List<Node> dataSources = new ArrayList<>();// e.g. float_arrays
         for (Node n : getListFromNodeList(node.getChildNodes())) {
             if (n.getNodeName().equals("technique_common")) {

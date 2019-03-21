@@ -2,6 +2,7 @@ package thornsPong;
 
 import engine.EngineMaster;
 import engine.graphics.cameras.TwoDimensionsCamera;
+import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.models.TexturedModel;
@@ -34,7 +35,7 @@ public class PongGui {
     private boolean flipPause = false;
     private PongGame game;
     public PongGui() {
-        GLFWWindow window = EngineMaster.init(true);
+        Window window = EngineMaster.init(true);
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
         ModelTexture texture = new ModelTexture(Loader.loadTexture("white.png"));
         //boundings

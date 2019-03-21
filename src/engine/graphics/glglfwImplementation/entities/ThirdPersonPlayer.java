@@ -29,7 +29,7 @@ public class ThirdPersonPlayer extends Player{
 
         super.increasePosition(dx, upwardSpeed * timeDelta, dz);
         float terrainHeigt = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
-        if (getPosition().y < terrainHeigt) { //todo !!!!!!
+        if (getPosition().y < terrainHeigt) { //todo  (physics) !!!!!!
             upwardSpeed = 0;
             super.getPosition().y = terrainHeigt;
             isInAir = false;

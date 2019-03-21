@@ -9,6 +9,8 @@ public interface Entity {
     void setRx(float rx);
     void setRy(float ry);
     void setRz(float rz);
+    void setPositionElement(float value, int index);
+    void increasePosition(float x, float y, float z);
     Vector3f getPosition();
     float getScale();
     float getRx();

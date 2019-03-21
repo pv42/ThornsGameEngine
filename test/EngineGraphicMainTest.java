@@ -13,13 +13,18 @@ import engine.toolbox.Color;
 import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
 import org.joml.Vector3f;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class EngineGraphicMainTest {
-    public static void main(String[] args) {
+    @Test
+    void test() {
         GLFWWindow window = EngineMaster.init();
         window.setTitle("??");
         RawModel model = OBJLoader.loadObjModel("barrel");
@@ -37,11 +42,18 @@ public class EngineGraphicMainTest {
         MasterRenderer.disableCulling();
         lights.forEach(MasterRenderer::addLight);
         Log.i("MainTest", "start rendering");
-        while (!window.isCloseRequested()){
+        int iter = 0;
+
+        window.hide();
+        while (!window.isCloseRequested() && iter < 5){
             MasterRenderer.render(camera);
-            entity.increaseRotation(0.1f,0,0);
+            entity.increaseRotation(16f,10f,3f);
             window.update();
+            iter++;
         }
+        assertEquals(0, Log.getErrorNumber());
+        assertEquals(0, Log.getWarningNumber());
+        window.destroy();
         EngineMaster.finish();
     }
 }

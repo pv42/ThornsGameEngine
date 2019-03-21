@@ -1,5 +1,6 @@
 package engine.graphics.cameras;
 
+import org.jetbrains.annotations.Contract;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -13,7 +14,7 @@ public abstract class ThreeDimensionCamera implements Camera{
     private float roll = 0;
 
     @Override
-    public Matrix4f getViewMatrix() {
+    public final Matrix4f getViewMatrix() {
         Matrix4f viewMatrix = new Matrix4f();
         viewMatrix.identity();
         viewMatrix.rotate((float) Math.toRadians(pitch), new Vector3f(1, 0, 0));
@@ -25,16 +26,31 @@ public abstract class ThreeDimensionCamera implements Camera{
         return viewMatrix;
     }
 
-    public abstract void move();
 
-    public Vector3f getPosition() {
+    /**
+     * cameras tick method, does nothing per default
+     */
+    public void move() {
+
+    }
+
+    /**
+     * gets cameras position in world space
+     * @return cameras position
+     */
+    public final Vector3f getPosition() {
         return position;
     }
 
-    public float getPitch() {
+    /**
+     * gets the camera's pitch
+     * @return pitch
+     */
+    public final float getPitch() {
         return pitch;
     }
 
+    //TODO jdoc
     public float getYaw() {
         return yaw;
     }

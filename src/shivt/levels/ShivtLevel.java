@@ -1,5 +1,6 @@
 package shivt.levels;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.nbt.Compound;
@@ -66,7 +67,7 @@ public class ShivtLevel {
         try {
             nbt = NBT.read(new FileInputStream(String.format(LEVELS_SAVE_PATH, file)));
             Log.d(TAG, nbt.toString());
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         ShivtLevel shivtLevel = new ShivtLevel();

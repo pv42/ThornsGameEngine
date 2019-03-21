@@ -16,6 +16,7 @@ import engine.graphics.renderEngine.MasterRenderer;
  *
  */
 // had to change file to ignore kernings
+@Deprecated
 public class MetaFile {
 
 	private static final int PAD_TOP = 0;

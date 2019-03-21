@@ -2,6 +2,7 @@ package engine.graphics.shaders;
 
 import engine.graphics.lights.Light;
 import engine.toolbox.Color;
+import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -9,8 +10,13 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * a lighted 3 dimensional glsl shader program
+ * @author pv42
+ */
 public abstract class Lighted3DShader extends ShaderProgram {
     private static final int MAX_LIGHTS = 4;
+    private static final String TAG = "Lighted3DShader";
     private int location_transformationMatrix;
     private int location_projectionMatrix;
     private int location_viewMatrix;
@@ -41,16 +47,6 @@ public abstract class Lighted3DShader extends ShaderProgram {
         locations_lightPosition = super.getUniformLocation("lightPosition");
         locations_lightColor = super.getUniformLocation("lightColor");
         locations_attenuation = super.getUniformLocation("lightAttenuation");
-
-        /*super.getUniformLocationsArray("lightPosition", locations_lightPosition, MAX_LIGHTS);
-        super.getUniformLocationsArray("lightColor", locations_lightColor, MAX_LIGHTS);
-        super.getUniformLocationsArray("attenuation", locations_attenuation, MAX_LIGHTS);
-        */
-        /*for (int i = 0; i < 4; i++) {
-            locations_lightPosition[i] = super.getUniformLocation("lightPosition[" + i + "]");
-            locations_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
-            locations_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
-        }*///todo remove if getLoc...Arr.. works
         location_shineDamper = super.getUniformLocation("shineDamper");
         location_reflectivity = super.getUniformLocation("reflectivity");
         location_useFakeLightning = super.getUniformLocation("useFakeLightning");

@@ -1,8 +1,6 @@
 package engine.graphics.glglfwImplementation.display;
 
-
 import engine.graphics.display.Window;
-import engine.toolbox.Log;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -10,11 +8,8 @@ import org.lwjgl.opengl.GL11;
 
 import static engine.toolbox.Time.getNanoTime;
 
-
-//
-
 /**
- * A GLFW window Object
+ * A GLFW window
  *
  * @author pv42
  */
@@ -27,15 +22,17 @@ public class GLFWWindow implements Window {
     private long lastFrameTime;
 
     /**
-     * creates window object from a GLFW id
+     * creates window object from a GLFW id, should only be called from GLFWDisplayManager
      *
-     * @param id          windows id (from glfw)
-     * @param initialSize windows size
-     * @param manger      display manager who created this window
+     * @param id     windows id (from glfw)
+     * @param manger display manager who created this window
      */
-    GLFWWindow(long id, Vector2i initialSize, GLFWDisplayManager manger) {
+    GLFWWindow(long id, GLFWDisplayManager manger) {
         this.id = id;
-        size = initialSize;
+        int[] w = new int[1];
+        int[] h = new int[1];
+        GLFW.glfwGetWindowSize(id, w, h);
+        size = new Vector2i(w[0], h[0]);
         GLFW.glfwSetWindowSizeCallback(id, new GLFWWindowSizeCallback() {
             @Override
             public void invoke(long window, int width, int height) {
@@ -58,22 +55,49 @@ public class GLFWWindow implements Window {
     }
 
     /**
-     * shows the window
+     * Sets if vertical synchronisation should be use for the rendering, if enabled caps the framerate to the monitors
+     * frame rate.
+     *
+     * @param enable indicates if vsync should be enabled
      */
+    public void setVSync(boolean enable) {
+        if (enable) {
+            GLFW.glfwSwapInterval(1);
+        } else {
+            GLFW.glfwSwapInterval(0);
+        }
+    }
+
+    /**
+     * lets the window grab or release the mouse
+     *
+     * @param b      whether to grab or to release the mouse
+     * @param window window the grab the mouse in
+     */
+    public void setMouseGrabbed(boolean b, GLFWWindow window) {
+        if (b) {
+            GLFW.glfwSetInputMode(window.getId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        } else {
+            GLFW.glfwSetInputMode(window.getId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+        }
+    }
+
+    /**
+     * destroys window, do not use outside of destroy() and GLFWDisplayManger.cleanUp()
+     */
+    void destroyUnsafe() {
+        GLFW.glfwDestroyWindow(id);
+    }
+
+
     public void show() {
         GLFW.glfwShowWindow(id);
     }
 
-    /**
-     * hide the window
-     */
     public void hide() {
         GLFW.glfwHideWindow(id);
     }
 
-    /**
-     * destroys the window and removes it from the display managers window list
-     */
     public void destroy() {
         destroyUnsafe();
         manger.removeWindow(this);
@@ -106,64 +130,22 @@ public class GLFWWindow implements Window {
         lastFrameTime = currentFrameTime;
     }
 
-    /**
-     * gets the windows aspect ratio, calculated from width/height
-     *
-     * @return the windows aspect ration
-     */
+
     public float getAspectRatio() {
         return (float) size.x() / (float) size.y();
     }
 
-    /**
-     * gets the windows size
-     *
-     * @return windows size with x is width and y is height
-     */
     public Vector2i getSize() {
         return size;
     }
 
-    /**
-     * Sets if vertical synchronisation should be use for the rendering, if enabled caps the framerate to the monitors
-     * frame rate.
-     *
-     * @param enable indicates if vsync should be enabled
-     */
-    public void setVSync(boolean enable) {
-        if (enable) {
-            GLFW.glfwSwapInterval(1);
-        } else {
-            GLFW.glfwSwapInterval(0);
-        }
-    }
-
-    /**
-     * Sets the windows size
-     *
-     * @param width  windows width to set
-     * @param height windows height to set
-     */
     public void setSize(int width, int height) {
         size.set(width, height);
         GLFW.glfwSetWindowSize(id, width, height);
     }
 
-    /**
-     * Sets the windows position, this is aligned to the top left corner of the render area ignoring the windows padding
-     *
-     * @param x windows x position to set
-     * @param y windows y position to set
-     */
     public void setPosition(int x, int y) {
         GLFW.glfwSetWindowPos(id, x, y);
-    }
-
-    /**
-     * destroys window, do not use outside of destroy() and GLFWDisplayManger.cleanUp()
-     */
-    void destroyUnsafe() {
-        GLFW.glfwDestroyWindow(id);
     }
 
     /**
@@ -173,19 +155,6 @@ public class GLFWWindow implements Window {
      */
     public float getLastFrameTime() {
         return frameDelta;
-    }
-
-    /**
-     * lets the window grab or release the mouse
-     * @param b whether to grab or to release the mouse
-     * @param window window the grab the mouse in
-     */
-    public void setMouseGrabbed(boolean b, GLFWWindow window) {
-        if(b) {
-            GLFW.glfwSetInputMode(window.getId(),GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_DISABLED);
-        } else {
-            GLFW.glfwSetInputMode(window.getId(),GLFW.GLFW_CURSOR,GLFW.GLFW_CURSOR_NORMAL);
-        }
     }
 
     public void setTitle(String title) {

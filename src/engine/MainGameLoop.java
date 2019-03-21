@@ -3,11 +3,12 @@ package engine;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.Animator;
 import engine.graphics.cameras.FirstPersonCamera;
-import engine.graphics.glglfwImplementation.display.GLFWWindow;
-import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
+import engine.graphics.entities.Entity;
 import engine.graphics.fontMeshCreator.FontType;
 import engine.graphics.fontMeshCreator.GUIText;
+import engine.graphics.glglfwImplementation.display.GLFWWindow;
+import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
+import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.guis.GuiTexture;
 import engine.graphics.lights.Light;
 import engine.graphics.models.TexturedModel;
@@ -44,9 +45,8 @@ public class MainGameLoop {
     private static final String FONT = "courier_df";
     private static final String TAG = "GameLoop";
     private static final float FONT_SIZE = 1;
-    private static boolean onlineMode = false;
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         GLFWWindow window = EngineMaster.init();
         InputHandler.addListener(new InputEventListener(InputEvent.MOUSE_EVENT, InputEvent.KEY_PRESS, InputEvent.L_MOUSE) {
             @Override
@@ -55,8 +55,6 @@ public class MainGameLoop {
             }
         });
         //todo AudioMaster.setListenerData();
-        // objs
-
         FontType font = Loader.loadFont(FONT);
         ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         GUIText text = new GUIText("loading", FONT_SIZE, font, new Vector2f(0, 0), 1, false);
@@ -82,7 +80,7 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(bgT, rT, bT, gT);
         TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap.png"));
         Terrain terrain = new Terrain(0, 0, texturePack, blendMap, null);
-        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png", false), 4, true, true), 1, 1.3f, 3f, new Vector3f(20, 10, 25), new Vector3f(2f, 2f, 2f));
+        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png", false), 4, true, true), 10, 2.0f, 3f, new Vector3f(20, 10, 25), new Vector3f(5f, 5f, 5f));
         Random random = new Random();
         for (int i = 0; i < 500; i++) {
             float x = random.nextFloat() * 800;
@@ -101,13 +99,13 @@ public class MainGameLoop {
         List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
         Animation cowboyAnimation = cowboyCollada.getAnimation();
         Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
-        List<TexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
-        GLEntity girl = new GLEntity(cowboy, new Vector3f(30, 20, 50));
+        //List<TexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
+        Entity girl = new GLEntity(cowboy, new Vector3f(30, 20, 50));
         girl.setRx(-90);
         girl.setScale(5f);
         FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0, 0, 0), window);
         player.setScale(.8f);
-        GLEntity cube = new GLEntity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))), new Vector3f());
+        Entity cube = new GLEntity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))), new Vector3f());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;
@@ -122,7 +120,6 @@ public class MainGameLoop {
         lights.forEach(MasterRenderer::addLight);
         guis.forEach(MasterRenderer::addGui);
         entities.forEach(MasterRenderer::addEntity);
-
 
         while (!window.isCloseRequested()) { //actual MainGameLoop
             //game logic
@@ -154,7 +151,6 @@ public class MainGameLoop {
             timeSinceFPSUpdate += window.getLastFrameTime();
             framesSinceFPSUpdate++;
         }
-
         EngineMaster.finish();
     }
 

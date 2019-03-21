@@ -1,13 +1,12 @@
 package engine;
 
 import engine.audio.AudioMaster;
-import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
-import engine.inputs.*;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.renderEngine.Loader;
 import engine.graphics.renderEngine.MasterRenderer;
+import engine.inputs.InputLoop;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import org.lwjgl.Version;
@@ -24,6 +23,7 @@ public class EngineMaster {
     private static final String TAG = "Engine";
     private static GLFWWindow window;
     private static GLFWDisplayManager displayManager;
+
     public static GLFWWindow init() {
         return init(false);
     }
@@ -31,11 +31,12 @@ public class EngineMaster {
 
     /**
      * starts the engine, initialize components, opens window, start event handling, must be called as first operation of the engine
+     *
      * @param use2D use flat projection
      */
     public static GLFWWindow init(boolean use2D) {
         Settings.loadSettings();
-        if(Settings.WRITE_LOG_FILE) Log.connectLogFile();
+        if (Settings.WRITE_LOG_FILE) Log.connectLogFile();
         Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().toString());
         Log.i(TAG, "lwjgl-version: " + Version.getVersion());
         AudioMaster.init();
@@ -55,14 +56,13 @@ public class EngineMaster {
      */
     public static void finish() {
         InputLoop.finish();
-        Log.i(TAG,"shutting down render ");
+        Log.i(TAG, "shutting down render ");
         ParticleMaster.cleanUp();
         MasterRenderer.cleanUp();
         Loader.cleanUp();
-        window.destroy();
         displayManager.cleanUp();
         AudioMaster.cleanUp();
         GLFW.glfwTerminate();
-        Log.i(TAG,"program stopped");
+        Log.i(TAG, "program stopped");
     }
 }

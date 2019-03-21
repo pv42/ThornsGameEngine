@@ -58,7 +58,6 @@ public class FirstPersonPlayer extends Player{
         window.setMouseGrabbed(true, window);
         InputHandler.setMouseBound(true);
         InputHandler.setCursorListener((x, y) -> {
-            // todo  implement
             increaseRotation(y * 0.1f, - x * 0.1f,0);
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_W) {
@@ -130,7 +129,7 @@ public class FirstPersonPlayer extends Player{
         InputHandler.addListener(new InputEventListener(MOUSE_EVENT,KEY_PRESS, InputEvent.L_MOUSE) {
             @Override
             public void onOccur() {
-                //getGun().shot(null,getThis()); // todo
+                //getGun().shot(null,getThis()); // todo removed guns
             }
         });
     }
