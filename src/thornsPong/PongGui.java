@@ -1,14 +1,13 @@
 package thornsPong;
 
 import engine.EngineMaster;
+import engine.graphics.Scene;
 import engine.graphics.cameras.TwoDimensionsCamera;
 import engine.graphics.display.Window;
-import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
-import engine.graphics.glglfwImplementation.display.GLFWWindow;
-import engine.graphics.models.TexturedModel;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import engine.physics.CuboidHitBox;
@@ -17,7 +16,6 @@ import engine.physics.PhysicalEntity;
 import engine.physics.PhysicsEngine;
 import engine.toolbox.MeshCreator;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
 
 
@@ -37,9 +35,9 @@ public class PongGui {
     public PongGui() {
         Window window = EngineMaster.init(true);
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
-        ModelTexture texture = new ModelTexture(Loader.loadTexture("white.png"));
+        ModelTexture texture = new ModelTexture(GLLoader.loadTexture("white.png"));
         //boundings
-        TexturedModel boundingModel = new TexturedModel(MeshCreator.createBox(2,.2f,1), texture);
+        GLTexturedModel boundingModel = new GLTexturedModel(MeshCreator.createBox(2,.2f,1), texture);
         CuboidHitBox boundingHitBox = new CuboidHitBox(-1,1,-.1f,.1f,-.5f,.5f);
         PhysicalEntity topBounding = new PhysicalEntity(boundingModel, new Vector3f(0,.7f,0), 1);
         topBounding.setStatic(true);
@@ -52,7 +50,7 @@ public class PongGui {
         bottomBounding.setCollisionType(COLLISION_TYPE_INV_Y);
         PhysicsEngine.addPhysical(bottomBounding);
         //paddles
-        TexturedModel paddleModel = new TexturedModel(MeshCreator.createBox(.2f,.2f,.2f),texture);
+        GLTexturedModel paddleModel = new GLTexturedModel(MeshCreator.createBox(.2f,.2f,.2f),texture);
         HitBox paddleHitBox = new CuboidHitBox(-.1f,.1f,-.1f,.1f,-.1f,.1f);
         //left paddle
         PhysicalEntity leftPaddle = new PhysicalEntity(paddleModel, new Vector3f(),1);
@@ -67,7 +65,7 @@ public class PongGui {
         rightPaddle.setHitBox(paddleHitBox);
         PhysicsEngine.addPhysical(rightPaddle);
         //ball
-        TexturedModel ballModel = new TexturedModel(MeshCreator.createCircle(.02f,24),texture);
+        GLTexturedModel ballModel = new GLTexturedModel(MeshCreator.createCircle(.02f,24),texture);
         HitBox ballHitBox = new CuboidHitBox(-.01f,.01f,-.01f,.01f,-.01f,.01f);
         PhysicalEntity ball = new PhysicalEntity(ballModel,new Vector3f(),0);
         ball.setHitBox(ballHitBox);
@@ -77,14 +75,15 @@ public class PongGui {
         game = new PongGame(leftPaddle, rightPaddle, ball);
         initEventListeners();
         MasterRenderer.setAmbientLight(.9f);
-        MasterRenderer.addEntity(topBounding);
-        MasterRenderer.addEntity(bottomBounding);
-        MasterRenderer.addEntity(leftPaddle);
-        MasterRenderer.addEntity(rightPaddle);
-        MasterRenderer.addEntity(ball);
+        Scene scene = new Scene();
+        scene.addEntity(topBounding);
+        scene.addEntity(bottomBounding);
+        scene.addEntity(leftPaddle);
+        scene.addEntity(rightPaddle);
+        scene.addEntity(ball);
         while(!window.isCloseRequested()) {
             game.update(window.getLastFrameTime(),klu, kld, kru, krd,flipPause);
-            MasterRenderer.render(camera);
+            MasterRenderer.render(scene, camera);
             window.update();
         }
         EngineMaster.finish();

@@ -1,14 +1,13 @@
 package engine.graphics.guis;
 
 
-import engine.graphics.models.RawModel;
-import engine.graphics.renderEngine.Loader;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import engine.toolbox.Maths;
 
 import java.util.List;
@@ -17,12 +16,12 @@ import java.util.List;
  * Created by pv42 on 20.06.16.
  */
 public class GuiRenderer {
-    private final RawModel quad;
+    private final GLRawModel quad;
     private float aspectRatio;
     private GuiShader shader;
     public GuiRenderer(float aspectRatio) {
         float[] positions = {-1, 1, -1, -1, 1, 1, 1,-1};
-        quad = Loader.loadToVAO(positions,2);
+        quad = GLLoader.loadToVAO(positions,2);
         this.aspectRatio = aspectRatio;
         shader = new GuiShader();
     }

@@ -1,27 +1,28 @@
 package engine;
 
+import engine.graphics.Scene;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.Animator;
 import engine.graphics.cameras.FirstPersonCamera;
 import engine.graphics.entities.Entity;
+import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
 import engine.graphics.guis.GuiTexture;
 import engine.graphics.lights.Light;
-import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.particles.ParticleSystem;
 import engine.graphics.particles.ParticleSystemStream;
 import engine.graphics.particles.ParticleTexture;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.terrains.Terrain;
-import engine.graphics.textures.ModelTexture;
-import engine.graphics.textures.TerrainTexture;
-import engine.graphics.textures.TerrainTexturePack;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.TerrainTexture;
+import engine.graphics.glglfwImplementation.textures.TerrainTexturePack;
 import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
@@ -59,28 +60,29 @@ public class MainGameLoop {
         GLTTFont font = new GLTTFont("res/fonts/arial.ttf", 64);
         ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         GLGuiText text = new GLGuiText(font, "loading", FONT_SIZE, new Color(0.3f, 0.3f, 0.4f), new Vector2f(0, 0));
-        MasterRenderer.addText(text);
+        Scene scene = new Scene();
+        scene.addText(text);
         List<GLEntity> entities = new ArrayList<>();
         List<GuiTexture> guis = new ArrayList<>();
-        GuiTexture gui = new GuiTexture(Loader.loadTexture("cross.png"), new Vector2f(0f, 0f), new Vector2f(.04f, .04f), window);
+        GuiTexture gui = new GuiTexture(GLLoader.loadTexture("cross.png"), new Vector2f(0f, 0f), new Vector2f(.04f, .04f), window);
         guis.add(gui);
-        TexturedModel texturedModel = new TexturedModel(OBJLoader.loadObjModel("lowPolyTree"), new ModelTexture(Loader.loadTexture("lowPolyTree.png")));
+        GLTexturedModel texturedModel = new GLTexturedModel(OBJLoader.loadObjModel("lowPolyTree"), new ModelTexture(GLLoader.loadTexture("lowPolyTree.png")));
         texturedModel.getTexture().setReflectivity(.1f);
-        TexturedModel texturedModel2 = new TexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(Loader.loadTexture("fern.png")));
+        GLTexturedModel texturedModel2 = new GLTexturedModel(OBJLoader.loadObjModel("fern"), new ModelTexture(GLLoader.loadTexture("fern.png")));
         texturedModel2.getTexture().setHasTransparency(true);
         texturedModel2.getTexture().setUseFakeLightning(true);
         Light sun = new Light(new Vector3f(500, 50000, 500), new Color(1, 1, .9), new Vector3f(1f, 0.00f, 0.00f));
         List<Light> lights = new ArrayList<>();
         lights.add(sun);
-        //terrain engine.graphics.textures
-        TerrainTexture bgT = new TerrainTexture(Loader.loadTexture("grass.png"));
-        TerrainTexture rT = new TerrainTexture(Loader.loadTexture("dirt.png"));
-        TerrainTexture gT = new TerrainTexture(Loader.loadTexture("path.png"));
-        TerrainTexture bT = new TerrainTexture(Loader.loadTexture("grassFlowers.png"));//grassFlowers
+        //terrain textures
+        TerrainTexture bgT = new TerrainTexture(GLLoader.loadTexture("grass.png"));
+        TerrainTexture rT = new TerrainTexture(GLLoader.loadTexture("dirt.png"));
+        TerrainTexture gT = new TerrainTexture(GLLoader.loadTexture("path.png"));
+        TerrainTexture bT = new TerrainTexture(GLLoader.loadTexture("grassFlowers.png"));//grassFlowers
         TerrainTexturePack texturePack = new TerrainTexturePack(bgT, rT, bT, gT);
-        TerrainTexture blendMap = new TerrainTexture(Loader.loadTexture("blendMap.png"));
+        TerrainTexture blendMap = new TerrainTexture(GLLoader.loadTexture("blendMap.png"));
         Terrain terrain = new Terrain(0, 0, texturePack, blendMap, null);
-        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(Loader.loadTexture("fire.png", false), 4, true, true), 10, 2.0f, 3f, new Vector3f(20, 10, 25), new Vector3f(5f, 5f, 5f));
+        ParticleSystem particleSystem = new ParticleSystemStream(new ParticleTexture(GLLoader.loadTexture("fire.png", false), 4, true, true), 10, 2.0f, 3f, new Vector3f(20, 10, 25), new Vector3f(5f, 5f, 5f));
         Random random = new Random();
         for (int i = 0; i < 500; i++) {
             float x = random.nextFloat() * 800;
@@ -96,16 +98,16 @@ public class MainGameLoop {
         }
         //player
         Collada cowboyCollada = ColladaLoader.loadCollada("cowboy");
-        List<TexturedModel> cowboy = cowboyCollada.getTexturedModels();
+        List<GLTexturedModel> cowboy = cowboyCollada.getTexturedModels();
         Animation cowboyAnimation = cowboyCollada.getAnimation();
         Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
-        //List<TexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
+        //List<GLTexturedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
         Entity girl = new GLEntity(cowboy, new Vector3f(30, 20, 50));
         girl.setRx(-90);
         girl.setScale(5f);
         FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0, 0, 0), window);
         player.setScale(.8f);
-        Entity cube = new GLEntity(new TexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(Loader.loadTexture("white.png"))), new Vector3f());
+        Entity cube = new GLEntity(new GLTexturedModel(OBJLoader.loadObjModel("cube"), new ModelTexture(GLLoader.loadTexture("white.png"))), new Vector3f());
         FirstPersonCamera camera = new FirstPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;
@@ -114,13 +116,14 @@ public class MainGameLoop {
         Log.i(TAG, "starting render");
         float animationTime = 0;
 
-        MasterRenderer.addEntity(girl);
-        MasterRenderer.addTerrain(terrain);
-        MasterRenderer.addEntity(cube);
-        lights.forEach(MasterRenderer::addLight);
-        guis.forEach(MasterRenderer::addGui);
-        entities.forEach(MasterRenderer::addEntity);
+        scene.addEntity(girl);
+        scene.addTerrain(terrain);
+        scene.addEntity(cube);
+        lights.forEach(scene::addLight);
+        guis.forEach(scene::addGui);
+        entities.forEach(scene::addEntity);
 
+        scene.addAniEntity(player);
         while (!window.isCloseRequested()) { //actual MainGameLoop
             //game logic
             //FPS Updates
@@ -140,18 +143,12 @@ public class MainGameLoop {
             Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
             //player.getModels().get(0).getRawModel().getJoints().get(10).rotate(new Vector3f(0,1,0),1);
             //game render
-            processFirstPersonPlayer(player);
-
-            MasterRenderer.render(camera);
+            MasterRenderer.render(scene, camera);
             window.update();
             //post render
             timeSinceFPSUpdate += window.getLastFrameTime();
             framesSinceFPSUpdate++;
         }
         EngineMaster.finish();
-    }
-
-    private static void processFirstPersonPlayer(FirstPersonPlayer player) {
-        MasterRenderer.addAniEntity(player);
     }
 }

@@ -1,11 +1,11 @@
 package engine.graphics.terrains;
 
-import engine.graphics.models.RawModel;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.textures.TerrainTexture;
-import engine.graphics.textures.TerrainTexturePack;
+import engine.graphics.glglfwImplementation.textures.TerrainTexture;
+import engine.graphics.glglfwImplementation.textures.TerrainTexturePack;
 import engine.toolbox.Log;
 import engine.toolbox.Maths;
 
@@ -24,7 +24,7 @@ public class Terrain {
     private static final int GENERATE_VERTEX_COUNT = 128;
     private float x;
     private float z;
-    private RawModel model;
+    private GLRawModel model;
     private TerrainTexturePack texturePack;
     private TerrainTexture blendMap;
     private float [][] heights;
@@ -62,7 +62,7 @@ public class Terrain {
         if (Float.isNaN(answer)) Log.w("NaN: x=" + worldX + ", z=" + worldZ + "");
         return answer;
     }
-    private RawModel generateTerrain( int seed) {
+    private GLRawModel generateTerrain(int seed) {
         HeightGenerator generator;
         if(seed == 0) {
             generator = new HeightGenerator();
@@ -107,9 +107,9 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        return Loader.loadToVAO(vertices, textureCoords, normals, indices);
+        return GLLoader.loadToVAO(vertices, textureCoords, normals, indices);
     }
-    private RawModel generateTerrainFromFile(String heightMap){
+    private GLRawModel generateTerrainFromFile(String heightMap){
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File("res/" + heightMap + ".png"));
@@ -154,7 +154,7 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        return Loader.loadToVAO(vertices, textureCoords, normals, indices);
+        return GLLoader.loadToVAO(vertices, textureCoords, normals, indices);
     }
     public float getX() {
         return x;
@@ -162,7 +162,7 @@ public class Terrain {
     public float getZ() {
         return z;
     }
-    public RawModel getModel() {
+    public GLRawModel getModel() {
         return model;
     }
     public TerrainTexturePack getTexturePack() {

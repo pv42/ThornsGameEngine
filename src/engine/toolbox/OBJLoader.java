@@ -1,10 +1,10 @@
 package engine.toolbox;
 
 import engine.graphics.animation.Joint;
-import engine.graphics.models.RawModel;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import engine.graphics.renderEngine.Loader;
+import engine.graphics.glglfwImplementation.GLLoader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,13 +19,13 @@ import java.util.List;
 public class OBJLoader {
     private static final String TAG = "OBJLoader";
 
-    public static RawModel loadObjModel(String filename) {
+    public static GLRawModel loadObjModel(String filename) {
         FileReader fr;
         try {
              fr = new FileReader(new File("res/meshs/" + filename + ".obj"));
         } catch (IOException e ){
              Log.e("couldn't read OBJ '" + filename + "'");
-             return new RawModel(0,0); //inv model with 0 vertices
+             return new GLRawModel(0,0); //inv model with 0 vertices
         }
         BufferedReader reader = new BufferedReader(fr);
         String line;
@@ -93,10 +93,10 @@ public class OBJLoader {
         }
 
         Log.d(TAG, "mesh 'res/meshs/" + filename + ".obj' loaded");
-        return Loader.loadToVAO(verticesArray,textureArray,normalsArray,indicesArray);
+        return GLLoader.loadToVAO(verticesArray,textureArray,normalsArray,indicesArray);
     }
     @Deprecated
-    public static RawModel loadObjModelAnimated(String filename, List<Joint> joints) {
+    public static GLRawModel loadObjModelAnimated(String filename, List<Joint> joints) {
         FileReader fr;
         try {
             fr = new FileReader(new File("res/meshs/" + filename + ".obj"));
@@ -181,7 +181,7 @@ public class OBJLoader {
         for(int index : indices) {
             indicesArray[pointer++] = index;
         }
-        return Loader.loadToVAOAnimated(verticesArray,textureArray,normalsArray,indicesArray,boneIndicesArray,boneWeightArray, joints);
+        return GLLoader.loadToVAOAnimated(verticesArray,textureArray,normalsArray,indicesArray,boneIndicesArray,boneWeightArray, joints);
     }
     private static void processVertex(String[] vertexData, List<Integer> indices, List<Vector2f> textures, List<Vector3f> normals, float[] textureArray, float[] normalsArray) {
         int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;

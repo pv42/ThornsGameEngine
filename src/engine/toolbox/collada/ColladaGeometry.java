@@ -1,7 +1,7 @@
 package engine.toolbox.collada;
 
-import engine.graphics.models.RawModel;
-import engine.graphics.renderEngine.Loader;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.toolbox.Log;
 import engine.toolbox.StorageFormatUtil;
 import org.w3c.dom.Node;
@@ -29,8 +29,8 @@ public class ColladaGeometry extends ColladaPrimaryElement {
         this.materialId = materialId;
     }
 
-    public RawModel getRawModel() {
-        return Loader.loadToVAO(StorageFormatUtil.get1DArray(position), StorageFormatUtil.get1DArray(textureCoordinates), StorageFormatUtil.get1DArray(normal), indices);
+    public GLRawModel getRawModel() {
+        return GLLoader.loadToVAO(StorageFormatUtil.get1DArray(position), StorageFormatUtil.get1DArray(textureCoordinates), StorageFormatUtil.get1DArray(normal), indices);
     }
 
     int[] getIndices() {

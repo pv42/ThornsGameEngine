@@ -1,18 +1,18 @@
 package shivt.levels;
 
+import engine.graphics.Scene;
+import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
 import engine.graphics.lights.Light;
 import engine.toolbox.OBJLoader;
-import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.particles.ParticleSystem;
 import engine.graphics.particles.ParticleSystemStream;
 import engine.graphics.particles.ParticleTexture;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.toolbox.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -28,12 +28,12 @@ public class RenderLevel {
     private List<GLGuiText> texts;
     private List<Vector3f> ends;
 
-    public RenderLevel(ShivtLevel level, GLTTFont font) {
+    public RenderLevel(ShivtLevel level, GLTTFont font, Scene scene) {
         lines = new ArrayList<>();
         List<GLEntity> entities = new ArrayList<>();
         ends = new ArrayList<>();
         texts = new ArrayList<>();
-        ParticleTexture pt = new ParticleTexture(Loader.loadTexture("frostfire.png"),4,true,true);
+        ParticleTexture pt = new ParticleTexture(GLLoader.loadTexture("frostfire.png"),4,true,true);
         for (Route route: level.getRoutes()) {
             int start = route.getStations()[0];
             int end = route.getStations()[1];
@@ -42,7 +42,7 @@ public class RenderLevel {
             ends.add(level.getStations().get(end).getPosition());
         }
         for(Station station : level.getStations()) {
-            TexturedModel texturedModel = new TexturedModel(OBJLoader.loadObjModel("spaceStation"),new ModelTexture(Loader.loadTexture("blue.png")));
+            GLTexturedModel texturedModel = new GLTexturedModel(OBJLoader.loadObjModel("spaceStation"),new ModelTexture(GLLoader.loadTexture("blue.png")));
             texturedModel.getTexture().setReflectivity(.1f);
             GLEntity e = new GLEntity(texturedModel,station.getPosition());
             e.setScale(0.5f);
@@ -52,8 +52,8 @@ public class RenderLevel {
             // todo fix text MasterRenderer.loadText(text);
         }
         Light sun = new Light(new Vector3f(0, 0, -20), new Color(1.0, 1.0, 1.0));
-        entities.forEach(MasterRenderer::addEntity);
-        MasterRenderer.addLight(sun);
+        entities.forEach(scene::addEntity);
+        scene.addLight(sun);
     }
     public void process(float timeDelta) {
         for (int i = 0; i < lines.size(); i++) {

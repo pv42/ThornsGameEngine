@@ -1,19 +1,18 @@
-package engine.graphics.renderEngine;
+package engine.graphics.terrains;
 
 import java.util.List;
 
 import engine.graphics.cameras.Camera;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.lights.Light;
-import engine.graphics.models.RawModel;
 
-import engine.toolbox.Log;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import engine.graphics.terrains.TerrainShader;
 import engine.graphics.terrains.Terrain;
-import engine.graphics.textures.TerrainTexturePack;
+import engine.graphics.glglfwImplementation.textures.TerrainTexturePack;
 import engine.toolbox.Maths;
 
 import static engine.toolbox.Settings.SKY_COLOR;
@@ -38,7 +37,6 @@ public class TerrainRenderer {
     }
 
     public void render(List<Terrain> terrains, Camera camera, List<Light> lights) {
-        Log.i("TERA", "" + terrains.size());
         shader.start();
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);
@@ -54,7 +52,7 @@ public class TerrainRenderer {
     }
 
     private void prepareTerrain(Terrain terrain) {
-        RawModel rawModel = terrain.getModel();
+        GLRawModel rawModel = terrain.getModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);

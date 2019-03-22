@@ -1,12 +1,12 @@
 package shivt;
 
 import engine.EngineMaster;
+import engine.graphics.Scene;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.inputs.InputLoop;
 import engine.toolbox.Color;
 import org.joml.Vector2f;
@@ -27,13 +27,15 @@ public class ShivtGameLoop {
     private int framesSinceFPSUpdate = 0;
     private GLGuiText fpsText;
     private Window window;
+    private Scene scene;
 
     public ShivtGameLoop() {
         Window window = EngineMaster.init();
         buttons = new ArrayList<>();
         FONT = new GLTTFont("res/fonts/arial.ttf",64);
         fpsText = new GLGuiText(FONT, "loading", 0.0005f, new Color(0.3f, 0.3f, 0.4f), new Vector2f(0, 0));
-        MasterRenderer.addText(fpsText);
+        scene = new Scene();
+        scene.addText(fpsText);
     }
 
     public void loop(RenderLevel level, ThreeDimensionCamera camera) {
@@ -45,8 +47,10 @@ public class ShivtGameLoop {
         }
         if (level != null) level.process(window.getLastFrameTime());
         // todo fix text MasterRenderer.processText(fpsText);
-        buttons.forEach(Button::processRender);
-        MasterRenderer.render(camera);
+        for (Button button : buttons) {
+            button.processRender(scene);
+        }
+        MasterRenderer.render(scene, camera);
         window.update();
         timeSinceFPSUpdate += window.getLastFrameTime();
         framesSinceFPSUpdate++;

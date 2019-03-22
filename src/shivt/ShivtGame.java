@@ -1,9 +1,8 @@
 package shivt;
 
+import engine.graphics.Scene;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
 import engine.inputs.GuiClickController;
-import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
-import engine.graphics.renderEngine.Loader;
 import engine.toolbox.Log;
 import org.joml.Vector2f;
 import shivt.guiElements.Button;
@@ -34,7 +33,8 @@ public class ShivtGame {
         requestedGameState(GAME_STATE_MAIN_MENU);
         camera = new ShivtCamera();
         ShivtLevel level = ShivtLevel.readFromFile("test");
-        RenderLevel renderLevel = new RenderLevel(level,new GLTTFont("res/fonts/arial.ttf",64));
+        Scene scene = new Scene();
+        RenderLevel renderLevel = new RenderLevel(level,new GLTTFont("res/fonts/arial.ttf",64), scene);
         while (!gameLoop.isCloseRequested()) {
             gameLoop.loop(renderLevel,camera);
             applyGameState();

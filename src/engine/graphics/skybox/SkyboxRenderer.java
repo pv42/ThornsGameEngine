@@ -1,15 +1,14 @@
 package engine.graphics.skybox;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.models.RawModel;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.toolbox.Color;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.joml.Matrix4f;
-import engine.graphics.renderEngine.Loader;
 
 /**
  * Created by pv42 on 21.06.16.
@@ -59,13 +58,13 @@ public class SkyboxRenderer {
             -SIZE, -SIZE, SIZE,
             SIZE, -SIZE, SIZE
     };
-    private RawModel cube;
+    private GLRawModel cube;
     private static SkyBoxShader shader;
     private int texture;
     public SkyboxRenderer(Matrix4f projectionMatrix,String textureFile, String extension) {
-        cube = Loader.loadToVAO(VERTICES, 3);
+        cube = GLLoader.loadToVAO(VERTICES, 3);
         if (extension == null) extension = ".png";
-        texture = Loader.loadCubeMapTexture(textureFile, extension);
+        texture = GLLoader.loadCubeMapTexture(textureFile, extension);
         shader = new SkyBoxShader();
         shader.start();
         shader.connectTextures();

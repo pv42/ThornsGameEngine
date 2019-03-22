@@ -2,8 +2,8 @@ package engineTester.graphicTest;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.shaders.EntityShader;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
@@ -49,8 +49,8 @@ public class TestRender {
             f = false;
         }
         shader.start();
-        TexturedModel texturedModel = entity.getModels().get(0);
-        RawModel model = texturedModel.getRawModel();
+        GLTexturedModel texturedModel = entity.getModels().get(0);
+        GLRawModel model = texturedModel.getRawModel();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadTransformationMatrix(Maths.createTransformationMatrix(entity.getPosition(),

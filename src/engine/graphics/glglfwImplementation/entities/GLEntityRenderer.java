@@ -2,28 +2,29 @@ package engine.graphics.glglfwImplementation.entities;
 
 import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
-import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.lights.Light;
-import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.shaders.EntityShader;
-import engine.toolbox.Log;
-import engine.toolbox.Matrix4fDbg;
-import org.lwjgl.opengl.*;
-import org.joml.Matrix4f;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.toolbox.Maths;
+import engine.toolbox.Matrix4fDbg;
+import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_POSITION;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_UV;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_NORMAL;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_INDICES;
-import static engine.graphics.renderEngine.Loader.VERTEX_ATTRIB_ARRAY_BONE_WEIGHT;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_BONE_INDICES;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_BONE_WEIGHT;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_NORMAL;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_POSITION;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_UV;
 import static engine.toolbox.Settings.AMBIENT_LIGHT;
 import static engine.toolbox.Settings.SKY_COLOR;
 
@@ -51,11 +52,10 @@ public class GLEntityRenderer {
         shader.stop();
     }
 
-    public void render(Map<List<TexturedModel>, List<GLEntity>> entities, List<Light> lights, Camera camera) {
-        Log.i("ENTS", "= " + entities.size());
+    public void render(Map<List<GLTexturedModel>, List<GLEntity>> entities, List<Light> lights, Camera camera) {
         prepare(lights, camera);
-        for (List<TexturedModel> models : entities.keySet()) {
-            for (TexturedModel model : models) {
+        for (List<GLTexturedModel> models : entities.keySet()) {
+            for (GLTexturedModel model : models) {
                 prepareTexturedModel(model);
                 List<GLEntity> batch = entities.get(models);
                 for (GLEntity entity : batch) {
@@ -69,13 +69,13 @@ public class GLEntityRenderer {
         shader.stop();
     }
 
-    private void prepareTexturedModel(TexturedModel model) {
-        RawModel rawModel = model.getRawModel();
+    private void prepareTexturedModel(GLTexturedModel model) {
+        GLRawModel rawModel = model.getRawModel();
         List<Joint> joints;
         List<Matrix4fDbg> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
             joints = rawModel.getJoints();
-            for(Joint joint : joints) {
+            for (Joint joint : joints) {
                 boneMatrices.add(joint.getTransformationMatrix());
             }
         }
@@ -137,7 +137,7 @@ public class GLEntityRenderer {
     }
 
     @Deprecated
-    public void render(RawModel model) {
+    public void render(GLRawModel model) {
         GL30.glBindVertexArray(model.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
@@ -146,8 +146,8 @@ public class GLEntityRenderer {
     }
 
     @Deprecated
-    public void render(TexturedModel model) {
-        RawModel rawModel = model.getRawModel();
+    public void render(GLTexturedModel model) {
+        GLRawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
@@ -161,8 +161,8 @@ public class GLEntityRenderer {
 
     @Deprecated
     public void render(GLEntity entity, EntityShader shader) {
-        TexturedModel model = entity.getModels().get(0);
-        RawModel rawModel = model.getRawModel();
+        GLTexturedModel model = entity.getModels().get(0);
+        GLRawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);

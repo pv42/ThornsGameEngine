@@ -1,10 +1,10 @@
-package engine.graphics.renderEngine;
+package engine.graphics.glglfwImplementation;
 
 import engine.graphics.animation.Joint;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.lines.Line;
 import engine.graphics.lines.LineModel;
-import engine.graphics.models.RawModel;
-import engine.graphics.textures.TextureData;
+import engine.graphics.glglfwImplementation.textures.TextureData;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.StorageFormatUtil;
@@ -41,7 +41,7 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
 /***
  * Created by pv42 on 16.06.16.
  */
-public class Loader {
+public class GLLoader {
     public static final int VERTEX_ATTRIB_ARRAY_POSITION = 0;
     public static final int VERTEX_ATTRIB_ARRAY_UV = 1;
     public static final int VERTEX_ATTRIB_ARRAY_NORMAL = 2;
@@ -49,7 +49,7 @@ public class Loader {
     public static final int VERTEX_ATTRIB_ARRAY_BONE_WEIGHT = 4;
     static final int VERTEX_ATTRIB_ARRAY_TANGENTS = 3;
     private static final float ANISOTROPIC_FILTERING = Settings.ANISOTROPIC_FILTERING;
-    private static final String TAG = "Loader";
+    private static final String TAG = "GLLoader";
     private static List<Integer> vaos = new ArrayList<>();
     private static List<Integer> vbos = new ArrayList<>();
     private static List<Integer> textures = new ArrayList<>();
@@ -61,11 +61,11 @@ public class Loader {
      * @param dimension coordinate dimension
      * @return rawmodel
      */
-    public static RawModel loadToVAO(float[] positions, int dimension) {
+    public static GLRawModel loadToVAO(float[] positions, int dimension) {
         int vaoID = createVAO();
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, dimension, positions);
         unbindVAO();
-        return new RawModel(vaoID, positions.length / dimension);
+        return new GLRawModel(vaoID, positions.length / dimension);
     }
 
     /**
@@ -75,12 +75,12 @@ public class Loader {
      * @param indices   indices array
      * @return rawmodel
      */
-    public static RawModel loadToVAO(float[] positions, int[] indices) {
+    public static GLRawModel loadToVAO(float[] positions, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
         unbindVAO();
-        return new RawModel(vaoID, indices.length);
+        return new GLRawModel(vaoID, indices.length);
     }
 
     /**
@@ -106,13 +106,13 @@ public class Loader {
      * @param indices   indices array
      * @return rawmodel
      */
-    public static RawModel loadToVAO(float[] positions, float[] uv, int[] indices) {
+    public static GLRawModel loadToVAO(float[] positions, float[] uv, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, 3, positions);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_UV, 2, uv);
         unbindVAO();
-        return new RawModel(vaoID, indices.length);
+        return new GLRawModel(vaoID, indices.length);
     }
 
     /**
@@ -124,10 +124,10 @@ public class Loader {
      * @param indices   indices array
      * @return rawmodel
      */
-    public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
+    public static GLRawModel loadToVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
         unbindVAO();
-        return new RawModel(vaoID, indices.length);
+        return new GLRawModel(vaoID, indices.length);
     }
 
     /**
@@ -140,11 +140,11 @@ public class Loader {
      * @param indices   indices array
      * @return rawmodel
      */
-    public static RawModel loadToVAO(float[] positions, float[] uv, float[] normals, float[] tangents, int[] indices) {
+    public static GLRawModel loadToVAO(float[] positions, float[] uv, float[] normals, float[] tangents, int[] indices) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_TANGENTS, 3, tangents);
         unbindVAO();
-        return new RawModel(vaoID, indices.length);
+        return new GLRawModel(vaoID, indices.length);
     }
 
     public static LineModel loadToVAO(Line line) {
@@ -171,12 +171,12 @@ public class Loader {
      * @param joints      list of the joints/bones to use
      * @return rawmodel
      */
-    public static RawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
+    public static GLRawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_INDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
         unbindVAO();
-        return new RawModel(vaoID, indices.length, joints);
+        return new GLRawModel(vaoID, indices.length, joints);
     }
 
     private static int createTexturedLightedVAO(float[] positions, float[] uv, float[] normals, int[] indices) {

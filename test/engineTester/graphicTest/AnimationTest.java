@@ -1,12 +1,13 @@
 package engineTester.graphicTest;
 
 import engine.EngineMaster;
+import engine.graphics.Scene;
 import engine.graphics.animation.Animation;
 import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.models.TexturedModel;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.inputs.InputHandler;
 import engine.toolbox.Log;
 import engine.toolbox.collada.Collada;
@@ -23,15 +24,16 @@ public class AnimationTest {
     void testAnimation() {
         GLFWWindow window = EngineMaster.init();
         Collada collada = ColladaLoader.loadCollada("cowboy");
-        TexturedModel cowboyModel = collada.getTexturedModels().get(0);
+        GLTexturedModel cowboyModel = collada.getTexturedModels().get(0);
         Animation animation = collada.getAnimation();
         GLEntity entity = new GLEntity(cowboyModel,new Vector3f(0,-12f,0),0,0,0,1);
         Camera camera = new ShivtCamera();
         InputHandler.init(window.getId());
-        MasterRenderer.addEntity(entity);
+        Scene scene = new Scene();
+        scene.addEntity(entity);
         int count = 0;
         while (!window.isCloseRequested() && count < 10) {
-            MasterRenderer.render(camera);
+            MasterRenderer.render(scene, camera);
             window.update();
             try {
                 Thread.sleep(60);

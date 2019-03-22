@@ -1,7 +1,7 @@
 package engine.graphics.glglfwImplementation.text;
 
-import engine.graphics.models.RawModel;
-import engine.graphics.renderEngine.Loader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.glglfwImplementation.GLLoader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -16,7 +16,7 @@ import org.lwjgl.stb.STBTruetype;
  * @author pv42
  */
 public class GLTextRenderer {
-    private final RawModel quadModel;
+    private final GLRawModel quadModel;
     private TextShader shader;
     private GLTTFont font;
     private float size;
@@ -32,7 +32,7 @@ public class GLTextRenderer {
     public GLTextRenderer() {
         shader = new TextShader();
         float[] position = {-1, 1, -1, -1, 1, 1, 1, -1};
-        quadModel = Loader.loadToVAO(position, 2); // todo fix reinitialisation of the model
+        quadModel = GLLoader.loadToVAO(position, 2); // todo fix reinitialisation of the model
         shader.start();
         shader.connectTextures();
         shader.stop();
@@ -65,6 +65,8 @@ public class GLTextRenderer {
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);
         shader.stop();
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+
     }
 
     /**

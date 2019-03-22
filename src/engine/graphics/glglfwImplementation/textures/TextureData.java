@@ -1,4 +1,4 @@
-package engine.graphics.textures;
+package engine.graphics.glglfwImplementation.textures;
 
 import java.nio.ByteBuffer;
 

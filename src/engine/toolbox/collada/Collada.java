@@ -3,10 +3,10 @@ package engine.toolbox.collada;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.Joint;
 import engine.graphics.animation.KeyFrame;
-import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.toolbox.Log;
 import engine.toolbox.StorageFormatUtil;
 
@@ -107,9 +107,9 @@ public class Collada implements ICollada{
         this.cameras = cameras;
     }
 
-    public List<TexturedModel> getTexturedModels() {
+    public List<GLTexturedModel> getTexturedModels() {
         Log.d(TAG, "loading data to VRAM");
-        List<TexturedModel> models = new ArrayList<>();
+        List<GLTexturedModel> models = new ArrayList<>();
         for (int i = 0; i < scene.getRootNodes().size(); i++) { //for models
             String nodeId = scene.getRootNodes().get(i);
             ColladaNode cnode = scene.getNode(nodeId);
@@ -120,7 +120,7 @@ public class Collada implements ICollada{
                 Map<String, Joint> joints = controller.getJoints();
                 processNode(skeletonRoot, joints, null); //apply poses to joints
                 ColladaGeometry geometry = geometries.get(controller.getGeometryId());
-                RawModel model = Loader.loadToVAOAnimated(
+                GLRawModel model = GLLoader.loadToVAOAnimated(
                         StorageFormatUtil.get1DArray(geometry.getPosition()),
                         StorageFormatUtil.get1DArray(geometry.getTextureCoordinates()),
                         StorageFormatUtil.get1DArray(geometry.getNormal()),
@@ -132,7 +132,7 @@ public class Collada implements ICollada{
                 materialId = ic.getBindMaterialId(materialId);
                 ColladaEffect effect = materials.get(materialId).getInstanceEffect(effects);
                 String imageFile = images.get(effect.getImage()).getSource();
-                TexturedModel texturedModel = new TexturedModel(model, new ModelTexture(Loader.loadTexture(
+                GLTexturedModel texturedModel = new GLTexturedModel(model, new ModelTexture(GLLoader.loadTexture(
                         imageFile.replaceFirst("file:///","").replaceAll("%20", " "))));
                 models.add(texturedModel);
             }

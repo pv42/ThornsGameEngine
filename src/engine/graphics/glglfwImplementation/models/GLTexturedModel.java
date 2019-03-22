@@ -1,26 +1,26 @@
-package engine.graphics.models;
+package engine.graphics.glglfwImplementation.models;
 
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 
 /***
  * Created by pv42 on 17.06.16.
  */
-public class TexturedModel {
-    private RawModel rawmodel;
+public class GLTexturedModel {
+    private GLRawModel rawmodel;
     private ModelTexture texture;
     private boolean isAnimated;
 
-    public TexturedModel(RawModel rawmodel, ModelTexture texture) {
+    public GLTexturedModel(GLRawModel rawmodel, ModelTexture texture) {
         this(rawmodel,texture,!(rawmodel.getJoints() == null));
     }
 
-    public TexturedModel(RawModel rawModel, ModelTexture texture, boolean isAnimated) {
+    public GLTexturedModel(GLRawModel rawModel, ModelTexture texture, boolean isAnimated) {
         this.rawmodel = rawModel;
         this.texture = texture;
         this.isAnimated = isAnimated;
     }
 
-    public RawModel getRawModel() {
+    public GLRawModel getRawModel() {
         return rawmodel;
     }
 

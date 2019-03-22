@@ -1,7 +1,7 @@
 package engine.graphics.glglfwImplementation.entities;
 
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
-import engine.graphics.models.TexturedModel;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
@@ -26,7 +26,7 @@ public class FirstPersonPlayer extends Player{
     private float currentSideSpeed;
     private float heightAngle = 0;
     private boolean sprinting;
-    public FirstPersonPlayer(List<TexturedModel> model, Vector3f position, GLFWWindow window) {
+    public FirstPersonPlayer(List<GLTexturedModel> model, Vector3f position, GLFWWindow window) {
         super(model,position);
         sprinting = false;
         registerEvents(window);

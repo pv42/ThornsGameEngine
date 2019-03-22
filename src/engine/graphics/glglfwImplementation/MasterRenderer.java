@@ -1,33 +1,23 @@
-package engine.graphics.renderEngine;
+package engine.graphics.glglfwImplementation;
 
+import engine.graphics.Scene;
 import engine.graphics.cameras.Camera;
 import engine.graphics.display.Window;
-import engine.graphics.entities.Entity;
 import engine.graphics.glglfwImplementation.entities.GLEntityRenderer;
-import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTextRenderer;
 import engine.graphics.guis.GuiRenderer;
 import engine.graphics.guis.GuiShader;
-import engine.graphics.guis.GuiTexture;
-import engine.graphics.lights.Light;
-import engine.graphics.lines.LineModel;
 import engine.graphics.lines.LineRenderer;
-import engine.graphics.models.TexturedModel;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.skybox.SkyboxRenderer;
-import engine.graphics.terrains.Terrain;
+import engine.graphics.terrains.TerrainRenderer;
 import engine.graphics.terrains.TerrainShader;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.Time;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static engine.toolbox.Settings.SKY_COLOR;
 
@@ -47,16 +37,7 @@ public class MasterRenderer {
     private static GuiRenderer guiRenderer;
     private static GuiShader guiShader = new GuiShader();
     private static GLTextRenderer textRenderer;
-    //rendering objects
-    private static Map<List<TexturedModel>, List<GLEntity>> entities = new HashMap<>();
-    private static Map<List<TexturedModel>, List<GLEntity>> aniEntities = new HashMap<>();
-    //private static Map<TexturedModel,List<GLEntity>> normalEntities = new HashMap<>();
-    private static List<Terrain> terrains = new ArrayList<>();
-    private static List<LineModel> lineStripModels = new ArrayList<>();
-    private static List<GuiTexture> guis = new ArrayList<>();
-    private static List<GLGuiText> texts = new ArrayList<>();
-    private static List<Light> lights;
-    //
+
     private static Window window;
     //performance calc
     private static long startT, preT, entT, normT, terT, skyT, partT, guiT, endT;
@@ -77,7 +58,6 @@ public class MasterRenderer {
         lineRenderer = new LineRenderer(projectionMatrix);
         guiRenderer = new GuiRenderer(getAspectRatio()); // todo
         textRenderer = new GLTextRenderer();
-        lights = new ArrayList<>();
         Log.i(TAG, "initialised");
     }
 
@@ -121,20 +101,20 @@ public class MasterRenderer {
      *
      * @param camera camera to use for render
      */
-    public static void render(Camera camera) {
+    public static void render(Scene scene, Camera camera) {
         startT = Time.getNanoTime();
         prepare();
         preT = Time.getNanoTime();
         //entities
-        entityRenderer.render(entities, lights, camera);
+        entityRenderer.render(scene.getEntities(), scene.getLights(), camera);
         //animation
-        aniRenderer.render(aniEntities, lights, camera);
+        aniRenderer.render(scene.getAniEntities(), scene.getLights(), camera);
         entT = Time.getNanoTime();
         //normal
         //todo normalRenderer.render(normalEntities,clipPlane,lights, camera);
         normT = Time.getNanoTime();
         //terrain
-        terrainRenderer.render(terrains, camera, lights);
+        terrainRenderer.render(scene.getTerrains(), camera, scene.getLights());
         terT = Time.getNanoTime();
         //skybox
         if (enableSkybox) skyboxRenderer.render(camera, SKY_COLOR, window.getLastFrameTime());
@@ -143,18 +123,18 @@ public class MasterRenderer {
         ParticleMaster.renderParticles(camera);
         partT = Time.getNanoTime();
         //lines
-        lineRenderer.render(lineStripModels, camera);
+        lineRenderer.render(scene.getLineStripModels(), camera);
         //gui
-        guiRenderer.render(guis);
+        guiRenderer.render(scene.getGuis());
         //text
-        for (GLGuiText text: texts) {
+        for (GLGuiText text: scene.getTexts()) {
             textRenderer.renderText(text, getAspectRatio());
         }
         guiT = Time.getNanoTime();
         endT = Time.getNanoTime();
         double comT = 0.01 * (endT - startT);
 
-        //System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
+        System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
     }
 
     /**
@@ -166,59 +146,12 @@ public class MasterRenderer {
         enableSkybox = enable;
     }
 
-    public static void addTerrain(Terrain terrain) {
-        terrains.add(terrain);
-    }
 
-    public static void addEntity(Entity entity) {
-        if (!(entity instanceof GLEntity)) {
-            throw new UnsupportedOperationException("Can't process none GL entities");
-        }
-        GLEntity glEntity = (GLEntity) entity;
-        List<TexturedModel> entityModels = glEntity.getModels();
-        if (true) {
-            List<GLEntity> batch = entities.get(entityModels);
-            if (batch != null) {
-                batch.add(glEntity);
-            } else {
-                List<GLEntity> newBatch = new ArrayList<>();
-                newBatch.add(glEntity);
-                entities.put(entityModels, newBatch);
-            }
-        } else {
-            //todo normal entities
-            /*
-            List<GLEntity> batch = normalEntities.get(entityModel);
-            if(batch!=null){
 
-                batch.add(entity);
-            }else{
-                List<GLEntity> newBatch = new ArrayList<>();
-                newBatch.add(entity);
-                normalEntities.put(entityModel, newBatch);
-            }*/
-        }
-    }
 
-    public static void addAniEntity(GLEntity entity) {
-        List<TexturedModel> entityModel = entity.getModels(); //// TODO: 10.08.16 ?
-        List<GLEntity> batch = aniEntities.get(entityModel);
-        if (batch != null) {
-            batch.add(entity);
-        } else {
-            List<GLEntity> newBatch = new ArrayList<>();
-            newBatch.add(entity);
-            aniEntities.put(entityModel, newBatch);
-        }
-    }
 
-    public static void addLine(LineModel lineStripModel) {
-        lineStripModels.add(lineStripModel);
-    }
 
-    public static void addGui(GuiTexture gui) {
-        guis.add(gui);
-    }
+
 
     public static void cleanUp() {
         entityRenderer.cleanUp();
@@ -291,14 +224,6 @@ public class MasterRenderer {
         GL11.glDisable(GL11.GL_CULL_FACE);
     }
 
-    public static void addText(GLGuiText text) {
-        texts.add(text);
-    }
-
-
-    public static void addLight(Light light) {
-        lights.add(light);
-    }
 
     /**
      * calculates the windows current aspect ratio
@@ -313,14 +238,4 @@ public class MasterRenderer {
         entityRenderer.setAmbientLight(ambientLight);
     }
 
-    public void clearAll() {
-        guis.clear();
-        terrains.clear();
-        entities.clear();
-        aniEntities.clear();
-        lineStripModels.clear();
-        //todo normalEntities.clear();
-        texts.clear();
-        lights.clear();
-    }
 }

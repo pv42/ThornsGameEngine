@@ -1,15 +1,16 @@
 package engineTester.graphicTest;
 
 import engine.EngineMaster;
+import engine.graphics.Scene;
 import engine.graphics.cameras.ThreeDimensionCamera;
+import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.inputs.InputHandler;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
@@ -44,21 +45,21 @@ public class Main {
         float[] normal = {
                 0, 0, 0
         };
-        RawModel model = Loader.loadToVAO(vertices, textCoords, normal, indices);
+        GLRawModel model = GLLoader.loadToVAO(vertices, textCoords, normal, indices);
         GLEntity lara  = new GLEntity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
         lara.setRx(80);
-        int texture = Loader.loadTexture("Screen_Dust_D.png");
+        int texture = GLLoader.loadTexture("Screen_Dust_D.png");
         ModelTexture modelTexture = new ModelTexture(texture);
-        TexturedModel texturedModel = new TexturedModel(model, modelTexture);
+        GLTexturedModel texturedModel = new GLTexturedModel(model, modelTexture);
 
         ThreeDimensionCamera camera = new ShivtCamera();
         GLEntity e = new GLEntity(texturedModel, new Vector3f(0,12.5f,1f));
-
+        Scene scene = new Scene();
         while (!window.isCloseRequested()) {
             if (useEngine) {
-                MasterRenderer.addEntity(lara);
-                MasterRenderer.addEntity(e);
-                MasterRenderer.render(camera);
+                scene.addEntity(lara);
+                scene.addEntity(e);
+                MasterRenderer.render(scene,camera);
             } else {
                 renderer.prepare();
                 renderer.render(lara, camera);
@@ -72,7 +73,7 @@ public class Main {
             MasterRenderer.cleanUp();
         } else {
             renderer.cleanUp();
-            Loader.cleanUp();
+            GLLoader.cleanUp();
         }
 
         window.destroy();

@@ -1,14 +1,12 @@
 package engine.graphics.particles;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.models.RawModel;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import engine.graphics.renderEngine.Loader;
-import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 
 import java.nio.FloatBuffer;
@@ -23,20 +21,20 @@ public class ParticleRenderer {
     private static final int MAX_INSTANCES = Settings.MAX_PARTICLE_INSTANCES;
     private static final int INSTANCE_DATA_LENGTH =21;
     private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(MAX_INSTANCES * INSTANCE_DATA_LENGTH );
-    private RawModel quad;
+    private GLRawModel quad;
     private ParticleShader shader;
     private int vbo;
     private int pointer = 0;
     protected ParticleRenderer( Matrix4f projectionMatrix) {
          //quad ...
-        this.vbo = Loader.createEmptyVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
-        quad = Loader.loadToVAO(VERTECIS,2);
-        Loader.addInstancesAttribute(quad.getVaoID(), vbo, 1 , 4, INSTANCE_DATA_LENGTH, 0);
-        Loader.addInstancesAttribute(quad.getVaoID(), vbo, 2 , 4, INSTANCE_DATA_LENGTH, 4);
-        Loader.addInstancesAttribute(quad.getVaoID(), vbo, 3 , 4, INSTANCE_DATA_LENGTH, 8);
-        Loader.addInstancesAttribute(quad.getVaoID(), vbo, 4 , 4, INSTANCE_DATA_LENGTH, 12);
-        Loader.addInstancesAttribute(quad.getVaoID(), vbo, 5 , 4, INSTANCE_DATA_LENGTH, 16);
-        Loader.addInstancesAttribute(quad.getVaoID(), vbo, 6 , 1, INSTANCE_DATA_LENGTH, 20);
+        this.vbo = GLLoader.createEmptyVbo(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
+        quad = GLLoader.loadToVAO(VERTECIS,2);
+        GLLoader.addInstancesAttribute(quad.getVaoID(), vbo, 1 , 4, INSTANCE_DATA_LENGTH, 0);
+        GLLoader.addInstancesAttribute(quad.getVaoID(), vbo, 2 , 4, INSTANCE_DATA_LENGTH, 4);
+        GLLoader.addInstancesAttribute(quad.getVaoID(), vbo, 3 , 4, INSTANCE_DATA_LENGTH, 8);
+        GLLoader.addInstancesAttribute(quad.getVaoID(), vbo, 4 , 4, INSTANCE_DATA_LENGTH, 12);
+        GLLoader.addInstancesAttribute(quad.getVaoID(), vbo, 5 , 4, INSTANCE_DATA_LENGTH, 16);
+        GLLoader.addInstancesAttribute(quad.getVaoID(), vbo, 6 , 1, INSTANCE_DATA_LENGTH, 20);
         shader = new ParticleShader();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
@@ -54,7 +52,7 @@ public class ParticleRenderer {
                 updateModelViewMatrix(particle.getPosition(),particle.getRotation(),particle.getScale(),viewMatrix,vboData);
                 updateUVInfo(particle,vboData);
             }
-            Loader.updateVbo(vbo, vboData, buffer);
+            GLLoader.updateVbo(vbo, vboData, buffer);
             GL31.glDrawArraysInstanced(GL11.GL_TRIANGLE_STRIP,0,quad.getVertexCount(),particleList.size());
         }
         finishrendering();

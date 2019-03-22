@@ -2,15 +2,15 @@ import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.lights.Light;
 import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
-import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.shaders.EntityShader;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
@@ -27,7 +27,6 @@ import java.util.List;
 
 import static engine.toolbox.Settings.SKY_COLOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -41,8 +40,8 @@ public class EngineGraphicsTest {
     @Test
     public void main() {
         //EngineMaster.init();
-        //int texture = Loader.loadTexture("grass.png");
-        //TexturedModel model = new TexturedModel(OBJLoader.loadObjModel("dragon"), new ModelTexture(texture));
+        //int texture = GLLoader.loadTexture("grass.png");
+        //GLTexturedModel model = new GLTexturedModel(OBJLoader.loadObjModel("dragon"), new ModelTexture(texture));
         //GLEntity entity = new GLEntity(model,new Vector3f(0,0,0),0,0,0,1);
         //ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(-10,0,0), new Vector3f(0,0,0));
         long window;
@@ -62,16 +61,16 @@ public class EngineGraphicsTest {
         glVertexPointer(2, GL_FLOAT, 16, charBuffer);
 
         glClearColor(43f / 255f, 43f / 255f, 43f / 255f, 0f); // BG color
-        RawModel rawModel = OBJLoader.loadObjModel("barrel");
-        //RawModel rawModel = OBJLoader.loadObjModel("bunny");
+        GLRawModel rawModel = OBJLoader.loadObjModel("barrel");
+        //GLRawModel rawModel = OBJLoader.loadObjModel("bunny");
         createProjectionMatrix(1,1);
         EntityShader shader = new EntityShader();
         ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0,0,20), new Vector3f());
         Light cameraLight = new Light(new Vector3f(0,0,10), new Color(1.0,1.0,1.0));
         List<Light> lights = new ArrayList<>();
         lights.add(cameraLight);
-        ModelTexture texture = new ModelTexture(Loader.loadTexture("barrel.png"));
-        TexturedModel texturedModel = new TexturedModel(rawModel,texture);
+        ModelTexture texture = new ModelTexture(GLLoader.loadTexture("barrel.png"));
+        GLTexturedModel texturedModel = new GLTexturedModel(rawModel,texture);
         GLEntity entity = new GLEntity(texturedModel,new Vector3f());
         //entity.setScale(.2f);
         entity.setPosition(0,-1,-1);
@@ -91,8 +90,6 @@ public class EngineGraphicsTest {
             count ++;
         }
         displayManager.cleanUp();
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
         assertEquals(0, Log.getErrorNumber());
@@ -152,8 +149,8 @@ public class EngineGraphicsTest {
         projectionMatrix.m33(0);
     }
 
-    private static void prepareTexturedModel(TexturedModel model, EntityShader shader) {
-        RawModel rawModel = model.getRawModel();
+    private static void prepareTexturedModel(GLTexturedModel model, EntityShader shader) {
+        GLRawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);

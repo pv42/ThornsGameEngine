@@ -5,6 +5,7 @@ import java.util.Map;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.ThreeDimensionCamera;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -14,10 +15,9 @@ import org.joml.Vector4f;
 
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
-import engine.graphics.models.RawModel;
-import engine.graphics.models.TexturedModel;
-import engine.graphics.renderEngine.MasterRenderer;
-import engine.graphics.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.toolbox.Maths;
 
 import static engine.toolbox.Settings.SKY_COLOR;
@@ -40,10 +40,10 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<TexturedModel, List<GLEntity>> entities, Vector4f clipPlane, List<Light> lights, ThreeDimensionCamera camera) {
+	public void render(Map<GLTexturedModel, List<GLEntity>> entities, Vector4f clipPlane, List<Light> lights, ThreeDimensionCamera camera) {
 		shader.start();
 		prepare(clipPlane, lights, camera);
-		for (TexturedModel model : entities.keySet()) {
+		for (GLTexturedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			List<GLEntity> batch = entities.get(model);
 			for (GLEntity entity : batch) {
@@ -59,8 +59,8 @@ public class NormalMappingRenderer {
 		shader.cleanUp();
 	}
 
-	private void prepareTexturedModel(TexturedModel model) {
-		RawModel rawModel = model.getRawModel();
+	private void prepareTexturedModel(GLTexturedModel model) {
+		GLRawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);

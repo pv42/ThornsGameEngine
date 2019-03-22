@@ -1,4 +1,4 @@
-package engine.graphics.textures;
+package engine.graphics.glglfwImplementation.textures;
 
 /**
  * Created by pv42 on 20.06.16.

@@ -2,12 +2,8 @@ import engine.EngineMaster;
 import engine.audio.AudioMaster;
 import engine.audio.OggData;
 import engine.audio.Source;
-import engine.graphics.cameras.StaticThreeDimensionCamera;
-import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
-import engine.graphics.renderEngine.MasterRenderer;
 import engine.toolbox.Log;
-import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,8 +1,7 @@
 package engine.graphics.lines;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;

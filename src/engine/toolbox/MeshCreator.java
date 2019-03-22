@@ -1,7 +1,7 @@
 package engine.toolbox;
 
-import engine.graphics.models.RawModel;
-import engine.graphics.renderEngine.Loader;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
 
 import static java.lang.Math.PI;
 
@@ -20,7 +20,7 @@ public class MeshCreator {
      * @param uprZ boxes lower z coordinate
      * @return boxes raw model
      */
-    public static RawModel createBox(float lwrX, float uprX, float lwrY, float uprY, float lwrZ, float uprZ) {
+    public static GLRawModel createBox(float lwrX, float uprX, float lwrY, float uprY, float lwrZ, float uprZ) {
         float[] positions = {
                 uprX, lwrY, lwrZ,
                 uprX, lwrY, uprZ,
@@ -51,7 +51,7 @@ public class MeshCreator {
                 4, 5, 1, 5, 6, 2,
                 2, 6, 7, 0, 3, 7
         };
-        return Loader.loadToVAO(positions, normals, textures, indices);
+        return GLLoader.loadToVAO(positions, normals, textures, indices);
     }
     /**
      * creates a mesh box parallel to the axis
@@ -59,11 +59,11 @@ public class MeshCreator {
      * @param ySize boxes y size
      * @param zSize boxes z size
      */
-    public static RawModel createBox(float xSize, float ySize, float zSize) {
+    public static GLRawModel createBox(float xSize, float ySize, float zSize) {
         return createBox(-xSize/2,xSize/2,-ySize/2,ySize/2,-zSize/2, zSize/2);
     }
 
-    public static RawModel createCircle(float radius, int circleVertices) {
+    public static GLRawModel createCircle(float radius, int circleVertices) {
         float[] positions = new float[circleVertices * 3];
         for (int i = 0; i < circleVertices * 3; i += 3) {
             float alpha = (float) (i * 2*PI / circleVertices / 3);
@@ -84,6 +84,6 @@ public class MeshCreator {
             textures[i+1] = (float) Math.cos(alpha) * radius;
         }
         float[] normals = new float[circleVertices * 3];
-        return Loader.loadToVAO(positions, textures, normals, indices);
+        return GLLoader.loadToVAO(positions, textures, normals, indices);
     }
 }

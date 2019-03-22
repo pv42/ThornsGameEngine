@@ -1,12 +1,13 @@
 package engineTester.graphicTest;
 
 import engine.EngineMaster;
+import engine.graphics.Scene;
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
 import org.joml.Vector2f;
@@ -22,11 +23,12 @@ public class FontTest {
         GLTTFont font = new GLTTFont("res\\fonts\\arial.ttf", 128);
         GLGuiText text = new GLGuiText(font, "H3l!0 w0r!d", 0.0001f, new Color(0, 1.0, 1.0), new Vector2f());
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(), new Vector3f());
+        Scene scene = new Scene();
         int count = 0;
+        scene.addText(text);
         while (!window.isCloseRequested() && count < 60) {
-            MasterRenderer.render(camera);
+            MasterRenderer.render(scene, camera);
             window.update();
-            MasterRenderer.addText(text);
             count++;
         }
         EngineMaster.finish();

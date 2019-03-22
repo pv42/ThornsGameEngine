@@ -1,11 +1,11 @@
 package engine;
 
 import engine.audio.AudioMaster;
+import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.particles.ParticleMaster;
-import engine.graphics.renderEngine.Loader;
-import engine.graphics.renderEngine.MasterRenderer;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.inputs.InputLoop;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
@@ -59,7 +59,7 @@ public class EngineMaster {
         Log.i(TAG, "shutting down render ");
         ParticleMaster.cleanUp();
         MasterRenderer.cleanUp();
-        Loader.cleanUp();
+        GLLoader.cleanUp();
         displayManager.cleanUp();
         AudioMaster.cleanUp();
         GLFW.glfwTerminate();
