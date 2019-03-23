@@ -2,12 +2,12 @@ package engine.graphics.glglfwImplementation.entities;
 
 import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
-import engine.graphics.lights.Light;
-import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.shaders.EntityShader;
+import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.lights.Light;
+import engine.graphics.shaders.EntityShader;
 import engine.toolbox.Maths;
 import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import static engine.toolbox.Settings.SKY_COLOR;
  * @author pv42
  */
 public class GLEntityRenderer {
+    private static boolean already_printed = false;
     private EntityShader shader;
     private float ambientLight = AMBIENT_LIGHT;
 
@@ -75,9 +77,20 @@ public class GLEntityRenderer {
         List<Matrix4fDbg> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
             joints = rawModel.getJoints();
+            int i = 0;
+
             for (Joint joint : joints) {
+                //matrix is supposed to be  root.proc * child.proc * ... * leaf.proc * (root.mdj * child.mdj * ... * leaf.mdj) ^(-1)
+                // = root.proc * child.proc * ... * leaf.proc * (leaf.mdj ^-1 * ... * child.mdj^-1 * root.mdj^-1)
+                // proc == IBM
+                if (!already_printed) {
+                    System.out.println("[" + i + "]" + joint.getId() + ": " + joint.getTransformationMatrix().getName());
+                    System.out.println(joint.getTransformationMatrix().toString(new DecimalFormat()));
+                    i++;
+                }
                 boneMatrices.add(joint.getTransformationMatrix());
             }
+            already_printed = true;
         }
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_POSITION);

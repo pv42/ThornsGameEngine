@@ -1,28 +1,28 @@
 package engine;
 
+import engine.graphics.Entity;
 import engine.graphics.Scene;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.Animator;
 import engine.graphics.cameras.FirstPersonCamera;
-import engine.graphics.entities.Entity;
 import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
+import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.TerrainTexture;
+import engine.graphics.glglfwImplementation.textures.TerrainTexturePack;
 import engine.graphics.guis.GuiTexture;
 import engine.graphics.lights.Light;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.particles.ParticleSystem;
 import engine.graphics.particles.ParticleSystemStream;
 import engine.graphics.particles.ParticleTexture;
-import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.terrains.Terrain;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
-import engine.graphics.glglfwImplementation.textures.TerrainTexture;
-import engine.graphics.glglfwImplementation.textures.TerrainTexturePack;
 import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
@@ -43,9 +43,8 @@ import java.util.Random;
  */
 
 public class MainGameLoop {
-    private static final String FONT = "courier_df";
     private static final String TAG = "GameLoop";
-    private static final float FONT_SIZE = 0.00005f;
+    private static final float FONT_SIZE = 0.00002f;
 
     public static void main(String[] args) {
         GLFWWindow window = EngineMaster.init();
@@ -59,9 +58,9 @@ public class MainGameLoop {
         //todo AudioMaster.setListenerData();
         GLTTFont font = new GLTTFont("res/fonts/arial.ttf", 64);
         ParticleMaster.init(MasterRenderer.getProjectionMatrix());
-        GLGuiText text = new GLGuiText(font, "loading", FONT_SIZE, new Color(0.3f, 0.3f, 0.4f), new Vector2f(0, 0));
+        GLGuiText fpsText = new GLGuiText(font, "loading", FONT_SIZE, new Color(0.5f, 0.5f, 0.5f), new Vector2f(-1f, .96f));
         Scene scene = new Scene();
-        scene.addText(text);
+        scene.addText(fpsText);
         List<GLEntity> entities = new ArrayList<>();
         List<GuiTexture> guis = new ArrayList<>();
         GuiTexture gui = new GuiTexture(GLLoader.loadTexture("cross.png"), new Vector2f(0f, 0f), new Vector2f(.04f, .04f), window);
@@ -124,11 +123,11 @@ public class MainGameLoop {
         entities.forEach(scene::addEntity);
 
         scene.addAniEntity(player);
-        while (!window.isCloseRequested()) { //actual MainGameLoop
+        while (!window.isCloseRequested() || false) { //actual MainGameLoop
             //game logic
             //FPS Updates
             if (timeSinceFPSUpdate >= 1.7f) {
-                text.setString((int) (framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps");
+                fpsText.setString((int) (framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps");
                 timeSinceFPSUpdate = 0;
                 framesSinceFPSUpdate = 0;
             }

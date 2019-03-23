@@ -141,6 +141,7 @@ public class Collada implements ICollada{
     }
 
     private void processNode(ColladaNode node, Map<String, Joint> joints, Joint parent) {
+        Log.i(TAG, "procNode " + node.getSid());
         Joint joint = joints.get(node.getSid());
         joint.setPoseTransformationMatrix(node.getTransformation());
         joint.setParent(parent);

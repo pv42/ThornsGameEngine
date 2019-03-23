@@ -110,9 +110,6 @@ public class MasterRenderer {
         //animation
         aniRenderer.render(scene.getAniEntities(), scene.getLights(), camera);
         entT = Time.getNanoTime();
-        //normal
-        //todo normalRenderer.render(normalEntities,clipPlane,lights, camera);
-        normT = Time.getNanoTime();
         //terrain
         terrainRenderer.render(scene.getTerrains(), camera, scene.getLights());
         terT = Time.getNanoTime();
@@ -133,8 +130,7 @@ public class MasterRenderer {
         guiT = Time.getNanoTime();
         endT = Time.getNanoTime();
         double comT = 0.01 * (endT - startT);
-
-        System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
+        // System.out.println(String.format("pre:%.2f%% ent:%.2f%% nen:%.2f%% ter:%.2f%% sky:%.2f%% other:%.2f%%" ,(preT - startT) / comT,(entT - preT)/ comT,(normT - entT)/comT,(terT- normT)/comT,(skyT - terT)/comT,(endT-skyT)/comT  )  );
     }
 
     /**

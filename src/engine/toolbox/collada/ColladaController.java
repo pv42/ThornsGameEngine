@@ -18,6 +18,7 @@ public class ColladaController extends ColladaPrimaryElement{
     private static final String TAG = "Collada:Controller";
     private Matrix4f bindShapeMatrix;
     private Map<String, Joint> joints; //also with bind matrices
+    private List<String> jointNames;
     private VertexWeights weights; //todo
     private String geometryId;
 
@@ -38,6 +39,7 @@ public class ColladaController extends ColladaPrimaryElement{
 
     private static ColladaController readSkin(Node node) {
         //skinsToHandle.add(node);
+        List<String> jointNames = new ArrayList<>();
         Map<String, Node> sources = new HashMap<>();
         Node bindShapeMatrixNode = null;
         Node jointsNode = null;
@@ -61,13 +63,18 @@ public class ColladaController extends ColladaPrimaryElement{
         } else {
             controller.setBindShapeMatrix(new Matrix4f().identity());
         }
-        controller.setJoints(readJoints(jointsNode, sources));
+        controller.setJoints(readJoints(jointsNode, sources, jointNames));
+        controller.setJointNames(jointNames);
         controller.setWeights(readVertexWeights(vertexWeightNode, sources));
         controller.setGeometryId(getAttribValue(node,"source").replaceFirst("#",""));
         return controller;
     }
 
-    private static Map<String, Joint> readJoints(Node node, Map<String, Node> sources) {
+    private void setJointNames(List<String> jointNames) {
+        this.jointNames = jointNames;
+    }
+
+    private static Map<String, Joint> readJoints(Node node, Map<String, Node> sources, List<String> jointNames) {
         List<Matrix4f> matrices = null;
         List<String> jointIds = null;
         for (Node n : getListFromNodeList(node.getChildNodes())) {
@@ -86,6 +93,7 @@ public class ColladaController extends ColladaPrimaryElement{
             }
         }
         if (matrices == null || jointIds == null || jointIds.size() != matrices.size()) throw  new IllegalStateException("invalid joint data");
+        jointNames.addAll(jointIds);
         Map<String,Joint> joints = new HashMap<>();
         for (int i = 0; i < matrices.size(); i++) {
             Joint joint = new Joint(jointIds.get(i),matrices.get(i));
@@ -95,14 +103,14 @@ public class ColladaController extends ColladaPrimaryElement{
 
     }
 
-    private static VertexWeights readVertexWeights(Node node, Map<String, Node> sources) {
+    private static VertexWeights readVertexWeights(Node vertexWeightsNode, Map<String, Node> sources) {
         List<Float> weights = null;
         List<Integer> vertexCounts = null;
         List<Integer> v = null;
-        for (Node n : getListFromNodeList(node.getChildNodes())) {
+        for (Node n : getListFromNodeList(vertexWeightsNode.getChildNodes())) {
             if (n.getNodeName().equals("input")) {
                 if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("JOINT")) {
-                    //todo worth it?
+                    Log.i(TAG, "ignoring joint hint in vertex weight");
                 } else if (n.getAttributes().getNamedItem("semantic").getNodeValue().equals("WEIGHT")) {
                     weights = StorageFormatUtil.getList(ColladaUtil.readSource(sources.get(getAttribValue(n,"source")
                             .replaceFirst("#",""))).getFloatData());
@@ -132,7 +140,7 @@ public class ColladaController extends ColladaPrimaryElement{
             finalWeights.add(currentWeights);
             finalIndices.add(currentIndices);
         }
-        return new VertexWeights(finalWeights, finalIndices);
+        return new VertexWeights(finalWeights, finalIndices); // list with bone indices and weights per element
     }
 
     private void setBindShapeMatrix(Matrix4f bindShapeMatrix) {
@@ -164,8 +172,18 @@ public class ColladaController extends ColladaPrimaryElement{
     }
 
     List<Joint> getJointList() {
-        return new ArrayList<>(joints.values());
+        List<Joint> jointList = new ArrayList<>();
+        String[] names = {"Torso","Chest","Neck","Head","Upper_Arm_L","Lower_Arm_L","Hand_L","Upper_Arm_R",
+                "Lower_Arm_R","Hand_R","Upper_Leg_L","Lower_Leg_L","Foot_L","Upper_Leg_R","Lower_Leg_R","Foot_R"}; // todo remove hardcode
+        for(String name: names) {
+            jointList.add(joints.get(name));
+        }
+        return jointList;
+        //
+
     }
+
+
 
     public Matrix4f getBindShapeMatrix() {
         return bindShapeMatrix;

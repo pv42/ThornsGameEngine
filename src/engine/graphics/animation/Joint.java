@@ -5,6 +5,8 @@ import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by pv42 on 27.07.16.
  */
@@ -23,22 +25,29 @@ float4x4 Torso.mjd is (static)
 0.0 0.0 0.0 1.0
  */
 public class Joint {
-    private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0));
+    private static final Matrix4fDbg CORRECTION = new Matrix4fDbg(new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0)),"COR"); // blender up axis
 
     private static final String TAG = "Joint";
-    private final Matrix4fDbg inverseBindMatrix;
-    private Matrix4fDbg poseTransformationMatrix;
+    private final Matrix4fDbg relativeInverseBindMatrix;
+    private /*final*/ Matrix4fDbg relativePoseTransformationMatrix;
+    private Matrix4fDbg absoluteInverseBindMatrix;
+    private Matrix4fDbg absolutePoseTransformationMatrix;
+    private final String id;
     private Matrix4fDbg animationTransformationMatrix = new Matrix4fDbg("I");
     private Joint parent;
-    private final String id;
 
     public Joint(String id, Matrix4f inverseBindMatrix) {
         this.id = id;
-        this.inverseBindMatrix = new Matrix4fDbg(inverseBindMatrix,id);
+        this.relativeInverseBindMatrix = new Matrix4fDbg(inverseBindMatrix, id + ".ibm").transpose();
+        System.out.println("IBM " + id + "\n" + inverseBindMatrix.toString(new DecimalFormat()));
     }
 
     public Joint getParent() {
         return parent;
+    }
+
+    public void setParent(Joint parent) {
+        this.parent = parent;
     }
 
     public String getId() {
@@ -50,53 +59,57 @@ public class Joint {
     }
 
     public Matrix4fDbg getTransformationMatrix() {
-        if(poseTransformationMatrix == null) {
+        if (relativePoseTransformationMatrix == null) {
             Log.w(TAG, "id:" + id);
-            Matrix4fDbg matrix4fDbg =  new Matrix4fDbg("I");
+            Matrix4fDbg matrix4fDbg = new Matrix4fDbg("I");
             matrix4fDbg.identity();
             return matrix4fDbg;
         }
-        //Matrix4fDbg mat1 = poseTransformationMatrix;
-        //Matrix4fDbg mat0 = animationTransformationMatrix;
-        Matrix4fDbg matrix;
-        matrix = getMat0();
-        matrix.mul(getMat1().invert());
-        //System.out.println(getMat0().getName()+ "|" + getMat1().getName());
-
-        return matrix;
+        //if(true) return new Matrix4fDbg(new Matrix4f(),"");
+        Matrix4fDbg m0 = new Matrix4fDbg(getAbsoluteAnimationTransformMatrix());
+        Matrix4fDbg m1 = new Matrix4fDbg(CORRECTION).mul(getAbsolutePoseTransformationMatrix());
+        return new Matrix4fDbg(new Matrix4fDbg(m0).mul(new Matrix4fDbg(m1).invert()));
     }
 
-    private Matrix4fDbg getMat0() {
+    private Matrix4fDbg getAbsoluteInverseBindMatrix() {
+        if(true) return relativeInverseBindMatrix;
+        if (absoluteInverseBindMatrix == null) {
+            if (hasParent()) {
+                absoluteInverseBindMatrix = new Matrix4fDbg(parent.getAbsoluteInverseBindMatrix()).mul(relativeInverseBindMatrix);
+            } else {
+                absoluteInverseBindMatrix = new Matrix4fDbg(relativeInverseBindMatrix);
+            }
+        }
+        return absoluteInverseBindMatrix;
+    }
 
+    private Matrix4fDbg getAbsolutePoseTransformationMatrix() {
+        //if(true) return relativePoseTransformationMatrix;
+        if (absolutePoseTransformationMatrix == null) {
+            if (hasParent()) {
+                absolutePoseTransformationMatrix = new Matrix4fDbg(parent.getAbsolutePoseTransformationMatrix()).mul(relativePoseTransformationMatrix);
+            } else {
+                absolutePoseTransformationMatrix = new Matrix4fDbg(relativePoseTransformationMatrix);
+            }
+        }
+        return absolutePoseTransformationMatrix;
+    }
+
+    private Matrix4fDbg getAbsoluteAnimationTransformMatrix() {
         if (hasParent()) {
-            return new Matrix4fDbg(parent.getMat0()).mul(animationTransformationMatrix);
+            return new Matrix4fDbg(parent.getAbsoluteAnimationTransformMatrix()).mul(animationTransformationMatrix);
         } else {
             return new Matrix4fDbg(animationTransformationMatrix);
         }
     }
 
-    private Matrix4fDbg getMat1() {
-
-        if (hasParent()) {
-            return new Matrix4fDbg(parent.getMat1()).mul(poseTransformationMatrix);
-        } else {
-            return new Matrix4fDbg(poseTransformationMatrix);
-        }
-    }
-
     public void setPoseTransformationMatrix(Matrix4f poseTransformationMatrix) {
-        this.poseTransformationMatrix = new Matrix4fDbg(CORRECTION.mul(poseTransformationMatrix.transpose(new Matrix4f()), new Matrix4f()), id + ".pTM");
-        //this.poseTransformationMatrix.debugPrint();
+        this.relativePoseTransformationMatrix = new Matrix4fDbg(poseTransformationMatrix, id + ".pTM").transpose();
+        this.relativePoseTransformationMatrix.debugPrint();
     }
 
-    
     public void setAnimationTransformationMatrix(Matrix4f animationTransformationMatrix) {
-        this.animationTransformationMatrix = new Matrix4fDbg(CORRECTION.mul(animationTransformationMatrix, new Matrix4f()), id + ".aTM");
-        this.animationTransformationMatrix.debugPrint();
+        this.animationTransformationMatrix = new Matrix4fDbg(animationTransformationMatrix, id + ".aTM");
+        //this.animationTransformationMatrix.debugPrint();
     }
-
-    public void setParent(Joint parent) {
-        this.parent = parent;
-    }
-
 }

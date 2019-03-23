@@ -1,6 +1,6 @@
 package thornsPong;
 
-import engine.graphics.entities.Entity;
+import engine.graphics.Entity;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.physics.PhysicalEntity;
 import engine.physics.PhysicsEngine;

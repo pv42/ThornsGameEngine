@@ -1,6 +1,5 @@
 package engine.graphics.shaders;
 
-import engine.toolbox.Log;
 import engine.toolbox.Matrix4fDbg;
 import org.joml.Vector2f;
 
@@ -29,7 +28,7 @@ public class EntityShader extends Lighted3DShader {
      * -bone animation
      * -spec maps
      * -lighting
-     * - ...
+     * -animation (even tho it does not word)
      */
     public EntityShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -66,6 +65,7 @@ public class EntityShader extends Lighted3DShader {
 
     /**
      * loads if a specular map should be used
+     *
      * @param usesSpecMap should a spec. map be used
      */
     public void loadUseSpecMap(boolean usesSpecMap) {
@@ -74,6 +74,7 @@ public class EntityShader extends Lighted3DShader {
 
     /**
      * loads the number of rows if the texture is an atlas or 1
+     *
      * @param numberOfRows the number of rows/cols the texture has
      */
     public void loadTextureAtlasNumberOfRows(int numberOfRows) {
@@ -82,6 +83,7 @@ public class EntityShader extends Lighted3DShader {
 
     /**
      * loads the texture offset in texture atlases
+     *
      * @param offsetX textures x offset
      * @param offsetY textures y offset
      */
@@ -91,6 +93,7 @@ public class EntityShader extends Lighted3DShader {
 
     /**
      * load the bone matrices into the shader uniforms
+     *
      * @param bones bone matrices to load
      */
     public void loadBones(List<Matrix4fDbg> bones) {
@@ -101,10 +104,9 @@ public class EntityShader extends Lighted3DShader {
          super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 
-
-
     /**
      * loads whether the rendered gpu should use bone animation
+     *
      * @param useAnimation should animations be used
      */
     public void loadUseAnimation(boolean useAnimation) {

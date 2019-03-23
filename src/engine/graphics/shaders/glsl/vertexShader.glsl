@@ -1,5 +1,9 @@
 #version 400 core
 
+const int MAX_WEIGHTS = 4;
+const int MAX_LIGHTS = 4;
+const int MAX_BONES = 250;
+
 in vec3 position;
 in vec2 uv;
 in vec3 normal;
@@ -13,7 +17,7 @@ out float visibility;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition[4];
+uniform vec3 lightPosition[MAX_LIGHTS];
 uniform float useFakeLightning;
 uniform int numberOfRows;
 uniform vec2 offset;
@@ -23,7 +27,7 @@ uniform vec2 offset;
 in vec4 bone_index;
 in vec4 bone_weight;
 uniform float useAnimation;
-uniform mat4 bone[250]; // Settings.MAX_BONES
+uniform mat4 bone[MAX_BONES]; // Settings.MAX_BONES
 //
 
 const float density = 0.0035; //0.0035
@@ -32,20 +36,15 @@ const float gradient = 5.0;
 void main(void) {
     vec4 worldPosition;
     vec3 actualNormal;
-    if(/*useAnimation < 0.5 */true ) {
+    if(useAnimation < 0.5 /*/true*/ ) {
         worldPosition = transformationMatrix * vec4(position,1.0);
         actualNormal = normal;
     } else {
         vec4 animatedPosition = vec4(0);
         vec4 animatedNormal = vec4(0);
-        vec4 bi = bone_index;
-        vec4 bw = bone_weight;
-        for(int j = 0; j < 4; j++) {
-            int i = int(bi.x);    //Cast to int
-            animatedPosition += bone[i] *  vec4(position, 1.0) * bw.x;
-            animatedNormal += bone[i] * vec4(normal, 1.0) * bw.x;
-            bi = bi.yzwx;
-            bw = bw.yzwx;
+        for(int i = 0; i < MAX_WEIGHTS; i++) {
+            animatedPosition += bone[int(bone_index[i])] *  vec4(position, 1.0) * bone_weight[i];
+            animatedNormal += bone[int(bone_index[i])] * vec4(normal, 1.0) * bone_weight[i];
         }
         //animatedPosition = vec4(position, 1.0);
         //animatedNormal = vec4(normal, 1.0);

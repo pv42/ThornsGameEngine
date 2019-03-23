@@ -24,7 +24,7 @@ public class OBJLoader {
         try {
              fr = new FileReader(new File("res/meshs/" + filename + ".obj"));
         } catch (IOException e ){
-             Log.e("couldn't read OBJ '" + filename + "'");
+             Log.e(TAG, "couldn't read OBJ '" + filename + "'");
              return new GLRawModel(0,0); //inv model with 0 vertices
         }
         BufferedReader reader = new BufferedReader(fr);

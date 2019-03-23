@@ -20,7 +20,7 @@ public class Animation {
     }
 
     Matrix4f getMatrix(float time, String jointName) {
-        //if(0==0) return keyframes.get(0).getJointData().get(jointName); // todo remove
+        if(0==0) return keyframes.get(0).getJointData().get(jointName); // todo remove
         float prevTS = 0;
         float nextTS = Float.POSITIVE_INFINITY;
         Matrix4f nextMatrix = null;

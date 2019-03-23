@@ -173,9 +173,15 @@ public class GLLoader {
      */
     public static GLRawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
+        System.out.print("index:");
+        //for(int index: boneIndices) {
+        //    System.out.print(index+ ",");
+        //}
+        //System.out.println();
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_INDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
         unbindVAO();
+        Log.i(TAG, "p:" + positions.length + " bi:" + boneIndices.length + " bw:" + boneWeight.length);
         return new GLRawModel(vaoID, indices.length, joints);
     }
 

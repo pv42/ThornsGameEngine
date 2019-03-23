@@ -1,6 +1,5 @@
 package engine.graphics;
 
-import engine.graphics.entities.Entity;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
