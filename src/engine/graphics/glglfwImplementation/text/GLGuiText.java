@@ -1,7 +1,7 @@
 package engine.graphics.glglfwImplementation.text;
 
-import engine.graphics.text.Font;
 import engine.graphics.text.Text;
+import engine.graphics.text.Font;
 import engine.toolbox.Color;
 import org.joml.Vector2f;
 

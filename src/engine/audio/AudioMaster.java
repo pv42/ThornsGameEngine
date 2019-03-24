@@ -30,12 +30,14 @@ public class AudioMaster {
         try {
             try {
                 ALC.getFunctionProvider(); //test if OpenAL is initialized
+                device = openDefaultDevice();
 
             } catch (IllegalStateException ex) {
                 ALC.create();
                 Log.i(TAG, "reinitialized OpenAL");
+                device = openDefaultDevice();
+
             }
-            device = openDefaultDevice();
             //ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
             context = ALC10.alcCreateContext(device, (IntBuffer)null);
             if (context == NULL) {
