@@ -6,6 +6,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pv42 on 27.07.16.
@@ -35,6 +37,21 @@ public class Joint {
     private final String id;
     private Matrix4fDbg animationTransformationMatrix = new Matrix4fDbg("I");
     private Joint parent;
+
+    // only use in example
+    public int numId;
+    public List<Joint> children = new ArrayList<>();
+    public Joint(int id, String nameId, Matrix4fDbg bindTransform) {
+        this.id = nameId;
+        this.numId = id;
+        relativeInverseBindMatrix = bindTransform;
+    }
+    public void addChild(Joint joint) {
+        joint.setParent(this);
+        children.add(joint);
+    }
+    //exampe use end
+
 
     public Joint(String id, Matrix4f inverseBindMatrix) {
         this.id = id;
