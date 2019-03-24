@@ -8,6 +8,7 @@ import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
 import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.glglfwImplementation.text.GLTTFontFactory;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
 import org.joml.Vector2f;
@@ -20,7 +21,7 @@ public class FontTest {
     @Test
     public void testFont() {
         Window window = EngineMaster.init();
-        GLTTFont font = new GLTTFont("res\\fonts\\arial.ttf", 128);
+        GLTTFont font = GLTTFontFactory.loadSystemFont("bahnschrift",128);
         GLGuiText text = new GLGuiText(font, "H3l!0 w0r!d", 0.0001f, new Color(0, 1.0, 1.0), new Vector2f());
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(), new Vector3f());
         Scene scene = new Scene();

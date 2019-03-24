@@ -194,4 +194,8 @@ public class GLTTFont implements Font {
             this.leftSideBearing = leftSideBearing;
         }
     }
+
+    public int getPixelSize() {
+        return pixelSize;
+    }
 }
