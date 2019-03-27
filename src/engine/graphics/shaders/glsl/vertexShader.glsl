@@ -1,6 +1,6 @@
 #version 400 core
 
-const int MAX_WEIGHTS = 4;
+const int MAX_WEIGHTS = 3;
 const int MAX_LIGHTS = 4;
 const int MAX_BONES = 250;
 
@@ -24,8 +24,8 @@ uniform vec2 offset;
 
 //animation:
 
-in vec4 bone_index;
-in vec4 bone_weight;
+in vec3 bone_index;
+in vec3 bone_weight;
 uniform float useAnimation;
 uniform mat4 bone[MAX_BONES]; // Settings.MAX_BONES
 //
@@ -36,7 +36,7 @@ const float gradient = 5.0;
 void main(void) {
     vec4 worldPosition;
     vec3 actualNormal;
-    if(useAnimation < 0.5 /*/true*/ ) {
+    if(useAnimation < 0.5 && true) {
         worldPosition = transformationMatrix * vec4(position,1.0);
         actualNormal = normal;
     } else {

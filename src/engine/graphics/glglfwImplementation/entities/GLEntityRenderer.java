@@ -77,16 +77,15 @@ public class GLEntityRenderer {
         List<Matrix4fDbg> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
             joints = rawModel.getJoints();
-            System.out.print(joints);
             int i = 0;
 
             for (Joint joint : joints) {
                 //matrix is supposed to be  root.proc * child.proc * ... * leaf.proc * (root.mdj * child.mdj * ... * leaf.mdj) ^(-1)
                 // = root.proc * child.proc * ... * leaf.proc * (leaf.mdj ^-1 * ... * child.mdj^-1 * root.mdj^-1)
-                // proc == IBM
+                // mdj == ibm
                 if (!already_printed) {
                     if(joint == null) continue;
-                    System.out.println("[" + i + "]" + joint.getId() + ": " + joint.getTransformationMatrix().getName());
+                    System.out.println("JTM[" + i + "]" + joint.getId() + ": " + joint.getTransformationMatrix().getName());
                     System.out.println(joint.getTransformationMatrix().toString(new DecimalFormat()));
                     i++;
                 }

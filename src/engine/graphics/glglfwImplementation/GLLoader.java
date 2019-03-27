@@ -173,7 +173,6 @@ public class GLLoader {
      */
     public static GLRawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
-        System.out.print("index:");
         //for(int index: boneIndices) {
         //    System.out.print(index+ ",");
         //}

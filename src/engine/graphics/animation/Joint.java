@@ -33,7 +33,6 @@ public class Joint {
     private final Matrix4fDbg relativeInverseBindMatrix;
     private /*final*/ Matrix4fDbg relativePoseTransformationMatrix;
     private Matrix4fDbg absoluteInverseBindMatrix;
-    private Matrix4fDbg absolutePoseTransformationMatrix;
     private final String id;
     private Matrix4fDbg animationTransformationMatrix = new Matrix4fDbg("I");
     private Joint parent;
@@ -53,9 +52,9 @@ public class Joint {
     //exampe use end
 
 
-    public Joint(String id, Matrix4f inverseBindMatrix) {
+    public Joint(String id, Matrix4fDbg inverseBindMatrix) {
         this.id = id;
-        this.relativeInverseBindMatrix = new Matrix4fDbg(inverseBindMatrix, id + ".ibm").transpose();
+        this.relativeInverseBindMatrix = inverseBindMatrix;
         System.out.println("IBM " + id + "\n" + inverseBindMatrix.toString(new DecimalFormat()));
     }
 
@@ -76,20 +75,12 @@ public class Joint {
     }
 
     public Matrix4fDbg getTransformationMatrix() {
-        if (relativePoseTransformationMatrix == null) {
-            Log.w(TAG, "id:" + id);
-            Matrix4fDbg matrix4fDbg = new Matrix4fDbg("I");
-            matrix4fDbg.identity();
-            return matrix4fDbg;
-        }
-        //if(true) return new Matrix4fDbg(new Matrix4f(),"");
         Matrix4fDbg m0 = new Matrix4fDbg(getAbsoluteAnimationTransformMatrix());
-        Matrix4fDbg m1 = new Matrix4fDbg(CORRECTION).mul(getAbsolutePoseTransformationMatrix());
+        Matrix4fDbg m1 = getAbsoluteInverseBindMatrix();
         return new Matrix4fDbg(new Matrix4fDbg(m0).mul(new Matrix4fDbg(m1).invert()));
     }
 
     private Matrix4fDbg getAbsoluteInverseBindMatrix() {
-        if(true) return relativeInverseBindMatrix;
         if (absoluteInverseBindMatrix == null) {
             if (hasParent()) {
                 absoluteInverseBindMatrix = new Matrix4fDbg(parent.getAbsoluteInverseBindMatrix()).mul(relativeInverseBindMatrix);
@@ -98,18 +89,6 @@ public class Joint {
             }
         }
         return absoluteInverseBindMatrix;
-    }
-
-    private Matrix4fDbg getAbsolutePoseTransformationMatrix() {
-        //if(true) return relativePoseTransformationMatrix;
-        if (absolutePoseTransformationMatrix == null) {
-            if (hasParent()) {
-                absolutePoseTransformationMatrix = new Matrix4fDbg(parent.getAbsolutePoseTransformationMatrix()).mul(relativePoseTransformationMatrix);
-            } else {
-                absolutePoseTransformationMatrix = new Matrix4fDbg(relativePoseTransformationMatrix);
-            }
-        }
-        return absolutePoseTransformationMatrix;
     }
 
     private Matrix4fDbg getAbsoluteAnimationTransformMatrix() {
@@ -121,12 +100,11 @@ public class Joint {
     }
 
     public void setPoseTransformationMatrix(Matrix4f poseTransformationMatrix) {
-        this.relativePoseTransformationMatrix = new Matrix4fDbg(poseTransformationMatrix, id + ".pTM").transpose();
+        this.relativePoseTransformationMatrix = new Matrix4fDbg(poseTransformationMatrix, id + ".pTM");
         this.relativePoseTransformationMatrix.debugPrint();
     }
 
-    public void setAnimationTransformationMatrix(Matrix4f animationTransformationMatrix) {
-        this.animationTransformationMatrix = new Matrix4fDbg(animationTransformationMatrix, id + ".aTM");
-        //this.animationTransformationMatrix.debugPrint();
+    public void setAnimationTransformationMatrix(Matrix4fDbg animationTransformationMatrix) {
+        this.animationTransformationMatrix = new Matrix4fDbg(animationTransformationMatrix);
     }
 }

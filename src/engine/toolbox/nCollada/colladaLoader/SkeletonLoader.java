@@ -46,14 +46,15 @@ public class SkeletonLoader {
         int index = boneOrder.indexOf(nameId);
         String[] matrixData = jointNode.getChild("matrix").getData().split(" ");
         Matrix4fDbg matrix = new Matrix4fDbg(new Matrix4f(convertData(matrixData)), "");
-        matrix.setName(nameId + ".ptm");
+        matrix.setName(nameId + ".ibm"); //ptm
         matrix.transpose();
+        matrix.debugPrint();
+
         if (isRoot) {
             //because in Blender z is up, but in our game y is up.
             CORRECTION.mul(matrix, matrix);
         }
         jointCount++;
-        matrix.debugPrint();
         for (int i = 0; i < 16; i++) {
             System.out.print(matrixData[i] + ",");
         }

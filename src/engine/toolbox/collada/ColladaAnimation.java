@@ -1,6 +1,7 @@
 package engine.toolbox.collada;
 
 import engine.toolbox.Log;
+import engine.toolbox.Matrix4fDbg;
 import engine.toolbox.StorageFormatUtil;
 import org.joml.Matrix4f;
 import org.w3c.dom.Node;
@@ -16,9 +17,9 @@ public class ColladaAnimation extends ColladaPrimaryElement {
     private static final String TAG = "Collada:animation";
     private String target;
     private float[] keyFrameTimes;
-    private Matrix4f[] keyFrameMatrices;
+    private Matrix4fDbg[] keyFrameMatrices;
 
-    public ColladaAnimation(String id, String target, float[] keyFrameTimes, Matrix4f[] keyFrameMatrices) {
+    public ColladaAnimation(String id, String target, float[] keyFrameTimes, Matrix4fDbg[] keyFrameMatrices) {
         super();
         super.setId(id);
         this.target = target;
@@ -34,7 +35,7 @@ public class ColladaAnimation extends ColladaPrimaryElement {
         return keyFrameTimes;
     }
 
-    public Matrix4f[] getKeyFrameMatrices() {
+    public Matrix4fDbg[] getKeyFrameMatrices() {
         return keyFrameMatrices;
     }
 
@@ -77,7 +78,11 @@ public class ColladaAnimation extends ColladaPrimaryElement {
             }
         }
         Matrix4f[] poses = readSource(sources.get(output)).getMatrix4Data();
+        Matrix4fDbg[] posesDbg = new Matrix4fDbg[poses.length];
+        for(int i = 0; i < poses.length;i++) {
+            posesDbg[i] = new Matrix4fDbg(poses[i], "poseMtr" + i);
+        }
         float[] times = StorageFormatUtil.get1DArray(readSource(sources.get(input)).getFloatData());
-        return new ColladaAnimation(id, target, times, poses);
+        return new ColladaAnimation(id, target, times, posesDbg);
     }
 }

@@ -34,7 +34,7 @@ public class Settings {
     public static final float NEAR_PLANE = 0.1f;
     public static final float FAR_PLANE = 2000;
     //animation
-    public static int MAX_BONES_PER_VERTEX = 4;
+    public static int MAX_BONES_PER_VERTEX = 3;
     public static int MAX_BONES = 250;
     public static boolean SHOW_SKELETON_BONES = false;
     //debug

@@ -35,18 +35,27 @@ public class Matrix4fDbg extends Matrix4f {
         this.name = name;
     }
 
+
     public Matrix4fDbg mul(Matrix4fDbg right) {
         this.name = this.name + " * " + right.name;
-        mul(right, this);
+        super.mul(right, this);
         return this;
     }
 
+    public Matrix4fDbg mul(Matrix4fDbg right, Matrix4fDbg target) {
+        target.name = this.name + " * " + right.name;
+        super.mul(right, target);
+        return target;
+    }
+
+    @Override
     public Matrix4fDbg transpose() {
         transpose(this);
         name = "(" + name + "^T)";
         return this;
     }
 
+    @Override
     public Matrix4fDbg invert() {
         invert(this);
         name = "((" + name + ")^-1)";

@@ -2,6 +2,7 @@ package engine.toolbox.collada;
 
 import engine.graphics.animation.Joint;
 import engine.toolbox.Log;
+import engine.toolbox.Matrix4fDbg;
 import engine.toolbox.StorageFormatUtil;
 import org.joml.Matrix4f;
 import org.w3c.dom.Node;
@@ -96,7 +97,7 @@ public class ColladaController extends ColladaPrimaryElement{
         jointNames.addAll(jointIds);
         Map<String,Joint> joints = new HashMap<>();
         for (int i = 0; i < matrices.size(); i++) {
-            Joint joint = new Joint(jointIds.get(i),matrices.get(i));
+            Joint joint = new Joint(jointIds.get(i),new Matrix4fDbg("<>"));
             joints.put(joint.getId(), joint);
         }
         return joints;
