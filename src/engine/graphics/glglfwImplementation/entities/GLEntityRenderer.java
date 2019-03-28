@@ -3,11 +3,13 @@ package engine.graphics.glglfwImplementation.entities;
 import engine.graphics.animation.Joint;
 import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.shaders.EntityShader;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
-import engine.graphics.glglfwImplementation.shaders.EntityShader;
+import engine.graphics.materials.Material;
+import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Maths;
 import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
@@ -54,10 +56,10 @@ public class GLEntityRenderer {
         shader.stop();
     }
 
-    public void render(Map<List<GLTexturedModel>, List<GLEntity>> entities, List<Light> lights, Camera camera) {
+    public void render(Map<List<GLMaterializedModel>, List<GLEntity>> entities, List<Light> lights, Camera camera) {
         prepare(lights, camera);
-        for (List<GLTexturedModel> models : entities.keySet()) {
-            for (GLTexturedModel model : models) {
+        for (List<GLMaterializedModel> models : entities.keySet()) {
+            for (GLMaterializedModel model : models) {
                 prepareTexturedModel(model);
                 List<GLEntity> batch = entities.get(models);
                 for (GLEntity entity : batch) {
@@ -71,7 +73,7 @@ public class GLEntityRenderer {
         shader.stop();
     }
 
-    private void prepareTexturedModel(GLTexturedModel model) {
+    private void prepareTexturedModel(GLMaterializedModel model) {
         GLRawModel rawModel = model.getRawModel();
         List<Joint> joints;
         List<Matrix4fDbg> boneMatrices = new ArrayList<>();
@@ -84,7 +86,7 @@ public class GLEntityRenderer {
                 // = root.proc * child.proc * ... * leaf.proc * (leaf.mdj ^-1 * ... * child.mdj^-1 * root.mdj^-1)
                 // mdj == ibm
                 if (!already_printed) {
-                    if(joint == null) continue;
+                    if (joint == null) continue;
                     System.out.println("JTM[" + i + "]" + joint.getId() + ": " + joint.getTransformationMatrix().getName());
                     System.out.println(joint.getTransformationMatrix().toString(new DecimalFormat()));
                     i++;
@@ -101,8 +103,10 @@ public class GLEntityRenderer {
             GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_INDICES);
             GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT);
         }
-
-        GLModelTexture texture = model.getTexture();
+        Material material = model.getMaterial();
+        if (!(material instanceof TexturedMaterial))
+            throw new UnsupportedOperationException("only textured materials are supported");
+        GLModelTexture texture = (GLModelTexture) ((TexturedMaterial) material).getTexture();
         shader.loadUseAnimation(model.isAnimated());
         shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
         if (texture.isHasTransparency()) {
@@ -112,11 +116,11 @@ public class GLEntityRenderer {
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         if (model.isAnimated()) shader.loadBones(boneMatrices);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
         shader.loadUseSpecMap(texture.hasSpecularMap());
         if (texture.hasSpecularMap()) {
             GL13.glActiveTexture(GL13.GL_TEXTURE1);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getSpecularMapID());
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getSpecularMapID());
         }
     }
 
@@ -148,50 +152,6 @@ public class GLEntityRenderer {
 
     public void cleanUp() {
         shader.cleanUp();
-    }
-
-    @Deprecated
-    public void render(GLRawModel model) {
-        GL30.glBindVertexArray(model.getVaoID());
-        GL20.glEnableVertexAttribArray(0);
-        GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-        GL20.glDisableVertexAttribArray(0);
-        GL30.glBindVertexArray(0);
-    }
-
-    @Deprecated
-    public void render(GLTexturedModel model) {
-        GLRawModel rawModel = model.getRawModel();
-        GL30.glBindVertexArray(rawModel.getVaoID());
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
-        GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-        GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-        GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
-        GL30.glBindVertexArray(0);
-    }
-
-    @Deprecated
-    public void render(GLEntity entity, EntityShader shader) {
-        GLTexturedModel model = entity.getModels().get(0);
-        GLRawModel rawModel = model.getRawModel();
-        GL30.glBindVertexArray(rawModel.getVaoID());
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
-        GL20.glEnableVertexAttribArray(2);
-        Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale());
-        shader.loadTransformationMatrix(transformationMatrix);
-        GLModelTexture texture = model.getTexture();
-        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
-        GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
-        GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-        GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
-        GL20.glDisableVertexAttribArray(2);
-        GL30.glBindVertexArray(0);
     }
 
     public void setAmbientLight(float ambientLight) {

@@ -1,6 +1,6 @@
 package engine.graphics.glglfwImplementation.entities;
 
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import org.joml.Vector3f;
 import engine.graphics.terrains.Terrain;
 
@@ -15,7 +15,7 @@ public class ThirdPersonPlayer extends Player{
     private static final float TURN_SPEED = 160;
     private float currentSpeed;
     private float currentTurnSpeed;
-    public ThirdPersonPlayer(List<GLTexturedModel> model, Vector3f position) {
+    public ThirdPersonPlayer(List<GLMaterializedModel> model, Vector3f position) {
         super(model,position);
     }
     @Override

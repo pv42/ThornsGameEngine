@@ -2,12 +2,12 @@ package shivt.levels;
 
 import engine.EngineMaster;
 import engine.graphics.Scene;
-import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
 import engine.graphics.lights.Light;
+import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.OBJLoader;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.particles.ParticleSystem;
@@ -43,8 +43,9 @@ public class RenderLevel {
             ends.add(level.getStations().get(end).getPosition());
         }
         for(Station station : level.getStations()) {
-            GLTexturedModel texturedModel = new GLTexturedModel(OBJLoader.loadObjModel("spaceStation"), (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("blue.png"));
-            texturedModel.getTexture().setReflectivity(.1f);
+            GLMaterializedModel texturedModel = new GLMaterializedModel(OBJLoader.loadObjModel("spaceStation"),
+                    new TexturedMaterial(EngineMaster.getTextureLoader().loadTexture("blue.png")));
+            // todo add this texturedModel.getTexture().setReflectivity(.1f);
             GLEntity e = new GLEntity(texturedModel,station.getPosition());
             e.setScale(0.5f);
             entities.add(e);

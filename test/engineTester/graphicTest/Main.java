@@ -7,8 +7,9 @@ import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
+import engine.graphics.materials.TexturedMaterial;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.inputs.InputHandler;
@@ -50,7 +51,7 @@ public class Main {
         GLEntity lara  = new GLEntity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
         lara.setRx(80);
         GLModelTexture modelTexture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("Screen_Dust_D.png");
-        GLTexturedModel texturedModel = new GLTexturedModel(model, modelTexture);
+        GLMaterializedModel texturedModel = new GLMaterializedModel(model, new TexturedMaterial(modelTexture));
 
         ThreeDimensionCamera camera = new ShivtCamera();
         GLEntity e = new GLEntity(texturedModel, new Vector3f(0,12.5f,1f));

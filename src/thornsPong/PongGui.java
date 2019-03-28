@@ -4,10 +4,11 @@ import engine.EngineMaster;
 import engine.graphics.Scene;
 import engine.graphics.cameras.TwoDimensionsCamera;
 import engine.graphics.display.Window;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
-import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
+import engine.graphics.materials.Material;
+import engine.graphics.materials.TexturedMaterial;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import engine.physics.CuboidHitBox;
@@ -37,8 +38,9 @@ public class PongGui {
         Window window = EngineMaster.getDisplayManager().createWindow();
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
         GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("white.png");
+        Material material = new TexturedMaterial(texture);
         //boundings
-        GLTexturedModel boundingModel = new GLTexturedModel(MeshCreator.createBox(2,.2f,1), texture);
+        GLMaterializedModel boundingModel = new GLMaterializedModel(MeshCreator.createBox(2,.2f,1), material);
         CuboidHitBox boundingHitBox = new CuboidHitBox(-1,1,-.1f,.1f,-.5f,.5f);
         PhysicalEntity topBounding = new PhysicalEntity(boundingModel, new Vector3f(0,.7f,0), 1);
         topBounding.setStatic(true);
@@ -51,7 +53,7 @@ public class PongGui {
         bottomBounding.setCollisionType(COLLISION_TYPE_INV_Y);
         PhysicsEngine.addPhysical(bottomBounding);
         //paddles
-        GLTexturedModel paddleModel = new GLTexturedModel(MeshCreator.createBox(.2f,.2f,.2f),texture);
+        GLMaterializedModel paddleModel = new GLMaterializedModel(MeshCreator.createBox(.2f,.2f,.2f), material);
         HitBox paddleHitBox = new CuboidHitBox(-.1f,.1f,-.1f,.1f,-.1f,.1f);
         //left paddle
         PhysicalEntity leftPaddle = new PhysicalEntity(paddleModel, new Vector3f(),1);
@@ -66,7 +68,7 @@ public class PongGui {
         rightPaddle.setHitBox(paddleHitBox);
         PhysicsEngine.addPhysical(rightPaddle);
         //ball
-        GLTexturedModel ballModel = new GLTexturedModel(MeshCreator.createCircle(.02f,24),texture);
+        GLMaterializedModel ballModel = new GLMaterializedModel(MeshCreator.createCircle(.02f,24), material);
         HitBox ballHitBox = new CuboidHitBox(-.01f,.01f,-.01f,.01f,-.01f,.01f);
         PhysicalEntity ball = new PhysicalEntity(ballModel,new Vector3f(),0);
         ball.setHitBox(ballHitBox);

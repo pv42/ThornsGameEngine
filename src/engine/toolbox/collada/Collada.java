@@ -5,9 +5,10 @@ import engine.graphics.animation.Animation;
 import engine.graphics.animation.Joint;
 import engine.graphics.animation.KeyFrame;
 import engine.graphics.glglfwImplementation.GLLoader;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
+import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Log;
 import engine.toolbox.StorageFormatUtil;
 
@@ -108,9 +109,9 @@ public class Collada implements ICollada{
         this.cameras = cameras;
     }
 
-    public List<GLTexturedModel> getTexturedModels() {
+    public List<GLMaterializedModel> getTexturedModels() {
         Log.d(TAG, "loading data to VRAM");
-        List<GLTexturedModel> models = new ArrayList<>();
+        List<GLMaterializedModel> models = new ArrayList<>();
         for (int i = 0; i < scene.getRootNodes().size(); i++) { //for models
             String nodeId = scene.getRootNodes().get(i);
             ColladaNode cnode = scene.getNode(nodeId);
@@ -133,8 +134,8 @@ public class Collada implements ICollada{
                 materialId = ic.getBindMaterialId(materialId);
                 ColladaEffect effect = materials.get(materialId).getInstanceEffect(effects);
                 String imageFile = images.get(effect.getImage()).getSource();
-                GLTexturedModel texturedModel = new GLTexturedModel(model, (GLModelTexture) EngineMaster.getTextureLoader().loadTexture(
-                        imageFile.replaceFirst("file:///","").replaceAll("%20", " ")));
+                GLMaterializedModel texturedModel = new GLMaterializedModel(model, new TexturedMaterial(EngineMaster.getTextureLoader().loadTexture(
+                        imageFile.replaceFirst("file:///","").replaceAll("%20", " "))));
                 models.add(texturedModel);
             }
         }

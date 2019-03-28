@@ -1,6 +1,6 @@
 package engine.graphics.glglfwImplementation.entities;
 
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import org.joml.Vector3f;
 import engine.graphics.terrains.Terrain;
 
@@ -16,7 +16,7 @@ public abstract class Player extends GLEntity {
     private static final float EYE_HEIGHT = 4.6f;
     float upwardSpeed;
     boolean isInAir;
-    public Player(List<GLTexturedModel> model, Vector3f position) {
+    public Player(List<GLMaterializedModel> model, Vector3f position) {
         super(model,position);
 
     }

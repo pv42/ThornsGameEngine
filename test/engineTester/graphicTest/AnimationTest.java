@@ -12,13 +12,12 @@ import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
-import engine.inputs.InputHandler;
+import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
 import engine.toolbox.collada.Collada;
@@ -75,7 +74,7 @@ public class AnimationTest {
         EngineMaster.init();
         Window window = EngineMaster.getDisplayManager().createWindow();
         Collada collada = ColladaLoader.loadCollada("cowboy");
-        GLTexturedModel cowboyModel = collada.getTexturedModels().get(0);
+        GLMaterializedModel cowboyModel = collada.getTexturedModels().get(0);
         Animation animation = collada.getAnimation();
         GLEntity entity = new GLEntity(cowboyModel, new Vector3f(0, 0f, -10), -90, 0, 0, 1);
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
@@ -114,8 +113,9 @@ public class AnimationTest {
         Log.i("" + md.getVertices().length, "" + md.getVertexWeights().length);
         assert md.getVertices().length / 3 == md.getVertexWeights().length / 3;
         assert md.getVertexWeights().length == md.getJointIds().length;
-        GLRawModel model = GLLoader.loadToVAOAnimated(md.getVertices(), md.getTextureCoords(), md.getNormals(), md.getIndices(), md.getJointIds(), md.getVertexWeights(), listJoints(head));
-        GLTexturedModel texturedModel = new GLTexturedModel(model, (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png", false));
+        GLRawModel model = GLLoader.loadToVAOAnimated(md.getVertices(), md.getTextureCoords(), md.getNormals(),
+                md.getIndices(), md.getJointIds(), md.getVertexWeights(), listJoints(head));
+        GLMaterializedModel texturedModel = new GLMaterializedModel(model, new TexturedMaterial(EngineMaster.getTextureLoader().loadTexture("diffuse.png", false)));
         Entity entity = new GLEntity(texturedModel, new Vector3f(0,-5,0));
         Scene scene = new Scene();
         scene.addEntity(entity);

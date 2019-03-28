@@ -5,8 +5,9 @@ import java.util.Map;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
+import engine.graphics.materials.TexturedMaterial;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -40,10 +41,10 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<GLTexturedModel, List<GLEntity>> entities, Vector4f clipPlane, List<Light> lights, ThreeDimensionCamera camera) {
+	public void render(Map<GLMaterializedModel, List<GLEntity>> entities, Vector4f clipPlane, List<Light> lights, ThreeDimensionCamera camera) {
 		shader.start();
 		prepare(clipPlane, lights, camera);
-		for (GLTexturedModel model : entities.keySet()) {
+		for (GLMaterializedModel model : entities.keySet()) {
 			prepareTexturedModel(model);
 			List<GLEntity> batch = entities.get(model);
 			for (GLEntity entity : batch) {
@@ -59,24 +60,24 @@ public class NormalMappingRenderer {
 		shader.cleanUp();
 	}
 
-	private void prepareTexturedModel(GLTexturedModel model) {
+	private void prepareTexturedModel(GLMaterializedModel model) {
 		GLRawModel rawModel = model.getRawModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		GL20.glEnableVertexAttribArray(3);
-		GLModelTexture texture = model.getTexture();
+		GLModelTexture texture = (GLModelTexture) ((TexturedMaterial)model.getMaterial()).getTexture();
 		shader.loadNumberOfRows(texture.getNumberOfRows());
 		if (texture.isHasTransparency()) {
 			MasterRenderer.disableCulling();
 		}
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
 
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getNormalMapID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getNormalMapID());
 	}
 
 	private void unbindTexturedModel() {

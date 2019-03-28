@@ -1,7 +1,7 @@
 package engine.graphics;
 
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.guis.GuiTexture;
 import engine.graphics.lights.Light;
@@ -16,8 +16,8 @@ import java.util.Map;
 public class Scene {
     private static final String TAG = "Scene";
     //rendering objects
-    private Map<List<GLTexturedModel>, List<GLEntity>> entities;
-    private Map<List<GLTexturedModel>, List<GLEntity>> aniEntities;
+    private Map<List<GLMaterializedModel>, List<GLEntity>> entities;
+    private Map<List<GLMaterializedModel>, List<GLEntity>> aniEntities;
     private List<Terrain> terrains;
     private List<LineModel> lineStripModels;
     private List<GuiTexture> guis;
@@ -34,11 +34,11 @@ public class Scene {
         lights = new ArrayList<>();
     }
 
-    public Map<List<GLTexturedModel>, List<GLEntity>> getEntities() {
+    public Map<List<GLMaterializedModel>, List<GLEntity>> getEntities() {
         return entities;
     }
 
-    public Map<List<GLTexturedModel>, List<GLEntity>> getAniEntities() {
+    public Map<List<GLMaterializedModel>, List<GLEntity>> getAniEntities() {
         return aniEntities;
     }
 
@@ -71,7 +71,7 @@ public class Scene {
             throw new UnsupportedOperationException("Can't process none GL entities");
         }
         GLEntity glEntity = (GLEntity) entity;
-        List<GLTexturedModel> entityModels = glEntity.getModels();
+        List<GLMaterializedModel> entityModels = glEntity.getModels();
         List<GLEntity> batch = entities.get(entityModels);
         if (batch != null) {
             batch.add(glEntity);
@@ -83,7 +83,7 @@ public class Scene {
     }
 
     public void addAniEntity(GLEntity entity) {
-        List<GLTexturedModel> entityModel = entity.getModels(); //// TODO: 10.08.16 ?
+        List<GLMaterializedModel> entityModel = entity.getModels(); //// TODO: 10.08.16 ?
         List<GLEntity> batch = aniEntities.get(entityModel);
         if (batch != null) {
             batch.add(entity);

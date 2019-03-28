@@ -3,12 +3,12 @@ import engine.graphics.Scene;
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.display.Window;
-import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
+import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Color;
 import engine.toolbox.assimpLoader.AssimpLoader;
 import engine.toolbox.assimpLoader.AssimpMaterial;
@@ -43,7 +43,7 @@ class AssimpLoaderTester {
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         Scene scene = new Scene();
         GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png");
-        GLTexturedModel texturedModel = new GLTexturedModel(c.meshs.get(0).createRawModel(), texture);
+        GLMaterializedModel texturedModel = new GLMaterializedModel(c.meshs.get(0).createRawModel(), new TexturedMaterial(texture));
         GLEntity entity = new GLEntity(texturedModel, new Vector3f());
         entity.setRx(-90);
         scene.addEntity(entity);
@@ -65,7 +65,7 @@ class AssimpLoaderTester {
         scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
         for (AssimpMesh mesh : c.meshs) {
             GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png");
-            GLTexturedModel texturedModel = new GLTexturedModel(mesh.createRawModel(), texture);
+            GLMaterializedModel texturedModel = new GLMaterializedModel(mesh.createRawModel(), new TexturedMaterial(texture));
             GLEntity entity = new GLEntity(texturedModel, new Vector3f());
             entity.setRx(-90);
             scene.addEntity(entity);

@@ -8,6 +8,7 @@ import org.joml.Vector2f;
 
 public interface TextureLoader {
     Texture loadTexture(String file);
+
     Texture loadTexture(String file, boolean flip);
 
     int loadCubeMapTexture(String nameStart, String extension);
@@ -16,6 +17,9 @@ public interface TextureLoader {
 
     TerrainTexture loadTerrainTexture(String file);
 
-    ParticleTexture loadParticleTexture(String file, boolean flip, int numberOfRows,boolean isAdditive,boolean randomizeAtlas);
-    ParticleTexture loadParticleTexture(String file, int numberOfRows,boolean isAdditive,boolean randomizeAtlas);
+    ParticleTexture loadParticleTexture(String file, boolean flip, int numberOfRows, boolean isAdditive, boolean randomizeAtlas);
+
+    ParticleTexture loadParticleTexture(String file, int numberOfRows, boolean isAdditive, boolean randomizeAtlas);
+
+    void cleanUp();
 }

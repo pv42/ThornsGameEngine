@@ -1,7 +1,7 @@
 package engine.physics;
 
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import org.joml.Vector3f;
 
 import static engine.physics.PhysicsEngine.COLLISION_TYPE_ELASTIC;
@@ -16,12 +16,12 @@ public class PhysicalEntity extends GLEntity implements Physical {
     private int collisionType = COLLISION_TYPE_ELASTIC;
 
     //<init>
-    public PhysicalEntity(GLTexturedModel model, Vector3f position, float mass) {
+    public PhysicalEntity(GLMaterializedModel model, Vector3f position, float mass) {
         super(model, position);
         this.mass = mass;
     }
 
-    public PhysicalEntity(GLTexturedModel model, int textureIndex, Vector3f position, float mass) {
+    public PhysicalEntity(GLMaterializedModel model, int textureIndex, Vector3f position, float mass) {
         super(model, textureIndex, position);
         this.mass = mass;
     }

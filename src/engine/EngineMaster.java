@@ -68,6 +68,7 @@ public class EngineMaster {
         MasterRenderer.cleanUp();
         GLLoader.cleanUp();
         displayManager.cleanUp();
+        textureLoader.cleanUp();
         AudioMaster.cleanUp();
         GLFW.glfwTerminate();
         Log.i(TAG, "program stopped");

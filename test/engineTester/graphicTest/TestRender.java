@@ -2,9 +2,11 @@ package engineTester.graphicTest;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.shaders.EntityShader;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
+import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;
@@ -49,7 +51,7 @@ public class TestRender {
             f = false;
         }
         shader.start();
-        GLTexturedModel texturedModel = entity.getModels().get(0);
+        GLMaterializedModel texturedModel = entity.getModels().get(0);
         GLRawModel model = texturedModel.getRawModel();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.loadViewMatrix(camera.getViewMatrix());
@@ -59,7 +61,8 @@ public class TestRender {
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getID());
+        GLModelTexture texture = (GLModelTexture) ((TexturedMaterial)texturedModel.getMaterial()).getTexture();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
         GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);

@@ -3,13 +3,13 @@ import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
+import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
-import engine.graphics.glglfwImplementation.models.GLTexturedModel;
-import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.shaders.EntityShader;
 import engine.toolbox.Color;
@@ -42,7 +42,7 @@ public class EngineGraphicsTest {
     public void main() {
         //EngineMaster.init();
         //int texture = GLLoader.loadTexture("grass.png");
-        //GLTexturedModel model = new GLTexturedModel(OBJLoader.loadObjModel("dragon"), new GLModelTexture(texture));
+        //GLMaterializedModel model = new GLMaterializedModel(OBJLoader.loadObjModel("dragon"), new GLModelTexture(texture));
         //GLEntity entity = new GLEntity(model,new Vector3f(0,0,0),0,0,0,1);
         //ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(-10,0,0), new Vector3f(0,0,0));
         long window;
@@ -71,7 +71,7 @@ public class EngineGraphicsTest {
         List<Light> lights = new ArrayList<>();
         lights.add(cameraLight);
         GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("barrel.png");
-        GLTexturedModel texturedModel = new GLTexturedModel(rawModel,texture);
+        GLMaterializedModel texturedModel = new GLMaterializedModel(rawModel,new TexturedMaterial(texture));
         GLEntity entity = new GLEntity(texturedModel,new Vector3f());
         //entity.setScale(.2f);
         entity.setPosition(0,-1,-1);
@@ -150,13 +150,13 @@ public class EngineGraphicsTest {
         projectionMatrix.m33(0);
     }
 
-    private static void prepareTexturedModel(GLTexturedModel model, EntityShader shader) {
+    private static void prepareTexturedModel(GLMaterializedModel model, EntityShader shader) {
         GLRawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
-        GLModelTexture texture = model.getTexture();
+        GLModelTexture texture = (GLModelTexture) ((TexturedMaterial)model.getMaterial()).getTexture();
         shader.loadUseAnimation(model.isAnimated());
         shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
         if (texture.hasTransparency()) {
@@ -165,11 +165,11 @@ public class EngineGraphicsTest {
         shader.loadFakeLightning(texture.isUseFakeLightning());
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
         shader.loadUseSpecMap(texture.hasSpecularMap());
         if (texture.hasSpecularMap()) {
             GL13.glActiveTexture(GL13.GL_TEXTURE1);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getSpecularMapID());
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getSpecularMapID());
         }
     }
 }
