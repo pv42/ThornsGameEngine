@@ -1,20 +1,20 @@
 package engine.graphics.glglfwImplementation.models;
 
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 
 /***
  * Created by pv42 on 17.06.16.
  */
 public class GLTexturedModel {
     private GLRawModel rawmodel;
-    private ModelTexture texture;
+    private GLModelTexture texture;
     private boolean isAnimated;
 
-    public GLTexturedModel(GLRawModel rawmodel, ModelTexture texture) {
+    public GLTexturedModel(GLRawModel rawmodel, GLModelTexture texture) {
         this(rawmodel,texture,!(rawmodel.getJoints() == null));
     }
 
-    public GLTexturedModel(GLRawModel rawModel, ModelTexture texture, boolean isAnimated) {
+    public GLTexturedModel(GLRawModel rawModel, GLModelTexture texture, boolean isAnimated) {
         this.rawmodel = rawModel;
         this.texture = texture;
         this.isAnimated = isAnimated;
@@ -24,7 +24,7 @@ public class GLTexturedModel {
         return rawmodel;
     }
 
-    public ModelTexture getTexture() {
+    public GLModelTexture getTexture() {
         return texture;
     }
 

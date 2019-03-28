@@ -1,5 +1,6 @@
 package shivt.levels;
 
+import engine.EngineMaster;
 import engine.graphics.Scene;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
@@ -12,7 +13,7 @@ import engine.graphics.particles.ParticleMaster;
 import engine.graphics.particles.ParticleSystem;
 import engine.graphics.particles.ParticleSystemStream;
 import engine.graphics.particles.ParticleTexture;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.toolbox.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -33,7 +34,7 @@ public class RenderLevel {
         List<GLEntity> entities = new ArrayList<>();
         ends = new ArrayList<>();
         texts = new ArrayList<>();
-        ParticleTexture pt = new ParticleTexture(GLLoader.loadTexture("frostfire.png"),4,true,true);
+        ParticleTexture pt = EngineMaster.getTextureLoader().loadParticleTexture("frostfire.png",4,true,true);
         for (Route route: level.getRoutes()) {
             int start = route.getStations()[0];
             int end = route.getStations()[1];
@@ -42,7 +43,7 @@ public class RenderLevel {
             ends.add(level.getStations().get(end).getPosition());
         }
         for(Station station : level.getStations()) {
-            GLTexturedModel texturedModel = new GLTexturedModel(OBJLoader.loadObjModel("spaceStation"),new ModelTexture(GLLoader.loadTexture("blue.png")));
+            GLTexturedModel texturedModel = new GLTexturedModel(OBJLoader.loadObjModel("spaceStation"), (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("blue.png"));
             texturedModel.getTexture().setReflectivity(.1f);
             GLEntity e = new GLEntity(texturedModel,station.getPosition());
             e.setScale(0.5f);

@@ -1,7 +1,7 @@
-package engine.graphics.guis;
+package engine.graphics.glglfwImplementation.guis;
 
 import org.joml.Matrix4f;
-import engine.graphics.shaders.ShaderProgram;
+import engine.graphics.glglfwImplementation.shaders.ShaderProgram;
 
 /**
  * Created by pv42 on 20.06.16.

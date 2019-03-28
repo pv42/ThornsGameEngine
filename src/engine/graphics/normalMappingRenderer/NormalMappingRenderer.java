@@ -6,6 +6,7 @@ import java.util.Map;
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -17,7 +18,6 @@ import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.lights.Light;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.toolbox.Maths;
 
 import static engine.toolbox.Settings.SKY_COLOR;
@@ -66,7 +66,7 @@ public class NormalMappingRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		GL20.glEnableVertexAttribArray(3);
-		ModelTexture texture = model.getTexture();
+		GLModelTexture texture = model.getTexture();
 		shader.loadNumberOfRows(texture.getNumberOfRows());
 		if (texture.isHasTransparency()) {
 			MasterRenderer.disableCulling();

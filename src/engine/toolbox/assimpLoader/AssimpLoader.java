@@ -87,6 +87,7 @@ public class AssimpLoader {
     private void loadAnimations(AIScene scene) {
         int count = scene.mNumAnimations();
         PointerBuffer aiAnimations = scene.mAnimations();
+        Log.d(TAG, "animcount=" + count);
         for(int i = 0; i < count; i++) {
             AIAnimation animation = AIAnimation.create(aiAnimations.get(i));
             AssimpAnimation.load(animation);

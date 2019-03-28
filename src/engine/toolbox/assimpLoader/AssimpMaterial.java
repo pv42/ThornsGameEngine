@@ -23,6 +23,7 @@ public class AssimpMaterial {
     private float refractionIndex;
     private String name;
     private String textureFile;
+    private float opacity;
 
     private AssimpMaterial() {
         ambient = new Vector4f(0.1f, 0.1f, 0.1f, 1);
@@ -33,6 +34,7 @@ public class AssimpMaterial {
         materialReflectivity = 0;
         refractionIndex = 1;
         shininess = 0;
+        opacity = 1;
     }
 
     static AssimpMaterial load(AIMaterial aiMaterial) {
@@ -82,6 +84,9 @@ public class AssimpMaterial {
                     case Assimp.AI_MATKEY_REFRACTI:
                         material.setRefractionIndex(readFloat(data, len));
                         break;
+                    case Assimp.AI_MATKEY_OPACITY:
+                        material.setOpacity(readFloat(data, len));
+                        break;
                     case Assimp._AI_MATKEY_UVTRANSFORM_BASE: // i have no idea what this is
                     case Assimp._AI_MATKEY_TEXBLEND_BASE:
                         break;
@@ -115,7 +120,7 @@ public class AssimpMaterial {
     private static String readString(ByteBuffer buffer, int len) {
         StringBuilder string = new StringBuilder();
         int str_len = buffer.getInt();
-        if(str_len != len - 5) Log.w(TAG, "string length mismatch (" + (len-5) + " != " + str_len + ")");
+        if (str_len != len - 5) Log.w(TAG, "string length mismatch (" + (len - 5) + " != " + str_len + ")");
         for (int i = 4; i < len - 1; i++) { // 4 byte len, 1 byte null terminator
             string.append((char) buffer.get());
         }
@@ -153,83 +158,91 @@ public class AssimpMaterial {
         return buffer.getFloat();
     }
 
-    private void setAmbient(Vector4f ambient) {
-        this.ambient = ambient;
+    public float getOpacity() {
+        return opacity;
     }
 
-    private void setDiffuse(Vector4f diffuse) {
-        this.diffuse = diffuse;
-    }
-
-    private void setSpecular(Vector4f specular) {
-        this.specular = specular;
-    }
-
-    private void setEmissive(Vector4f emissive) {
-        this.emissive = emissive;
-    }
-
-    private void setColorReflective(Vector4f reflective) {
-        this.colorReflective = reflective;
-    }
-
-    private void setMaterialReflectivity(float materialReflectivity) {
-        this.materialReflectivity = materialReflectivity;
-    }
-
-    private void setShininess(float shininess) {
-        this.shininess = shininess;
-    }
-
-    private void setRefractionIndex(float refractionIndex) {
-        this.refractionIndex = refractionIndex;
-    }
-
-    private void setName(String name) {
-        this.name = name;
-    }
-
-    private void setTextureFile(String textureFile) {
-        this.textureFile = textureFile;
+    private void setOpacity(float opacity) {
+        this.opacity = opacity;
     }
 
     public Vector4f getAmbient() {
         return ambient;
     }
 
+    private void setAmbient(Vector4f ambient) {
+        this.ambient = ambient;
+    }
+
     public Vector4f getDiffuse() {
         return diffuse;
+    }
+
+    private void setDiffuse(Vector4f diffuse) {
+        this.diffuse = diffuse;
     }
 
     public Vector4f getSpecular() {
         return specular;
     }
 
+    private void setSpecular(Vector4f specular) {
+        this.specular = specular;
+    }
+
     public Vector4f getEmissive() {
         return emissive;
+    }
+
+    private void setEmissive(Vector4f emissive) {
+        this.emissive = emissive;
     }
 
     public Vector4f getColorReflective() {
         return colorReflective;
     }
 
+    private void setColorReflective(Vector4f reflective) {
+        this.colorReflective = reflective;
+    }
+
     public float getMaterialReflectivity() {
         return materialReflectivity;
+    }
+
+    private void setMaterialReflectivity(float materialReflectivity) {
+        this.materialReflectivity = materialReflectivity;
     }
 
     public float getShininess() {
         return shininess;
     }
 
+    private void setShininess(float shininess) {
+        this.shininess = shininess;
+    }
+
     public float getRefractionIndex() {
         return refractionIndex;
+    }
+
+    private void setRefractionIndex(float refractionIndex) {
+        this.refractionIndex = refractionIndex;
     }
 
     public String getName() {
         return name;
     }
 
+    private void setName(String name) {
+        this.name = name;
+    }
+
     public String getTextureFile() {
         return textureFile;
+    }
+
+    private void setTextureFile(String textureFile) {
+        this.textureFile = textureFile;
     }
 }

@@ -1,6 +1,9 @@
 package engine.graphics.glglfwImplementation.display;
 
 import engine.graphics.display.Window;
+import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.particles.ParticleMaster;
+import engine.inputs.InputLoop;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -43,6 +46,10 @@ public class GLFWWindow implements Window {
         });
         this.manger = manger;
         lastFrameTime = getNanoTime();
+        InputLoop.init(id);
+        makeActive();
+        show();
+        new Thread(InputLoop::run).start(); //starts input handling threat
     }
 
     /**

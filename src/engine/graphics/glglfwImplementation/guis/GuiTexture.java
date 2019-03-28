@@ -1,4 +1,4 @@
-package engine.graphics.guis;
+package engine.graphics.glglfwImplementation.guis;
 
 import engine.graphics.display.Window;
 import engine.toolbox.Conversion;

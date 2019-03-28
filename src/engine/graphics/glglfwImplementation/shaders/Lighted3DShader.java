@@ -1,9 +1,7 @@
-package engine.graphics.shaders;
+package engine.graphics.glglfwImplementation.shaders;
 
 import engine.graphics.lights.Light;
 import engine.toolbox.Color;
-import engine.toolbox.Log;
-import engine.toolbox.Settings;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

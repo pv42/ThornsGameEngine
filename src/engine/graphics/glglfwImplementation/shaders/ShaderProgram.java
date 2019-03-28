@@ -1,4 +1,4 @@
-package engine.graphics.shaders;
+package engine.graphics.glglfwImplementation.shaders;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -8,7 +8,6 @@ import engine.toolbox.Log;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -20,7 +19,7 @@ import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
  * @author pv42
  */
 public abstract class ShaderProgram {
-    private static final String SHADER_LOCATION = "src/engine/graphics/shaders/glsl/";
+    private static final String SHADER_LOCATION = "src/engine/graphics/glglfwImplementation/shaders/glsl/";
     private static final Object SHADER_NAME_EXTENSION = ".glsl";
     private int programID;
     private int vertexShaderID;

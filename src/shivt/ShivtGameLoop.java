@@ -30,7 +30,8 @@ public class ShivtGameLoop {
     private Scene scene;
 
     public ShivtGameLoop() {
-        Window window = EngineMaster.init();
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
         buttons = new ArrayList<>();
         FONT = new GLTTFont("res/fonts/arial.ttf",64);
         fpsText = new GLGuiText(FONT, "loading", 0.0005f, new Color(0.3f, 0.3f, 0.4f), new Vector2f(0, 0));

@@ -15,7 +15,7 @@ import static engine.toolbox.assimpLoader.AssimpLoader.readBuffer3f;
 import static engine.toolbox.assimpLoader.AssimpLoader.readBuffer3fTo2f;
 
 public class AssimpMesh {
-    private static final String TAG = "ColladaMesh";
+    private static final String TAG = "AssimpMesh";
     private final float[] pos;
     private final int[] indices;
     private String name;
@@ -32,7 +32,7 @@ public class AssimpMesh {
     }
 
     public static AssimpMesh load(AIMesh mesh) {
-        Log.i(TAG, "loading mesh " + mesh.mName().dataString());
+        Log.d(TAG, "loading mesh " + mesh.mName().dataString());
         float[] v = readVertices(mesh);
         float[] normals = readNormals(mesh);
         float[] texCoords = readTextureCoordinates(mesh);
@@ -48,7 +48,7 @@ public class AssimpMesh {
     private static int[] readIndices(AIMesh mesh) {
         int fcount = mesh.mNumFaces();
         int[] indices = new int[fcount * 3];
-        Log.i(TAG, fcount + " faces");
+        Log.d(TAG, fcount + " faces");
         for(int i = 0; i < fcount; i++) {
             AIFace face = mesh.mFaces().get(i);
             for (int j = 0; j < face.mNumIndices(); j++) {

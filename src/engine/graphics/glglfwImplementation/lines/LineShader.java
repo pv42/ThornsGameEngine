@@ -1,10 +1,8 @@
-package engine.graphics.lines;
+package engine.graphics.glglfwImplementation.lines;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.shaders.ShaderProgram;
+import engine.graphics.glglfwImplementation.shaders.ShaderProgram;
 import engine.toolbox.Color;
-import engine.toolbox.Maths;
 import org.joml.Matrix4f;
 
 /***

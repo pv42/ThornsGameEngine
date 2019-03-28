@@ -5,8 +5,7 @@ import engine.toolbox.Color;
 import engine.toolbox.Log;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
-import engine.graphics.shaders.ShaderProgram;
+import engine.graphics.glglfwImplementation.shaders.ShaderProgram;
 
 /**
    Created by pv42 on 21.06.16.

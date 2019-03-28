@@ -1,12 +1,13 @@
 package engine.graphics.glglfwImplementation.textures;
 
+import engine.graphics.textures.Texture;
 import engine.toolbox.Log;
 
 /**
  * Created by pv42 on 17.06.16.
  */
 
-public class ModelTexture {
+public class GLModelTexture implements Texture {
 
     private int textureID;
     private final int normalMapID = -1;
@@ -31,7 +32,7 @@ public class ModelTexture {
         return hasTransparency;
     }
 
-    public ModelTexture(int texture){
+    public GLModelTexture(int texture){
         this.textureID = texture;
     }
 

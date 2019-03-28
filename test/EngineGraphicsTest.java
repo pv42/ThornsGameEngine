@@ -1,16 +1,17 @@
+import engine.EngineMaster;
 import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
 import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.shaders.EntityShader;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.shaders.EntityShader;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
@@ -41,7 +42,7 @@ public class EngineGraphicsTest {
     public void main() {
         //EngineMaster.init();
         //int texture = GLLoader.loadTexture("grass.png");
-        //GLTexturedModel model = new GLTexturedModel(OBJLoader.loadObjModel("dragon"), new ModelTexture(texture));
+        //GLTexturedModel model = new GLTexturedModel(OBJLoader.loadObjModel("dragon"), new GLModelTexture(texture));
         //GLEntity entity = new GLEntity(model,new Vector3f(0,0,0),0,0,0,1);
         //ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(-10,0,0), new Vector3f(0,0,0));
         long window;
@@ -69,7 +70,7 @@ public class EngineGraphicsTest {
         Light cameraLight = new Light(new Vector3f(0,0,10), new Color(1.0,1.0,1.0));
         List<Light> lights = new ArrayList<>();
         lights.add(cameraLight);
-        ModelTexture texture = new ModelTexture(GLLoader.loadTexture("barrel.png"));
+        GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("barrel.png");
         GLTexturedModel texturedModel = new GLTexturedModel(rawModel,texture);
         GLEntity entity = new GLEntity(texturedModel,new Vector3f());
         //entity.setScale(.2f);
@@ -130,7 +131,7 @@ public class EngineGraphicsTest {
 
     }
 
-    private static void bindTextures(ModelTexture modelTexture) {
+    private static void bindTextures(GLModelTexture modelTexture) {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, modelTexture.getID());
     }
@@ -155,7 +156,7 @@ public class EngineGraphicsTest {
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
-        ModelTexture texture = model.getTexture();
+        GLModelTexture texture = model.getTexture();
         shader.loadUseAnimation(model.isAnimated());
         shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
         if (texture.hasTransparency()) {

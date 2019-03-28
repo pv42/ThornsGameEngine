@@ -2,6 +2,7 @@ import engine.EngineMaster;
 import engine.audio.AudioMaster;
 import engine.audio.OggData;
 import engine.audio.Source;
+import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.toolbox.Log;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,8 @@ public class EngineSoundTest {
     @Test
     void testSound() throws InterruptedException {
         Thread.sleep(1000);
-        GLFWWindow window = EngineMaster.init();
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
         Source source = new Source();
         OggData ogg = AudioMaster.loadSound("res/sounds/GT_Ogg_Vorbis.ogg");
 

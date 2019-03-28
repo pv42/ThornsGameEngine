@@ -5,9 +5,9 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
-import engine.graphics.shaders.EntityShader;
+import engine.graphics.glglfwImplementation.shaders.EntityShader;
 import engine.toolbox.Maths;
 import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
@@ -102,7 +102,7 @@ public class GLEntityRenderer {
             GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT);
         }
 
-        ModelTexture texture = model.getTexture();
+        GLModelTexture texture = model.getTexture();
         shader.loadUseAnimation(model.isAnimated());
         shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
         if (texture.isHasTransparency()) {
@@ -183,7 +183,7 @@ public class GLEntityRenderer {
         GL20.glEnableVertexAttribArray(2);
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRx(), entity.getRy(), entity.getRz(), entity.getScale());
         shader.loadTransformationMatrix(transformationMatrix);
-        ModelTexture texture = model.getTexture();
+        GLModelTexture texture = model.getTexture();
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());

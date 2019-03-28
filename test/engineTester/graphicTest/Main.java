@@ -8,9 +8,9 @@ import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.inputs.InputHandler;
 import engine.toolbox.collada.ColladaLoader;
 import org.joml.Vector3f;
@@ -19,11 +19,12 @@ import shivt.ShivtCamera;
 public class Main {
     static boolean useEngine = true;
     public static void main(String args[]) {
-        GLFWWindow window = EngineMaster.init();
+        EngineMaster.init();
+        GLFWWindow window = (GLFWWindow) EngineMaster.getDisplayManager().createWindow();
 
         TestRender renderer = null;
         if (useEngine) {
-            MasterRenderer.init(window, false);
+            //MasterRenderer.init(window, false);
 
             ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         } else {
@@ -48,8 +49,7 @@ public class Main {
         GLRawModel model = GLLoader.loadToVAO(vertices, textCoords, normal, indices);
         GLEntity lara  = new GLEntity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
         lara.setRx(80);
-        int texture = GLLoader.loadTexture("Screen_Dust_D.png");
-        ModelTexture modelTexture = new ModelTexture(texture);
+        GLModelTexture modelTexture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("Screen_Dust_D.png");
         GLTexturedModel texturedModel = new GLTexturedModel(model, modelTexture);
 
         ThreeDimensionCamera camera = new ShivtCamera();

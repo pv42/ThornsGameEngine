@@ -7,7 +7,9 @@ import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
+import engine.graphics.lights.Light;
+import engine.toolbox.Color;
 import engine.toolbox.assimpLoader.AssimpLoader;
 import engine.toolbox.assimpLoader.AssimpMaterial;
 import engine.toolbox.assimpLoader.AssimpMesh;
@@ -15,17 +17,17 @@ import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
 
-public class AssimpAssimpLoaderTester {
+class AssimpLoaderTester {
     @Test
     void testLoad() {
         AssimpLoader c = new AssimpLoader();
         c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
-        for(AssimpMesh meshData: c.meshs) {
+        for (AssimpMesh meshData : c.meshs) {
             System.out.println(meshData.toString());
             System.out.println(" nvc=" + meshData.getNormal().length);
             System.out.println(" uvvc=" + meshData.getUv().length);
         }
-        for (AssimpMaterial material: c.materials) {
+        for (AssimpMaterial material : c.materials) {
             System.out.println(material.getName());
             System.out.println(material.getTextureFile());
         }
@@ -36,14 +38,38 @@ public class AssimpAssimpLoaderTester {
         AssimpLoader c = new AssimpLoader();
         c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
         //engine
-        Window window = EngineMaster.init();
-        Camera camera = new StaticThreeDimensionCamera(new Vector3f(0,0,10), new Vector3f());
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
+        Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         Scene scene = new Scene();
-        ModelTexture texture = new ModelTexture(GLLoader.loadTexture("diffuse.png"));
+        GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png");
         GLTexturedModel texturedModel = new GLTexturedModel(c.meshs.get(0).createRawModel(), texture);
         GLEntity entity = new GLEntity(texturedModel, new Vector3f());
         entity.setRx(-90);
         scene.addEntity(entity);
+        while (!window.isCloseRequested()) {
+            MasterRenderer.render(scene, camera);
+            window.update();
+        }
+    }
+
+    @Test
+    void testLoadAndDrawLara() {
+        AssimpLoader c = new AssimpLoader();
+        c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\res\\meshs\\Lara_Croft.dae");
+        //engine
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
+        Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
+        Scene scene = new Scene();
+        scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
+        for (AssimpMesh mesh : c.meshs) {
+            GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png");
+            GLTexturedModel texturedModel = new GLTexturedModel(mesh.createRawModel(), texture);
+            GLEntity entity = new GLEntity(texturedModel, new Vector3f());
+            entity.setRx(-90);
+            scene.addEntity(entity);
+        }
         while (!window.isCloseRequested()) {
             MasterRenderer.render(scene, camera);
             window.update();

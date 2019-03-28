@@ -9,18 +9,18 @@ import engine.graphics.animation.Joint;
 import engine.graphics.animation.KeyFrame;
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.StaticThreeDimensionCamera;
+import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
 import engine.inputs.InputHandler;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
-import engine.toolbox.Matrix4fDbg;
 import engine.toolbox.collada.Collada;
 import engine.toolbox.collada.ColladaLoader;
 import engine.toolbox.nCollada.dataStructures.AnimatedModelData;
@@ -72,13 +72,13 @@ public class AnimationTest {
 
     @Test
     void testAnimation() {
-        GLFWWindow window = EngineMaster.init();
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
         Collada collada = ColladaLoader.loadCollada("cowboy");
         GLTexturedModel cowboyModel = collada.getTexturedModels().get(0);
         Animation animation = collada.getAnimation();
         GLEntity entity = new GLEntity(cowboyModel, new Vector3f(0, 0f, -10), -90, 0, 0, 1);
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
-        InputHandler.init(window.getId());
         Scene scene = new Scene();
         scene.addLight(new Light(new Vector3f(), new Color(1.0, 1.0, 1.0)));
         scene.addEntity(entity);
@@ -105,7 +105,8 @@ public class AnimationTest {
         String filename = "cowboy";
         AnimationData animationData = engine.toolbox.nCollada.colladaLoader.ColladaLoader.loadColladaAnimation(new File("res/meshs/" + filename + ".dae"));
         AnimatedModelData modelData = engine.toolbox.nCollada.colladaLoader.ColladaLoader.loadColladaModel(new File("res/meshs/" + filename + ".dae"), 50);
-        GLFWWindow window = EngineMaster.init();
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
         MasterRenderer.enableCulling();
         MeshData md = modelData.getMeshData();
         Joint head = createJoints(modelData.getJointsData().headJoint);
@@ -114,7 +115,7 @@ public class AnimationTest {
         assert md.getVertices().length / 3 == md.getVertexWeights().length / 3;
         assert md.getVertexWeights().length == md.getJointIds().length;
         GLRawModel model = GLLoader.loadToVAOAnimated(md.getVertices(), md.getTextureCoords(), md.getNormals(), md.getIndices(), md.getJointIds(), md.getVertexWeights(), listJoints(head));
-        GLTexturedModel texturedModel = new GLTexturedModel(model, new ModelTexture(GLLoader.loadTexture("diffuse.png", false)));
+        GLTexturedModel texturedModel = new GLTexturedModel(model, (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png", false));
         Entity entity = new GLEntity(texturedModel, new Vector3f(0,-5,0));
         Scene scene = new Scene();
         scene.addEntity(entity);

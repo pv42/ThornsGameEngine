@@ -3,9 +3,9 @@ package engine.graphics;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
-import engine.graphics.guis.GuiTexture;
+import engine.graphics.glglfwImplementation.guis.GuiTexture;
 import engine.graphics.lights.Light;
-import engine.graphics.lines.LineModel;
+import engine.graphics.glglfwImplementation.lines.LineModel;
 import engine.graphics.terrains.Terrain;
 
 import java.util.ArrayList;

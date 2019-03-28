@@ -1,11 +1,13 @@
 package engine;
 
 import engine.audio.AudioMaster;
+import engine.graphics.display.DisplayManager;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
-import engine.graphics.glglfwImplementation.display.GLFWWindow;
+import engine.graphics.glglfwImplementation.textures.GLTextureLoader;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.textures.TextureLoader;
 import engine.inputs.InputLoop;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
@@ -21,11 +23,11 @@ import org.lwjgl.glfw.GLFW;
  */
 public class EngineMaster {
     private static final String TAG = "Engine";
-    private static GLFWWindow window;
     private static GLFWDisplayManager displayManager;
+    private static TextureLoader textureLoader;
 
-    public static GLFWWindow init() {
-        return init(false);
+    public static void init() {
+        init(false);
     }
 
 
@@ -34,21 +36,26 @@ public class EngineMaster {
      *
      * @param use2D use flat projection
      */
-    public static GLFWWindow init(boolean use2D) {
+    public static void init(boolean use2D) {
         Settings.loadSettings();
         if (Settings.WRITE_LOG_FILE) Log.connectLogFile();
         Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().toString());
         Log.i(TAG, "lwjgl-version: " + Version.getVersion());
         AudioMaster.init();
         displayManager = new GLFWDisplayManager();
-        window = displayManager.createWindow();
-        window.makeActive();
-        window.show();
-        MasterRenderer.init(window, use2D);
-        ParticleMaster.init(MasterRenderer.getProjectionMatrix());
-        InputLoop.init(window.getId());
-        new Thread(InputLoop::run).start(); //starts input handling threat
-        return window;
+        textureLoader = new GLTextureLoader();
+        MasterRenderer.init(use2D);
+        //InputLoop.init(window.getId());
+        //new Thread(InputLoop::run).start(); //starts input handling threat
+    }
+
+    /**
+     * get the engine current display-/windowmanager
+     *
+     * @return engine display manager
+     */
+    public static DisplayManager getDisplayManager() {
+        return displayManager;
     }
 
     /**
@@ -64,5 +71,9 @@ public class EngineMaster {
         AudioMaster.cleanUp();
         GLFW.glfwTerminate();
         Log.i(TAG, "program stopped");
+    }
+
+    public static TextureLoader getTextureLoader() {
+        return textureLoader;
     }
 }

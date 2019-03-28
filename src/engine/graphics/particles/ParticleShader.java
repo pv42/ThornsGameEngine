@@ -2,7 +2,7 @@ package engine.graphics.particles;
 
 import org.joml.Matrix4f;
 
-import engine.graphics.shaders.ShaderProgram;
+import engine.graphics.glglfwImplementation.shaders.ShaderProgram;
 
 public class ParticleShader extends ShaderProgram {
 

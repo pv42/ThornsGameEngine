@@ -1,12 +1,13 @@
 package engine.toolbox.collada;
 
+import engine.EngineMaster;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.Joint;
 import engine.graphics.animation.KeyFrame;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.toolbox.Log;
 import engine.toolbox.StorageFormatUtil;
 
@@ -132,8 +133,8 @@ public class Collada implements ICollada{
                 materialId = ic.getBindMaterialId(materialId);
                 ColladaEffect effect = materials.get(materialId).getInstanceEffect(effects);
                 String imageFile = images.get(effect.getImage()).getSource();
-                GLTexturedModel texturedModel = new GLTexturedModel(model, new ModelTexture(GLLoader.loadTexture(
-                        imageFile.replaceFirst("file:///","").replaceAll("%20", " "))));
+                GLTexturedModel texturedModel = new GLTexturedModel(model, (GLModelTexture) EngineMaster.getTextureLoader().loadTexture(
+                        imageFile.replaceFirst("file:///","").replaceAll("%20", " ")));
                 models.add(texturedModel);
             }
         }

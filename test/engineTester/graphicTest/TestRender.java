@@ -4,7 +4,7 @@ import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
-import engine.graphics.shaders.EntityShader;
+import engine.graphics.glglfwImplementation.shaders.EntityShader;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
 import org.joml.Matrix4f;

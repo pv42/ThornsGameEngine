@@ -1,6 +1,8 @@
 package engine.graphics.glglfwImplementation.display;
 
 import engine.graphics.display.DisplayManager;
+import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.particles.ParticleMaster;
 import engine.toolbox.Log;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
@@ -166,6 +168,8 @@ public class GLFWDisplayManager implements DisplayManager {
             window.destroyUnsafe();
             return null;
         }
+        MasterRenderer.setWindow(window);
+        ParticleMaster.init(MasterRenderer.getProjectionMatrix());
         GL11.glViewport(0, 0, width, height);
         GL11.glOrtho(0, width, height, 0.0, -1.0, 1.0);
         Log.i(TAG, "Window created with MSAA x" + GL11.glGetInteger(GL_SAMPLES));

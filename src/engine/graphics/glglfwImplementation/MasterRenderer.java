@@ -6,9 +6,9 @@ import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.entities.GLEntityRenderer;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTextRenderer;
-import engine.graphics.guis.GuiRenderer;
-import engine.graphics.guis.GuiShader;
-import engine.graphics.lines.LineRenderer;
+import engine.graphics.glglfwImplementation.guis.GuiRenderer;
+import engine.graphics.glglfwImplementation.guis.GuiShader;
+import engine.graphics.glglfwImplementation.lines.LineRenderer;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.TerrainRenderer;
@@ -35,7 +35,7 @@ public class MasterRenderer {
     private static SkyboxRenderer skyboxRenderer;
     private static LineRenderer lineRenderer;
     private static GuiRenderer guiRenderer;
-    private static GuiShader guiShader = new GuiShader();
+    private static GuiShader guiShader;
     private static GLTextRenderer textRenderer;
 
     private static Window window;
@@ -45,10 +45,26 @@ public class MasterRenderer {
     /**
      * initializes the MasterRender
      */
-    public static void init(Window window, boolean use2D) {
+    public static void init(boolean use2D) {
+        MasterRenderer.use2D = use2D;
+        Log.i(TAG, "initialised");
+    }
+
+    /**
+     * initializes the MasterRenderer with specific aspect ratio
+     */
+    public static void init() {
+        enableCulling();
+        createProjectionMatrix(getAspectRatio(), use2D);
+        textRenderer = new GLTextRenderer();
+
+        Log.i(TAG, " initialised");
+    }
+
+    public static void setWindow(Window window) {
         MasterRenderer.window = window;
         enableCulling();
-        MasterRenderer.use2D = use2D;
+        textRenderer = new GLTextRenderer();
         createProjectionMatrix(use2D);
         entityRenderer = new GLEntityRenderer(projectionMatrix);
         aniRenderer = new GLEntityRenderer(projectionMatrix);
@@ -56,30 +72,8 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
+        guiShader = new GuiShader();
         guiRenderer = new GuiRenderer(getAspectRatio()); // todo
-        textRenderer = new GLTextRenderer();
-        Log.i(TAG, "initialised");
-    }
-
-    /**
-     * initializes the MasterRenderer with specific aspect ratio
-     *
-     * @param window to render in
-     */
-    public static void init(Window window) {
-        MasterRenderer.window = window;
-        enableCulling();
-        createProjectionMatrix(getAspectRatio(), use2D);
-        entityRenderer = new GLEntityRenderer(projectionMatrix);
-        aniRenderer = new GLEntityRenderer(projectionMatrix);
-        terrainShader = new TerrainShader();
-        terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-        skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
-        lineRenderer = new LineRenderer(projectionMatrix);
-        guiRenderer = new GuiRenderer(getAspectRatio()); // todo
-        textRenderer = new GLTextRenderer();
-
-        Log.i(TAG, " initialised");
     }
 
     /**

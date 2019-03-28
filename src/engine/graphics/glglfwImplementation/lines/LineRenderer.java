@@ -1,4 +1,4 @@
-package engine.graphics.lines;
+package engine.graphics.glglfwImplementation.lines;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.MasterRenderer;

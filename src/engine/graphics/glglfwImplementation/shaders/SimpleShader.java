@@ -1,4 +1,4 @@
-package engine.graphics.shaders;
+package engine.graphics.glglfwImplementation.shaders;
 
 public class SimpleShader extends ShaderProgram {
     private static final String VERTEX_FILE = "src/engine/graphics/shaders/glsl/simpleVertexShader.glsl";

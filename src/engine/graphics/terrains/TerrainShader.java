@@ -1,7 +1,7 @@
 package engine.graphics.terrains;
 
 
-import engine.graphics.shaders.Lighted3DShader;
+import engine.graphics.glglfwImplementation.shaders.Lighted3DShader;
 
 /**
   Created by pv42 on 18.06.16.

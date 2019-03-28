@@ -1,10 +1,11 @@
 package shivt.guiElements;
 
+import engine.EngineMaster;
 import engine.graphics.Scene;
 import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
-import engine.graphics.guis.GuiTexture;
+import engine.graphics.glglfwImplementation.guis.GuiTexture;
 import engine.inputs.Clickable;
 import engine.inputs.clickAreas.RectangleClickArea;
 import engine.inputs.listeners.OnMouseDownListener;
@@ -36,7 +37,7 @@ public class Button extends Clickable {
     }
     public Button(Vector2f position, Vector2f scale, String text, Window window) {
         super(new RectangleClickArea(Maths.getAreaFromPositionAndScale(window, position,scale))); //todo
-        this.gui = new GuiTexture(GLLoader.loadTexture("path_cs.png"),position,scale, window);
+        this.gui = EngineMaster.getTextureLoader().loadGuiTexture("path_cs.png",position,scale, window);
         this.text = new GLGuiText(new GLTTFont("res/fonts/arial.ttf",64),text,scale.y / 1000, new Color(0),new Vector2f(position));
         this.text.setColor(new Color(0.0,1.0,0.0));
         setTextClickColor(new Color(1.0,0.0,0.0));

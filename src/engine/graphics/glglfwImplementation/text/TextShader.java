@@ -1,6 +1,6 @@
 package engine.graphics.glglfwImplementation.text;
 
-import engine.graphics.shaders.ShaderProgram;
+import engine.graphics.glglfwImplementation.shaders.ShaderProgram;
 import engine.toolbox.Color;
 import org.joml.Vector4f;
 

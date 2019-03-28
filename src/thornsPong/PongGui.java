@@ -7,7 +7,7 @@ import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import engine.physics.CuboidHitBox;
@@ -33,9 +33,10 @@ public class PongGui {
     private boolean flipPause = false;
     private PongGame game;
     public PongGui() {
-        Window window = EngineMaster.init(true);
+        EngineMaster.init(true);
+        Window window = EngineMaster.getDisplayManager().createWindow();
         TwoDimensionsCamera camera = new TwoDimensionsCamera();
-        ModelTexture texture = new ModelTexture(GLLoader.loadTexture("white.png"));
+        GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("white.png");
         //boundings
         GLTexturedModel boundingModel = new GLTexturedModel(MeshCreator.createBox(2,.2f,1), texture);
         CuboidHitBox boundingHitBox = new CuboidHitBox(-1,1,-.1f,.1f,-.5f,.5f);

@@ -2,14 +2,15 @@ import engine.EngineMaster;
 import engine.graphics.Scene;
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.StaticThreeDimensionCamera;
+import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLTexturedModel;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.glglfwImplementation.textures.ModelTexture;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
 import engine.toolbox.OBJLoader;
@@ -25,10 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EngineGraphicMainTest {
     @Test
     void test() {
-        GLFWWindow window = EngineMaster.init();
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
         window.setTitle("??");
         GLRawModel model = OBJLoader.loadObjModel("barrel");
-        ModelTexture texture = new ModelTexture(GLLoader.loadTexture("tree.png"));
+        GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("tree.png");
         texture.setReflectivity(.0f);
         texture.setShineDamper(.1f);
         GLTexturedModel tm = new GLTexturedModel(model, texture);

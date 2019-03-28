@@ -1,4 +1,4 @@
-package engine.graphics.shaders;
+package engine.graphics.glglfwImplementation.shaders;
 
 import engine.toolbox.Matrix4fDbg;
 import org.joml.Vector2f;

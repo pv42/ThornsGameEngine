@@ -1,5 +1,6 @@
 package engine.graphics.skybox;
 
+import engine.EngineMaster;
 import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
@@ -64,7 +65,7 @@ public class SkyboxRenderer {
     public SkyboxRenderer(Matrix4f projectionMatrix,String textureFile, String extension) {
         cube = GLLoader.loadToVAO(VERTICES, 3);
         if (extension == null) extension = ".png";
-        texture = GLLoader.loadCubeMapTexture(textureFile, extension);
+        texture = EngineMaster.getTextureLoader().loadCubeMapTexture(textureFile, extension);
         shader = new SkyBoxShader();
         shader.start();
         shader.connectTextures();

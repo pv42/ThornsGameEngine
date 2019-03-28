@@ -1,4 +1,4 @@
-package engine.graphics.lines;
+package engine.graphics.glglfwImplementation.lines;
 
 import engine.toolbox.Color;
 import org.joml.Vector3f;
