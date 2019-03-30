@@ -1,5 +1,11 @@
 package engine.toolbox.assimpLoader;
 
+import engine.EngineMaster;
+import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.textures.GLModelTexture;
+import engine.graphics.materials.Material;
+import engine.graphics.materials.TexturedMaterial;
+import engine.graphics.textures.Texture;
 import engine.toolbox.Log;
 import org.joml.Vector4f;
 import org.lwjgl.assimp.AIMaterial;
@@ -244,5 +250,11 @@ public class AssimpMaterial {
 
     private void setTextureFile(String textureFile) {
         this.textureFile = textureFile;
+    }
+
+    public Material getMaterial() {
+        Texture texture = EngineMaster.getTextureLoader().loadTexture(getTextureFile());
+        TexturedMaterial tm = new TexturedMaterial(texture);
+        return tm;
     }
 }

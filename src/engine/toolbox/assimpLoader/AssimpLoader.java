@@ -78,9 +78,10 @@ public class AssimpLoader {
             throw new RuntimeException("Error loading model");
         }
 
-        loadMeshs(scene);
         loadMaterials(scene);
+        loadMeshs(scene);
         loadAnimations(scene);
+
 
     }
 
@@ -99,7 +100,7 @@ public class AssimpLoader {
         PointerBuffer aiMeshes = scene.mMeshes();
         for (int i = 0; i < numMeshes; i++) {
             AIMesh mesh = AIMesh.create(aiMeshes.get(i));
-            meshs.add(AssimpMesh.load(mesh));
+            meshs.add(AssimpMesh.load(mesh, materials));
         }
     }
 

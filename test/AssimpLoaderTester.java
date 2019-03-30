@@ -10,6 +10,7 @@ import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
 import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Color;
+import engine.toolbox.Log;
 import engine.toolbox.assimpLoader.AssimpLoader;
 import engine.toolbox.assimpLoader.AssimpMaterial;
 import engine.toolbox.assimpLoader.AssimpMesh;
@@ -42,15 +43,17 @@ class AssimpLoaderTester {
         Window window = EngineMaster.getDisplayManager().createWindow();
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         Scene scene = new Scene();
-        GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png");
-        GLMaterializedModel texturedModel = new GLMaterializedModel(c.meshs.get(0).createRawModel(), new TexturedMaterial(texture));
+        GLMaterializedModel texturedModel = c.meshs.get(0).createMaterializedModel();
         GLEntity entity = new GLEntity(texturedModel, new Vector3f());
         entity.setRx(-90);
+        entity.setPosition(0,-5,0);
         scene.addEntity(entity);
+        scene.addLight(new Light(new Vector3f(0,0,10), new Color(1,1,1)));
         while (!window.isCloseRequested()) {
             MasterRenderer.render(scene, camera);
             window.update();
         }
+        EngineMaster.finish();
     }
 
     @Test
@@ -63,10 +66,11 @@ class AssimpLoaderTester {
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         Scene scene = new Scene();
         scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
+        Log.i("number of meshes:" + c.meshs.size());
         for (AssimpMesh mesh : c.meshs) {
-            GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("diffuse.png");
-            GLMaterializedModel texturedModel = new GLMaterializedModel(mesh.createRawModel(), new TexturedMaterial(texture));
-            GLEntity entity = new GLEntity(texturedModel, new Vector3f());
+            GLMaterializedModel texturedModel = mesh.createMaterializedModel();
+            GLEntity entity = new GLEntity(texturedModel, new Vector3f(0,-5,0));
+            entity.setScale(3);
             entity.setRx(-90);
             scene.addEntity(entity);
         }
@@ -74,5 +78,6 @@ class AssimpLoaderTester {
             MasterRenderer.render(scene, camera);
             window.update();
         }
+        EngineMaster.finish();
     }
 }

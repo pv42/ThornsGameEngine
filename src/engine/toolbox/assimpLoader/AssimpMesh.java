@@ -1,7 +1,9 @@
 package engine.toolbox.assimpLoader;
 
 import engine.graphics.glglfwImplementation.GLLoader;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
+import engine.graphics.materials.Material;
 import engine.toolbox.Log;
 import org.lwjgl.assimp.AIBone;
 import org.lwjgl.assimp.AIFace;
@@ -23,6 +25,7 @@ public class AssimpMesh {
     private float[] uv;
     private List<AssimpJoint> joints;
     private int vcount;
+    private AssimpMaterial assimpMaterial;
 
     private AssimpMesh(String name, float[] pos, int vcount, int[] indices) {
         this.name = name;
@@ -31,7 +34,7 @@ public class AssimpMesh {
         this.indices = indices;
     }
 
-    public static AssimpMesh load(AIMesh mesh) {
+    public static AssimpMesh load(AIMesh mesh, List<AssimpMaterial> materials) {
         Log.d(TAG, "loading mesh " + mesh.mName().dataString());
         float[] v = readVertices(mesh);
         float[] normals = readNormals(mesh);
@@ -42,14 +45,23 @@ public class AssimpMesh {
         data.setJoints(joints);
         data.setNormal(normals);
         data.setUv(texCoords);
+        try {
+            data.setMaterial(materials.get(mesh.mMaterialIndex()));
+        } catch (Exception ex) {
+            Log.e(TAG, "could not set material");
+        }
         return data;
+    }
+
+    private void setMaterial(AssimpMaterial assimpMaterial) {
+        this.assimpMaterial = assimpMaterial;
     }
 
     private static int[] readIndices(AIMesh mesh) {
         int fcount = mesh.mNumFaces();
         int[] indices = new int[fcount * 3];
         Log.d(TAG, fcount + " faces");
-        for(int i = 0; i < fcount; i++) {
+        for (int i = 0; i < fcount; i++) {
             AIFace face = mesh.mFaces().get(i);
             for (int j = 0; j < face.mNumIndices(); j++) {
                 indices[i * 3 + j] = face.mIndices().get(j);
@@ -124,17 +136,23 @@ public class AssimpMesh {
     }
 
     public GLRawModel createRawModel() {
+        Log.d(TAG, "loading mesh raw model:" + name);
         GLRawModel model = null;
-        if(joints.size() > 0) {
+        if (joints.size() > 0) {
             //model = GLLoader.loadToVAOAnimated(pos,uv,normal,  ...)
-            model = GLLoader.loadToVAO(pos, uv,normal, indices);
+            model = GLLoader.loadToVAO(pos, uv, normal, indices);
         } else {
-            model = GLLoader.loadToVAO(pos, uv,normal, indices);
+            model = GLLoader.loadToVAO(pos, uv, normal, indices);
         }
         //todo cases
         return model;
     }
 
+    public GLMaterializedModel createMaterializedModel() {
+        GLRawModel model = createRawModel();
+        Material material = assimpMaterial.getMaterial();
+        return new GLMaterializedModel(model, material);
+    }
 
 
     @Override
