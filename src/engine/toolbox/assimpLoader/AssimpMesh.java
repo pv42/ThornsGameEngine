@@ -1,10 +1,12 @@
 package engine.toolbox.assimpLoader;
 
+import engine.graphics.animation.Joint;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.materials.Material;
 import engine.toolbox.Log;
+import engine.toolbox.Matrix4fDbg;
 import org.lwjgl.assimp.AIBone;
 import org.lwjgl.assimp.AIFace;
 import org.lwjgl.assimp.AIMesh;
@@ -13,8 +15,8 @@ import org.lwjgl.assimp.AIVector3D;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.toolbox.assimpLoader.AssimpLoader.readBuffer3f;
-import static engine.toolbox.assimpLoader.AssimpLoader.readBuffer3fTo2f;
+import static engine.toolbox.assimpLoader.AssimpScene.readBuffer3f;
+import static engine.toolbox.assimpLoader.AssimpScene.readBuffer3fTo2f;
 
 public class AssimpMesh {
     private static final String TAG = "AssimpMesh";
@@ -26,6 +28,8 @@ public class AssimpMesh {
     private List<AssimpJoint> joints;
     private int vcount;
     private AssimpMaterial assimpMaterial;
+    private int[] weightIndices;
+    private float[] weightValues;
 
     private AssimpMesh(String name, float[] pos, int vcount, int[] indices) {
         this.name = name;
@@ -50,6 +54,7 @@ public class AssimpMesh {
         } catch (Exception ex) {
             Log.e(TAG, "could not set material");
         }
+        data.createWeights(3);
         return data;
     }
 
@@ -90,7 +95,6 @@ public class AssimpMesh {
         return readBuffer3fTo2f(buffer, count);
     }
 
-
     private static float[] readNormals(AIMesh mesh) {
         int vcount = mesh.mNumVertices();
         AIVector3D.Buffer buffer = mesh.mNormals();
@@ -105,6 +109,35 @@ public class AssimpMesh {
         int vcount = mesh.mNumVertices();
         AIVector3D.Buffer buffer = mesh.mVertices();
         return readBuffer3f(buffer, vcount);
+    }
+
+    private void createWeights(int maxWeightsPerVertex) {
+        weightIndices = new int[vcount * maxWeightsPerVertex];
+        weightValues = new float[vcount * maxWeightsPerVertex];
+        for (int i = 0; i < joints.size(); i++) {
+            AssimpJoint joint = joints.get(i);
+            for (int j = 0; j < joint.getWeightsIndices().size(); j++) {
+                int index = joint.getWeightsIndices().get(j);
+                float weight = joint.getWeightValues().get(j);
+                for (int pos = i * maxWeightsPerVertex; pos < (i + 1) * maxWeightsPerVertex; pos++) {
+                    if (weight > weightValues[pos]) {
+                        moveWeightsInArrays(pos, (i + 1) * maxWeightsPerVertex - 1);
+                        weightIndices[pos] = index;
+                        weightValues[pos] = weight;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void moveWeightsInArrays(int pos, int limit) {
+        if (pos >= limit - 1) return;
+        moveWeightsInArrays(pos + 1, limit);
+        if (weightValues[pos] > 0) { // move away if there is space
+            weightIndices[pos + 1] = weightIndices[pos];
+            weightValues[pos + 1] = weightIndices[pos];
+        }
     }
 
     public float[] getPos() {
@@ -139,13 +172,21 @@ public class AssimpMesh {
         Log.d(TAG, "loading mesh raw model:" + name);
         GLRawModel model = null;
         if (joints.size() > 0) {
-            //model = GLLoader.loadToVAOAnimated(pos,uv,normal,  ...)
-            model = GLLoader.loadToVAO(pos, uv, normal, indices);
+            model = GLLoader.loadToVAOAnimated(pos, uv, normal, indices, weightIndices, weightValues, getEngineJoints());
         } else {
             model = GLLoader.loadToVAO(pos, uv, normal, indices);
         }
         //todo cases
         return model;
+    }
+
+    private List<Joint> getEngineJoints() {
+        List<Joint> jointList = new ArrayList<>();
+        for (AssimpJoint assimpJoint : joints) {
+            jointList.add(new Joint(assimpJoint.getName(), new Matrix4fDbg(assimpJoint.getOffsetMatrix(),
+                    assimpJoint.getName() + ".assM")));
+        }
+        return jointList;
     }
 
     public GLMaterializedModel createMaterializedModel() {

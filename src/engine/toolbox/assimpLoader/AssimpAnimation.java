@@ -1,6 +1,9 @@
 package engine.toolbox.assimpLoader;
 
+import engine.graphics.animation.Animation;
+import engine.graphics.animation.KeyFrame;
 import engine.toolbox.Log;
+import engine.toolbox.Matrix4fDbg;
 import javafx.util.Pair;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -16,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class AssimpAnimation {
     private final String name;
@@ -62,7 +67,23 @@ public class AssimpAnimation {
         return animation;
     }
 
-
+    public Animation getAnimation() {
+        Animation animation = new Animation();
+        Map<Float, KeyFrame> keyFrames = new HashMap<>();
+        for (String name : keyFrameData.keySet()) {
+            List<Pair<Double, Matrix4f>> pairs = keyFrameData.get(name);
+            for (Pair<Double, Matrix4f> pair : pairs) {
+                float time = new Float(pair.getKey());
+                keyFrames.computeIfAbsent(time, aFloat -> {
+                    keyFrames.put(time, new KeyFrame(aFloat));
+                    return null;
+                });
+                keyFrames.get(time).addJointData(name, new Matrix4fDbg(pair.getValue(), name + ".anM"));
+            }
+        }
+        keyFrames.forEach((aFloat, keyFrame) -> animation.addKeyFrame(keyFrame));
+        return animation;
+    }
 
     private static void print3Arr(AIVector3D vector) {
         System.out.println(" " + vector.x() + "," + vector.y() + "," + vector.z());
@@ -81,7 +102,7 @@ public class AssimpAnimation {
     }
 
     private void addData(String jointName, double time, Matrix4f transform) {
-        if(!keyFrameData.containsKey(jointName)) {
+        if (!keyFrameData.containsKey(jointName)) {
             keyFrameData.put(jointName, new ArrayList<>());
         }
         System.out.println(time + " " + jointName + " \n" + transform);

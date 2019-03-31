@@ -115,11 +115,12 @@ public class AnimationTest {
         assert md.getVertexWeights().length == md.getJointIds().length;
         GLRawModel model = GLLoader.loadToVAOAnimated(md.getVertices(), md.getTextureCoords(), md.getNormals(),
                 md.getIndices(), md.getJointIds(), md.getVertexWeights(), listJoints(head));
-        GLMaterializedModel texturedModel = new GLMaterializedModel(model, new TexturedMaterial(EngineMaster.getTextureLoader().loadTexture("diffuse.png", false)));
+        GLMaterializedModel texturedModel = new GLMaterializedModel(model, new TexturedMaterial(EngineMaster.getTextureLoader().loadTexture("characterTexture.png", false)));
         Entity entity = new GLEntity(texturedModel, new Vector3f(0,-5,0));
+        entity.setRx(-90);
         Scene scene = new Scene();
         scene.addEntity(entity);
-        scene.addLight(new Light(new Vector3f(0,0,5), new Color(1,1,1)));
+        scene.addLight(new Light(new Vector3f(0,0,10), new Color(1,1,1)));
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         int count = 0;
         float animationTime = 0;

@@ -14,11 +14,12 @@ import org.lwjgl.assimp.Assimp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssimpLoader {
-    private static final String TAG = "AssimpLoader";
+public class AssimpScene {
+    private static final String TAG = "AssimpScene";
 
-    public List<AssimpMesh> meshs = new ArrayList<>();
-    public List<AssimpMaterial> materials = new ArrayList<>();
+    private List<AssimpMesh> meshs = new ArrayList<>();
+    private List<AssimpMaterial> materials = new ArrayList<>();
+    private List<AssimpAnimation> animations = new ArrayList<>();
 
     static float[] readBuffer3f(AIVector3D.Buffer buffer, int count) {
         float[] data = new float[count * 3];
@@ -91,7 +92,7 @@ public class AssimpLoader {
         Log.d(TAG, "animcount=" + count);
         for(int i = 0; i < count; i++) {
             AIAnimation animation = AIAnimation.create(aiAnimations.get(i));
-            AssimpAnimation.load(animation);
+            animations.add(AssimpAnimation.load(animation));
         }
     }
 
@@ -113,5 +114,15 @@ public class AssimpLoader {
         }
     }
 
+    public List<AssimpMesh> getMeshs() {
+        return meshs;
+    }
 
+    public List<AssimpMaterial> getMaterials() {
+        return materials;
+    }
+
+    public List<AssimpAnimation> getAnimations() {
+        return animations;
+    }
 }
