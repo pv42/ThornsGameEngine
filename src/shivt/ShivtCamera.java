@@ -3,6 +3,7 @@ package shivt;
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.joml.Vector3f;
 
@@ -19,7 +20,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         setYaw(180);
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_REPEAT, GLFW.GLFW_KEY_UP) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 Vector3f pos = getPosition();
                 pos.z += 1;
                 setPosition(pos);
@@ -27,7 +28,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_REPEAT, GLFW.GLFW_KEY_DOWN) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.z -= 1;
@@ -36,7 +37,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_REPEAT, GLFW.GLFW_KEY_LEFT) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.x += 1;
@@ -45,7 +46,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_REPEAT, GLFW.GLFW_KEY_RIGHT) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.x -= 1;
@@ -54,7 +55,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_REPEAT, GLFW.GLFW_KEY_PAGE_UP) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.y += 1;
@@ -63,7 +64,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_REPEAT, GLFW.GLFW_KEY_PAGE_DOWN) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 Vector3f pos = getPosition();
                 pos.y -= 1;
                 setPosition(pos);
@@ -71,7 +72,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_UP) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 Vector3f pos = getPosition();
                 pos.z += 1;
                 setPosition(pos);
@@ -79,7 +80,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_DOWN) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.z -= 1;
@@ -88,7 +89,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_LEFT) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.x += 1;
@@ -97,7 +98,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_RIGHT) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.x -= 1;
@@ -106,7 +107,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_PAGE_UP) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
 
                 Vector3f pos = getPosition();
                 pos.y += 1;
@@ -115,7 +116,7 @@ public class ShivtCamera extends ThreeDimensionCamera {
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_PAGE_DOWN) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 Vector3f pos = getPosition();
                 pos.y -= 1;
                 setPosition(pos);

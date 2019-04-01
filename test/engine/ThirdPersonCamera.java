@@ -2,6 +2,15 @@ package engine;
 
 import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.glglfwImplementation.entities.Player;
+import engine.inputs.InputHandler;
+import engine.inputs.listeners.InputEventListener;
+import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
+
+import static engine.inputs.InputEvent.KEY_EVENT;
+import static engine.inputs.InputEvent.KEY_PRESS;
+import static engine.inputs.InputEvent.MOUSE_EVENT;
+import static engine.inputs.InputEvent.SCROLL;
 
 /**
    Created by pv42 on 17.06.16.
@@ -16,6 +25,12 @@ public class ThirdPersonCamera  extends ThreeDimensionCamera {
     public ThirdPersonCamera(Player player) {
         super();
         this.player = player;
+        InputHandler.addListener(new InputEventListener(MOUSE_EVENT,SCROLL, 0) {
+            @Override
+            public void onOccur(Vector2f v2f) {
+                distanceFromPlayer -= v2f.y * 3f;
+            }
+        });
     }
 
     public void move() {
@@ -25,7 +40,7 @@ public class ThirdPersonCamera  extends ThreeDimensionCamera {
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
         calculateCamaraPosition(horizontalDistance,verticalDistance);
-        setYaw(180 - (angleAroundPlayer + player.getRy()));
+        setYaw(180 - (angleAroundPlayer + player.getRz()));
     }
 
 
@@ -58,7 +73,7 @@ public class ThirdPersonCamera  extends ThreeDimensionCamera {
         return (float) (distanceFromPlayer * Math.sin(Math.toRadians(getPitch())));
     }
     private void calculateCamaraPosition(float horizontalDistance, float verticalDistance) {
-        float theta = angleAroundPlayer + player.getRy();
+        float theta = angleAroundPlayer + player.getRz();
         float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
         getPosition().x = player.getEyePosition().x - offsetX;

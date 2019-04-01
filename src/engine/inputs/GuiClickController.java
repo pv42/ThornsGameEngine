@@ -36,7 +36,7 @@ public class GuiClickController {
         });
         InputHandler.addListener(new InputEventListener(MOUSE_EVENT,KEY_PRESS,L_MOUSE) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 //updateCurrentClickable();
                 if(currentClickable != null) currentClickable.onMouseDown();
                 mouseDownClickable = currentClickable;
@@ -44,7 +44,7 @@ public class GuiClickController {
         });
         InputHandler.addListener(new InputEventListener(MOUSE_EVENT,KEY_RELEASE,L_MOUSE) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 //updateCurrentClickable();
                 if(currentClickable != null) {
                     currentClickable.onMouseUp();

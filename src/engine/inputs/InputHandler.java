@@ -117,7 +117,7 @@ public class InputHandler {
         } else {
             InputEventListener l = listeners.get(e.getDataID());
             if (l != null) {
-                l.onOccur();
+                l.onOccur(e.getMousePosition());
             }
         }
 

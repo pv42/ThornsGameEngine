@@ -1,5 +1,7 @@
 package engine.inputs.listeners;
 
+import org.joml.Vector2f;
+
 /**
  * Created by pv42 on 06.09.2016.
  */
@@ -30,5 +32,5 @@ public abstract class InputEventListener {
         return eventSource + 2 * eventType + 8 * eventData;
     }
 
-    public abstract void onOccur();
+    public abstract void onOccur(Vector2f posData);
 }

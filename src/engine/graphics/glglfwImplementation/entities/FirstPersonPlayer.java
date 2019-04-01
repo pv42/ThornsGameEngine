@@ -5,6 +5,7 @@ import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.joml.Vector3f;
 import engine.graphics.terrains.Terrain;
@@ -63,73 +64,73 @@ public class FirstPersonPlayer extends Player{
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_W) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSpeed = RUN_SPEED;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_RELEASE, GLFW.GLFW_KEY_W) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSpeed = 0;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_A) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSideSpeed = RUN_SPEED;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_RELEASE, GLFW.GLFW_KEY_A) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSideSpeed = 0;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_S) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSpeed = - RUN_SPEED;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_RELEASE, GLFW.GLFW_KEY_S) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSpeed = 0;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_D) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSideSpeed = - RUN_SPEED;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_RELEASE, GLFW.GLFW_KEY_D) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 currentSideSpeed = 0;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_LEFT_SHIFT) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 sprinting = true;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_RELEASE, GLFW.GLFW_KEY_LEFT_SHIFT) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 sprinting = false;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_SPACE) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 jump();
             }
         });
         InputHandler.addListener(new InputEventListener(MOUSE_EVENT,KEY_PRESS, InputEvent.L_MOUSE) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 //getGun().shot(null,getThis()); // todo removed guns
             }
         });

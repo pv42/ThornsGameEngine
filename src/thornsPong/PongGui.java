@@ -16,6 +16,7 @@ import engine.physics.HitBox;
 import engine.physics.PhysicalEntity;
 import engine.physics.PhysicsEngine;
 import engine.toolbox.MeshCreator;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
@@ -94,55 +95,55 @@ public class PongGui {
     private void initEventListeners() {
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_Q) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 klu = true;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_A) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 kld = true;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_KP_9) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 kru = true;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_PRESS, GLFW.GLFW_KEY_KP_6) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 krd = true;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_RELEASE, GLFW.GLFW_KEY_Q) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 klu = false;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_RELEASE, GLFW.GLFW_KEY_A) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 kld = false;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_RELEASE, GLFW.GLFW_KEY_KP_9) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 kru = false;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_RELEASE, GLFW.GLFW_KEY_KP_6) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 krd = false;
             }
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT, KEY_RELEASE, GLFW.GLFW_KEY_SPACE) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 game.flipPaused();
             }
         });

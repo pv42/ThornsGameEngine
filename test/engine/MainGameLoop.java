@@ -51,7 +51,7 @@ public class MainGameLoop {
         GLFWWindow window = (GLFWWindow) EngineMaster.getDisplayManager().createWindow();
         InputHandler.addListener(new InputEventListener(InputEvent.MOUSE_EVENT, InputEvent.KEY_PRESS, InputEvent.L_MOUSE) {
             @Override
-            public void onOccur() {
+            public void onOccur(Vector2f v2f) {
                 Log.i("EVENT_TESTER", "It works");
             }
         });
@@ -110,7 +110,7 @@ public class MainGameLoop {
         FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0, 0, 0), window);
         player.setScale(.8f);
         Entity cube = new GLEntity(new GLMaterializedModel(OBJLoader.loadObjModel("cube"), new TexturedMaterial(tl.loadTexture("white.png"))), new Vector3f());
-        FirstPersonCamera camera = new FirstPersonCamera(player);
+        ThirdPersonCamera camera = new ThirdPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;
         //network
