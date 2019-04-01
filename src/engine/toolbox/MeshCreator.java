@@ -54,10 +54,11 @@ public class MeshCreator {
         return GLLoader.loadToVAO(positions, normals, textures, indices);
     }
     /**
-     * creates a mesh box parallel to the axis
+     * creates a mesh box parallel to the axis with given size
      * @param xSize boxes x size
      * @param ySize boxes y size
      * @param zSize boxes z size
+     * @return created GLRawModel of a box
      */
     public static GLRawModel createBox(float xSize, float ySize, float zSize) {
         return createBox(-xSize/2,xSize/2,-ySize/2,ySize/2,-zSize/2, zSize/2);

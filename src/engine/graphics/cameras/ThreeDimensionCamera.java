@@ -4,10 +4,10 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 /**
-   Created by pv42 on 17.06.16.
+ * Created by pv42 on 17.06.16.
  */
-public abstract class ThreeDimensionCamera implements Camera{
-    private Vector3f position = new Vector3f(0,5,0);
+public abstract class ThreeDimensionCamera implements Camera {
+    private Vector3f position = new Vector3f(0, 5, 0);
     private float pitch = 11;
     private float yaw = 30;
     private float roll = 0;
@@ -35,41 +35,67 @@ public abstract class ThreeDimensionCamera implements Camera{
 
     /**
      * gets cameras position in world space
+     *
      * @return cameras position
      */
     public final Vector3f getPosition() {
         return position;
     }
 
+    public void setPosition(Vector3f position) {
+        this.position = position;
+    }
+
     /**
-     * gets the camera's pitch
+     * gets the camera's rotation pitch
+     *
      * @return pitch
      */
     public final float getPitch() {
         return pitch;
     }
 
-    //TODO jdoc
-    public float getYaw() {
-        return yaw;
-    }
-
-    public float getRoll() {
-        return roll;
-    }
-
-    public void setPosition(Vector3f position) {
-        this.position = position;
-    }
-
+    /**
+     * sets the camera's rotation pitch
+     *
+     * @param pitch rotation pitch
+     */
     public void setPitch(float pitch) {
         this.pitch = pitch;
     }
 
+    /**
+     * gets the camera's rotation yaw
+     *
+     * @return yaw
+     */
+    public float getYaw() {
+        return yaw;
+    }
+
+    /**
+     * sets the camera's rotation yaw
+     *
+     * @param yaw rotation yaw
+     */
     public void setYaw(float yaw) {
         this.yaw = yaw;
     }
 
+    /**
+     * sets the camera's rotation roll
+     *
+     * @return roll
+     */
+    public float getRoll() {
+        return roll;
+    }
+
+    /**
+     * gets the camera's rotation roll
+     *
+     * @param roll rotation roll
+     */
     public void setRoll(float roll) {
         this.roll = roll;
     }

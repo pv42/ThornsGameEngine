@@ -18,6 +18,8 @@ import engine.toolbox.assimpLoader.AssimpMesh;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class AssimpLoaderTester {
     @Test
@@ -47,7 +49,7 @@ class AssimpLoaderTester {
         Window window = EngineMaster.getDisplayManager().createWindow();
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         Scene scene = new Scene();
-        GLMaterializedModel texturedModel = c.getMeshs().get(0).createMaterializedModel();
+        GLMaterializedModel texturedModel = c.getMeshs().get(0).createMaterializedModel(true);
         GLEntity entity = new GLEntity(texturedModel, new Vector3f());
         entity.setRx(-90);
         entity.setPosition(0,-5,0);
@@ -56,10 +58,35 @@ class AssimpLoaderTester {
         Animation animation = c.getAnimations().get(0).getAnimation();
         float aniTime = 0;
         while (!window.isCloseRequested()) {
-            Animator.applyAnimation(animation, texturedModel.getRawModel().getJoints(), aniTime);
+            if (texturedModel.getRawModel().getJoints() != null) Animator.applyAnimation(animation, texturedModel.getRawModel().getJoints(), aniTime);
             MasterRenderer.render(scene, camera);
             window.update();
             aniTime += window.getLastFrameTime();
+        }
+        EngineMaster.finish();
+    }
+
+    @Test
+    void testAndDrawBlender() {
+        AssimpScene c = new AssimpScene();
+        c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\bmw27_cpu.blend");
+        //engine
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
+        Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
+        Scene scene = new Scene();
+        scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
+        Log.i("number of meshes:" + c.getMeshs().size());
+        for (AssimpMesh mesh : c.getMeshs()) {
+            GLMaterializedModel texturedModel = mesh.createMaterializedModel(false);
+            GLEntity entity = new GLEntity(texturedModel, new Vector3f(0,-5,0));
+            entity.setScale(3);
+            entity.setRx(-90);
+            scene.addEntity(entity);
+        }
+        while (!window.isCloseRequested()) {
+            MasterRenderer.render(scene, camera);
+            window.update();
         }
         EngineMaster.finish();
     }
@@ -76,7 +103,7 @@ class AssimpLoaderTester {
         scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
         Log.i("number of meshes:" + c.getMeshs().size());
         for (AssimpMesh mesh : c.getMeshs()) {
-            GLMaterializedModel texturedModel = mesh.createMaterializedModel();
+            GLMaterializedModel texturedModel = mesh.createMaterializedModel(false);
             GLEntity entity = new GLEntity(texturedModel, new Vector3f(0,-5,0));
             entity.setScale(3);
             entity.setRx(-90);

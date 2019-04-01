@@ -10,7 +10,7 @@ import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTruetype;
 
 /**
- * A Class to render 2D Text with a TrueTypeFont using OpenGL and Sean's Tool Box (STB_TrueType),
+ * A Class to render 2D GuiText with a TrueTypeFont using OpenGL and Sean's Tool Box (STB_TrueType),
  * part of the render engine
  *
  * @author pv42

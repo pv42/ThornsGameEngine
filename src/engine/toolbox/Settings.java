@@ -8,6 +8,7 @@ import java.io.IOException;
 
 /***
  * Created by pv42 on 21.06.16.
+ * @author pv42
  */
 public class Settings {
 

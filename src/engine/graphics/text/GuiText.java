@@ -4,26 +4,25 @@ import engine.toolbox.Color;
 import org.joml.Vector2f;
 
 
-
 /**
- * A renderable text e.g a string to be rendered in a font, color and size at a starting specific position
+ * A renderable text e.g. a string to be rendered in a font, color and size at a starting specific position
  *
  * @author pv42
  */
-public interface Text {
+public interface GuiText {
 
 
     /**
-     * gets the text (true type) font
+     * gets the text font
      *
-     * @return texts ttf
+     * @return texts fonts
      */
     Font getFont();
 
     /**
-     * sets text true type font
+     * sets text font
      *
-     * @param font GLTTFont to use
+     * @param font font to use for the text
      */
     void setFont(Font font);
 
@@ -35,14 +34,15 @@ public interface Text {
     String getString();
 
     /**
-     * sets the guiText string
+     * sets the guiTexts text string
      *
      * @param string text string data
      */
     void setString(String string);
 
     /**
-     * gets the guiTexts font size
+     * gets the guiTexts font size; a size of 1 means pixel in the original font file is 1 in openGL space, so this
+     * should be around 1e-5 to result in usable text
      *
      * @return texts font size
      */
@@ -56,28 +56,28 @@ public interface Text {
     void setSize(float size);
 
     /**
-     * gets the guiTexts color
+     * gets the guiTexts (foreground) color, the background will be transparent
      *
      * @return texts color
      */
     Color getColor();
 
     /**
-     * sets guiTexts text color
+     * sets guiTexts text (foreground) color, the background will be transparent
      *
      * @param color color to set
      */
     void setColor(Color color);
 
     /**
-     * gets the texts first character's position
+     * gets the texts first character's position in openGL space
      *
      * @return first chars position
      */
     Vector2f getPosition();
 
     /**
-     * sets text starting position
+     * sets text starting position in openGL space, so 0,0 is the center of the window and -1,1 is top left
      *
      * @param position text starting position
      */

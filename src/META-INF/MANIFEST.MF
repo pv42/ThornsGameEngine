@@ -1,3 +1,5 @@
 Manifest-Version: 1.0
-Main-Class: engine.MainGameLoop
+Specification-Title: ThornsGameEngine
+Specification-Version: 0.3.07
+
 

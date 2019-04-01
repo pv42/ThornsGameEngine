@@ -1,12 +1,11 @@
 package engine.toolbox.assimpLoader;
 
 import engine.EngineMaster;
-import engine.graphics.glglfwImplementation.GLLoader;
-import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.materials.Material;
 import engine.graphics.materials.TexturedMaterial;
 import engine.graphics.textures.Texture;
 import engine.toolbox.Log;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.assimp.AIMaterial;
 import org.lwjgl.assimp.AIMaterialProperty;
@@ -21,6 +20,7 @@ public class AssimpMaterial {
 
     private Vector4f ambient;
     private Vector4f diffuse;
+    private Vector4f diffuseColor;
     private Vector4f specular;
     private Vector4f emissive;
     private Vector4f colorReflective;
@@ -58,28 +58,33 @@ public class AssimpMaterial {
                         material.setName(readString(data, len));
                         break;
                     case Assimp._AI_MATKEY_TEXTURE_BASE:
-                        material.setTextureFile(readString(data, len));
+                        String texbase = readString(data, len);
+                        if(texbase.equals("*0")){// blender
+                            texbase ="white.png";
+                        }
+                        material.setTextureFile(texbase);
                         break;
                     default:
                         Log.w(TAG, "unknown material property: \"" + key + "\"");
                         System.out.println(readString(data, len));
                 }
             } else if (type == Assimp.aiPTI_Float) {
+                //System.out.println(key + " l =" + len);
                 switch (key) {
                     case Assimp.AI_MATKEY_COLOR_AMBIENT:
-                        material.setAmbient(readVector4f(data, len));
+                        material.setAmbient(readVector1or3or4f(data, len));
                         break;
                     case Assimp.AI_MATKEY_COLOR_DIFFUSE:
-                        material.setDiffuse(readVector4f(data, len));
+                        material.setDiffuse(readVector1or3or4f(data, len));
                         break;
                     case Assimp.AI_MATKEY_COLOR_SPECULAR:
-                        material.setSpecular(readVector4f(data, len));
+                        material.setSpecular(readVector1or3or4f(data, len));
                         break;
                     case Assimp.AI_MATKEY_COLOR_EMISSIVE:
-                        material.setEmissive(readVector4f(data, len));
+                        material.setEmissive(readVector1or3or4f(data, len));
                         break;
                     case Assimp.AI_MATKEY_COLOR_REFLECTIVE:
-                        material.setColorReflective(readVector4f(data, len));
+                        material.setColorReflective(readVector1or3or4f(data, len));
                         break;
                     case Assimp.AI_MATKEY_SHININESS:
                         material.setShininess(readFloat(data, len));
@@ -95,10 +100,15 @@ public class AssimpMaterial {
                         break;
                     case Assimp._AI_MATKEY_UVTRANSFORM_BASE: // i have no idea what this is
                     case Assimp._AI_MATKEY_TEXBLEND_BASE:
+                    case Assimp.AI_MATKEY_BUMPSCALING:
                         break;
                     default:
-                        Log.w(TAG, "unknown material float property: \"" + key + "\"");
-                        System.out.println(Arrays.toString(readFloatArray(data, len)));
+                        if(key.startsWith("$mat.blend.")) {
+                            //Log.d(TAG, "ignoring blender property " + key);
+                        } else {
+                            Log.w(TAG, "unknown material float property: \"" + key + "\"");
+                            System.out.println(Arrays.toString(readFloatArray(data, len)));
+                        }
                 }
             } else if (type == Assimp.aiPTI_Integer) {
                 switch (key) {
@@ -108,10 +118,15 @@ public class AssimpMaterial {
                     case Assimp._AI_MATKEY_UVWSRC_BASE:
                     case Assimp._AI_MATKEY_MAPPINGMODE_U_BASE:
                     case Assimp._AI_MATKEY_MAPPINGMODE_V_BASE:
+                        Log.d(TAG, "ignoring property: " + key);
                         break;
                     default:
-                        Log.w(TAG, "unknown material int property: \"" + key + "\" + len=" + len);
-                        System.out.println(data.get());
+                        if(key.startsWith("$mat.blend.")) {
+                            //Log.d(TAG, "ignoring blender property " + key);
+                        } else {
+                            Log.w(TAG, "unknown material int property: \"" + key + "\" + len=" + len);
+                            System.out.println(data.get());
+                        }
                 }
             } else {
                 Log.w(TAG, "unknown material typ/property: \"" + key + "\" + len=" + len);
@@ -159,9 +174,40 @@ public class AssimpMaterial {
         return vector;
     }
 
+    private static Vector3f readVector3f(ByteBuffer buffer, int len) {
+        float[] data = readFloatArray(buffer, len);
+        Vector3f vector;
+        if (len >= 12) { // 4 * 4 since a float is 4 byte the vector has 4 floats
+            vector = new Vector3f(data[0], data[1], data[2]);
+            if (len > 12) Log.w(TAG, "material property vector is to long (12 bytes expected, got " + len + ")");
+        } else {
+            Log.w(TAG, "material property vector is to short (12 bytes expected, got " + len + ")");
+            vector = new Vector3f();
+            if (len >= 4) vector.x = data[0];
+            if (len >= 8) vector.y = data[1];
+        }
+        return vector;
+    }
+
     private static float readFloat(ByteBuffer buffer, int len) {
         if (len != 4) Log.w(TAG, "material property vector is to short (4 bytes expected, got " + len + ")");
         return buffer.getFloat();
+    }
+
+    // read 3f and appends 1 or reads 4f or reads float and makes it to vector4f by setting x,y,z to the value and w to 1
+    private static Vector4f readVector1or3or4f(ByteBuffer buffer, int len) {
+        if (len == 4) {
+            float f = readFloat(buffer, len);
+            return new Vector4f(f,f,f,1);
+        } else if (len == 12) {
+            Vector3f vector3f = readVector3f(buffer, len);
+            return new Vector4f(vector3f, 1);
+        } else if (len == 16) {
+            return readVector4f(buffer, len);
+        } else {
+            Log.w(TAG, "material property vector is of wrong length expected 4, 12 or 16");
+            return new Vector4f(0,0,0,1);
+        }
     }
 
     public float getOpacity() {

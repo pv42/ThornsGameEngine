@@ -7,8 +7,10 @@ import org.joml.Matrix4f;
  */
 public interface Camera {
     /**
+     * calculates and returns the cameras view matrix, which converts world space coordinates to view space coordinates,
+     * based on the cameras parameters, e.g. position, rotation
      *
-     * @return the view matrix wich converts world space coordinates to view space coordinates
+     * @return the calculated view matrix
      */
     Matrix4f getViewMatrix();
 }

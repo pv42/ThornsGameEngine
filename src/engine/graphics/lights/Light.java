@@ -5,11 +5,13 @@ import org.joml.Vector3f;
 
 /**
  * Created by pv42 on 17.06.16.
+ *
+ * @author pv42
  */
 public class Light {
     private Vector3f position;
     private Color color;
-    private Vector3f attenuation = new Vector3f(1,0,0);
+    private Vector3f attenuation = new Vector3f(1, 0, 0);
 
     public Light(Vector3f position, Color color) {
         this.position = position;

@@ -4,11 +4,11 @@ import engine.graphics.Scene;
 import engine.graphics.cameras.Camera;
 import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.entities.GLEntityRenderer;
-import engine.graphics.glglfwImplementation.text.GLGuiText;
-import engine.graphics.glglfwImplementation.text.GLTextRenderer;
 import engine.graphics.glglfwImplementation.guis.GuiRenderer;
 import engine.graphics.glglfwImplementation.guis.GuiShader;
 import engine.graphics.glglfwImplementation.lines.LineRenderer;
+import engine.graphics.glglfwImplementation.text.GLGuiText;
+import engine.graphics.glglfwImplementation.text.GLTextRenderer;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.TerrainRenderer;
@@ -44,6 +44,8 @@ public class MasterRenderer {
 
     /**
      * initializes the MasterRender
+     *
+     * @param use2D determents if the renders scene is in 2d or 3d
      */
     public static void init(boolean use2D) {
         MasterRenderer.use2D = use2D;
@@ -51,7 +53,7 @@ public class MasterRenderer {
     }
 
     /**
-     * initializes the MasterRenderer with specific aspect ratio
+     * initializes the MasterRenderer
      */
     public static void init() {
         enableCulling();
@@ -73,7 +75,7 @@ public class MasterRenderer {
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
         lineRenderer = new LineRenderer(projectionMatrix);
         guiShader = new GuiShader();
-        guiRenderer = new GuiRenderer(getAspectRatio()); // todo
+        guiRenderer = new GuiRenderer(getAspectRatio()); // todo move shader
     }
 
     /**
@@ -91,9 +93,10 @@ public class MasterRenderer {
     }
 
     /**
-     * Renders the scene
+     * renders a scene from the view of a camera in the current active window
      *
      * @param camera camera to use for render
+     * @param scene  to render
      */
     public static void render(Scene scene, Camera camera) {
         startT = Time.getNanoTime();
@@ -118,7 +121,7 @@ public class MasterRenderer {
         //gui
         guiRenderer.render(scene.getGuis());
         //text
-        for (GLGuiText text: scene.getTexts()) {
+        for (GLGuiText text : scene.getTexts()) {
             textRenderer.renderText(text, getAspectRatio());
         }
         guiT = Time.getNanoTime();
@@ -135,12 +138,6 @@ public class MasterRenderer {
     public static void enableSkybox(boolean enable) {
         enableSkybox = enable;
     }
-
-
-
-
-
-
 
 
     public static void cleanUp() {

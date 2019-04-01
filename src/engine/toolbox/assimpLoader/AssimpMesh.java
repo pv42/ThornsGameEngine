@@ -64,7 +64,14 @@ public class AssimpMesh {
 
     private static int[] readIndices(AIMesh mesh) {
         int fcount = mesh.mNumFaces();
-        int[] indices = new int[fcount * 3];
+        int indicesLenght = 0;
+        for (int i = 0; i < fcount; i++) {
+            AIFace face = mesh.mFaces().get(i);
+            for (int j = 0; j < face.mNumIndices(); j++) {
+                indicesLenght ++;
+            }
+        }
+        int[] indices = new int[indicesLenght];
         Log.d(TAG, fcount + " faces");
         for (int i = 0; i < fcount; i++) {
             AIFace face = mesh.mFaces().get(i);
@@ -168,15 +175,14 @@ public class AssimpMesh {
         this.joints = joints;
     }
 
-    public GLRawModel createRawModel() {
+    public GLRawModel createRawModel(boolean animation) {
         Log.d(TAG, "loading mesh raw model:" + name);
-        GLRawModel model = null;
-        if (joints.size() > 0) {
+        GLRawModel model;
+        if (joints.size() > 0 && animation) {
             model = GLLoader.loadToVAOAnimated(pos, uv, normal, indices, weightIndices, weightValues, getEngineJoints());
         } else {
             model = GLLoader.loadToVAO(pos, uv, normal, indices);
         }
-        //todo cases
         return model;
     }
 
@@ -189,8 +195,8 @@ public class AssimpMesh {
         return jointList;
     }
 
-    public GLMaterializedModel createMaterializedModel() {
-        GLRawModel model = createRawModel();
+    public GLMaterializedModel createMaterializedModel(boolean animation) {
+        GLRawModel model = createRawModel(animation);
         Material material = assimpMaterial.getMaterial();
         return new GLMaterializedModel(model, material);
     }

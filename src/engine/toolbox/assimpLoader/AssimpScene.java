@@ -8,6 +8,7 @@ import org.lwjgl.assimp.AIMaterial;
 import org.lwjgl.assimp.AIMatrix4x4;
 import org.lwjgl.assimp.AIMesh;
 import org.lwjgl.assimp.AIScene;
+import org.lwjgl.assimp.AITexture;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
 
@@ -78,12 +79,16 @@ public class AssimpScene {
         if (scene == null) {
             throw new RuntimeException("Error loading model");
         }
-
+        loadTextures(scene);
         loadMaterials(scene);
         loadMeshs(scene);
         loadAnimations(scene);
 
 
+    }
+
+    private void loadTextures(AIScene scene) {
+        Log.d(TAG, "texture loading disabled since there is a assimp-lwjgl error");
     }
 
     private void loadAnimations(AIScene scene) {

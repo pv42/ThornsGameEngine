@@ -1,6 +1,6 @@
 package engine.graphics.glglfwImplementation.text;
 
-import engine.graphics.text.Text;
+import engine.graphics.text.GuiText;
 import engine.graphics.text.Font;
 import engine.toolbox.Color;
 import org.joml.Vector2f;
@@ -11,7 +11,7 @@ import org.joml.Vector2f;
  *
  * @author pv42
  */
-public class GLGuiText implements Text {
+public class GLGuiText implements GuiText {
     private GLTTFont font;
     private String string;
     private float size;
