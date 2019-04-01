@@ -90,7 +90,6 @@ public class AnimationLoader {
                 CORRECTION.mul(transform, transform);
             }
             keyFrames[i].addJointTransform(new JointTransformData(jointName, transform));
-            transform.debugPrint();
         }
     }
 

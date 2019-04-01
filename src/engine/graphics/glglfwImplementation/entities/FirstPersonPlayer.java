@@ -28,23 +28,23 @@ public class FirstPersonPlayer extends Player{
     private boolean sprinting;
     public FirstPersonPlayer(List<GLMaterializedModel> model, Vector3f position, GLFWWindow window) {
         super(model,position);
+        super.increaseRotation(new Vector3f(-90,0,0));
         sprinting = false;
         registerEvents(window);
     }
     @Override
     public void move(Terrain terrain, float timeDelta) {
-        heightAngle = getRx();
         heightAngle = Math.max(Math.min(heightAngle,MAX_PITCH_ABS),-MAX_PITCH_ABS);
         float bothFact = 1;
         if(currentSideSpeed != 0 && currentSpeed != 0) {
             bothFact = 1f / (float) Math.sqrt(2);
         }
         float distance = currentSpeed *( sprinting ? SPRINT_FACTOR : 1) * bothFact * timeDelta;
-        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRy())));
-        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRy())));
+        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRz())));
+        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRz())));
         float distanceSide = currentSideSpeed * ( sprinting ? SPRINT_FACTOR : 1) * bothFact * timeDelta;
-        dx += (float) (distanceSide * Math.cos(Math.toRadians(super.getRy())));
-        dz -= (float) (distanceSide * Math.sin(Math.toRadians(super.getRy())));
+        dx += (float) (distanceSide * Math.cos(Math.toRadians(super.getRz())));
+        dz -= (float) (distanceSide * Math.sin(Math.toRadians(super.getRz())));
         upwardSpeed -= GRAVITY * timeDelta; // todo move to physics
         super.increasePosition(dx, upwardSpeed * timeDelta, dz);
         float terrainHeight = terrain.getHeightOfTerrain(getPosition().x, getPosition().z);
@@ -58,7 +58,8 @@ public class FirstPersonPlayer extends Player{
         window.setMouseGrabbed(true, window);
         InputHandler.setMouseBound(true);
         InputHandler.setCursorListener((x, y) -> {
-            increaseRotation(y * 0.1f, - x * 0.1f,0);
+            increaseRotation(0, 0,- x * 0.1f);
+            heightAngle += y;
         });
         InputHandler.addListener(new InputEventListener(KEY_EVENT,KEY_PRESS, GLFW.GLFW_KEY_W) {
             @Override

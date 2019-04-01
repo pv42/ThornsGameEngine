@@ -23,8 +23,6 @@ public class Animation {
     }
 
     Matrix4fDbg getMatrix(float time, String jointName) {
-        //if (0 == 0) return keyframes.get(0).getJointData().get(jointName); // todo remove
-
         float prevTS = 0;
         float nextTS = Float.POSITIVE_INFINITY;
         Matrix4f nextMatrix = null;
@@ -40,10 +38,8 @@ public class Animation {
                 prevMatrix = frame.getJointData().get(jointName);
             }
         }
-        //todo remove if(true) return prevMatrix;
         if (nextTS == Float.POSITIVE_INFINITY) return prevMatrix; // past last timestamp
         float progress = (time - prevTS) / (nextTS - prevTS);//between 0,1; current interpolate
-        //todo prevMatrix.normal()
         Quaterniond prevQuat = new Quaterniond().setFromNormalized(prevMatrix);
         Quaterniond nextQuat = new Quaterniond().setFromNormalized(nextMatrix);
         Quaterniond rotation = new Quaterniond();

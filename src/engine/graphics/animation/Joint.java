@@ -30,9 +30,7 @@ public class Joint {
     private static final Matrix4fDbg CORRECTION = new Matrix4fDbg(new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0)),"COR"); // blender up axis
 
     private static final String TAG = "Joint";
-    private final Matrix4fDbg relativeInverseBindMatrix;
-    private /*final*/ Matrix4fDbg relativePoseTransformationMatrix;
-    private Matrix4fDbg absoluteInverseBindMatrix;
+    private Matrix4fDbg inverseBindMatrix;
     private final String id;
     private Matrix4fDbg animationTransformationMatrix = new Matrix4fDbg("I");
     private Joint parent;
@@ -43,7 +41,7 @@ public class Joint {
     public Joint(int id, String nameId, Matrix4fDbg bindTransform) {
         this.id = nameId;
         this.numId = id;
-        relativeInverseBindMatrix = bindTransform;
+        inverseBindMatrix = bindTransform;
     }
     public void addChild(Joint joint) {
         joint.setParent(this);
@@ -54,8 +52,7 @@ public class Joint {
 
     public Joint(String id, Matrix4fDbg inverseBindMatrix) {
         this.id = id;
-        this.relativeInverseBindMatrix = inverseBindMatrix;
-        System.out.println("IBM " + id + "\n" + inverseBindMatrix.toString(new DecimalFormat()));
+        this.inverseBindMatrix = inverseBindMatrix;
     }
 
     public Joint getParent() {
@@ -76,20 +73,11 @@ public class Joint {
 
     public Matrix4fDbg getTransformationMatrix() {
         Matrix4fDbg m0 = new Matrix4fDbg(getAbsoluteAnimationTransformMatrix());
-        Matrix4fDbg m1 = getAbsoluteInverseBindMatrix();
+        Matrix4fDbg m1 = new Matrix4fDbg(inverseBindMatrix);
         return new Matrix4fDbg(new Matrix4fDbg(m0).mul(new Matrix4fDbg(m1).invert()));
     }
 
-    private Matrix4fDbg getAbsoluteInverseBindMatrix() {
-        if (absoluteInverseBindMatrix == null) {
-            if (hasParent()) {
-                absoluteInverseBindMatrix = new Matrix4fDbg(parent.getAbsoluteInverseBindMatrix()).mul(relativeInverseBindMatrix);
-            } else {
-                absoluteInverseBindMatrix = new Matrix4fDbg(relativeInverseBindMatrix);
-            }
-        }
-        return absoluteInverseBindMatrix;
-    }
+
 
     private Matrix4fDbg getAbsoluteAnimationTransformMatrix() {
         if (hasParent()) {
@@ -100,8 +88,9 @@ public class Joint {
     }
 
     public void setPoseTransformationMatrix(Matrix4f poseTransformationMatrix) {
-        this.relativePoseTransformationMatrix = new Matrix4fDbg(poseTransformationMatrix, id + ".pTM");
-        this.relativePoseTransformationMatrix.debugPrint();
+        /*final*/
+        Matrix4fDbg relativePoseTransformationMatrix = new Matrix4fDbg(poseTransformationMatrix, id + ".pTM");
+        relativePoseTransformationMatrix.debugPrint();
     }
 
     public void setAnimationTransformationMatrix(Matrix4fDbg animationTransformationMatrix) {

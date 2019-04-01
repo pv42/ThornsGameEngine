@@ -7,8 +7,8 @@ import org.lwjgl.assimp.AIAnimation;
 import org.lwjgl.assimp.AIMaterial;
 import org.lwjgl.assimp.AIMatrix4x4;
 import org.lwjgl.assimp.AIMesh;
+import org.lwjgl.assimp.AINode;
 import org.lwjgl.assimp.AIScene;
-import org.lwjgl.assimp.AITexture;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.Assimp;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class AssimpScene {
     private static final String TAG = "AssimpScene";
 
-    private List<AssimpMesh> meshs = new ArrayList<>();
+    private List<AssimpMesh> meshes = new ArrayList<>();
     private List<AssimpMaterial> materials = new ArrayList<>();
     private List<AssimpAnimation> animations = new ArrayList<>();
 
@@ -74,7 +74,8 @@ public class AssimpScene {
     }
 
     public void load(String file) {
-        Log.i(TAG, "assimp v" + Assimp.aiGetVersionMajor() + "." + Assimp.aiGetVersionMinor());
+        Log.i(TAG, "assimp v" + Assimp.aiGetVersionMajor() + "." + Assimp.aiGetVersionMinor() + " loading " + file);
+        long millis = System.currentTimeMillis();
         AIScene scene = Assimp.aiImportFile(file, 0);
         if (scene == null) {
             throw new RuntimeException("Error loading model");
@@ -83,8 +84,31 @@ public class AssimpScene {
         loadMaterials(scene);
         loadMeshs(scene);
         loadAnimations(scene);
+        loadJointNodeStructure(scene);
+        Log.d(TAG, "loaded " + file + " in " + (System.currentTimeMillis() - millis) + "ms");
+    }
 
+    private void loadJointNodeStructure(AIScene scene) {
+        AINode rootNode = scene.mRootNode();
+        processJointNode(rootNode);
+    }
 
+    private void processJointNode(AINode aiNode) {
+        int numChildren = aiNode.mNumChildren();
+        String nodeName = aiNode.mName().dataString();
+        for (int i = 0; i < numChildren; i++) {
+            AINode child = AINode.create(aiNode.mChildren().get(i));
+            processJointNode(child);
+            for (AssimpMesh mesh : meshes) {
+                AssimpJoint aiParent = mesh.getJointByName(nodeName);
+                String childrenName = child.mName().dataString();
+                AssimpJoint aiChild = mesh.getJointByName(childrenName);
+                if (aiChild == null || aiParent == null) {
+                    continue;
+                }
+                aiChild.setParent(aiParent);
+            }
+        }
     }
 
     private void loadTextures(AIScene scene) {
@@ -95,7 +119,7 @@ public class AssimpScene {
         int count = scene.mNumAnimations();
         PointerBuffer aiAnimations = scene.mAnimations();
         Log.d(TAG, "animcount=" + count);
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             AIAnimation animation = AIAnimation.create(aiAnimations.get(i));
             animations.add(AssimpAnimation.load(animation));
         }
@@ -106,7 +130,7 @@ public class AssimpScene {
         PointerBuffer aiMeshes = scene.mMeshes();
         for (int i = 0; i < numMeshes; i++) {
             AIMesh mesh = AIMesh.create(aiMeshes.get(i));
-            meshs.add(AssimpMesh.load(mesh, materials));
+            meshes.add(AssimpMesh.load(mesh, materials));
         }
     }
 
@@ -119,8 +143,8 @@ public class AssimpScene {
         }
     }
 
-    public List<AssimpMesh> getMeshs() {
-        return meshs;
+    public List<AssimpMesh> getMeshes() {
+        return meshes;
     }
 
     public List<AssimpMaterial> getMaterials() {

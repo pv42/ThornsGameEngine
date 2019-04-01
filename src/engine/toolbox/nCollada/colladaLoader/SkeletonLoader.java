@@ -48,8 +48,6 @@ public class SkeletonLoader {
         Matrix4fDbg matrix = new Matrix4fDbg(new Matrix4f(convertData(matrixData)), "");
         matrix.setName(nameId + ".ibm"); //ptm
         matrix.transpose();
-        matrix.debugPrint();
-
         if (isRoot) {
             //because in Blender z is up, but in our game y is up.
             CORRECTION.mul(matrix, matrix);

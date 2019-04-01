@@ -27,9 +27,11 @@ public class AssimpMaterial {
     private float materialReflectivity;
     private float shininess;
     private float refractionIndex;
+    private float opacity;
+    private boolean wireframe;
+    private boolean twoSided;
     private String name;
     private String textureFile;
-    private float opacity;
 
     private AssimpMaterial() {
         ambient = new Vector4f(0.1f, 0.1f, 0.1f, 1);
@@ -38,9 +40,11 @@ public class AssimpMaterial {
         emissive = new Vector4f(0, 0, 0, 1);
         colorReflective = new Vector4f(0);
         materialReflectivity = 0;
-        refractionIndex = 1;
         shininess = 0;
+        refractionIndex = 1;
         opacity = 1;
+        wireframe = false;
+        twoSided = false;
     }
 
     static AssimpMaterial load(AIMaterial aiMaterial) {
@@ -112,9 +116,13 @@ public class AssimpMaterial {
                 }
             } else if (type == Assimp.aiPTI_Integer) {
                 switch (key) {
-                    case Assimp.AI_MATKEY_ENABLE_WIREFRAME: // ignore all these
+                    case Assimp.AI_MATKEY_ENABLE_WIREFRAME:
+                        material.setWireframe(readBoolean(data, len));
+                        break;
                     case Assimp.AI_MATKEY_TWOSIDED:
-                    case Assimp.AI_MATKEY_SHADING_MODEL:
+                        material.setTwoSided(readBoolean(data, len));
+                        break;
+                    case Assimp.AI_MATKEY_SHADING_MODEL: // ignore all these
                     case Assimp._AI_MATKEY_UVWSRC_BASE:
                     case Assimp._AI_MATKEY_MAPPINGMODE_U_BASE:
                     case Assimp._AI_MATKEY_MAPPINGMODE_V_BASE:
@@ -122,7 +130,7 @@ public class AssimpMaterial {
                         break;
                     default:
                         if(key.startsWith("$mat.blend.")) {
-                            //Log.d(TAG, "ignoring blender property " + key);
+                            Log.d(TAG, "ignoring blender property " + key);
                         } else {
                             Log.w(TAG, "unknown material int property: \"" + key + "\" + len=" + len);
                             System.out.println(data.get());
@@ -207,6 +215,22 @@ public class AssimpMaterial {
         } else {
             Log.w(TAG, "material property vector is of wrong length expected 4, 12 or 16");
             return new Vector4f(0,0,0,1);
+        }
+    }
+
+    private static boolean readBoolean(ByteBuffer buffer, int len) {
+        if(len == 4) {
+            int v = buffer.getInt();
+            switch (v){
+                case 0: return false;
+                case 1: return true;
+                default: // still use c boolean interpretation but throw a warning
+                    Log.w(TAG, "boolean is neither 0 nor 1 but " + v);
+                    return true;
+            }
+        } else {
+            Log.w(TAG, " boolean length is " + len + ", 4 expected");
+            return false;
         }
     }
 
@@ -302,5 +326,21 @@ public class AssimpMaterial {
         Texture texture = EngineMaster.getTextureLoader().loadTexture(getTextureFile());
         TexturedMaterial tm = new TexturedMaterial(texture);
         return tm;
+    }
+
+    public boolean isWireframe() {
+        return wireframe;
+    }
+
+    private void setWireframe(boolean wireframe) {
+        this.wireframe = wireframe;
+    }
+
+    public boolean isTwoSided() {
+        return twoSided;
+    }
+
+    private void setTwoSided(boolean twoSided) {
+        this.twoSided = twoSided;
     }
 }

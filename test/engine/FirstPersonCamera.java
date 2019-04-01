@@ -29,7 +29,7 @@ public class FirstPersonCamera extends ThreeDimensionCamera {
     }
 
     private void calculateYaw() {
-        setYaw(180 - player.getRy());
+        setYaw(180 - player.getRz());
     }
 
 

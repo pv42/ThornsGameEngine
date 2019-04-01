@@ -58,17 +58,13 @@ public class AssimpMesh {
         return data;
     }
 
-    private void setMaterial(AssimpMaterial assimpMaterial) {
-        this.assimpMaterial = assimpMaterial;
-    }
-
     private static int[] readIndices(AIMesh mesh) {
         int fcount = mesh.mNumFaces();
         int indicesLenght = 0;
         for (int i = 0; i < fcount; i++) {
             AIFace face = mesh.mFaces().get(i);
             for (int j = 0; j < face.mNumIndices(); j++) {
-                indicesLenght ++;
+                indicesLenght++;
             }
         }
         int[] indices = new int[indicesLenght];
@@ -118,18 +114,22 @@ public class AssimpMesh {
         return readBuffer3f(buffer, vcount);
     }
 
+    private void setMaterial(AssimpMaterial assimpMaterial) {
+        this.assimpMaterial = assimpMaterial;
+    }
+
     private void createWeights(int maxWeightsPerVertex) {
         weightIndices = new int[vcount * maxWeightsPerVertex];
         weightValues = new float[vcount * maxWeightsPerVertex];
-        for (int i = 0; i < joints.size(); i++) {
-            AssimpJoint joint = joints.get(i);
-            for (int j = 0; j < joint.getWeightsIndices().size(); j++) {
-                int index = joint.getWeightsIndices().get(j);
-                float weight = joint.getWeightValues().get(j);
-                for (int pos = i * maxWeightsPerVertex; pos < (i + 1) * maxWeightsPerVertex; pos++) {
+        for (int jointIndex = 0; jointIndex < joints.size(); jointIndex++) {
+            AssimpJoint joint = joints.get(jointIndex);
+            for (int i = 0; i < joint.getWeightsIndices().size(); i++) {
+                int index = joint.getWeightsIndices().get(i);
+                float weight = joint.getWeightValues().get(i);
+                for (int pos = index * maxWeightsPerVertex; pos < (index + 1) * index; pos++) {
                     if (weight > weightValues[pos]) {
-                        moveWeightsInArrays(pos, (i + 1) * maxWeightsPerVertex - 1);
-                        weightIndices[pos] = index;
+                        moveWeightsInArrays(pos, (index + 1) * maxWeightsPerVertex - 1);
+                        weightIndices[pos] = jointIndex;
                         weightValues[pos] = weight;
                         break;
                     }
@@ -139,12 +139,10 @@ public class AssimpMesh {
     }
 
     private void moveWeightsInArrays(int pos, int limit) {
-        if (pos >= limit - 1) return;
+        if (pos >= limit || weightValues[pos] == 0) return;
         moveWeightsInArrays(pos + 1, limit);
-        if (weightValues[pos] > 0) { // move away if there is space
-            weightIndices[pos + 1] = weightIndices[pos];
-            weightValues[pos + 1] = weightIndices[pos];
-        }
+        weightIndices[pos + 1] = weightIndices[pos];
+        weightValues[pos + 1] = weightValues[pos];
     }
 
     public float[] getPos() {
@@ -175,6 +173,13 @@ public class AssimpMesh {
         this.joints = joints;
     }
 
+    public AssimpJoint getJointByName(String name) {
+        for (AssimpJoint joint : joints) {
+            if (joint.getName().equals(name)) return joint;
+        }
+        return null;
+    }
+
     public GLRawModel createRawModel(boolean animation) {
         Log.d(TAG, "loading mesh raw model:" + name);
         GLRawModel model;
@@ -189,8 +194,18 @@ public class AssimpMesh {
     private List<Joint> getEngineJoints() {
         List<Joint> jointList = new ArrayList<>();
         for (AssimpJoint assimpJoint : joints) {
-            jointList.add(new Joint(assimpJoint.getName(), new Matrix4fDbg(assimpJoint.getOffsetMatrix(),
-                    assimpJoint.getName() + ".assM")));
+            Joint joint = new Joint(assimpJoint.getName(), new Matrix4fDbg(assimpJoint.getOffsetMatrix(),
+                    assimpJoint.getName() + ".ibm_as"));
+            AssimpJoint parentAssimpJoint = assimpJoint.getParent();
+            if(parentAssimpJoint != null) {
+                String parentName = parentAssimpJoint.getName();
+                Joint parentJoint = null;
+                for (int i = 0; i < jointList.size(); i++) {
+                    if(jointList.get(i).getId().equals(parentName)) parentJoint = jointList.get(i);
+                }
+                joint.setParent(parentJoint);
+            }
+            jointList.add(joint);
         }
         return jointList;
     }
@@ -199,6 +214,10 @@ public class AssimpMesh {
         GLRawModel model = createRawModel(animation);
         Material material = assimpMaterial.getMaterial();
         return new GLMaterializedModel(model, material);
+    }
+
+    public GLMaterializedModel createMaterializedModel() {
+        return createMaterializedModel(true);
     }
 
 

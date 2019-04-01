@@ -15,11 +15,13 @@ public class AssimpJoint {
     private Matrix4f offsetMatrix;
     private List<Integer> weightIndices;
     private List<Float> weightValues;
+    private AssimpJoint parent;
 
     private AssimpJoint(String name) {
         this.name = name;
         weightIndices = new ArrayList<>();
         weightValues = new ArrayList<>();
+        parent = null;
     }
 
 
@@ -28,8 +30,6 @@ public class AssimpJoint {
         data.setOffsetMatrix(readMatrix4f(bone.mOffsetMatrix()));
         data.getOffsetMatrix().invert();
         data.getOffsetMatrix().transpose();
-        //data.setOffsetMatrix(data.getOffsetMatrix().transpose());
-        System.out.println(data.name + ".ibm\n" + data.getOffsetMatrix());
         for (int i = 0; i < bone.mNumWeights(); i++) {
             AIVertexWeight vertexWeight = bone.mWeights().get(i);
             data.addWeight(vertexWeight.mVertexId(), vertexWeight.mWeight());
@@ -61,5 +61,13 @@ public class AssimpJoint {
 
     List<Float> getWeightValues() {
         return weightValues;
+    }
+
+    void setParent(AssimpJoint parent) {
+        this.parent = parent;
+    }
+
+    public AssimpJoint getParent() {
+        return parent;
     }
 }

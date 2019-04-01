@@ -20,10 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FontTest {
     @Test
     public void testFont() {
+        int now = Log.getWarningNumber();
         EngineMaster.init();
         Window window = EngineMaster.getDisplayManager().createWindow();
         GLTTFont font = GLTTFontFactory.loadSystemFont("bahnschrift",128);
-        GLGuiText text = new GLGuiText(font, "H3l!0 w0r!d", 0.0001f, new Color(0, 1.0, 1.0), new Vector2f());
+        GLGuiText text = new GLGuiText(font, "H31!0 w0r!d", 0.0001f, new Color(0, 1.0, 1.0), new Vector2f());
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(), new Vector3f());
         Scene scene = new Scene();
         int count = 0;
@@ -35,7 +36,7 @@ public class FontTest {
         }
         EngineMaster.finish();
         assertEquals(0, Log.getErrorNumber());
-        assertEquals(0, Log.getWarningNumber());
+        assertEquals(now, Log.getWarningNumber());
 
     }
 }
