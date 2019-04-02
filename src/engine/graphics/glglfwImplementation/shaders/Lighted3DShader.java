@@ -133,5 +133,4 @@ public abstract class Lighted3DShader extends ShaderProgram {
     public void loadAmbientLight(float ambient) {
         super.loadFloat(location_ambientLight, ambient);
     }
-
 }

@@ -124,11 +124,15 @@ public class AssimpMesh {
         for (int jointIndex = 0; jointIndex < joints.size(); jointIndex++) {
             AssimpJoint joint = joints.get(jointIndex);
             for (int i = 0; i < joint.getWeightsIndices().size(); i++) {
-                int index = joint.getWeightsIndices().get(i);
+                int vertexIndex = joint.getWeightsIndices().get(i);
+                if(vertexIndex >= vcount) {
+                    Log.e(TAG, "vertex weight index is out of range");
+                    continue;
+                }
                 float weight = joint.getWeightValues().get(i);
-                for (int pos = index * maxWeightsPerVertex; pos < (index + 1) * index; pos++) {
+                for (int pos = vertexIndex * maxWeightsPerVertex; pos < (vertexIndex + 1) * maxWeightsPerVertex; pos++) {
                     if (weight > weightValues[pos]) {
-                        moveWeightsInArrays(pos, (index + 1) * maxWeightsPerVertex - 1);
+                        moveWeightsInArrays(pos, (vertexIndex + 1) * maxWeightsPerVertex - 1);
                         weightIndices[pos] = jointIndex;
                         weightValues[pos] = weight;
                         break;

@@ -68,7 +68,7 @@ public class MainGameLoop {
         GuiTexture gui = tl.loadGuiTexture("cross.png", new Vector2f(0f, 0f), new Vector2f(.04f, .04f), window);
         guis.add(gui);
         GLMaterializedModel texturedModel = new GLMaterializedModel(OBJLoader.loadObjModel("lowPolyTree"), new TexturedMaterial(tl.loadTexture("lowPolyTree.png")));
-        // todo texturedModel.getTexture().setReflectivity(.1f);
+        texturedModel.getMaterial().setReflectivity(.1f);
         GLMaterializedModel texturedModel2 = new GLMaterializedModel(OBJLoader.loadObjModel("fern"), new TexturedMaterial(tl.loadTexture("fern.png")));
         // todo texturedModel2.getTexture().setHasTransparency(true);
         // todo texturedModel2.getTexture().setUseFakeLightning(true);
@@ -126,7 +126,7 @@ public class MainGameLoop {
         entities.forEach(scene::addEntity);
 
         scene.addAniEntity(player);
-        while (!window.isCloseRequested() || false) { //actual MainGameLoop
+        while (!window.isCloseRequested()) { //actual MainGameLoop
             //game logic
             //FPS Updates
             if (timeSinceFPSUpdate >= 1.7f) {
@@ -140,8 +140,9 @@ public class MainGameLoop {
             particleSystem.generateParticles(new Vector3f(player.getEyePosition()), window.getLastFrameTime());
             ParticleMaster.update(window.getLastFrameTime());
             //animation
-            animationTime += window.getLastFrameTime() * 0.2;
-            animationTime %= 1;
+            animationTime += window.getLastFrameTime() * player.getCurrentSpeed() * 0.035f;
+            if(animationTime < 0) animationTime += cowboyAnimation.getLastKeyFrameTime();
+            animationTime %= cowboyAnimation.getLastKeyFrameTime();
             Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), animationTime);
             //game render
             MasterRenderer.render(scene, camera);

@@ -135,4 +135,9 @@ public class Log {
     public static int getWarningNumber() {
         return warningNumber;
     }
+
+    public static void clearNumbers() {
+        errorNumber = 0;
+        warningNumber = 0;
+    }
 }

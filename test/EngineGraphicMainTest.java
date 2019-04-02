@@ -9,9 +9,11 @@ import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.graphics.lights.Light;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.materials.Material;
 import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
+import engine.toolbox.MeshCreator;
 import engine.toolbox.OBJLoader;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
@@ -30,22 +32,31 @@ public class EngineGraphicMainTest {
         window.setTitle("??");
         GLRawModel model = OBJLoader.loadObjModel("barrel");
         GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("tree.png");
-        texture.setReflectivity(.0f);
-        texture.setShineDamper(.1f);
-        GLMaterializedModel tm = new GLMaterializedModel(model, new TexturedMaterial(texture));
+        TexturedMaterial material = new TexturedMaterial(texture);
+        material.setReflectivity(0f);
+        material.setShineDamper(.1f);
+        GLMaterializedModel tm = new GLMaterializedModel(model, material);
         GLEntity entity = new GLEntity(tm, new Vector3f());
         entity.setScale(.3f);
+        // wireframe
+        TexturedMaterial wfmaterial = new TexturedMaterial(texture);
+        wfmaterial.setWireframe(true);
+        GLMaterializedModel wfmodel = new GLMaterializedModel(MeshCreator.createBox(5,3,4), wfmaterial);
+        GLEntity wfEntity = new GLEntity(wfmodel, new Vector3f(6,8,0));
+
+        // --
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0,0,20), new Vector3f());
         List<Light> lights = new LinkedList<>();
         lights.add(new Light(new Vector3f(0, 50000, 20000), new Color(1, 1, .9), new Vector3f(1f, 0.00f, 0.00f)));
         Scene scene = new Scene();
         scene.addEntity(entity);
+        scene.addEntity(wfEntity);
         MasterRenderer.enableCulling();
         MasterRenderer.disableCulling();
         lights.forEach(scene::addLight);
         Log.i("MainTest", "start rendering");
         int iter = 0;
-        while (!window.isCloseRequested() && iter < 50){
+        while (!window.isCloseRequested() && iter < 300){
             MasterRenderer.render(scene, camera);
             entity.increaseRotation(16f,10f,3f);
             window.update();

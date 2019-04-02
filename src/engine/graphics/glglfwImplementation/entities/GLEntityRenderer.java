@@ -62,8 +62,12 @@ public class GLEntityRenderer {
                 List<GLEntity> batch = entities.get(models);
                 for (GLEntity entity : batch) {
                     prepareInstance(entity);
+                    if(model.getMaterial().isWireframe()) {
+                        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                    }
                     GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(),
                             GL11.GL_UNSIGNED_INT, 0);
+                    GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL); // set back to normal
                 }
                 unbindTexturedModel();
             }
@@ -98,8 +102,8 @@ public class GLEntityRenderer {
         if (texture.isHasTransparency()) {
             MasterRenderer.disableCulling();
         }
+        shader.loadShineVariables(material.getShineDamper(), material.getReflectivity());
         shader.loadFakeLightning(texture.isUseFakeLightning());
-        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         if (model.isAnimated()) shader.loadBones(boneMatrices);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());

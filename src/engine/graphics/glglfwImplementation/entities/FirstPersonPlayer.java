@@ -138,4 +138,8 @@ public class FirstPersonPlayer extends Player{
     public float getHeightAngle() {
         return heightAngle;
     }
+
+    public float getCurrentSpeed() {
+        return currentSpeed;
+    }
 }

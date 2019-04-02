@@ -145,7 +145,6 @@ public class AssimpMaterial {
         return material;
     }
 
-
     private static String readString(ByteBuffer buffer, int len) {
         StringBuilder string = new StringBuilder();
         int str_len = buffer.getInt();
@@ -266,40 +265,20 @@ public class AssimpMaterial {
         this.specular = specular;
     }
 
-    public Vector4f getEmissive() {
-        return emissive;
-    }
-
     private void setEmissive(Vector4f emissive) {
         this.emissive = emissive;
-    }
-
-    public Vector4f getColorReflective() {
-        return colorReflective;
     }
 
     private void setColorReflective(Vector4f reflective) {
         this.colorReflective = reflective;
     }
 
-    public float getMaterialReflectivity() {
-        return materialReflectivity;
-    }
-
     private void setMaterialReflectivity(float materialReflectivity) {
         this.materialReflectivity = materialReflectivity;
     }
 
-    public float getShininess() {
-        return shininess;
-    }
-
     private void setShininess(float shininess) {
         this.shininess = shininess;
-    }
-
-    public float getRefractionIndex() {
-        return refractionIndex;
     }
 
     private void setRefractionIndex(float refractionIndex) {
@@ -325,19 +304,13 @@ public class AssimpMaterial {
     public Material getMaterial() {
         Texture texture = EngineMaster.getTextureLoader().loadTexture(getTextureFile());
         TexturedMaterial tm = new TexturedMaterial(texture);
+        tm.setReflectivity(materialReflectivity);
+        tm.setWireframe(wireframe);
         return tm;
-    }
-
-    public boolean isWireframe() {
-        return wireframe;
     }
 
     private void setWireframe(boolean wireframe) {
         this.wireframe = wireframe;
-    }
-
-    public boolean isTwoSided() {
-        return twoSided;
     }
 
     private void setTwoSided(boolean twoSided) {

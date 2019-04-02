@@ -40,7 +40,7 @@ public class EngineGraphicsTest {
     private static float time = 1;
     @Test
     public void main() {
-        //EngineMaster.init();
+        EngineMaster.init();
         //int texture = GLLoader.loadTexture("grass.png");
         //GLMaterializedModel model = new GLMaterializedModel(OBJLoader.loadObjModel("dragon"), new GLModelTexture(texture));
         //GLEntity entity = new GLEntity(model,new Vector3f(0,0,0),0,0,0,1);
@@ -156,14 +156,15 @@ public class EngineGraphicsTest {
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
-        GLModelTexture texture = (GLModelTexture) ((TexturedMaterial)model.getMaterial()).getTexture();
+        TexturedMaterial material = ((TexturedMaterial)model.getMaterial());
+        GLModelTexture texture = (GLModelTexture) material.getTexture();
         shader.loadUseAnimation(model.isAnimated());
         shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
         if (texture.hasTransparency()) {
             MasterRenderer.disableCulling();
         }
         shader.loadFakeLightning(texture.isUseFakeLightning());
-        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+        shader.loadShineVariables(material.getShineDamper(), material.getReflectivity());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
         shader.loadUseSpecMap(texture.hasSpecularMap());

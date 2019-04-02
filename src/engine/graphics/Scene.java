@@ -7,6 +7,7 @@ import engine.graphics.glglfwImplementation.guis.GuiTexture;
 import engine.graphics.lights.Light;
 import engine.graphics.glglfwImplementation.lines.LineModel;
 import engine.graphics.terrains.Terrain;
+import engine.graphics.text.GuiText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class Scene {
     private List<Terrain> terrains;
     private List<LineModel> lineStripModels;
     private List<GuiTexture> guis;
-    private List<GLGuiText> texts;
+    private List<GuiText> texts;
     private List<Light> lights;
 
     public Scene() {
@@ -54,7 +55,7 @@ public class Scene {
         return guis;
     }
 
-    public List<GLGuiText> getTexts() {
+    public List<GuiText> getTexts() {
         return texts;
     }
 
@@ -102,7 +103,7 @@ public class Scene {
         guis.add(gui);
     }
 
-    public void addText(GLGuiText text) {
+    public void addText(GuiText text) {
         texts.add(text);
     }
 

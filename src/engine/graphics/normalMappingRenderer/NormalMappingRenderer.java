@@ -67,12 +67,13 @@ public class NormalMappingRenderer {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 		GL20.glEnableVertexAttribArray(3);
-		GLModelTexture texture = (GLModelTexture) ((TexturedMaterial)model.getMaterial()).getTexture();
+		TexturedMaterial material = (TexturedMaterial)model.getMaterial();
+		GLModelTexture texture = (GLModelTexture)material.getTexture();
 		shader.loadNumberOfRows(texture.getNumberOfRows());
 		if (texture.isHasTransparency()) {
 			MasterRenderer.disableCulling();
 		}
-		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+		shader.loadShineVariables(material.getShineDamper(), material.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
 

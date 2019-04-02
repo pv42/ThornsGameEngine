@@ -13,6 +13,7 @@ import engine.graphics.particles.ParticleMaster;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.TerrainRenderer;
 import engine.graphics.terrains.TerrainShader;
+import engine.graphics.text.GuiText;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.Time;
@@ -121,8 +122,11 @@ public class MasterRenderer {
         //gui
         guiRenderer.render(scene.getGuis());
         //text
-        for (GLGuiText text : scene.getTexts()) {
-            textRenderer.renderText(text, getAspectRatio());
+        for (GuiText text : scene.getTexts()) {
+            if(!(text instanceof GLGuiText)) {
+                throw new UnsupportedOperationException("can't render none-GL fonts");
+            }
+            textRenderer.renderText((GLGuiText) text, getAspectRatio());
         }
         guiT = Time.getNanoTime();
         endT = Time.getNanoTime();

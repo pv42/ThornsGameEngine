@@ -69,35 +69,6 @@ public class AnimationTest {
         return max;
     }
 
-    @Test
-    void testAnimation() {
-        EngineMaster.init();
-        Window window = EngineMaster.getDisplayManager().createWindow();
-        Collada collada = ColladaLoader.loadCollada("cowboy");
-        GLMaterializedModel cowboyModel = collada.getTexturedModels().get(0);
-        Animation animation = collada.getAnimation();
-        GLEntity entity = new GLEntity(cowboyModel, new Vector3f(0, 0f, -10), -90, 0, 0, 1);
-        Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
-        Scene scene = new Scene();
-        scene.addLight(new Light(new Vector3f(), new Color(1.0, 1.0, 1.0)));
-        scene.addEntity(entity);
-        int count = 0;
-        float animationTime = 0;
-        while (!window.isCloseRequested() && count < 1000) {
-            MasterRenderer.render(scene, camera);
-            animationTime += window.getLastFrameTime() * 0.2;
-            animationTime %= 1;
-            Animator.applyAnimation(animation, cowboyModel.getRawModel().getJoints(), animationTime);
-
-            window.update();
-            count++;
-        }
-        EngineMaster.finish();
-        assertEquals(0, Log.getErrorNumber());
-        //TODO fix warnings
-        assertEquals(0, Log.getWarningNumber());
-    }
-
     // other test
     @Test
     void testNAnimation() {
@@ -133,7 +104,7 @@ public class AnimationTest {
             animation.addKeyFrame(kf);
         }
         Animator.applyAnimation(animation, texturedModel.getRawModel().getJoints(), animationTime);
-        while (!window.isCloseRequested() && count < 1000) {
+        while (!window.isCloseRequested() && count < 300) {
             MasterRenderer.render(scene, camera);
             animationTime += window.getLastFrameTime() * 0.2;
             animationTime %= animation.getLastKeyFrameTime();
