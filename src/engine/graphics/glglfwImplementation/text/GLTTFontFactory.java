@@ -1,6 +1,7 @@
 package engine.graphics.glglfwImplementation.text;
 
 
+import engine.graphics.text.FontFactory;
 import org.lwjgl.system.Platform;
 
 import java.util.ArrayList;
@@ -8,11 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public class GLTTFontFactory {
+/**
+ * a FontFactory for GLTTFFonts
+ *
+ * @author pv42
+ */
+public class GLTTFontFactory implements FontFactory {
     private static String SYSTEM_FONT_PATH;
-    private static Map<String, List<GLTTFont>> fonts = new HashMap<>();
-    public static GLTTFont loadSystemFont(String name, int minPixelSize) {
+    private Map<String, List<GLTTFont>> fonts;
+
+    public GLTTFontFactory() {
+        fonts = new HashMap<>();
+        if (SYSTEM_FONT_PATH == null) getSystemFontPath();
+    }
+
+    public GLTTFont loadSystemFont(String name, int minPixelSize) {
         if (fonts.containsKey(name)) {
             GLTTFont bestFont = null;
             int pixelSize = Integer.MAX_VALUE;
@@ -27,8 +38,7 @@ public class GLTTFontFactory {
         return loadFont(name, minPixelSize);
     }
 
-    private static GLTTFont loadFont(String name, int pixelSize) {
-        if(SYSTEM_FONT_PATH == null) getSystemFontPath();
+    private GLTTFont loadFont(String name, int pixelSize) {
         String path = SYSTEM_FONT_PATH + name + ".ttf";
         GLTTFont font = new GLTTFont(path, pixelSize);
         if (!fonts.containsKey(name)) {
@@ -38,7 +48,7 @@ public class GLTTFontFactory {
         return font;
     }
 
-    private static void getSystemFontPath() {
+    private void getSystemFontPath() {
         switch (Platform.get()) {
             case WINDOWS:
                 SYSTEM_FONT_PATH = System.getenv("SystemRoot") + "\\" + "fonts" + "\\";
@@ -54,7 +64,7 @@ public class GLTTFontFactory {
         }
     }
 
-    public static void clear() {
-        fonts = new HashMap<>();
+    public void clear() {
+        fonts = null;
     }
 }

@@ -8,6 +8,7 @@ import engine.graphics.glglfwImplementation.text.GLTTFontFactory;
 import engine.graphics.glglfwImplementation.textures.GLTextureLoader;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.glglfwImplementation.MasterRenderer;
+import engine.graphics.text.FontFactory;
 import engine.graphics.textures.TextureLoader;
 import engine.inputs.InputLoop;
 import engine.toolbox.Log;
@@ -26,6 +27,7 @@ public class EngineMaster {
     private static final String TAG = "Engine";
     private static GLFWDisplayManager displayManager;
     private static TextureLoader textureLoader;
+    private static FontFactory fontFactory;
 
     public static void init() {
         init(false);
@@ -46,8 +48,7 @@ public class EngineMaster {
         displayManager = new GLFWDisplayManager();
         textureLoader = new GLTextureLoader();
         MasterRenderer.init(use2D);
-        //InputLoop.init(window.getId());
-        //new Thread(InputLoop::run).start(); //starts input handling threat
+        fontFactory = new GLTTFontFactory();
     }
 
     /**
@@ -66,7 +67,7 @@ public class EngineMaster {
         InputLoop.finish();
         Log.i(TAG, "shutting down render ");
         ParticleMaster.cleanUp();
-        GLTTFontFactory.clear();
+        fontFactory.clear();
         MasterRenderer.cleanUp();
         GLLoader.cleanUp();
         displayManager.cleanUp();

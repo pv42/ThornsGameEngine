@@ -4,7 +4,6 @@ import engine.graphics.display.DisplayManager;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.particles.ParticleMaster;
 import engine.toolbox.Log;
-import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -19,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static engine.toolbox.Settings.DEFAULT_HEIGHT;
-import static engine.toolbox.Settings.MSAA;
 import static engine.toolbox.Settings.DEFAULT_WIDTH;
+import static engine.toolbox.Settings.MSAA;
 import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
 import static org.lwjgl.opengl.GL13.GL_SAMPLES;
 
@@ -72,16 +71,16 @@ public class GLFWDisplayManager implements DisplayManager {
                 String output = "from " + getGLDebugSourceString(source) + " type " + getGLDebugTypeString(type) +
                         " (id:x" + Integer.toString(id, 16) + ") severity " + getGLDebugSeverityString(severity) +
                         " : " + message;
-                if(output.equals(lastOpenGLError) && lastErrorCount < 255 && OPENGL_REDUCED_ERROR_OUTPUT) {
-                    lastErrorCount ++;
+                if (output.equals(lastOpenGLError) && lastErrorCount < 255 && OPENGL_REDUCED_ERROR_OUTPUT) {
+                    lastErrorCount++;
                 } else {
-                    if(lastErrorCount > 1) Log.w("openGL", lastErrorCount + " more of the same error");
+                    if (lastErrorCount > 1) Log.w("openGL", lastErrorCount + " more of the same error");
                     lastOpenGLError = output;
                     lastErrorCount = 1;
 
                     if (severity == GL43.GL_DEBUG_SEVERITY_NOTIFICATION || severity == GL43.GL_DEBUG_SEVERITY_LOW
-                            ||severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
-                        if( id == NV_BUFFER_USE_VRAM) { // NVIDIA drives are quite chatty and provide how they store their VAOs
+                            || severity == GL43.GL_DEBUG_SEVERITY_MEDIUM) {
+                        if (id == NV_BUFFER_USE_VRAM) { // NVIDIA drives are quite chatty and provide how they store their VAOs
                             Log.d("openGL", output);
                         } else {
                             Log.i("openGL", output);
@@ -206,7 +205,7 @@ public class GLFWDisplayManager implements DisplayManager {
             window.destroyUnsafe();
         }
         windows.clear();
-        if(windowCount > 0) GL11.glDisable(GL43.GL_DEBUG_OUTPUT);
+        if (windowCount > 0) GL11.glDisable(GL43.GL_DEBUG_OUTPUT);
         GLFW.glfwTerminate();
         Log.i(TAG, "cleaned up");
     }
