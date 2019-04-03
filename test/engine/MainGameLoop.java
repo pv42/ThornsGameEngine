@@ -6,7 +6,6 @@ import engine.graphics.animation.Animation;
 import engine.graphics.animation.Animator;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
-import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.guis.GuiTexture;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
@@ -26,6 +25,7 @@ import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
+import engine.toolbox.MeshCreator;
 import engine.toolbox.OBJLoader;
 import engine.toolbox.assimpLoader.AssimpMesh;
 import engine.toolbox.assimpLoader.AssimpScene;
@@ -103,17 +103,15 @@ public class MainGameLoop {
         List<GLMaterializedModel> cowboy = assimpScene.getMeshes().stream().map(AssimpMesh::createMaterializedModel).collect(Collectors.toList());
         Animation cowboyAnimation = assimpScene.getAnimations().get(0).getAnimation();
         Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
-        //List<GLMaterializedModel> personModel = ColladaLoader.loadCollada("Laptop").getTexturedModels();
         Entity girl = new GLEntity(cowboy, new Vector3f(30, 0, 50));
         girl.setRx(-90);
         girl.setScale(5f);
         FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0, 0, 0), window);
         player.setScale(.8f);
-        Entity cube = new GLEntity(new GLMaterializedModel(OBJLoader.loadObjModel("cube"), new TexturedMaterial(tl.loadTexture("white.png"))), new Vector3f());
+        Entity cube = new GLEntity(new GLMaterializedModel(MeshCreator.createBox(1,1,1), new TexturedMaterial(tl.loadTexture("white.png"))), new Vector3f());
         ThirdPersonCamera camera = new ThirdPersonCamera(player);
         float timeSinceFPSUpdate = 0f;
         int framesSinceFPSUpdate = 0;
-        //network
 
         Log.i(TAG, "starting render");
         float animationTime = 0;
@@ -127,7 +125,6 @@ public class MainGameLoop {
 
         scene.addAniEntity(player);
         while (!window.isCloseRequested()) { //actual MainGameLoop
-            //game logic
             //FPS Updates
             if (timeSinceFPSUpdate >= 1.7f) {
                 fpsText.setString((int) (framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps");

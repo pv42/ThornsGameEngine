@@ -78,7 +78,7 @@ public class GLEntityRenderer {
     private void prepareTexturedModel(GLMaterializedModel model) {
         GLRawModel rawModel = model.getRawModel();
         List<Joint> joints;
-        List<Matrix4fDbg> boneMatrices = new ArrayList<>();
+        List<Matrix4f> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
             joints = rawModel.getJoints();
             for (Joint joint : joints) {

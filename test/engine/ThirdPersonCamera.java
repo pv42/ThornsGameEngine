@@ -1,7 +1,6 @@
 package engine;
 
 import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.glglfwImplementation.entities.Player;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
 import org.joml.Vector2f;

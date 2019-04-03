@@ -1,4 +1,4 @@
-package engine.graphics.glglfwImplementation.entities;
+package engine;
 
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;

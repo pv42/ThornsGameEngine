@@ -12,8 +12,6 @@ import java.util.Map;
 public class GLTTFontFactory {
     private static String SYSTEM_FONT_PATH;
     private static Map<String, List<GLTTFont>> fonts = new HashMap<>();
-
-
     public static GLTTFont loadSystemFont(String name, int minPixelSize) {
         if (fonts.containsKey(name)) {
             GLTTFont bestFont = null;
@@ -54,5 +52,9 @@ public class GLTTFontFactory {
             default:
                 throw new UnsupportedOperationException("operation system " + Platform.get() + " is not supported");
         }
+    }
+
+    public static void clear() {
+        fonts = new HashMap<>();
     }
 }

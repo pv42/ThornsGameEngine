@@ -44,6 +44,6 @@ public class ParticleMaster {
         batch.add(particle);
     }
     public static void cleanUp() {
-        renderer.cleanUp();
+        if(renderer != null) renderer.cleanUp();
     }
 }

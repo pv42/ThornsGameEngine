@@ -1,6 +1,5 @@
 package shivt.levels;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.nbt.Compound;
@@ -9,11 +8,15 @@ import engine.toolbox.nbt.NBTList;
 import engine.toolbox.nbt.Tag;
 import org.joml.Vector3f;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.toolbox.nbt.Tag.*;
+import static engine.toolbox.nbt.Tag.DATATYPE_COMPOUND;
+import static engine.toolbox.nbt.Tag.DATATYPE_LIST;
 
 /***
  * Created by pv42 on 15.09.2016.

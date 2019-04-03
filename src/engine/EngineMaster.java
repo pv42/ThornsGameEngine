@@ -4,6 +4,7 @@ import engine.audio.AudioMaster;
 import engine.graphics.display.DisplayManager;
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
+import engine.graphics.glglfwImplementation.text.GLTTFontFactory;
 import engine.graphics.glglfwImplementation.textures.GLTextureLoader;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.glglfwImplementation.MasterRenderer;
@@ -65,6 +66,7 @@ public class EngineMaster {
         InputLoop.finish();
         Log.i(TAG, "shutting down render ");
         ParticleMaster.cleanUp();
+        GLTTFontFactory.clear();
         MasterRenderer.cleanUp();
         GLLoader.cleanUp();
         displayManager.cleanUp();

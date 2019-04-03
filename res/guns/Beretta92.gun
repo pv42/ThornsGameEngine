@@ -10,4 +10,3 @@ magizineSize:8
 shotDelay:0.4f
 knockback:.2f
 end
-todo , update obj loader -> mesh:M9

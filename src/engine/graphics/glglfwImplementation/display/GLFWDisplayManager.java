@@ -30,7 +30,7 @@ import static org.lwjgl.opengl.GL13.GL_SAMPLES;
  * @author pv42
  */
 public class GLFWDisplayManager implements DisplayManager {
-    private static final String TAG = "Engine:DisplayManager";
+    private static final String TAG = "DisplayManager";
     private static final String DEFAULT_TITLE = "Thorns";
     private static final int NV_BUFFER_USE_VRAM = 0x20071; // nVidia driver's OpenGL debug id for using vram for vaos
     private static final boolean OPENGL_REDUCED_ERROR_OUTPUT = false; // requires more work
@@ -201,12 +201,13 @@ public class GLFWDisplayManager implements DisplayManager {
      * cleans up by destroying all windows and unbinding the error callback
      */
     public void cleanUp() {
+        int windowCount = windows.size();
         for (GLFWWindow window : windows) {
             window.destroyUnsafe();
         }
         windows.clear();
+        if(windowCount > 0) GL11.glDisable(GL43.GL_DEBUG_OUTPUT);
         GLFW.glfwTerminate();
-        GL11.glDisable(GL43.GL_DEBUG_OUTPUT);
         Log.i(TAG, "cleaned up");
     }
 

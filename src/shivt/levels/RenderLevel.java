@@ -45,13 +45,13 @@ public class RenderLevel {
         for(Station station : level.getStations()) {
             GLMaterializedModel texturedModel = new GLMaterializedModel(OBJLoader.loadObjModel("spaceStation"),
                     new TexturedMaterial(EngineMaster.getTextureLoader().loadTexture("blue.png")));
-            // todo add this texturedModel.getTexture().setReflectivity(.1f);
+            texturedModel.getMaterial().setReflectivity(.1f);
             GLEntity e = new GLEntity(texturedModel,station.getPosition());
             e.setScale(0.5f);
             entities.add(e);
             GLGuiText text = new GLGuiText(font, station.getTroopsStrength()  + "T",0.0005f,new Color(.3,.3,.3),new Vector2f(station.getPosition().x(), station.getPosition().y()));
             texts.add(text);
-            // todo fix text MasterRenderer.loadText(text);
+            scene.addText(text);
         }
         Light sun = new Light(new Vector3f(0, 0, -20), new Color(1.0, 1.0, 1.0));
         entities.forEach(scene::addEntity);
@@ -62,6 +62,5 @@ public class RenderLevel {
             lines.get(i).generateParticles(ends.get(i), timeDelta);
         }
         ParticleMaster.update(timeDelta);
-        // todo fix text texts.forEach(MasterRenderer::processText);
     }
 }

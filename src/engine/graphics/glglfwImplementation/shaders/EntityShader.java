@@ -1,6 +1,7 @@
 package engine.graphics.glglfwImplementation.shaders;
 
 import engine.toolbox.Matrix4fDbg;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import java.util.List;
@@ -96,11 +97,7 @@ public class EntityShader extends Lighted3DShader {
      *
      * @param bones bone matrices to load
      */
-    public void loadBones(List<Matrix4fDbg> bones) {
-         /*for(Matrix4fDbg mat: bones) {
-             System.out.println(mat.getName());
-         }
-         System.out.println("END\n");*/
+    public void loadBones(List<Matrix4f> bones) {
          super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 

@@ -27,9 +27,9 @@ public class GLLoader {
     public static final int VERTEX_ATTRIB_ARRAY_POSITION = 0;
     public static final int VERTEX_ATTRIB_ARRAY_UV = 1;
     public static final int VERTEX_ATTRIB_ARRAY_NORMAL = 2;
-    public static final int VERTEX_ATTRIB_ARRAY_BONE_INDICES = 3; // todo both tangents and animation
+    public static final int VERTEX_ATTRIB_ARRAY_BONE_INDICES = 3;
     public static final int VERTEX_ATTRIB_ARRAY_BONE_WEIGHT = 4;
-    static final int VERTEX_ATTRIB_ARRAY_TANGENTS = 3;
+    public static final int VERTEX_ATTRIB_ARRAY_TANGENTS = 5;
     private static final String TAG = "GLLoader";
     private static List<Integer> vaos = new ArrayList<>();
     private static List<Integer> vbos = new ArrayList<>();

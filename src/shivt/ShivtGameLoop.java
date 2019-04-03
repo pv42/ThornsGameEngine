@@ -42,12 +42,12 @@ public class ShivtGameLoop {
     public void loop(RenderLevel level, ThreeDimensionCamera camera) {
         if (timeSinceFPSUpdate >= 1.7f) {
             fpsText.setString((int) (framesSinceFPSUpdate / timeSinceFPSUpdate) + "fps");
-            // todo fix text MasterRenderer.loadText(fpsText);
+            scene.addText(fpsText);
             timeSinceFPSUpdate = 0;
             framesSinceFPSUpdate = 0;
         }
         if (level != null) level.process(window.getLastFrameTime());
-        // todo fix text MasterRenderer.processText(fpsText);
+        scene.addText(fpsText);
         for (Button button : buttons) {
             button.processRender(scene);
         }
@@ -55,7 +55,6 @@ public class ShivtGameLoop {
         window.update();
         timeSinceFPSUpdate += window.getLastFrameTime();
         framesSinceFPSUpdate++;
-        //System.out.println(Conversion.normalizedDeviceCoordsFromPixelCoods(Mouse.getX(), Mouse.getY()));
     }
 
     public void finish() {
@@ -64,7 +63,7 @@ public class ShivtGameLoop {
 
     void addButton(Button button) {
         buttons.add(button);
-        // todo fix text MasterRenderer.loadText(button.getText());
+        scene.addText(button.getText());
     }
 
     void removeAll() {

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class KeyFrame {
 
-    private Map<String, Matrix4fDbg> jointData;
+    private Map<String, Matrix4f> jointData;
     private float timestamp;
 
     public KeyFrame(float timeStamp) {
@@ -16,11 +16,11 @@ public class KeyFrame {
         this.timestamp = timeStamp;
     }
 
-    public void addJointData(String name, Matrix4fDbg data) {
+    public void addJointData(String name, Matrix4f data) {
         jointData.put(name,data);
     }
 
-    public Map<String, Matrix4fDbg> getJointData() {
+    public Map<String, Matrix4f> getJointData() {
         return jointData;
     }
 

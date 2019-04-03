@@ -1,7 +1,6 @@
 package engine;
 
 import engine.graphics.cameras.ThreeDimensionCamera;
-import engine.graphics.glglfwImplementation.entities.FirstPersonPlayer;
 
 /**
    Created by pv42 on 17.06.16.

@@ -3,29 +3,24 @@ package engine.toolbox.assimpLoader;
 import engine.graphics.animation.Animation;
 import engine.graphics.animation.KeyFrame;
 import engine.toolbox.Log;
-import engine.toolbox.Matrix4fDbg;
-import javafx.util.Pair;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.lwjgl.assimp.AIAnimation;
-import org.lwjgl.assimp.AIMeshAnim;
 import org.lwjgl.assimp.AINodeAnim;
 import org.lwjgl.assimp.AIQuatKey;
 import org.lwjgl.assimp.AIQuaternion;
 import org.lwjgl.assimp.AIVector3D;
 import org.lwjgl.assimp.AIVectorKey;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AssimpAnimation {
     private static final String TAG = "AssimpAnimation";
     private final String name;
     private double duration;
-    private Map<String, List<Pair<Double, Matrix4f>>> keyFrameData;
+    private Map<String, Map<Double, Matrix4f>> keyFrameData;
 
     private AssimpAnimation(String name) {
         this.name = name;
@@ -83,14 +78,10 @@ public class AssimpAnimation {
         Animation animation = new Animation();
         Map<Float, KeyFrame> keyFrames = new HashMap<>();
         for (String name : keyFrameData.keySet()) {
-            List<Pair<Double, Matrix4f>> pairs = keyFrameData.get(name);
-            for (Pair<Double, Matrix4f> pair : pairs) {
-                float time = new Float(pair.getKey());
-                keyFrames.computeIfAbsent(time, aFloat -> {
-                    keyFrames.put(time, new KeyFrame(aFloat));
-                    return null;
-                });
-                keyFrames.get(time).addJointData(name, new Matrix4fDbg(pair.getValue(), name + ".anM"));
+            Map<Double, Matrix4f> pairs = keyFrameData.get(name);
+            for (Double time : pairs.keySet()) {
+                keyFrames.putIfAbsent(time.floatValue(), new KeyFrame(time.floatValue()));
+                keyFrames.get(time.floatValue()).addJointData(name, new Matrix4f(pairs.get(time)));
             }
         }
         keyFrames.forEach((aFloat, keyFrame) -> animation.addKeyFrame(keyFrame));
@@ -103,8 +94,8 @@ public class AssimpAnimation {
 
     private void addData(String jointName, double time, Matrix4f transform) {
         if (!keyFrameData.containsKey(jointName)) {
-            keyFrameData.put(jointName, new ArrayList<>());
+            keyFrameData.put(jointName, new HashMap<>());
         }
-        keyFrameData.get(jointName).add(new Pair<>(time, transform));
+        keyFrameData.get(jointName).put(time, transform);
     }
 }

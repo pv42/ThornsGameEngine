@@ -5,6 +5,7 @@ import org.joml.Matrix4fc;
 
 import java.text.DecimalFormat;
 
+@Deprecated
 public class Matrix4fDbg extends Matrix4f {
     private String name;
 

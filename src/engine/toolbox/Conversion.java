@@ -22,6 +22,7 @@ public class Conversion {
     public static Vector2f normalizedDeviceCoordsFromPixelCoods(float pixelX, float pixelY) {
         //float x = (2f * pixelX) / Display.getWidth() - 1;
         //float y = (2f * pixelY) /Display.getHeight() - 1;
+        Log.w("ndc from pc"," not implemented");
         return new Vector2f(); //// TODO: 12.09.2016
     }
     private static Vector4f toEyeCoords(Vector4f clipCoords,Matrix4f projectionMatrix) {

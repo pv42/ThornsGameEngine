@@ -161,4 +161,54 @@ public class LightTests {
         assertEquals(0, Log.getWarningNumber());
         assertEquals(0, Log.getErrorNumber());
     }
+
+    @Test
+    void testLightPosition() {
+        Log.clearNumbers();
+        EngineMaster.init();
+        Window window = EngineMaster.getDisplayManager().createWindow();
+        Scene scene = new Scene();
+        GLRawModel rawModel = MeshCreator.createBox(1, 1, 1);
+        Texture texture = EngineMaster.getTextureLoader().loadTexture("test2.png");
+        Material material = new TexturedMaterial(texture);
+        GLMaterializedModel model = new GLMaterializedModel(rawModel, material, false);
+        Entity entity0 = new GLEntity(model, new Vector3f(-1, 0, 0));
+        Entity entity1 = new GLEntity(model, new Vector3f(1, 0, 0));
+        Entity entity2 = new GLEntity(model, new Vector3f(0, 0, -6));
+        entity2.setScale(10);
+        scene.addEntity(entity0);
+        scene.addEntity(entity1);
+        scene.addEntity(entity2);
+        Light light = new Light(new Vector3f(0, 0, 3), new Color(1, 1, 1));
+        scene.addLight(light);
+        StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
+        GLTTFont font = GLTTFontFactory.loadSystemFont("cour", 64);
+        GuiText text = new GLGuiText(font, "shineDamper.: 0", 0.00005f, new Color(1, 1, 1), new Vector2f(-1, .9f));
+        scene.addText(text);
+        float z = 0;
+        int zd = 1;
+        float x = 0;
+        int xd = 1;
+        int i = 0;
+        material.setReflectivity(.2f);
+        material.setShineDamper(2);
+        while (!window.isCloseRequested() && i < 600) {
+            z += .07f * zd;
+            x += .15f * xd;
+            if (Math.abs(z) > 7f) zd *= -1;
+            if (Math.abs(x) > 7f) xd *= -1;
+            light.setPosition(new Vector3f(x, 0,5 + z));
+            text.setString(String.format("x=%.0f y=0 z=%.0f", x, z + 5));
+            MasterRenderer.render(scene, camera);
+            window.update();
+            camera.setPosition(new Vector3f(0, 0, 3));
+            entity0.setRy(entity0.getRy() + 0.3f);
+            entity1.setRx(entity1.getRx() + 1);
+            i++;
+        }
+        EngineMaster.finish();
+        assertEquals(0, Log.getWarningNumber());
+        assertEquals(0, Log.getErrorNumber());
+    }
+
 }

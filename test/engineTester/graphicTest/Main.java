@@ -13,9 +13,14 @@ import engine.graphics.materials.TexturedMaterial;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.inputs.InputHandler;
-import engine.toolbox.collada.ColladaLoader;
+import engine.toolbox.assimpLoader.AssimpMesh;
+import engine.toolbox.assimpLoader.AssimpScene;
 import org.joml.Vector3f;
 import shivt.ShivtCamera;
+
+import java.util.ArrayList;
+import java.util.List;
+
 // todo fixme
 public class Main {
     static boolean useEngine = true;
@@ -48,7 +53,13 @@ public class Main {
                 0, 0, 0
         };
         GLRawModel model = GLLoader.loadToVAO(vertices, textCoords, normal, indices);
-        GLEntity lara  = new GLEntity(ColladaLoader.loadCollada("Lara_Croft").getTexturedModels(),new Vector3f(0,12.5f,0));
+        List<GLMaterializedModel> models = new ArrayList<>();
+        AssimpScene asScene = new AssimpScene();
+        asScene.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\res\\meshs\\Lara_Croft.dae");
+        for(AssimpMesh mesh: asScene.getMeshes()) {
+            models.add(mesh.createMaterializedModel(false));
+        }
+        GLEntity lara  = new GLEntity(models,new Vector3f(0,12.5f,0));
         lara.setRx(80);
         GLModelTexture modelTexture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("Screen_Dust_D.png");
         GLMaterializedModel texturedModel = new GLMaterializedModel(model, new TexturedMaterial(modelTexture));

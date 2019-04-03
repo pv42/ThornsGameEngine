@@ -36,7 +36,7 @@ public class Button extends Clickable {
         setListeners();
     }
     public Button(Vector2f position, Vector2f scale, String text, Window window) {
-        super(new RectangleClickArea(Maths.getAreaFromPositionAndScale(window, position,scale))); //todo
+        super(new RectangleClickArea(Maths.getAreaFromPositionAndScale(window, position,scale)));
         this.gui = EngineMaster.getTextureLoader().loadGuiTexture("path_cs.png",position,scale, window);
         this.text = new GLGuiText(new GLTTFont("res/fonts/arial.ttf",64),text,scale.y / 1000, new Color(0),new Vector2f(position));
         this.text.setColor(new Color(0.0,1.0,0.0));

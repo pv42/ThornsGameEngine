@@ -22,11 +22,11 @@ public class Animation {
         keyframes.add(keyFrame);
     }
 
-    Matrix4fDbg getMatrix(float time, String jointName) {
+    Matrix4f getMatrix(float time, String jointName) {
         float prevTS = 0;
         float nextTS = Float.POSITIVE_INFINITY;
         Matrix4f nextMatrix = null;
-        Matrix4fDbg prevMatrix = keyframes.get(0).getJointData().get(jointName);
+        Matrix4f prevMatrix = keyframes.get(0).getJointData().get(jointName);
         for (KeyFrame frame : keyframes) {
             float timestamp = frame.getTimestamp();
             if (timestamp > time && timestamp < nextTS) { //find next timestamp
@@ -49,10 +49,9 @@ public class Animation {
         prevTranslation.mul(progress);
         nextTranslation.mul(1f - progress);
         prevTranslation.add(nextTranslation);
-        Matrix4fDbg matrix = new Matrix4fDbg(new Matrix4f(), "<err>");
+        Matrix4f matrix = new Matrix4f();
         matrix.translate(prevTranslation);
         matrix.mul(rotation.get(new Matrix4f()));
-        matrix.setName(prevMatrix.getName());
         return matrix;
     }
 

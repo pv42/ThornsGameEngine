@@ -24,7 +24,7 @@ import static engine.toolbox.Settings.SKY_COLOR;
 
 public class MasterRenderer {
     //default
-    private static final String TAG = "Engine:MasterRenderer";
+    private static final String TAG = "MasterRenderer";
     private static boolean enableSkybox = true;
     private static boolean use2D;
     private static Matrix4f projectionMatrix;
@@ -145,6 +145,7 @@ public class MasterRenderer {
 
 
     public static void cleanUp() {
+        if(entityRenderer == null) return;
         entityRenderer.cleanUp();
         aniRenderer.cleanUp();
         terrainShader.cleanUp();

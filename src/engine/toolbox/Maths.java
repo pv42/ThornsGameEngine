@@ -34,7 +34,7 @@ public class Maths {
         return matrix;
     }
 
-    public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) { //todo do not work
+    public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) {
         float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
         float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
         float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
@@ -65,6 +65,7 @@ public class Maths {
     }
 
     public static boolean isPointInTriangle(Vector3f p, Vector3f t1, Vector3f t2, Vector3f t3) {
+        throw new UnsupportedOperationException("not implemented");
         //todo
         // Vector3f v0 = Vector3f.sub(t3,t1,null);
         /*Vector3f v1 = Vector3f.sub(t2,t1,null);
@@ -78,7 +79,7 @@ public class Maths {
         float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
         float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
         return (u >= 0) && (v >= 0) && (u + v < 1);*/
-        return false;
+        //return false;
     }
 
     public static boolean isPointInQuad(Vector3f p, Vector3f t1, Vector3f t2, Vector3f t3, Vector3f t4) {
@@ -98,7 +99,7 @@ public class Maths {
     }
 
     public static Vector3f getPositionComponent(Matrix4f matrix4f) {
-        if (Math.abs(matrix4f.m03() + matrix4f.m13() + matrix4f.m23() + Math.abs(matrix4f.m33() - 1)) > 0.01)
+        if (Math.abs(matrix4f.m03()) + Math.abs(matrix4f.m13()) + Math.abs(matrix4f.m23()) + Math.abs(matrix4f.m33() - 1) > 0.01)
             Log.w("unusual TM:\n" + matrix4f);
         return new Vector3f(matrix4f.m30(), matrix4f.m31(), matrix4f.m32());
     }
@@ -111,9 +112,6 @@ public class Maths {
         float rz = (float) Math.asin(sz);
         float sx = -m.m21() / cy;
         float rx = (float) Math.asin(sx);
-        //Log.d("rx:" + Math.toDegrees(rx));
-        //Log.d("ry:" + Math.toDegrees(ry));
-        //Log.d("rz:" + Math.toDegrees(rz));
         return new Vector3f(rx, ry, rz);
     }
 
