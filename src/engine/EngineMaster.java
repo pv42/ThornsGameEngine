@@ -80,4 +80,8 @@ public class EngineMaster {
     public static TextureLoader getTextureLoader() {
         return textureLoader;
     }
+
+    public static FontFactory getFontFactory() {
+        return fontFactory;
+    }
 }
