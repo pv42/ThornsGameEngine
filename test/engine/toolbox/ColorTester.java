@@ -1,16 +1,16 @@
-import engine.toolbox.Color;
+package engine.toolbox;
+
 import org.junit.jupiter.api.Test;
 
 import java.text.DecimalFormat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class ColorTester {
     private static float eps = 0.01f;
+
     @Test
     void test() {
         System.out.println(new Color(0.5, 0.7, 0.8));
@@ -22,18 +22,18 @@ class ColorTester {
 
     @Test
     void fromHSL() {
-        Color c = Color.fromHSL(1,0,0);
-        assertEquals(c, new Color((byte)0,(byte)0,(byte)0,(byte)255));
-        c = Color.fromHSL(0,0,1);
-        assertEquals(c, new Color((byte)255,(byte)255,(byte)255,(byte)255));
-        c = Color.fromHSL(0,1,0.5f);
-        assertEquals(c, new Color((byte)255,(byte)0,(byte)0,(byte)255));
-        c = Color.fromHSL(0,1,0.5f);
-        assertEquals(c, new Color((byte)255,(byte)0,(byte)0,(byte)255));
-        c = Color.fromHSL(60,1,0.5f);
-        assertEquals(c, new Color((byte)255,(byte)255,(byte)0,(byte)255));
-        c = Color.fromHSL(240,1,0.5f);
-        assertEquals(c, new Color((byte)0,(byte)0,(byte)255,(byte)255));
+        Color c = Color.fromHSL(1, 0, 0);
+        assertEquals(c, new Color((byte) 0, (byte) 0, (byte) 0, (byte) 255));
+        c = Color.fromHSL(0, 0, 1);
+        assertEquals(c, new Color((byte) 255, (byte) 255, (byte) 255, (byte) 255));
+        c = Color.fromHSL(0, 1, 0.5f);
+        assertEquals(c, new Color((byte) 255, (byte) 0, (byte) 0, (byte) 255));
+        c = Color.fromHSL(0, 1, 0.5f);
+        assertEquals(c, new Color((byte) 255, (byte) 0, (byte) 0, (byte) 255));
+        c = Color.fromHSL(60, 1, 0.5f);
+        assertEquals(c, new Color((byte) 255, (byte) 255, (byte) 0, (byte) 255));
+        c = Color.fromHSL(240, 1, 0.5f);
+        assertEquals(c, new Color((byte) 0, (byte) 0, (byte) 255, (byte) 255));
         System.out.println(c);
     }
 
@@ -43,7 +43,7 @@ class ColorTester {
 
     @Test
     void getColorData() {
-        Color c = new Color((byte)254,(byte)252,(byte)10,(byte)251);
+        Color c = new Color((byte) 254, (byte) 252, (byte) 10, (byte) 251);
         assertEquals(c.getColorData(), (-5 * 256 * 256 * 256) + (254 * 256 * 256) + (252 * 256) + 10);
     }
 
@@ -91,11 +91,11 @@ class ColorTester {
 
     @Test
     void equals1() {
-        Color c0 = new Color((byte)118,(byte)0,(byte)255,(byte)200);
-        Color c1 = new Color((byte)118,(byte)0,(byte)255,(byte)200);
-        Color c2 = new Color((byte)118,(byte)0,(byte)255,(byte)199);
-        Color c3 = new Color((byte)118,(byte)0,(byte)254,(byte)200);
-        Color c4 = new Color((byte)118,(byte)0,(byte)0,(byte)200);
+        Color c0 = new Color((byte) 118, (byte) 0, (byte) 255, (byte) 200);
+        Color c1 = new Color((byte) 118, (byte) 0, (byte) 255, (byte) 200);
+        Color c2 = new Color((byte) 118, (byte) 0, (byte) 255, (byte) 199);
+        Color c3 = new Color((byte) 118, (byte) 0, (byte) 254, (byte) 200);
+        Color c4 = new Color((byte) 118, (byte) 0, (byte) 0, (byte) 200);
         assertEquals(c0, c1);
         assertNotEquals(c0, c2);
         assertNotEquals(c0, c3);
@@ -104,9 +104,9 @@ class ColorTester {
 
     @Test
     void set() {
-        Color c = new Color(0.1,0.4,0.6);
-        Color d = new Color(1,0,0);
+        Color c = new Color(0.1, 0.4, 0.6);
+        Color d = new Color(1, 0, 0);
         c.set(d);
-        assertEquals(c,d);
+        assertEquals(c, d);
     }
 }

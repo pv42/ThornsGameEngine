@@ -7,6 +7,8 @@ import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.StorageFormatUtil;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -41,6 +43,8 @@ public class GLLoader {
      * @param dimension coordinate dimension
      * @return rawmodel
      */
+    @NotNull
+    @Contract("_, _ -> new")
     public static GLRawModel loadToVAO(float[] positions, int dimension) {
         int vaoID = createVAO();
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_POSITION, dimension, positions);
@@ -55,6 +59,8 @@ public class GLLoader {
      * @param indices   indices array
      * @return rawmodel
      */
+    @NotNull
+    @Contract("_, _ -> new")
     public static GLRawModel loadToVAO(float[] positions, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
@@ -86,6 +92,8 @@ public class GLLoader {
      * @param indices   indices array
      * @return rawmodel
      */
+    @NotNull
+    @Contract("_, _, _ -> new")
     public static GLRawModel loadToVAO(float[] positions, float[] uv, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
@@ -104,6 +112,8 @@ public class GLLoader {
      * @param indices   indices array
      * @return rawmodel
      */
+    @NotNull
+    @Contract("_, _, _, _ -> new")
     public static GLRawModel loadToVAO(float[] positions, float[] uv, float[] normals, int[] indices) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
         unbindVAO();
@@ -120,6 +130,8 @@ public class GLLoader {
      * @param indices   indices array
      * @return rawmodel
      */
+    @NotNull
+    @Contract("_, _, _, _, _ -> new")
     public static GLRawModel loadToVAO(float[] positions, float[] uv, float[] normals, float[] tangents, int[] indices) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_TANGENTS, 3, tangents);
@@ -127,6 +139,8 @@ public class GLLoader {
         return new GLRawModel(vaoID, indices.length);
     }
 
+    @NotNull
+    @Contract("_ -> new")
     public static LineModel loadToVAO(Line line) {
         int vaoID = createVAO();
         int[] indices = new int[2];
@@ -151,16 +165,13 @@ public class GLLoader {
      * @param joints      list of the joints/bones to use
      * @return rawmodel
      */
+    @Contract("_, _, _, _, _, _, _ -> new")
+    @NotNull
     public static GLRawModel loadToVAOAnimated(float[] positions, float[] uv, float[] normals, int[] indices, int[] boneIndices, float[] boneWeight, List<Joint> joints) {
         int vaoID = createTexturedLightedVAO(positions, uv, normals, indices);
-        //for(int index: boneIndices) {
-        //    System.out.print(index+ ",");
-        //}
-        //System.out.println();
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_INDICES, Settings.MAX_BONES_PER_VERTEX, boneIndices);
         storeDataInAttributeList(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT, Settings.MAX_BONES_PER_VERTEX, boneWeight);
         unbindVAO();
-        Log.i(TAG, "p:" + positions.length + " bi:" + boneIndices.length + " bw:" + boneWeight.length);
         return new GLRawModel(vaoID, indices.length, joints);
     }
 
@@ -193,7 +204,7 @@ public class GLLoader {
 
     }
 
-    public static void updateVbo(int vbo, float[] data, FloatBuffer buffer) {
+    public static void updateVbo(int vbo, float[] data, @NotNull FloatBuffer buffer) {
         buffer.clear();
         buffer.put(data);
         buffer.flip();
@@ -250,14 +261,14 @@ public class GLLoader {
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
     }
 
-    private static IntBuffer storeDataInIntBuffer(int[] data) {
+    private static IntBuffer storeDataInIntBuffer(@NotNull int[] data) {
         IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
         buffer.put(data);
         buffer.flip();
         return buffer;
     }
 
-    private static FloatBuffer storeDataInFloatBuffer(float[] data) {
+    private static FloatBuffer storeDataInFloatBuffer(@NotNull float[] data) {
         FloatBuffer floatBuffer = BufferUtils.createFloatBuffer(data.length);
         floatBuffer.put(data);
         floatBuffer.flip();
