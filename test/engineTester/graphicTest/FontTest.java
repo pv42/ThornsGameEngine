@@ -19,24 +19,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FontTest {
     @Test
-    public void testFont() {
-        int now = Log.getWarningNumber();
+    void testFont() {
+        Log.clearNumbers();
         EngineMaster.init();
         Window window = EngineMaster.getDisplayManager().createWindow();
-        GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("bahnschrift",128);
-        GLGuiText text = new GLGuiText(font, "H31!0 w0r!d", 0.0001f, new Color(0, 1.0, 1.0), new Vector2f());
+        GLTTFont bahnschrift = EngineMaster.getFontFactory().loadSystemFont("bahnschrift",128);
+        GLTTFont arial = EngineMaster.getFontFactory().loadSystemFont("arial",32);
+        GLTTFont bahnschrift2 = EngineMaster.getFontFactory().loadSystemFont("bahnschrift",32);
+        GLGuiText text = new GLGuiText(bahnschrift, "H31!0 w0r!d", 0.0001f, new Color(1.0, 1.0, 1.0), new Vector2f());
+        GLGuiText text1 = new GLGuiText(arial, "-0.5  0.5", 0.0002f, new Color(0.5, 1, 0), new Vector2f(-.5f,.5f));
+        GLGuiText text2 = new GLGuiText(bahnschrift2, "bahn2_-|.", 0.0002f, new Color(0.3, 0, 0), new Vector2f(-.5f,-.5f));
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(), new Vector3f());
         Scene scene = new Scene();
         int count = 0;
         scene.addText(text);
+        scene.addText(text1);
+        scene.addText(text2);
         while (!window.isCloseRequested() && count < 60) {
             MasterRenderer.render(scene, camera);
             window.update();
+            text.setPosition(new Vector2f(count/60f -.5f,0f));
             count++;
         }
         EngineMaster.finish();
+        assertEquals(32,arial.getPixelSize());
+        assertEquals(128,bahnschrift.getPixelSize());
+        assertEquals(bahnschrift,bahnschrift2);
         assertEquals(0, Log.getErrorNumber());
-        assertEquals(now, Log.getWarningNumber());
+        assertEquals(0, Log.getWarningNumber());
 
     }
 }

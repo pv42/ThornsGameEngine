@@ -202,7 +202,7 @@ public class Color {
         }
         if (obj instanceof Color) {
             Color anotherColor = (Color) obj;
-            if (getColorData() == anotherColor.getColorData()) return true;
+            return this.data == anotherColor.data;
         }
         return false;
     }
@@ -211,5 +211,9 @@ public class Color {
     public String toString() {
         return "Color(" + getUnsignedFromByte(getRByte()) + "," + getUnsignedFromByte(getGByte()) + "," +
                 getUnsignedFromByte(getBByte()) + "," + getUnsignedFromByte(getAByte()) + ")";
+    }
+
+    public void set(Color color) {
+        this.data = color.data;
     }
 }
