@@ -80,30 +80,30 @@ public class Color {
     /**
      * creates a color from the hsl
      *
-     * @param h hue parameter of the hls format
-     * @param s satuartion parameter of the hls format
-     * @param l lightness parameter of the hls format
+     * @param hue        hue parameter of the hls format
+     * @param saturation saturation parameter of the hls format
+     * @param lightness  lightness parameter of the hls format
      * @return Color
      */
-    public static Color fromHSL(float h, float s, float l) {
-        // 0<=h<360, 0<=l,s<=1
-        h = h % 360;
-        float c = (1 - Math.abs(2 * l - 1)) * s;
-        float x = c * (1 - Math.abs((h / 60) % 2 - 1));
-        float m = l - c / 2;
+    public static Color fromHSL(float hue, float saturation, float lightness) {
+        // 0<=hue<360, 0<=lightness,saturation<=1
+        hue = hue % 360;
+        float c = (1 - Math.abs(2 * lightness - 1)) * saturation;
+        float d = c * (1 - Math.abs((hue / 60) % 2 - 1));
+        float m = lightness - c / 2;
         Vector3f rgb;
-        if (h < 60) {
-            rgb = new Vector3f(c, x, 0);
-        } else if (h < 120) {
-            rgb = new Vector3f(x, c, 0);
-        } else if (h < 180) {
-            rgb = new Vector3f(0, c, x);
-        } else if (h < 240) {
-            rgb = new Vector3f(0, x, c);
-        } else if (h < 300) {
-            rgb = new Vector3f(x, 0, c);
+        if (hue < 60) {
+            rgb = new Vector3f(c, d, 0);
+        } else if (hue < 120) {
+            rgb = new Vector3f(d, c, 0);
+        } else if (hue < 180) {
+            rgb = new Vector3f(0, c, d);
+        } else if (hue < 240) {
+            rgb = new Vector3f(0, d, c);
+        } else if (hue < 300) {
+            rgb = new Vector3f(d, 0, c);
         } else {
-            rgb = new Vector3f(c, 0, x);
+            rgb = new Vector3f(c, 0, d);
         }
         rgb.x += m;
         rgb.y += m;
@@ -143,7 +143,7 @@ public class Color {
     }
 
     /**
-     * gets the red component of the 32bit color
+     * gets the red component of the 32bit color, note that a value greater then 127 is negative since java bytes are unsigned
      *
      * @return 8bit colors red part
      */
@@ -152,7 +152,7 @@ public class Color {
     }
 
     /**
-     * gets the green component of the 32bit color
+     * gets the green component of the 32bit color, note that a value greater then 127 is negative since java bytes are unsigned
      *
      * @return 8bit colors green part
      */
@@ -161,7 +161,7 @@ public class Color {
     }
 
     /**
-     * gets the blue component of the 32bit color
+     * gets the blue component of the 32bit color, note that a value greater then 127 is negative since java bytes are unsigned
      *
      * @return 8bit colors blue part
      */
@@ -209,7 +209,7 @@ public class Color {
 
     @Override
     public String toString() {
-        return "Color(" + getUnsignedFromByte(getRByte()) + "," + getUnsignedFromByte(getGByte()) + "," +
+        return "RGBA(" + getUnsignedFromByte(getRByte()) + "," + getUnsignedFromByte(getGByte()) + "," +
                 getUnsignedFromByte(getBByte()) + "," + getUnsignedFromByte(getAByte()) + ")";
     }
 
