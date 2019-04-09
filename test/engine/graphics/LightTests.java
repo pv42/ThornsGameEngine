@@ -1,6 +1,6 @@
+package engine.graphics;
+
 import engine.EngineMaster;
-import engine.graphics.Entity;
-import engine.graphics.Scene;
 import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.MasterRenderer;
@@ -9,7 +9,6 @@ import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
-import engine.graphics.glglfwImplementation.text.GLTTFontFactory;
 import engine.graphics.lights.Light;
 import engine.graphics.materials.Material;
 import engine.graphics.materials.TexturedMaterial;
@@ -51,7 +50,7 @@ public class LightTests {
         float reflec = 0;
         int reflecd = 1;
         int i = 0;
-        while (!window.isCloseRequested() && i < 600) {
+        while (!window.isCloseRequested() && i < 300) {
             reflec += 0.002f * reflecd;
             if (Math.abs(reflec) > .5f) reflecd *= -1;
             text.setString(String.format("reflec.: %.2f", (reflec + .5f)));
@@ -95,7 +94,7 @@ public class LightTests {
         int sdd = 1;
         int i = 0;
         material.setReflectivity(.5f);
-        while (!window.isCloseRequested() && i < 600) {
+        while (!window.isCloseRequested() && i < 300) {
             sd += 0.008f * sdd;
             if (Math.abs(sd) > 1f) sdd *= -1;
             float sdv = (sd + 1f) * (sd + 1f) * (sd + 1f) * 10 + 1f;
@@ -142,7 +141,7 @@ public class LightTests {
         int i = 0;
         material.setReflectivity(.1f);
         material.setShineDamper(2);
-        while (!window.isCloseRequested() && i < 600) {
+        while (!window.isCloseRequested() && i < 300) {
             h += 2;
             s += .015f * sd;
             if (Math.abs(s) > .48f) sd *= -1;
@@ -192,12 +191,12 @@ public class LightTests {
         int i = 0;
         material.setReflectivity(.2f);
         material.setShineDamper(2);
-        while (!window.isCloseRequested() && i < 600) {
+        while (!window.isCloseRequested() && i < 300) {
             z += .07f * zd;
             x += .15f * xd;
             if (Math.abs(z) > 7f) zd *= -1;
             if (Math.abs(x) > 7f) xd *= -1;
-            light.setPosition(new Vector3f(x, 0,5 + z));
+            light.setPosition(new Vector3f(x, 0, 5 + z));
             text.setString(String.format("x=%.0f y=0 z=%.0f", x, z + 5));
             MasterRenderer.render(scene, camera);
             window.update();

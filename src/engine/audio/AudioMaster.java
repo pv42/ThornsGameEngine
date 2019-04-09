@@ -2,17 +2,20 @@ package engine.audio;
 
 import engine.toolbox.IOUtil;
 import engine.toolbox.Log;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.openal.*;
 import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.EXTThreadLocalContext;
+import org.lwjgl.stb.STBVorbis;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import org.lwjgl.stb.STBVorbis;
-
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -23,28 +26,28 @@ public class AudioMaster {
     private static final String TAG = "Engine:AudioMaster";
     private static List<Integer> buffers = new ArrayList<>();
     private static long context;
-    private static long device;
+    private static Device device;
 
     public static void init() {
         Log.i(TAG, "initialising");
         try {
             try {
                 ALC.getFunctionProvider(); //test if OpenAL is initialized
-                device = openDefaultDevice();
+                device = Device.openDefaultDevice();
 
             } catch (IllegalStateException ex) {
                 ALC.create();
                 Log.i(TAG, "reinitialized OpenAL");
-                device = openDefaultDevice();
+                device = Device.openDefaultDevice();
 
             }
             //ALCCapabilities alcCapabilities = ALC.createCapabilities(device);
-            context = ALC10.alcCreateContext(device, (IntBuffer)null);
+            context = ALC10.alcCreateContext(device.getId(), (IntBuffer) null);
             if (context == NULL) {
                 throw new IllegalStateException("Failed to create an OpenAL context.");
             }
             EXTThreadLocalContext.alcSetThreadContext(context);
-            AL.createCapabilities(ALC.createCapabilities(device));
+            AL.createCapabilities(ALC.createCapabilities(device.getId()));
 
         } catch (Exception e) {
             Log.e(TAG, "could not initialize audio");
@@ -53,12 +56,11 @@ public class AudioMaster {
     }
 
 
-
     public static OggData loadSound(String filename) {
         Log.d(TAG, "loading sound \"" + filename + "\"");
         ByteBuffer vorbis = null;
         try {
-            vorbis = IOUtil.ioResourceToByteBuffer(filename,256 * 1024);
+            vorbis = IOUtil.ioResourceToByteBuffer(filename, 256 * 1024);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,24 +90,10 @@ public class AudioMaster {
         for (int buffer : buffers) {
             AL10.alDeleteBuffers(buffer);
         }
-        ALC10.alcCloseDevice(device);
+        device.close();
         ALC10.alcDestroyContext(context);
 
         EXTThreadLocalContext.alcSetThreadContext(0);
         ALC.destroy();
-    }
-
-    private static long openDefaultDevice() {
-        long device;
-        try {
-             device = ALC10.alcOpenDevice((ByteBuffer) null);
-        } catch (NullPointerException ex) {
-            throw new IllegalStateException("Failed to open the default device.");
-        }
-        //long device = ALC10.alcOpenDevice("");
-        if (device == NULL) {
-            throw new IllegalStateException("Failed to open the default device.");
-        }
-        return device;
     }
 }

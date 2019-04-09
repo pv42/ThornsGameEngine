@@ -1,4 +1,4 @@
-package engineTester.graphicTest;
+package engine.graphics;
 
 import engine.EngineMaster;
 import engine.graphics.Scene;

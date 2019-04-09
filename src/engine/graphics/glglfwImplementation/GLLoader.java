@@ -24,6 +24,8 @@ import java.util.List;
 
 /***
  * Created by pv42 on 16.06.16.
+ *
+ * @author pv42
  */
 public class GLLoader {
     public static final int VERTEX_ATTRIB_ARRAY_POSITION = 0;

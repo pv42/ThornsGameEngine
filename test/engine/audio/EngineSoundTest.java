@@ -1,15 +1,7 @@
+package engine.audio;
+
 import engine.EngineMaster;
-import engine.audio.AudioMaster;
-import engine.audio.OggData;
-import engine.audio.Source;
-import engine.graphics.Scene;
-import engine.graphics.cameras.StaticThreeDimensionCamera;
-import engine.graphics.display.Window;
-import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.glglfwImplementation.display.GLFWWindow;
-import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.toolbox.Log;
-import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
