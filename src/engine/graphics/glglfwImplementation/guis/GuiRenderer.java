@@ -3,6 +3,7 @@ package engine.graphics.glglfwImplementation.guis;
 
 import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -36,7 +37,7 @@ public class GuiRenderer {
             GL13.glActiveTexture(GL13.GL_TEXTURE0);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D,gui.getTexture());
             Matrix4f matrix = Maths.createTransformationMatrix(gui.getPosition(),gui.getScale());
-            //todo aspect ration Matrix4f.scale(new Vector3f(1/aspectRatio,1,1),matrix,matrix);
+            matrix.scale(new Vector3f(1/aspectRatio,1,1));
             shader.loadTransformationMatrix(matrix);
             GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP,0 , quad.getVertexCount());
         }

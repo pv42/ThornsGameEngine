@@ -9,7 +9,7 @@ import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
@@ -47,8 +47,8 @@ public class EngineGraphicMainTest {
 
         // --
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 20), new Vector3f());
-        List<Light> lights = new LinkedList<>();
-        lights.add(new Light(new Vector3f(0, 50000, 20000), new Color(1, 1, .9), new Vector3f(1f, 0.00f, 0.00f)));
+        List<PointLight> lights = new LinkedList<>();
+        lights.add(new PointLight(new Vector3f(0, 50000, 20000), new Color(1, 1, .9), new Vector3f(1f, 0.00f, 0.00f)));
         Scene scene = new Scene();
         scene.addEntity(entity);
         scene.addEntity(wfEntity);

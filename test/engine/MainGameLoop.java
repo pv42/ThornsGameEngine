@@ -13,7 +13,7 @@ import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
 import engine.graphics.glglfwImplementation.textures.TerrainTexture;
 import engine.graphics.glglfwImplementation.textures.TerrainTexturePack;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.materials.TexturedMaterial;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.particles.ParticleSystem;
@@ -72,8 +72,8 @@ public class MainGameLoop {
         GLMaterializedModel texturedModel2 = new GLMaterializedModel(OBJLoader.loadObjModel("fern"), new TexturedMaterial(tl.loadTexture("fern.png")));
         // todo texturedModel2.getTexture().setHasTransparency(true);
         // todo texturedModel2.getTexture().setUseFakeLightning(true);
-        Light sun = new Light(new Vector3f(500, 50000, 500), new Color(1, 1, .9), new Vector3f(1f, 0.00f, 0.00f));
-        List<Light> lights = new ArrayList<>();
+        PointLight sun = new PointLight(new Vector3f(500, 50000, 500), new Color(1, 1, .9), new Vector3f(1f, 0.00f, 0.00f));
+        List<PointLight> lights = new ArrayList<>();
         lights.add(sun);
         //terrain textures
         TerrainTexture bgT = tl.loadTerrainTexture("grass.png");

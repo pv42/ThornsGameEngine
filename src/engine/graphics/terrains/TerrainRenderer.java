@@ -4,14 +4,12 @@ import java.util.List;
 
 import engine.graphics.cameras.Camera;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 
 import org.lwjgl.opengl.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import engine.graphics.terrains.TerrainShader;
-import engine.graphics.terrains.Terrain;
 import engine.graphics.glglfwImplementation.textures.TerrainTexturePack;
 import engine.toolbox.Maths;
 
@@ -36,11 +34,12 @@ public class TerrainRenderer {
         shader.stop();
     }
 
-    public void render(List<Terrain> terrains, Camera camera, List<Light> lights) {
+    public void render(List<Terrain> terrains, Camera camera, List<PointLight> lights) {
         shader.start();
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);
         shader.loadSkyColor(SKY_COLOR);
+        GL11.glDisable(GL11.GL_BLEND);
         for (Terrain terrain : terrains) {
             prepareTerrain(terrain);
             loadModelMatrix(terrain);

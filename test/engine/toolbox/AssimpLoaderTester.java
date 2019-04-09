@@ -10,9 +10,7 @@ import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
-import engine.graphics.lights.Light;
-import engine.toolbox.Color;
-import engine.toolbox.Log;
+import engine.graphics.lights.PointLight;
 import engine.toolbox.assimpLoader.AssimpAnimation;
 import engine.toolbox.assimpLoader.AssimpMaterial;
 import engine.toolbox.assimpLoader.AssimpMesh;
@@ -54,7 +52,7 @@ class AssimpLoaderTester {
         entity.setRx(-90);
         entity.setPosition(0, -5, 0);
         scene.addEntity(entity);
-        scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
+        scene.addLight(new PointLight(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
         Animation animation = c.getAnimations().get(0).getAnimation();
         float aniTime = 0;
         while (!window.isCloseRequested() && aniTime < 5) {
@@ -78,7 +76,7 @@ class AssimpLoaderTester {
         Window window = EngineMaster.getDisplayManager().createWindow();
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         Scene scene = new Scene();
-        scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
+        scene.addLight(new PointLight(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
         Log.i("number of meshes:" + c.getMeshes().size());
         for (AssimpMesh mesh : c.getMeshes()) {
             GLMaterializedModel texturedModel = mesh.createMaterializedModel(false);
@@ -105,7 +103,7 @@ class AssimpLoaderTester {
         Window window = EngineMaster.getDisplayManager().createWindow();
         Camera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 10), new Vector3f());
         Scene scene = new Scene();
-        scene.addLight(new Light(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
+        scene.addLight(new PointLight(new Vector3f(0, 0, 10), new Color(1, 1, 1)));
         Log.i("number of meshes:" + c.getMeshes().size());
         for (AssimpMesh mesh : c.getMeshes()) {
             GLMaterializedModel texturedModel = mesh.createMaterializedModel(false);

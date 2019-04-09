@@ -6,14 +6,13 @@ import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.OBJLoader;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.particles.ParticleSystem;
 import engine.graphics.particles.ParticleSystemStream;
 import engine.graphics.particles.ParticleTexture;
-import engine.graphics.glglfwImplementation.textures.GLModelTexture;
 import engine.toolbox.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -53,7 +52,7 @@ public class RenderLevel {
             texts.add(text);
             scene.addText(text);
         }
-        Light sun = new Light(new Vector3f(0, 0, -20), new Color(1.0, 1.0, 1.0));
+        PointLight sun = new PointLight(new Vector3f(0, 0, -20), new Color(1.0, 1.0, 1.0));
         entities.forEach(scene::addEntity);
         scene.addLight(sun);
     }

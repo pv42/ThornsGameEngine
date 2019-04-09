@@ -124,5 +124,9 @@ public class Maths {
         Vector2f max = Conversion.pixelFromOpenGLSpace2D(window, new Vector2f(pos.x() + scale.x(), pos.y() + scale.y()));
         return new Vector4f(min.x, min.y, max.x, max.y);
     }
+
+    public static Vector3f vec4ToVec3(Vector4f v4) {
+        return new Vector3f(v4.x, v4.y, v4.z).mul(v4.w);
+    }
 }
 

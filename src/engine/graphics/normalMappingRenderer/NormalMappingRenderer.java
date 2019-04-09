@@ -16,7 +16,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.toolbox.Maths;
@@ -41,7 +41,7 @@ public class NormalMappingRenderer {
 		shader.stop();
 	}
 
-	public void render(Map<GLMaterializedModel, List<GLEntity>> entities, Vector4f clipPlane, List<Light> lights, ThreeDimensionCamera camera) {
+	public void render(Map<GLMaterializedModel, List<GLEntity>> entities, Vector4f clipPlane, List<PointLight> lights, ThreeDimensionCamera camera) {
 		shader.start();
 		prepare(clipPlane, lights, camera);
 		for (GLMaterializedModel model : entities.keySet()) {
@@ -97,7 +97,7 @@ public class NormalMappingRenderer {
 		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
 	}
 
-	private void prepare(Vector4f clipPlane, List<Light> lights, Camera camera) {
+	private void prepare(Vector4f clipPlane, List<PointLight> lights, Camera camera) {
 		shader.loadClipPlane(clipPlane);
 		shader.loadSkyColor(SKY_COLOR);
 		Matrix4f viewMatrix = camera.getViewMatrix();

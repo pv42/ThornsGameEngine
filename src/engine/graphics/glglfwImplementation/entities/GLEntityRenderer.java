@@ -7,11 +7,10 @@ import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.shaders.EntityShader;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.materials.Material;
 import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Maths;
-import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -54,7 +53,7 @@ public class GLEntityRenderer {
         shader.stop();
     }
 
-    public void render(Map<List<GLMaterializedModel>, List<GLEntity>> entities, List<Light> lights, Camera camera) {
+    public void render(Map<List<GLMaterializedModel>, List<GLEntity>> entities, List<PointLight> lights, Camera camera) {
         prepare(lights, camera);
         for (List<GLMaterializedModel> models : entities.keySet()) {
             for (GLMaterializedModel model : models) {
@@ -132,7 +131,7 @@ public class GLEntityRenderer {
         shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
     }
 
-    private void prepare(List<Light> lights, Camera camera) {
+    private void prepare(List<PointLight> lights, Camera camera) {
         shader.start();
         shader.loadSkyColor(SKY_COLOR);
         shader.loadAmbientLight(ambientLight);

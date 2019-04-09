@@ -2,22 +2,29 @@ package engine.graphics.glglfwImplementation;
 
 import engine.graphics.Scene;
 import engine.graphics.cameras.Camera;
+import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.Window;
 import engine.graphics.glglfwImplementation.entities.GLEntityRenderer;
 import engine.graphics.glglfwImplementation.guis.GuiRenderer;
 import engine.graphics.glglfwImplementation.guis.GuiShader;
+import engine.graphics.glglfwImplementation.guis.GuiTexture;
 import engine.graphics.glglfwImplementation.lines.LineRenderer;
+import engine.graphics.glglfwImplementation.shadows.ShadowMapMasterRenderer;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTextRenderer;
+import engine.graphics.lights.DirectionalLight;
 import engine.graphics.particles.ParticleMaster;
 import engine.graphics.skybox.SkyboxRenderer;
 import engine.graphics.terrains.TerrainRenderer;
 import engine.graphics.terrains.TerrainShader;
 import engine.graphics.text.GuiText;
+import engine.toolbox.Color;
 import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.Time;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import static engine.toolbox.Settings.SKY_COLOR;
@@ -38,6 +45,8 @@ public class MasterRenderer {
     private static GuiRenderer guiRenderer;
     private static GuiShader guiShader;
     private static GLTextRenderer textRenderer;
+    private static ShadowMapMasterRenderer shadowRenderer;
+    private static GuiTexture shadowTexture;
 
     private static Window window;
     //performance calc
@@ -100,6 +109,14 @@ public class MasterRenderer {
      * @param scene  to render
      */
     public static void render(Scene scene, Camera camera) {
+        if(shadowRenderer == null && camera instanceof ThreeDimensionCamera) {
+            shadowRenderer = new ShadowMapMasterRenderer((ThreeDimensionCamera) camera);
+            shadowTexture = new GuiTexture(getShadowMapTexture(), new Vector2f(0.5f), new Vector2f(0.5f), window);
+            scene.addGui(shadowTexture);
+        }
+        if(shadowRenderer != null) {
+            shadowRenderer.render(scene.getEntities(), new DirectionalLight(new Color(1,1,1), new Vector3f(-1)));
+        }
         startT = Time.getNanoTime();
         prepare();
         preT = Time.getNanoTime();
@@ -121,6 +138,7 @@ public class MasterRenderer {
         lineRenderer.render(scene.getLineStripModels(), camera);
         //gui
         guiRenderer.render(scene.getGuis());
+
         //text
         for (GuiText text : scene.getTexts()) {
             if(!(text instanceof GLGuiText)) {
@@ -153,6 +171,7 @@ public class MasterRenderer {
         textRenderer.cleanUp();
         skyboxRenderer.cleanUp();
         lineRenderer.cleanUp();
+        if(shadowRenderer != null) shadowRenderer.cleanUp();
     }
 
     private static void prepare() {
@@ -228,6 +247,10 @@ public class MasterRenderer {
 
     public static void setAmbientLight(float ambientLight) {
         entityRenderer.setAmbientLight(ambientLight);
+    }
+
+    public static int getShadowMapTexture() {
+        return shadowRenderer.getShadowMap();
     }
 
 }

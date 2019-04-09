@@ -9,7 +9,7 @@ import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.materials.Material;
 import engine.graphics.materials.TexturedMaterial;
 import engine.graphics.text.GuiText;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LightTests {
+public class PointLightTests {
     @Test
     void testReflectivity() {
         Log.clearNumbers();
@@ -41,7 +41,7 @@ public class LightTests {
         scene.addEntity(entity0);
         scene.addEntity(entity1);
         scene.addEntity(entity2);
-        Light light = new Light(new Vector3f(0, 0, 3), new Color(1, 1, 1));
+        PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
         GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("bahnschrift", 64);
@@ -84,7 +84,7 @@ public class LightTests {
         scene.addEntity(entity0);
         scene.addEntity(entity1);
         scene.addEntity(entity2);
-        Light light = new Light(new Vector3f(0, 0, 3), new Color(1, 1, 1));
+        PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
         GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("bahnschrift", 64);
@@ -129,7 +129,7 @@ public class LightTests {
         scene.addEntity(entity0);
         scene.addEntity(entity1);
         scene.addEntity(entity2);
-        Light light = new Light(new Vector3f(0, 0, 3), new Color(1, 1, 1));
+        PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
         GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("cour", 64);
@@ -178,7 +178,7 @@ public class LightTests {
         scene.addEntity(entity0);
         scene.addEntity(entity1);
         scene.addEntity(entity2);
-        Light light = new Light(new Vector3f(0, 0, 3), new Color(1, 1, 1));
+        PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
         GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("cour", 64);

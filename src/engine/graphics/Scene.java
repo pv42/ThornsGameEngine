@@ -2,9 +2,8 @@ package engine.graphics;
 
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
-import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.guis.GuiTexture;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.glglfwImplementation.lines.LineModel;
 import engine.graphics.terrains.Terrain;
 import engine.graphics.text.GuiText;
@@ -23,7 +22,7 @@ public class Scene {
     private List<LineModel> lineStripModels;
     private List<GuiTexture> guis;
     private List<GuiText> texts;
-    private List<Light> lights;
+    private List<PointLight> lights;
 
     public Scene() {
         entities = new HashMap<>();
@@ -59,7 +58,7 @@ public class Scene {
         return texts;
     }
 
-    public List<Light> getLights() {
+    public List<PointLight> getLights() {
         return lights;
     }
 
@@ -107,7 +106,7 @@ public class Scene {
         texts.add(text);
     }
 
-    public void addLight(Light light) {
+    public void addLight(PointLight light) {
         lights.add(light);
     }
 

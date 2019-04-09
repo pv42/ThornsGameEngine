@@ -1,6 +1,6 @@
 package engine.graphics.glglfwImplementation.shaders;
 
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.toolbox.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -84,11 +84,11 @@ public abstract class Lighted3DShader extends ShaderProgram {
      *
      * @param lights light sources
      */
-    public void loadLights(List<Light> lights) {
+    public void loadLights(List<PointLight> lights) {
         List<Vector3f> lightPositions = new ArrayList<>();
         List<Vector3f> lightColors = new ArrayList<>();
         List<Vector3f> attenuations = new ArrayList<>();
-        for (Light light : lights) {
+        for (PointLight light : lights) {
             lightPositions.add(light.getPosition());
             lightColors.add(light.getColor().getVector());
             attenuations.add(light.getAttenuation());

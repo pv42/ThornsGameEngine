@@ -10,7 +10,7 @@ import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.glglfwImplementation.shaders.EntityShader;
 import engine.graphics.glglfwImplementation.textures.GLModelTexture;
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.materials.TexturedMaterial;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
@@ -120,8 +120,8 @@ public class EngineGraphicsTest {
         createProjectionMatrix(1, 1);
         EntityShader shader = new EntityShader();
         ThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 20), new Vector3f());
-        Light cameraLight = new Light(new Vector3f(0, 0, 10), new Color(1.0, 1.0, 1.0));
-        List<Light> lights = new ArrayList<>();
+        PointLight cameraLight = new PointLight(new Vector3f(0, 0, 10), new Color(1.0, 1.0, 1.0));
+        List<PointLight> lights = new ArrayList<>();
         lights.add(cameraLight);
         GLModelTexture texture = (GLModelTexture) EngineMaster.getTextureLoader().loadTexture("barrel.png");
         GLMaterializedModel texturedModel = new GLMaterializedModel(rawModel, new TexturedMaterial(texture));
@@ -157,7 +157,7 @@ public class EngineGraphicsTest {
         shader.stop();
     }
 
-    public void render(GLEntity entity, EntityShader shader, ThreeDimensionCamera camera, List<Light> lights) {
+    public void render(GLEntity entity, EntityShader shader, ThreeDimensionCamera camera, List<PointLight> lights) {
         shader.start();
         shader.loadViewMatrix(camera.getViewMatrix());
         shader.loadLights(lights);

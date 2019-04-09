@@ -8,7 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import engine.graphics.lights.Light;
+import engine.graphics.lights.PointLight;
 import engine.graphics.glglfwImplementation.shaders.ShaderProgram;
 
 public class NormalMappingShader extends ShaderProgram{
@@ -98,7 +98,7 @@ public class NormalMappingShader extends ShaderProgram{
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 	
-	protected void loadLights(List<Light> lights, Matrix4f viewMatrix){
+	protected void loadLights(List<PointLight> lights, Matrix4f viewMatrix){
 		for(int i=0;i<MAX_LIGHTS;i++){
 			if(i<lights.size()){
 				super.loadVector(location_lightPositionEyeSpace[i], getEyeSpacePosition(lights.get(i), viewMatrix));
@@ -120,7 +120,7 @@ public class NormalMappingShader extends ShaderProgram{
 		super.loadMatrix(location_projectionMatrix, projection);
 	}
 	
-	private Vector3f getEyeSpacePosition(Light light, Matrix4f viewMatrix){
+	private Vector3f getEyeSpacePosition(PointLight light, Matrix4f viewMatrix){
 		Vector3f position = light.getPosition();
 		Vector4f eyeSpacePos = new Vector4f(position.x,position.y, position.z, 1f);
 		//todo Matrix4f.transform(viewMatrix, eyeSpacePos, eyeSpacePos);

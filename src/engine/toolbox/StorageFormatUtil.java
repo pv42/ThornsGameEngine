@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * Created by pv42 on 04.08.16.
  */
+@Deprecated
 public class StorageFormatUtil {
     public static float[] get1DArray(float[][] in) {
         float[] out = new float[in.length * in[0].length];

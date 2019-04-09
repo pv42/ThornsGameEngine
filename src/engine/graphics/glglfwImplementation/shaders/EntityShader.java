@@ -1,11 +1,15 @@
 package engine.graphics.glglfwImplementation.shaders;
 
-import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
 import java.util.List;
 
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_BONE_INDICES;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_BONE_WEIGHT;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_NORMAL;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_POSITION;
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_UV;
 import static engine.toolbox.Settings.MAX_BONES;
 
 /***
@@ -37,11 +41,11 @@ public class EntityShader extends Lighted3DShader {
 
     @Override
     protected void bindAttributes() {
-        super.bindAttribute(0, "position");
-        super.bindAttribute(1, "uv");
-        super.bindAttribute(2, "normal");
-        super.bindAttribute(3, "bone_index"); //only used in animation
-        super.bindAttribute(4, "bone_weight"); //same
+        super.bindAttribute(VERTEX_ATTRIB_ARRAY_POSITION, "position");
+        super.bindAttribute(VERTEX_ATTRIB_ARRAY_UV, "uv");
+        super.bindAttribute(VERTEX_ATTRIB_ARRAY_NORMAL, "normal");
+        super.bindAttribute(VERTEX_ATTRIB_ARRAY_BONE_INDICES, "bone_index"); //only used in animation
+        super.bindAttribute(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT, "bone_weight"); //same
     }
 
     @Override
@@ -98,7 +102,7 @@ public class EntityShader extends Lighted3DShader {
      * @param bones bone matrices to load
      */
     public void loadBones(List<Matrix4f> bones) {
-         super.loadMatrixArray(location_bones, bones, MAX_BONES);
+        super.loadMatrixArray(location_bones, bones, MAX_BONES);
     }
 
     /**
