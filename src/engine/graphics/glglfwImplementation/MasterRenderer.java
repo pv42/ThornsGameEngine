@@ -37,7 +37,6 @@ public class MasterRenderer {
     private static Matrix4f projectionMatrix;
     //renderers
     private static GLEntityRenderer entityRenderer;
-    private static GLEntityRenderer aniRenderer;
     private static TerrainRenderer terrainRenderer;
     private static TerrainShader terrainShader;
     private static SkyboxRenderer skyboxRenderer;
@@ -79,7 +78,6 @@ public class MasterRenderer {
         textRenderer = new GLTextRenderer();
         createProjectionMatrix(use2D);
         entityRenderer = new GLEntityRenderer(projectionMatrix);
-        aniRenderer = new GLEntityRenderer(projectionMatrix);
         terrainShader = new TerrainShader();
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(projectionMatrix, "stars");
@@ -96,7 +94,6 @@ public class MasterRenderer {
     public static void updateZoom(float zoom) {
         createProjectionMatrix(zoom, use2D);
         entityRenderer.updateProjectionMatrix(projectionMatrix);
-        aniRenderer.updateProjectionMatrix(projectionMatrix);
         terrainRenderer.updateProjectionMatrix(projectionMatrix);
         lineRenderer.updateProjectionMatrix(projectionMatrix);
         skyboxRenderer.updateProjectionMatrix(projectionMatrix);
@@ -111,11 +108,12 @@ public class MasterRenderer {
     public static void render(Scene scene, Camera camera) {
         if(shadowRenderer == null && camera instanceof ThreeDimensionCamera) {
             shadowRenderer = new ShadowMapMasterRenderer((ThreeDimensionCamera) camera);
-            shadowTexture = new GuiTexture(getShadowMapTexture(), new Vector2f(0.5f), new Vector2f(0.5f), window);
+            shadowTexture = new GuiTexture(getShadowMapTexture(), new Vector2f(0.5f), new Vector2f(-0.5f), window);
             scene.addGui(shadowTexture);
         }
         if(shadowRenderer != null) {
-            shadowRenderer.render(scene.getEntities(), new DirectionalLight(new Color(1,1,1), new Vector3f(-1)));
+            shadowRenderer.render(scene.getEntities(), new DirectionalLight(new Color(1,1,1), new Vector3f(1)));
+            //shadowRenderer.render(scene.getAniEntities(), new DirectionalLight(new Color(1,1,1), new Vector3f(0,1,0)));
         }
         startT = Time.getNanoTime();
         prepare();
@@ -123,10 +121,9 @@ public class MasterRenderer {
         //entities
         entityRenderer.render(scene.getEntities(), scene.getLights(), camera);
         //animation
-        aniRenderer.render(scene.getAniEntities(), scene.getLights(), camera);
         entT = Time.getNanoTime();
         //terrain
-        terrainRenderer.render(scene.getTerrains(), camera, scene.getLights());
+        terrainRenderer.render(scene.getTerrains(), camera, scene.getLights(), shadowRenderer.getToShadowMapSpaceMatrix(), shadowRenderer.getShadowMapTexture());
         terT = Time.getNanoTime();
         //skybox
         if (enableSkybox) skyboxRenderer.render(camera, SKY_COLOR, window.getLastFrameTime());
@@ -138,7 +135,6 @@ public class MasterRenderer {
         lineRenderer.render(scene.getLineStripModels(), camera);
         //gui
         guiRenderer.render(scene.getGuis());
-
         //text
         for (GuiText text : scene.getTexts()) {
             if(!(text instanceof GLGuiText)) {
@@ -165,7 +161,6 @@ public class MasterRenderer {
     public static void cleanUp() {
         if(entityRenderer == null) return;
         entityRenderer.cleanUp();
-        aniRenderer.cleanUp();
         terrainShader.cleanUp();
         guiShader.cleanUp();
         textRenderer.cleanUp();
@@ -250,7 +245,7 @@ public class MasterRenderer {
     }
 
     public static int getShadowMapTexture() {
-        return shadowRenderer.getShadowMap();
+        return shadowRenderer.getShadowMapTexture();
     }
 
 }

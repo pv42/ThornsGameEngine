@@ -4,6 +4,7 @@ import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.toolbox.Maths;
 import engine.toolbox.Settings;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -25,7 +26,7 @@ public class ShadowBox {
     private static final float OFFSET = 10;
     private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
     private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
-    private static final float SHADOW_DISTANCE = 100; // todo move to settings
+    private static final float SHADOW_DISTANCE = 250; // todo move to settings
 
     private float minX, maxX;
     private float minY, maxY;
@@ -46,7 +47,7 @@ public class ShadowBox {
      *                        world's axis to being in terms of the light's local axis).
      * @param camera          - the in-game camera.
      */
-    protected ShadowBox(Matrix4f lightViewMatrix, ThreeDimensionCamera camera) {
+    ShadowBox(Matrix4f lightViewMatrix, ThreeDimensionCamera camera) {
         this.lightViewMatrix = lightViewMatrix;
         this.cam = camera;
         calculateWidthsAndHeights();
@@ -68,10 +69,8 @@ public class ShadowBox {
         toNear.mul(Settings.NEAR_PLANE);
         Vector3f centerNear = toNear.add(cam.getPosition());
         Vector3f centerFar = toFar.add(cam.getPosition());
-
         Vector4f[] points = calculateFrustumVertices(rotation, forwardVector, centerNear,
                 centerFar);
-
         boolean first = true;
         for (Vector4f point : points) {
             if (first) {
@@ -153,8 +152,8 @@ public class ShadowBox {
      *                      plane.
      * @return The positions of the vertices of the frustum in light space.
      */
-    private Vector4f[] calculateFrustumVertices(Matrix4f rotation, Vector3f forwardVector,
-                                                Vector3f centerNear, Vector3f centerFar) {
+    private Vector4f[] calculateFrustumVertices(Matrix4f rotation, @NotNull Vector3f forwardVector, Vector3f centerNear,
+                                                Vector3f centerFar) {
         Vector3f upVector = Maths.vec4ToVec3(UP.mul(rotation, new Vector4f()));
         Vector3f rightVector = forwardVector.cross(upVector, new Vector3f());
         Vector3f downVector = new Vector3f(-upVector.x, -upVector.y, -upVector.z);
@@ -184,8 +183,7 @@ public class ShadowBox {
      * @param width      - the distance of the corner from the start point.
      * @return - The relevant corner vertex of the view frustum in light space.
      */
-    private Vector4f calculateLightSpaceFrustumCorner(Vector3f startPoint, Vector3f direction,
-                                                      float width) {
+    private Vector4f calculateLightSpaceFrustumCorner(Vector3f startPoint, @NotNull Vector3f direction, float width) {
         Vector3f point = new Vector3f(direction.x * width, direction.y * width, direction.z * width).add(startPoint);
         Vector4f point4f = new Vector4f(point.x, point.y, point.z, 1f);
         point4f.mul(lightViewMatrix);

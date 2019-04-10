@@ -1,10 +1,10 @@
 package engine.graphics;
 
 import engine.graphics.glglfwImplementation.entities.GLEntity;
-import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.guis.GuiTexture;
-import engine.graphics.lights.PointLight;
 import engine.graphics.glglfwImplementation.lines.LineModel;
+import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
+import engine.graphics.lights.PointLight;
 import engine.graphics.terrains.Terrain;
 import engine.graphics.text.GuiText;
 
@@ -17,7 +17,6 @@ public class Scene {
     private static final String TAG = "Scene";
     //rendering objects
     private Map<List<GLMaterializedModel>, List<GLEntity>> entities;
-    private Map<List<GLMaterializedModel>, List<GLEntity>> aniEntities;
     private List<Terrain> terrains;
     private List<LineModel> lineStripModels;
     private List<GuiTexture> guis;
@@ -26,7 +25,6 @@ public class Scene {
 
     public Scene() {
         entities = new HashMap<>();
-        aniEntities = new HashMap<>();
         terrains = new ArrayList<>();
         lineStripModels = new ArrayList<>();
         guis = new ArrayList<>();
@@ -36,10 +34,6 @@ public class Scene {
 
     public Map<List<GLMaterializedModel>, List<GLEntity>> getEntities() {
         return entities;
-    }
-
-    public Map<List<GLMaterializedModel>, List<GLEntity>> getAniEntities() {
-        return aniEntities;
     }
 
     public List<Terrain> getTerrains() {
@@ -82,18 +76,6 @@ public class Scene {
         }
     }
 
-    public void addAniEntity(GLEntity entity) {
-        List<GLMaterializedModel> entityModel = entity.getModels(); //// TODO: 10.08.16 ?
-        List<GLEntity> batch = aniEntities.get(entityModel);
-        if (batch != null) {
-            batch.add(entity);
-        } else {
-            List<GLEntity> newBatch = new ArrayList<>();
-            newBatch.add(entity);
-            aniEntities.put(entityModel, newBatch);
-        }
-    }
-
     public void addLine(LineModel lineStripModel) {
         lineStripModels.add(lineStripModel);
     }
@@ -114,7 +96,6 @@ public class Scene {
         guis.clear();
         terrains.clear();
         entities.clear();
-        aniEntities.clear();
         lineStripModels.clear();
         texts.clear();
         lights.clear();

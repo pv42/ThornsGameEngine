@@ -2,6 +2,7 @@ package engine.graphics.glglfwImplementation.shaders;
 
 import engine.graphics.lights.PointLight;
 import engine.toolbox.Color;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 /**
  * a lighted 3 dimensional glsl shader program
+ *
  * @author pv42
  */
 public abstract class Lighted3DShader extends ShaderProgram {
@@ -84,7 +86,7 @@ public abstract class Lighted3DShader extends ShaderProgram {
      *
      * @param lights light sources
      */
-    public void loadLights(List<PointLight> lights) {
+    public void loadLights(@NotNull List<PointLight> lights) {
         List<Vector3f> lightPositions = new ArrayList<>();
         List<Vector3f> lightColors = new ArrayList<>();
         List<Vector3f> attenuations = new ArrayList<>();
@@ -100,7 +102,8 @@ public abstract class Lighted3DShader extends ShaderProgram {
 
     /**
      * loads materials shineDamper and reflectivity
-     * @param shineDamper shine damper value
+     *
+     * @param shineDamper  shine damper value
      * @param reflectivity reflectivity to use
      */
     public void loadShineVariables(float shineDamper, float reflectivity) {
@@ -111,6 +114,7 @@ public abstract class Lighted3DShader extends ShaderProgram {
     /**
      * loads if fake lightning should be used fake lightning overwrites the normals light calculation and
      * always produces maximum brightness
+     *
      * @param useFakeLightning use fake lightning ?
      */
     public void loadFakeLightning(boolean useFakeLightning) {
@@ -119,15 +123,17 @@ public abstract class Lighted3DShader extends ShaderProgram {
 
     /**
      * loads the sky color to use for distance fog into sky blending
+     *
      * @param skyColor sky color to use for the fog blending
      */
-    public void loadSkyColor(Color skyColor) {
+    public void loadSkyColor(@NotNull Color skyColor) {
         super.loadVector(location_skyColor, skyColor.getVector());
     }
 
     /**
      * loads the amount of ambient (minimal) light to use as a float from 0 to 1 with 0 equals no ambient light
      * and 1 maximal brightness
+     *
      * @param ambient amount of ambient light
      */
     public void loadAmbientLight(float ambient) {

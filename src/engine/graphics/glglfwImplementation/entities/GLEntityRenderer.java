@@ -57,7 +57,7 @@ public class GLEntityRenderer {
         prepare(lights, camera);
         for (List<GLMaterializedModel> models : entities.keySet()) {
             for (GLMaterializedModel model : models) {
-                prepareTexturedModel(model);
+                prepareMaterializedModel(model);
                 List<GLEntity> batch = entities.get(models);
                 for (GLEntity entity : batch) {
                     prepareInstance(entity);
@@ -74,12 +74,11 @@ public class GLEntityRenderer {
         shader.stop();
     }
 
-    private void prepareTexturedModel(GLMaterializedModel model) {
+    private void prepareMaterializedModel(GLMaterializedModel model) {
         GLRawModel rawModel = model.getRawModel();
-        List<Joint> joints;
         List<Matrix4f> boneMatrices = new ArrayList<>();
         if (model.isAnimated()) {
-            joints = rawModel.getJoints();
+            List<Joint> joints = rawModel.getJoints();
             for (Joint joint : joints) {
                 boneMatrices.add(joint.getTransformationMatrix());
             }
@@ -92,18 +91,18 @@ public class GLEntityRenderer {
             GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_INDICES);
             GL20.glEnableVertexAttribArray(VERTEX_ATTRIB_ARRAY_BONE_WEIGHT);
         }
+        if (model.isAnimated()) shader.loadBones(boneMatrices);
+        shader.loadUseAnimation(model.isAnimated());
         Material material = model.getMaterial();
         if (!(material instanceof TexturedMaterial))
             throw new UnsupportedOperationException("only textured materials are supported");
         GLModelTexture texture = (GLModelTexture) ((TexturedMaterial) material).getTexture();
-        shader.loadUseAnimation(model.isAnimated());
         shader.loadTextureAtlasNumberOfRows(texture.getNumberOfRows());
         if (texture.isHasTransparency()) {
             MasterRenderer.disableCulling();
         }
         shader.loadShineVariables(material.getShineDamper(), material.getReflectivity());
         shader.loadFakeLightning(texture.isUseFakeLightning());
-        if (model.isAnimated()) shader.loadBones(boneMatrices);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
         shader.loadUseSpecMap(texture.hasSpecularMap());

@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class ShadowMapMasterRenderer {
 
-    private static final int SHADOW_MAP_SIZE = 0xa00; //4096
+    private static final int SHADOW_MAP_SIZE = 0x8000; //4096*8  // todo move to settings
 
     private ShadowFrameBuffer shadowFbo;
     private ShadowShader shader;
@@ -74,10 +74,10 @@ public class ShadowMapMasterRenderer {
      * very far from the scene. It then prepares to render, renders the entities
      * to the shadow map, and finishes rendering.
      *
-     * @param entities - the lists of entities to be rendered. Each list is
+     * @param entities the lists of entities to be rendered. Each list is
      *                 associated with the {@link GLMaterializedModel} that all of the
      *                 entities in that list use.
-     * @param sun      - the light acting as the sun in the scene.
+     * @param sun      the light acting as the sun in the scene.
      */
     public void render(Map<List<GLMaterializedModel>, List<GLEntity>> entities, DirectionalLight sun) {
         shadowBox.update();
@@ -112,7 +112,7 @@ public class ShadowMapMasterRenderer {
      * same, even when the contents of the shadow map texture change
      * each frame.
      */
-    public int getShadowMap() {
+    public int getShadowMapTexture() {
         return shadowFbo.getShadowMapTexture();
     }
 
@@ -137,9 +137,8 @@ public class ShadowMapMasterRenderer {
      * FBOs depth attachment from last frame. The simple shader program is also
      * started.
      *
-     * @param lightDirection - the direction of the light rays coming from the sun.
-     * @param box            - the shadow box, which contains all the info about the
-     *                       "view cuboid".
+     * @param lightDirection the direction of the light rays coming from the sun.
+     * @param box            the shadow box, which contains all the info about the "view cuboid".
      */
     private void prepare(Vector3f lightDirection, ShadowBox box) {
         updateOrthoProjectionMatrix(box.getWidth(), box.getHeight(), box.getLength());
@@ -169,9 +168,9 @@ public class ShadowMapMasterRenderer {
      * where and how the "view cuboid" is positioned in the world. The size of
      * the view cuboid, however, is determined by the projection matrix.
      *
-     * @param direction - the light direction, and therefore the direction that the
+     * @param direction the light direction, and therefore the direction that the
      *                  "view cuboid" should be pointing.
-     * @param center    - the center of the "view cuboid" in world space.
+     * @param center    the center of the "view cuboid" in world space.
      */
     private void updateLightViewMatrix(Vector3f direction, Vector3f center) {
         direction.normalize();
@@ -179,7 +178,7 @@ public class ShadowMapMasterRenderer {
         lightViewMatrix.identity();
         float pitch = (float) Math.acos(new Vector2f(direction.x, direction.z).length());
         lightViewMatrix.rotate(pitch, new Vector3f(1, 0, 0));
-        float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z)));
+        float yaw = (float) Math.toDegrees(((float) Math.atan(direction.x / direction.z))); //todo this is NaN if dir == 0 1 0
         yaw = direction.z > 0 ? yaw - 180 : yaw;
         lightViewMatrix.rotate((float) -Math.toRadians(yaw), new Vector3f(0, 1, 0));
         lightViewMatrix.translate(center);
@@ -190,9 +189,9 @@ public class ShadowMapMasterRenderer {
      * basically sets the width, length and height of the "view cuboid", based
      * on the values that were calculated in the {@link ShadowBox} class.
      *
-     * @param width  - shadow box width.
-     * @param height - shadow box height.
-     * @param length - shadow box length.
+     * @param width  shadow box width.
+     * @param height shadow box height.
+     * @param length shadow box length.
      */
     private void updateOrthoProjectionMatrix(float width, float height, float length) {
         projectionMatrix.identity();

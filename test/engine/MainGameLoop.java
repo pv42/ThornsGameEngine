@@ -93,7 +93,9 @@ public class MainGameLoop {
         for (int i = 0; i < 300; i++) {
             float x = random.nextFloat() * 800;
             float z = random.nextFloat() * 800;
+            float ry = random.nextFloat() * 360;
             GLEntity e = new GLEntity(texturedModel, new Vector3f(x, terrain.getHeightOfTerrain(x, z), z));
+            e.setRy(ry);
             e.setScale(.8f);
             entities.add(e);
         }
@@ -105,7 +107,7 @@ public class MainGameLoop {
         Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);
         Entity girl = new GLEntity(cowboy, new Vector3f(30, 0, 50));
         girl.setRx(-90);
-        girl.setScale(5f);
+        girl.setScale(10f);
         FirstPersonPlayer player = new FirstPersonPlayer(cowboy, new Vector3f(0, 0, 0), window);
         player.setScale(.8f);
         Entity cube = new GLEntity(new GLMaterializedModel(MeshCreator.createBox(1,1,1), new TexturedMaterial(tl.loadTexture("white.png"))), new Vector3f());
@@ -123,7 +125,7 @@ public class MainGameLoop {
         guis.forEach(scene::addGui);
         entities.forEach(scene::addEntity);
 
-        scene.addAniEntity(player);
+        scene.addEntity(player);
         while (!window.isCloseRequested()) { //actual MainGameLoop
             //FPS Updates
             if (timeSinceFPSUpdate >= 1.7f) {

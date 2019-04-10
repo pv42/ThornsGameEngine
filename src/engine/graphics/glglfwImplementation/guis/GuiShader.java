@@ -3,6 +3,8 @@ package engine.graphics.glglfwImplementation.guis;
 import org.joml.Matrix4f;
 import engine.graphics.glglfwImplementation.shaders.ShaderProgram;
 
+import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_POSITION;
+
 /**
  * Created by pv42 on 20.06.16.
  */
@@ -22,6 +24,6 @@ public class GuiShader  extends ShaderProgram{
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
     }
     @Override protected void bindAttributes() {
-        super.bindAttribute(0, "position");
+        super.bindAttribute(VERTEX_ATTRIB_ARRAY_POSITION, "position");
     }
 }

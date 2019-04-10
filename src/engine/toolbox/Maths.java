@@ -126,7 +126,9 @@ public class Maths {
     }
 
     public static Vector3f vec4ToVec3(Vector4f v4) {
-        return new Vector3f(v4.x, v4.y, v4.z).mul(v4.w);
+        Vector3f v3 = new Vector3f(v4.x, v4.y, v4.z);
+        if(v4.w != 0) v3.div(v4.w);
+        return v3;
     }
 }
 

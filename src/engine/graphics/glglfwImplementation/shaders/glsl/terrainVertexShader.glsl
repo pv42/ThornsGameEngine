@@ -9,17 +9,20 @@ out vec3 surfaceNormal;
 out vec3 toLightVector[4];
 out vec3 toCameraVector;
 out float visibility;
+out vec4 shadowCoords;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
+uniform mat4 shadowSpaceMatrix;
 
 const float density = 0.0015;
 const float gradient = 5.0;
 
 void main(void) {
     vec4 worldPosition = transformationMatrix * vec4(position,1.0);
+    shadowCoords = shadowSpaceMatrix * worldPosition;
     vec4 positionToCamera = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionToCamera;
     //gl_Position = vec4(position, 1.0);

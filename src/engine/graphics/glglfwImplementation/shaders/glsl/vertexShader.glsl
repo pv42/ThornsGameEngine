@@ -1,4 +1,4 @@
-#version 400 core
+#version 150
 
 const int MAX_WEIGHTS = 3;
 const int MAX_LIGHTS = 4;
@@ -36,7 +36,7 @@ const float gradient = 5.0;
 void main(void) {
     vec4 worldPosition;
     vec3 actualNormal;
-    if(useAnimation < 0.5 && true) {
+    if(useAnimation < 0.5) {
         worldPosition = transformationMatrix * vec4(position,1.0);
         actualNormal = normal;
     } else {
@@ -46,8 +46,6 @@ void main(void) {
             animatedPosition += bone[int(bone_index[i])] *  vec4(position, 1.0) * bone_weight[i];
             animatedNormal += bone[int(bone_index[i])] * vec4(normal, 1.0) * bone_weight[i];
         }
-        //animatedPosition = vec4(position, 1.0);
-        //animatedNormal = vec4(normal, 1.0);
         worldPosition = transformationMatrix * animatedPosition;
         actualNormal = animatedNormal.xyz / animatedNormal.w;
     }
