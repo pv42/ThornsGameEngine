@@ -45,6 +45,8 @@ public class Settings {
     private static final String SECTION_LOG = "log";
     private static final String KEY_SDL = "show_debug_log";
     private static final String KEY_SEL = "show_event_log";
+    private static final String KEY_SHADOW_DISTANCE = "shadow_distance";
+    private static final String KEY_SHADOW_MAP_SIZE = "shadow_map_size";
     //graphics
     public static int LIMIT_FPS = 0; // no limit
     public static int DEFAULT_WIDTH = 600; //not fullscreen
@@ -54,10 +56,11 @@ public class Settings {
     public static float AMBIENT_LIGHT = .1f;
     public static Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
     public static Integer MSAA = 2;
+    public static float SHADOW_DISTANCE = 250;
+    public static int SHADOW_MAP_SIZE = 8192;
     //animation
     public static int MAX_BONES_PER_VERTEX = 3;
     public static int MAX_BONES = 250;
-    public static boolean SHOW_SKELETON_BONES = false;
     //debug
     public static boolean SHOW_DEBUG_LOG = true;
     public static boolean SHOW_EVENT_LOG = false;
@@ -84,6 +87,8 @@ public class Settings {
         AMBIENT_LIGHT = Float.parseFloat(getSetting(SECTION_GRAPHIC, KEY_AMBIENT, AMBIENT_LIGHT));
         SHOW_DEBUG_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SDL, SHOW_DEBUG_LOG));
         SHOW_EVENT_LOG = Boolean.parseBoolean(getSetting(SECTION_LOG, KEY_SEL, SHOW_EVENT_LOG));
+        SHADOW_DISTANCE = Float.parseFloat(getSetting(SECTION_GRAPHIC, KEY_SHADOW_DISTANCE, SHADOW_DISTANCE));
+        SHADOW_MAP_SIZE = Integer.parseInt(getSetting(SECTION_GRAPHIC, KEY_SHADOW_MAP_SIZE, SHADOW_MAP_SIZE));
         Log.d(TAG, "loaded settings");
         storeIni(f);
 

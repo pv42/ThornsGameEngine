@@ -9,6 +9,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import static engine.toolbox.Settings.SHADOW_DISTANCE;
+
 /**
  * Represents the 3D cuboidal area of the world in which objects will cast
  * shadows (basically represents the orthographic projection area for the shadow
@@ -26,7 +28,6 @@ public class ShadowBox {
     private static final float OFFSET = 10;
     private static final Vector4f UP = new Vector4f(0, 1, 0, 0);
     private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
-    private static final float SHADOW_DISTANCE = 250; // todo move to settings
 
     private float minX, maxX;
     private float minY, maxY;
@@ -41,11 +42,11 @@ public class ShadowBox {
      * the camera's view frustum, namely the width and height of the near plane
      * and (possibly adjusted) far plane.
      *
-     * @param lightViewMatrix - basically the "view matrix" of the light. Can be used to
+     * @param lightViewMatrix basically the "view matrix" of the light. Can be used to
      *                        transform a point from world space into "light" space (i.e.
      *                        changes a point's coordinates from being in relation to the
      *                        world's axis to being in terms of the light's local axis).
-     * @param camera          - the in-game camera.
+     * @param camera          the in-game camera.
      */
     ShadowBox(Matrix4f lightViewMatrix, ThreeDimensionCamera camera) {
         this.lightViewMatrix = lightViewMatrix;

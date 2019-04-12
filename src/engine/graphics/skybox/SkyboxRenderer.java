@@ -15,7 +15,7 @@ import org.joml.Matrix4f;
  * Created by pv42 on 21.06.16.
  */
 public class SkyboxRenderer {
-    private static final float SIZE = 500f;
+    private static final float SIZE = 1000f;
     private static final float[] VERTICES = {
             -SIZE, SIZE, -SIZE, //0
             -SIZE, -SIZE, -SIZE,
