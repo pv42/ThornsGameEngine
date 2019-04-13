@@ -1,11 +1,6 @@
 package engine.graphics.animation;
 
-import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by pv42 on 27.07.16.
@@ -13,9 +8,6 @@ import java.util.List;
  * @author pv42
  */
 public class Joint {
-    private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0)); // blender up axis
-
-    private static final String TAG = "Joint";
     private final String id;
     // only use in example
     public int numId;

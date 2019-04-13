@@ -4,7 +4,6 @@ import engine.graphics.animation.Joint;
 import engine.graphics.glglfwImplementation.lines.Line;
 import engine.graphics.glglfwImplementation.lines.LineModel;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
-import engine.toolbox.Log;
 import engine.toolbox.Settings;
 import engine.toolbox.StorageFormatUtil;
 import org.jetbrains.annotations.Contract;
@@ -35,8 +34,8 @@ public class GLLoader {
     public static final int VERTEX_ATTRIB_ARRAY_BONE_WEIGHT = 4;
     public static final int VERTEX_ATTRIB_ARRAY_TANGENTS = 5;
     private static final String TAG = "GLLoader";
-    private static List<Integer> vaos = new ArrayList<>();
-    private static List<Integer> vbos = new ArrayList<>();
+    private static final List<Integer> vaos = new ArrayList<>();
+    private static final List<Integer> vbos = new ArrayList<>();
 
     /**
      * loads a rawmodel with only a position array in 2D or 3D

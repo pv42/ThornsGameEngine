@@ -7,6 +7,7 @@ import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.materials.Material;
 import engine.toolbox.Log;
 import engine.toolbox.Matrix4fDbg;
+import org.joml.Matrix4f;
 import org.lwjgl.assimp.AIBone;
 import org.lwjgl.assimp.AIFace;
 import org.lwjgl.assimp.AIMesh;
@@ -198,8 +199,7 @@ public class AssimpMesh {
     private List<Joint> getEngineJoints() {
         List<Joint> jointList = new ArrayList<>();
         for (AssimpJoint assimpJoint : joints) {
-            Joint joint = new Joint(assimpJoint.getName(), new Matrix4fDbg(assimpJoint.getOffsetMatrix(),
-                    assimpJoint.getName() + ".ibm_as"));
+            Joint joint = new Joint(assimpJoint.getName(), new Matrix4f(assimpJoint.getOffsetMatrix()));
             AssimpJoint parentAssimpJoint = assimpJoint.getParent();
             if(parentAssimpJoint != null) {
                 String parentName = parentAssimpJoint.getName();

@@ -1,6 +1,5 @@
 package engine.graphics.glglfwImplementation.shaders;
 
-import engine.graphics.glglfwImplementation.GLLoader;
 import org.joml.Matrix4f;
 
 import java.util.List;

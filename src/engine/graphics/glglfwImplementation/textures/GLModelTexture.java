@@ -5,11 +5,12 @@ import engine.toolbox.Log;
 
 /**
  * Created by pv42 on 17.06.16.
+ * @author pv42
  */
 
 public class GLModelTexture implements Texture {
 
-    private int textureID;
+    private final int textureID;
     private final int normalMapID = -1;
     private int specularMapID;
 

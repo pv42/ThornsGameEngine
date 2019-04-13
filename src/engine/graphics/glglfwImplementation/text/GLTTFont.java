@@ -23,8 +23,8 @@ import java.util.Map;
 public class GLTTFont implements Font {
     private static final String TAG = "FontTextureLoader";
 
-    static byte CODEPOINT_OFFSET = 31;
-    private static byte QUALITY_BM_SIZE_MULTIPLIER = 16;
+    static final byte CODEPOINT_OFFSET = 31;
+    private static final byte QUALITY_BM_SIZE_MULTIPLIER = 16;
 
     private STBTTBakedChar.Buffer bakedBuffer;
     private volatile STBTTFontinfo fontinfo;
@@ -36,7 +36,6 @@ public class GLTTFont implements Font {
     private Map<Integer, HMetrics> hMetricsMap;
     private int pixelSize; // fonts size in pixel
     private float scale;
-    private volatile ByteBuffer fontData;
 
     /**
      * loads a TrueType font from a .ttf file, creates the texture with a given quality
@@ -47,7 +46,7 @@ public class GLTTFont implements Font {
     public GLTTFont(String filename, int textureQuality) {
         pixelSize = textureQuality;
         bitmapSize = QUALITY_BM_SIZE_MULTIPLIER * textureQuality;
-        fontData = loadFontData(filename);
+        ByteBuffer fontData = loadFontData(filename);
         fontinfo = loadFont(fontData);
         getVMetrics();
         bakedBuffer = bakeFont(fontData, textureQuality);

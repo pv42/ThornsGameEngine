@@ -2,8 +2,6 @@ package engine.graphics.particles;
 
 import org.joml.Vector3f;
 
-import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
-
 public abstract class ParticleSystem {
 
     private float pps;

@@ -6,7 +6,7 @@ import java.util.List;
 /***
  * Created by pv42 on 26.09.2016.
  */
-public class Tag<T>{
+public class Tag<T> {
     public static final byte DATATYPE_END = 0;
     public static final byte DATATYPE_BYTE = 1;
     public static final byte DATATYPE_SHORT = 2;
@@ -23,15 +23,45 @@ public class Tag<T>{
     private String name;
     private byte dataType;
     private T data;
-    public Tag(){}
-    public Tag(String name, T data) {
-        this(name,data,dataTypeFromClass(data.getClass()));
+
+    public Tag() {
     }
+
+    public Tag(String name, T data) {
+        this(name, data, dataTypeFromClass(data.getClass()));
+    }
+
     public Tag(String name, T data, byte dataType) {
         this.name = name;
         this.dataType = dataType;
         this.data = data;
     }
+
+    public static byte dataTypeFromClass(Class c) {
+        if (c == Byte.class) {
+            return DATATYPE_BYTE;
+        } else if (c == Short.class) {
+            return DATATYPE_SHORT;
+        } else if (c == Integer.class) {
+            return DATATYPE_INT;
+        } else if (c == Long.class) {
+            return DATATYPE_LONG;
+        } else if (c == Float.class) {
+            return DATATYPE_FLOAT;
+        } else if (c == Double.class) {
+            return DATATYPE_DOUBLE;
+        } else if (c == List.class) {
+            return DATATYPE_BYTEARRAY;
+        } else if (c == List.class) {
+            return DATATYPE_LIST;
+        } else if (c == List.class) {
+            return DATATYPE_COMPOUND;
+        } else if (c == List.class) {
+            return DATATYPE_INTARRAY;
+        }
+        return 0;
+    }
+
     public String getName() {
         return name;
     }
@@ -60,34 +90,7 @@ public class Tag<T>{
     public String toString() {
         String ds;
         ds = data.toString();
-        if(dataType == DATATYPE_STRING) ds = "\"" + ds + "\"";
-            return name + ":" + ds;
-    }
-
-    public static byte dataTypeFromClass(Class c) {
-        if (c == Byte.class) {
-            return DATATYPE_BYTE;
-        } else if (c == Short.class) {
-            return DATATYPE_SHORT;
-        }else if (c == Short.class) {
-            return DATATYPE_INT;
-        } else if (c == Integer.class) {
-            return DATATYPE_SHORT;
-        } else if (c == Long.class) {
-            return DATATYPE_LONG;
-        } else if (c == Float.class) {
-            return DATATYPE_FLOAT;
-        } else if (c == Double.class) {
-            return DATATYPE_DOUBLE;
-        } else if (c == List.class) {
-            return DATATYPE_BYTEARRAY;
-        } else if (c == List.class) {
-            return DATATYPE_LIST;
-        } else if (c == List.class) {
-            return DATATYPE_COMPOUND;
-        } else if (c == List.class) {
-            return DATATYPE_INTARRAY;
-        }
-        return 0;
+        if (dataType == DATATYPE_STRING) ds = "\"" + ds + "\"";
+        return name + ":" + ds;
     }
 }

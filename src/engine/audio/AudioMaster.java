@@ -21,6 +21,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * Created by pv42 on 02.07.16.
+ * @author pv42
  */
 public class AudioMaster {
     private static final String TAG = "Engine:AudioMaster";
@@ -28,6 +29,7 @@ public class AudioMaster {
     private static long context;
     private static Device device;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void init() {
         Log.i(TAG, "initialising");
         try {

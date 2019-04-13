@@ -120,13 +120,15 @@ public class GLTextureLoader implements TextureLoader {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
         for (int i = 0; i < textureFiles.length; i++) {
-            TextureData date = null;
+            TextureData data;
             try {
-                date = decodeTextureFile("res/textures/" + textureFiles[i] + fileExtension, false);
+                data = decodeTextureFile("res/textures/" + textureFiles[i] + fileExtension, false);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
+                continue;
             }
-            GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, date.getHeight(), date.getWidth(), 0, GL11.GL_RGBA, GL_UNSIGNED_BYTE, date.getBuffer());
+            GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getHeight(),
+                    data.getWidth(), 0, GL11.GL_RGBA, GL_UNSIGNED_BYTE, data.getBuffer());
         }
         //posX, negX, posY, negY, posZ, negZ
         GL11.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //todo what does it tut27

@@ -14,7 +14,6 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.round;
 import static org.lwjgl.stb.STBVorbis.*;
-import static org.lwjgl.stb.STBVorbis.stb_vorbis_seek;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**

@@ -6,22 +6,22 @@ import engine.graphics.materials.Material;
  * Created by pv42 on 17.06.16.
  */
 public class GLMaterializedModel {
-    private GLRawModel rawmodel;
+    private final GLRawModel rawModel;
     private Material material;
     private boolean isAnimated;
 
-    public GLMaterializedModel(GLRawModel rawmodel, Material material) {
-        this(rawmodel, material, !(rawmodel.getJoints() == null));
+    public GLMaterializedModel(GLRawModel rawModel, Material material) {
+        this(rawModel, material, !(rawModel.getJoints() == null));
     }
 
     public GLMaterializedModel(GLRawModel rawModel, Material material, boolean isAnimated) {
-        this.rawmodel = rawModel;
+        this.rawModel = rawModel;
         this.material = material;
         this.isAnimated = isAnimated;
     }
 
     public GLRawModel getRawModel() {
-        return rawmodel;
+        return rawModel;
     }
 
     public Material getMaterial() {

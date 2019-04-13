@@ -1,27 +1,48 @@
 package engine.graphics.animation;
 
-import engine.toolbox.Matrix4fDbg;
 import org.joml.Matrix4f;
-import org.joml.Quaterniond;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A animation of a raw model, based on KeyFrames and joints, joint matrices are calculated by interpolation between
+ * timed keyframes
+ *
+ * @author pv42
+ * @see KeyFrame
+ */
 public class Animation {
-    private static final String TAG = "Animation";
-    private List<KeyFrame> keyframes;
+    private final List<KeyFrame> keyframes;
     private float lastKeyFrameTime = 0;
 
+    /**
+     * creates an Animation with no bones or keyframes
+     */
     public Animation() {
         keyframes = new ArrayList<>();
     }
 
+    /**
+     * adds a keyframe, which hold a timestamp and joint-matrices
+     *
+     * @param keyFrame keyframe to add
+     */
     public void addKeyFrame(KeyFrame keyFrame) {
-        if(keyFrame.getTimestamp() > lastKeyFrameTime) lastKeyFrameTime = keyFrame.getTimestamp();
+        if (keyFrame.getTimestamp() > lastKeyFrameTime) lastKeyFrameTime = keyFrame.getTimestamp();
         keyframes.add(keyFrame);
     }
 
+    /**
+     * gets a animation transformation at a given time for a given joint identified by its name, the matrix is
+     * calculated by interpolating between the closest keyframe before and after the given time
+     *
+     * @param time      timestamp at which the the animation currently is
+     * @param jointName joints name of the joint to get the matrix for
+     * @return joint animation transform at the given time
+     */
     Matrix4f getMatrix(float time, String jointName) {
         float prevTS = 0;
         float nextTS = Float.POSITIVE_INFINITY;
@@ -40,10 +61,10 @@ public class Animation {
         }
         if (nextTS == Float.POSITIVE_INFINITY) return prevMatrix; // past last timestamp
         float progress = (time - prevTS) / (nextTS - prevTS);//between 0,1; current interpolate
-        Quaterniond prevQuat = new Quaterniond().setFromNormalized(prevMatrix);
-        Quaterniond nextQuat = new Quaterniond().setFromNormalized(nextMatrix);
-        Quaterniond rotation = new Quaterniond();
-        prevQuat.nlerp(nextQuat, progress, rotation);
+        Quaternionf prevQuaternion = new Quaternionf().setFromNormalized(prevMatrix);
+        Quaternionf nextQuaternion = new Quaternionf().setFromNormalized(nextMatrix);
+        Quaternionf rotation = new Quaternionf();
+        prevQuaternion.nlerp(nextQuaternion, progress, rotation);
         Vector3f prevTranslation = prevMatrix.getTranslation(new Vector3f());
         Vector3f nextTranslation = nextMatrix.getTranslation(new Vector3f());
         prevTranslation.mul(progress);
@@ -55,6 +76,12 @@ public class Animation {
         return matrix;
     }
 
+    /**
+     * gets the timestamp of the last keyframe in the animation, this is usually the length of the animation, however
+     * if the first keyframes timestamp is not zero, this is not the case
+     *
+     * @return last keyframe's timestamp
+     */
     public float getLastKeyFrameTime() {
         return lastKeyFrameTime;
     }

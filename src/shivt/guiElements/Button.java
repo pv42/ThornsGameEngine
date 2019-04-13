@@ -12,7 +12,6 @@ import engine.inputs.listeners.OnMouseDownListener;
 import engine.inputs.listeners.OnMouseEnterListener;
 import engine.inputs.listeners.OnMouseLeaveListener;
 import engine.inputs.listeners.OnMouseUpListener;
-import engine.graphics.glglfwImplementation.GLLoader;
 import engine.toolbox.Color;
 import engine.toolbox.Maths;
 import org.joml.Vector2f;

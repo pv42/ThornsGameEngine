@@ -5,8 +5,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +76,7 @@ public class StorageFormatUtil {
         return out;
     }
     public static float[][] get2DArray(List<Vector4f> in) {
-        float out[][] = new float[in.size()][3];
+        float[][] out = new float[in.size()][3];
         for (int i = 0; i < in.size(); i++) {
             Vector4f vec = in.get(i);
             out[i][0] = vec.x;
@@ -88,7 +86,7 @@ public class StorageFormatUtil {
         return out;
     }
     public static float[] get1DArray(List<Vector3f> in) {
-        float out[] = new float[in.size() * 3];
+        float[] out = new float[in.size() * 3];
         for(int i = 0; i < in.size(); i++) {
             out[3 * i] = in.get(i).x;
             out[3 * i + 1] = in.get(i).y;
@@ -97,7 +95,7 @@ public class StorageFormatUtil {
         return out;
     }
     public static float[] get1DArray(Vector3f[] in) {
-        float out[] = new float[in.length * 3];
+        float[] out = new float[in.length * 3];
         for(int i = 0; i < in.length; i++) {
             out[3 * i] = in[i].x;
             out[3 * i + 1] = in[i].y;

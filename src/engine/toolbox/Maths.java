@@ -1,6 +1,5 @@
 package engine.toolbox;
 
-import engine.graphics.cameras.ThreeDimensionCamera;
 import engine.graphics.display.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;

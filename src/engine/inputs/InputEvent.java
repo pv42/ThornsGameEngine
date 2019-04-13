@@ -1,12 +1,8 @@
 package engine.inputs;
 
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.joml.Vector2f;
-
-import java.nio.ByteBuffer;
-import java.util.List;
 
 /**
  * Created by pv42 on 04.09.2016.
@@ -21,11 +17,11 @@ public class InputEvent {
     public static final int SCROLL = 4;
     public static final int L_MOUSE = 0;
     public static final int R_MOUSE = 1;
-    private int eventSource;
-    private int eventType;
-    private int eventData;
-    private long eventTime;
-    private Vector2f mousePosition;
+    private final int eventSource;
+    private final int eventType;
+    private final int eventData;
+    private final long eventTime;
+    private final Vector2f mousePosition;
 
     public InputEvent(int eventSource, int eventType, int eventData, long eventTime,Vector2f mousePosition) {
         this.eventSource = eventSource;
@@ -39,6 +35,7 @@ public class InputEvent {
         this.eventType = eventType;
         this.eventData = eventData;
         this.eventTime = eventTime;
+        this.mousePosition = null;
     }
 
     public int getEventSource() {

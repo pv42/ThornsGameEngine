@@ -1,7 +1,6 @@
 package engine.toolbox;
 
 import engine.graphics.display.Window;
-import engine.graphics.glglfwImplementation.display.GLFWDisplayManager;
 import org.joml.*;
 
 /***

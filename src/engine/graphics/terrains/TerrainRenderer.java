@@ -3,7 +3,6 @@ package engine.graphics.terrains;
 import java.util.List;
 
 import engine.graphics.cameras.Camera;
-import engine.graphics.glglfwImplementation.GLLoader;
 import engine.graphics.glglfwImplementation.models.GLRawModel;
 import engine.graphics.lights.PointLight;
 

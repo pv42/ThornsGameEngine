@@ -31,6 +31,10 @@ public class Settings {
     public static final String SERVER_PASSWORD = "toor";
     public static final String SQL_SERVER = "192.168.178.21";
     public static final long LEVEL_FILE_VERSION = 1000000; //x.yy.zzzz -> xyyzzzz
+    public static final Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
+    //animation
+    public static final int MAX_BONES_PER_VERTEX = 3;
+    public static final int MAX_BONES = 250;
     //self
     private static final String CONFIG_FILE = "conf.ini";
     private static final String TAG = "Settings";
@@ -54,13 +58,9 @@ public class Settings {
     public static int ANISOTROPIC_FILTERING = 1;
     public static int MAX_PARTICLE_INSTANCES = 10000;
     public static float AMBIENT_LIGHT = .1f;
-    public static Color SKY_COLOR = new Color(0.1, 0.12, 0.128);
     public static Integer MSAA = 2;
     public static float SHADOW_DISTANCE = 250;
     public static int SHADOW_MAP_SIZE = 8192;
-    //animation
-    public static int MAX_BONES_PER_VERTEX = 3;
-    public static int MAX_BONES = 250;
     //debug
     public static boolean SHOW_DEBUG_LOG = true;
     public static boolean SHOW_EVENT_LOG = false;

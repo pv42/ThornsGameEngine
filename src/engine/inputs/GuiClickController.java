@@ -4,7 +4,6 @@ import engine.inputs.InputHandler;
 import engine.inputs.Clickable;
 import engine.inputs.listeners.CursorListener;
 import engine.inputs.listeners.InputEventListener;
-import engine.toolbox.Log;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
