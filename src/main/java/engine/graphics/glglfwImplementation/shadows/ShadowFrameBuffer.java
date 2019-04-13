@@ -51,7 +51,7 @@ public class ShadowFrameBuffer {
     private static void bindFrameBuffer(int frameBuffer, int width, int height) {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-        GL13.glViewport(0, 0, width, height); // todo windows actual size
+        GL11.glViewport(0, 0, width, height); // todo windows actual size
     }
 
     /**

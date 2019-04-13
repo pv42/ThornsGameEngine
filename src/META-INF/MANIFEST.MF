@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Specification-Title: ThornsGameEngine
-Specification-Version: 0.3.07
-
-
