@@ -1,14 +1,12 @@
 package engine.graphics;
 
 import engine.EngineMaster;
-import engine.graphics.Scene;
 import engine.graphics.cameras.Camera;
 import engine.graphics.cameras.StaticThreeDimensionCamera;
 import engine.graphics.display.Window;
+import engine.graphics.glglfwImplementation.MasterRenderer;
 import engine.graphics.glglfwImplementation.text.GLGuiText;
 import engine.graphics.glglfwImplementation.text.GLTTFont;
-import engine.graphics.glglfwImplementation.MasterRenderer;
-import engine.graphics.glglfwImplementation.text.GLTTFontFactory;
 import engine.toolbox.Color;
 import engine.toolbox.Log;
 import org.joml.Vector2f;

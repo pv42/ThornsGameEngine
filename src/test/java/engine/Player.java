@@ -2,8 +2,8 @@ package engine;
 
 import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
-import org.joml.Vector3f;
 import engine.graphics.terrains.Terrain;
+import org.joml.Vector3f;
 
 import java.util.List;
 

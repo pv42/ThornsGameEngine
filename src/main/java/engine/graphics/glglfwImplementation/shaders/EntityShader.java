@@ -5,20 +5,22 @@ import org.joml.Vector2f;
 
 import java.util.List;
 
-import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_BONE_INDICES;
-import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_BONE_WEIGHT;
-import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_NORMAL;
-import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_POSITION;
-import static engine.graphics.glglfwImplementation.GLLoader.VERTEX_ATTRIB_ARRAY_UV;
+import static engine.graphics.glglfwImplementation.GLLoader.*;
 import static engine.toolbox.Settings.MAX_BONES;
 
-/***
- * Created by pv42 on 17.06.16.
+/**
+ * shader for entities, supports:
+ * -texture atlases
+ * -bone animation
+ * -spec maps
+ * -lighting
+ * -animation (even tho it does not word)
+ *
+ * @author pv42
  */
 public class EntityShader extends Lighted3DShader {
     private static final String VERTEX_FILE = "vertexShader";
     private static final String FRAGMENT_FILE = "fragmentShader";
-    private static final String TAG = "EntityShader";
     private int location_numberOfRows;
     private int location_offset;
     private int location_specMap;
@@ -28,12 +30,7 @@ public class EntityShader extends Lighted3DShader {
     private int location_useAnimation;
 
     /**
-     * shader for entities, supports:
-     * -texture atlases
-     * -bone animation
-     * -spec maps
-     * -lighting
-     * -animation (even tho it does not word)
+     * creates a entity shader by loading and compiling the glsl files
      */
     public EntityShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);

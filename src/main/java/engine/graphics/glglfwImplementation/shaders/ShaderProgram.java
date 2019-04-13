@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
  * @author pv42
  */
 public abstract class ShaderProgram {
-    private static final String SHADER_LOCATION = "src/engine/graphics/glglfwImplementation/shaders/glsl/";
+    private static final String SHADER_LOCATION = "src/main/glsl/";
     private static final Object SHADER_NAME_EXTENSION = ".glsl";
     private static final float[] matrixBuffer = new float[16];
     private final int programID;
@@ -87,21 +87,21 @@ public abstract class ShaderProgram {
     /**
      * enables the shader to be applied
      */
-    public void start() {
+    public final void start() {
         GL20.glUseProgram(programID);
     }
 
     /**
      * disables the shader (and any other shader)
      */
-    public void stop() {
+    public final void stop() {
         GL20.glUseProgram(0);
     }
 
     /**
      * unloads the shader from VRAM
      */
-    public void cleanUp() {
+    public final void cleanUp() {
         stop();
         GL20.glDetachShader(programID, vertexShaderID);
         GL20.glDetachShader(programID, fragmentShaderID);
@@ -121,7 +121,7 @@ public abstract class ShaderProgram {
      * @param attribute    vbo number in vao
      * @param variableName var name in glsl shader code
      */
-    protected void bindAttribute(int attribute, String variableName) {
+    protected final void bindAttribute(int attribute, String variableName) {
         GL20.glBindAttribLocation(programID, attribute, variableName);
     }
 
@@ -136,7 +136,7 @@ public abstract class ShaderProgram {
      * @param uniformName the uniform's variable name
      * @return the uniform location in vram
      */
-    public int getUniformLocation(String uniformName) {
+    public final int getUniformLocation(String uniformName) {
         return GL20.glGetUniformLocation(programID, uniformName);
     }
 
@@ -146,7 +146,7 @@ public abstract class ShaderProgram {
      * @param location uniform location
      * @param value    binary value to load
      */
-    protected void loadBoolean(int location, boolean value) {
+    protected final void loadBoolean(int location, boolean value) {
         float toLoad = 0;
         if (value) toLoad = 1;
         loadFloat(location, toLoad);
@@ -158,7 +158,7 @@ public abstract class ShaderProgram {
      * @param location uniform location
      * @param value    int value to load
      */
-    protected void loadInt(int location, int value) {
+    protected final void loadInt(int location, int value) {
         GL20.glUniform1i(location, value);
     }
 
@@ -168,7 +168,7 @@ public abstract class ShaderProgram {
      * @param location uniform location
      * @param value    float value to load
      */
-    protected void loadFloat(int location, float value) {
+    protected final void loadFloat(int location, float value) {
         GL20.glUniform1f(location, value);
     }
 
@@ -178,7 +178,7 @@ public abstract class ShaderProgram {
      * @param location uniform location
      * @param vector   vector to load
      */
-    protected void loadVector(int location, Vector2f vector) {
+    protected final void loadVector(int location, Vector2f vector) {
         GL20.glUniform2f(location, vector.x(), vector.y());
     }
 
@@ -188,7 +188,7 @@ public abstract class ShaderProgram {
      * @param location uniform location
      * @param vector   vector to load
      */
-    protected void loadVector(int location, Vector3f vector) {
+    protected final void loadVector(int location, Vector3f vector) {
         GL20.glUniform3f(location, vector.x(), vector.y(), vector.z());
     }
 
@@ -198,7 +198,7 @@ public abstract class ShaderProgram {
      * @param location uniform location
      * @param vector   vector to load
      */
-    protected void loadVector(int location, Vector4f vector) {
+    protected final void loadVector(int location, Vector4f vector) {
         GL20.glUniform4f(location, vector.x(), vector.y(), vector.z(), vector.w());
     }
 
@@ -208,7 +208,7 @@ public abstract class ShaderProgram {
      * @param location uniform location
      * @param matrix   matrix to load
      */
-    protected void loadMatrix(int location, Matrix4f matrix) {
+    protected final void loadMatrix(int location, Matrix4f matrix) {
         matrix.get(matrixBuffer);
         GL20.glUniformMatrix4fv(location, false, matrixBuffer);
     }
@@ -220,7 +220,7 @@ public abstract class ShaderProgram {
      * @param vectors  vectors to load
      * @param size     uniform array size, max amount of vectors to load
      */
-    protected void loadVectorArray(int location, List<Vector3f> vectors, int size) {
+    protected final void loadVectorArray(int location, List<Vector3f> vectors, int size) {
         float[] data = new float[size * 3];
         for (int i = 0; i < size; i++) {
             if (i < vectors.size()) {
@@ -244,7 +244,7 @@ public abstract class ShaderProgram {
      * @param matrices matrices to load
      * @param size     uniform array size, max amount of matrices to load
      */
-    protected void loadMatrixArray(int location, List<? extends Matrix4f> matrices, int size) {
+    protected final void loadMatrixArray(int location, List<? extends Matrix4f> matrices, int size) {
         float[] data = new float[size * 16];
         for (int i = 0; i < size; i++) {
             if (i < matrices.size()) {
@@ -253,6 +253,4 @@ public abstract class ShaderProgram {
         }
         GL20.glUniformMatrix4fv(location, false, data);
     }
-
-
 }

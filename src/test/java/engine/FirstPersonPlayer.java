@@ -2,14 +2,14 @@ package engine;
 
 import engine.graphics.glglfwImplementation.display.GLFWWindow;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
+import engine.graphics.terrains.Terrain;
 import engine.inputs.InputEvent;
 import engine.inputs.InputHandler;
 import engine.inputs.listeners.InputEventListener;
-import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
-import org.joml.Vector3f;
-import engine.graphics.terrains.Terrain;
 import engine.toolbox.Settings;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
