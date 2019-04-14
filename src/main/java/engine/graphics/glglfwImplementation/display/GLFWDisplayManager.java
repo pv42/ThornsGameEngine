@@ -39,6 +39,8 @@ public class GLFWDisplayManager implements DisplayManager {
 
     /**
      * initialize GLFW, setting up the error callback and some settings
+     *
+     * @throws IllegalStateException if GLFW can not be initialized
      */
     public GLFWDisplayManager() {
         GLFWErrorCallback.createPrint(System.err).set();
@@ -47,7 +49,6 @@ public class GLFWDisplayManager implements DisplayManager {
         }
         GLFW.glfwWindowHint(GLFW_SAMPLES, MSAA);
         Log.i(TAG, "initialized");
-
     }
 
     /**

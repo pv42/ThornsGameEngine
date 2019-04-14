@@ -14,7 +14,7 @@ public interface FontFactory {
      * @param minPixelSize minimum pixelSize/quality on the font
      * @return the loaded font
      */
-    GLTTFont loadSystemFont(String name, int minPixelSize);
+    GLTTFont getSystemFont(String name, int minPixelSize);
 
     /**
      * clears the FontFactory, unloads all fonts

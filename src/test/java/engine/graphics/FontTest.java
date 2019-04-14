@@ -13,6 +13,8 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FontTest {
@@ -21,9 +23,9 @@ public class FontTest {
         Log.clearNumbers();
         EngineMaster.init();
         Window window = EngineMaster.getDisplayManager().createWindow();
-        GLTTFont bahnschrift = EngineMaster.getFontFactory().loadSystemFont("bahnschrift",128);
-        GLTTFont arial = EngineMaster.getFontFactory().loadSystemFont("arial",32);
-        GLTTFont bahnschrift2 = EngineMaster.getFontFactory().loadSystemFont("bahnschrift",32);
+        GLTTFont bahnschrift = EngineMaster.getFontFactory().getSystemFont("bahnschrift",128);
+        GLTTFont arial = EngineMaster.getFontFactory().getSystemFont("arial",32);
+        GLTTFont bahnschrift2 = EngineMaster.getFontFactory().getSystemFont("bahnschrift",32);
         GLGuiText text = new GLGuiText(bahnschrift, "H31!0 w0r!d", 0.0001f, new Color(1.0, 1.0, 1.0), new Vector2f());
         GLGuiText text1 = new GLGuiText(arial, "-0.5  0.5", 0.0002f, new Color(0.5, 1, 0), new Vector2f(-.5f,.5f));
         GLGuiText text2 = new GLGuiText(bahnschrift2, "bahn2_-|.", 0.0002f, new Color(0.3, 0, 0), new Vector2f(-.5f,-.5f));

@@ -113,8 +113,7 @@ public class MasterRenderer {
         }
         if(shadowRenderer != null) {
             shadowRenderer.render(scene.getEntities(), new DirectionalLight(new Color(1,1,1), new Vector3f(1)));
-            //shadowRenderer.render(scene.getAniEntities(), new DirectionalLight(new Color(1,1,1), new Vector3f(0,1,0)));
-        }
+            }
         startT = Time.getNanoTime();
         prepare();
         preT = Time.getNanoTime();
@@ -166,7 +165,14 @@ public class MasterRenderer {
         textRenderer.cleanUp();
         skyboxRenderer.cleanUp();
         lineRenderer.cleanUp();
-        if(shadowRenderer != null) shadowRenderer.cleanUp();
+        if(shadowRenderer != null) {
+            shadowRenderer.cleanUp();
+            shadowRenderer = null;
+        }
+        if(shadowTexture != null) {
+            GL11.glDeleteTextures(shadowTexture.getTexture());
+            shadowTexture = null;
+        }
     }
 
     private static void prepare() {

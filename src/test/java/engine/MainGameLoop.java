@@ -47,7 +47,9 @@ public class MainGameLoop {
     private static final float FONT_SIZE = 0.00002f;
 
     public static void main(String[] args) {
-        EngineMaster.init();
+        if(!EngineMaster.init()) {
+            return;
+        }
         GLFWWindow window = (GLFWWindow) EngineMaster.getDisplayManager().createWindow();
         InputHandler.addListener(new InputEventListener(InputEvent.MOUSE_EVENT, InputEvent.KEY_PRESS, InputEvent.L_MOUSE) {
             @Override
@@ -101,7 +103,8 @@ public class MainGameLoop {
         }
         //player
         AssimpScene assimpScene = new AssimpScene();
-        assimpScene.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
+        assimpScene.load("/home/pv42/IdeaProjects/ThornsGameEngine/testres/cowboy.dae");
+        //assimpScene.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
         List<GLMaterializedModel> cowboy = assimpScene.getMeshes().stream().map(AssimpMesh::createMaterializedModel).collect(Collectors.toList());
         Animation cowboyAnimation = assimpScene.getAnimations().get(0).getAnimation();
         Animator.applyAnimation(cowboyAnimation, cowboy.get(0).getRawModel().getJoints(), 0);

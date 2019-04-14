@@ -5,6 +5,7 @@ import engine.graphics.glglfwImplementation.entities.GLEntity;
 import engine.graphics.glglfwImplementation.models.GLMaterializedModel;
 import engine.graphics.glglfwImplementation.shaders.ShadowShader;
 import engine.graphics.lights.DirectionalLight;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -79,7 +80,7 @@ public class ShadowMapMasterRenderer {
      *                 entities in that list use.
      * @param sun      the light acting as the sun in the scene.
      */
-    public void render(Map<List<GLMaterializedModel>, List<GLEntity>> entities, DirectionalLight sun) {
+    public void render(Map<List<GLMaterializedModel>, List<GLEntity>> entities, @NotNull DirectionalLight sun) {
         shadowBox.update();
         Vector3f lightDirection = sun.getDirection();
         prepare(lightDirection, shadowBox);

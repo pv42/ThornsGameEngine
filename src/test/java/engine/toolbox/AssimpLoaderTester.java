@@ -23,7 +23,8 @@ class AssimpLoaderTester {
     @Test
     void testLoad() {
         AssimpScene c = new AssimpScene();
-        c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
+        c.load("/home/pv42/IdeaProjects/ThornsGameEngine/testres/cowboy.dae");
+        //c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
         for (AssimpMesh meshData : c.getMeshes()) {
             System.out.println(meshData.toString());
             System.out.println(" nvc=" + meshData.getNormal().length);
@@ -41,7 +42,8 @@ class AssimpLoaderTester {
     @Test
     void testLoadAndDraw() {
         AssimpScene c = new AssimpScene();
-        c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
+        c.load("/home/pv42/IdeaProjects/ThornsGameEngine/testres/cowboy.dae");
+        //c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\testres\\cowboy.dae");
         //engine
         EngineMaster.init();
         Window window = EngineMaster.getDisplayManager().createWindow();
@@ -97,7 +99,8 @@ class AssimpLoaderTester {
     @Test
     void testLoadAndDrawLara() {
         AssimpScene c = new AssimpScene();
-        c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\res\\meshs\\Lara_Croft.dae");
+        c.load("/home/pv42/IdeaProjects/ThornsGameEngine/res/meshs/Lara_Croft.dae");
+        //c.load("C:\\Users\\pv42\\Documents\\IdeaProjects\\ThornsGameEngine\\res\\meshs\\Lara_Croft.dae");
         //engine
         EngineMaster.init();
         Window window = EngineMaster.getDisplayManager().createWindow();

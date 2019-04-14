@@ -29,8 +29,8 @@ public class EngineMaster {
     private static TextureLoader textureLoader;
     private static FontFactory fontFactory;
 
-    public static void init() {
-        init(false);
+    public static boolean init() {
+        return init(false);
     }
 
 
@@ -38,17 +38,26 @@ public class EngineMaster {
      * starts the engine, initialize components, opens window, start event handling, must be called as first operation of the engine
      *
      * @param use2D use flat projection
+     * @return {@code true} if the initialisation was successful, {@code false} if an error occurred during
+     * initialisation
      */
-    public static void init(boolean use2D) {
+    public static boolean init(boolean use2D) {
         Settings.loadSettings();
         if (Settings.WRITE_LOG_FILE) Log.connectLogFile();
         Log.i(TAG, "OS: " + org.lwjgl.system.Platform.get().toString());
         Log.i(TAG, "lwjgl-version: " + Version.getVersion());
         AudioMaster.init();
-        displayManager = new GLFWDisplayManager();
+        try {
+            displayManager = new GLFWDisplayManager();
+        } catch (IllegalStateException ex) {
+            AudioMaster.cleanUp();
+            Log.w(TAG, "engine stopped");
+            return false;
+        }
         textureLoader = new GLTextureLoader();
         MasterRenderer.init(use2D);
         fontFactory = new GLTTFontFactory();
+        return true;
     }
 
     /**
@@ -67,14 +76,14 @@ public class EngineMaster {
         InputLoop.finish();
         Log.i(TAG, "shutting down render ");
         ParticleMaster.cleanUp();
-        fontFactory.clear();
+        if(fontFactory != null) fontFactory.clear();
         MasterRenderer.cleanUp();
         GLLoader.cleanUp();
-        displayManager.cleanUp();
-        textureLoader.cleanUp();
+        if(displayManager != null) displayManager.cleanUp();
+        if(textureLoader != null) textureLoader.cleanUp();
         AudioMaster.cleanUp();
         GLFW.glfwTerminate();
-        Log.i(TAG, "program stopped");
+        Log.i(TAG, "engine stopped");
     }
 
     public static TextureLoader getTextureLoader() {

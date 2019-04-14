@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EngineSoundTest {
     @Test
     void testSound() throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(100);
+        Log.clearNumbers();
         EngineMaster.init();
         //Window window = EngineMaster.getDisplayManager().createWindow();
         Source source = new Source();

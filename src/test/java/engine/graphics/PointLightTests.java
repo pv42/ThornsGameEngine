@@ -44,7 +44,7 @@ public class PointLightTests {
         PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
-        GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("bahnschrift", 64);
+        GLTTFont font = EngineMaster.getFontFactory().getSystemFont("bahnschrift", 64);
         GuiText text = new GLGuiText(font, "reflec.: 0", 0.00005f, new Color(1, 1, 1), new Vector2f(-1, .9f));
         scene.addText(text);
         float reflec = 0;
@@ -87,7 +87,7 @@ public class PointLightTests {
         PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
-        GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("bahnschrift", 64);
+        GLTTFont font = EngineMaster.getFontFactory().getSystemFont("bahnschrift", 64);
         GuiText text = new GLGuiText(font, "shineDamper.: 0", 0.00005f, new Color(1, 1, 1), new Vector2f(-1, .9f));
         scene.addText(text);
         float sd = 0;
@@ -132,7 +132,7 @@ public class PointLightTests {
         PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
-        GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("cour", 64);
+        GLTTFont font = EngineMaster.getFontFactory().getSystemFont("bahnschrift", 64);
         GuiText text = new GLGuiText(font, "shineDamper.: 0", 0.00005f, new Color(1, 1, 1), new Vector2f(-1, .9f));
         scene.addText(text);
         float h = 0;
@@ -181,7 +181,7 @@ public class PointLightTests {
         PointLight light = new PointLight(new Vector3f(0, 0, 3), new Color(1, 1, 1));
         scene.addLight(light);
         StaticThreeDimensionCamera camera = new StaticThreeDimensionCamera(new Vector3f(0, 0, 1), new Vector3f());
-        GLTTFont font = EngineMaster.getFontFactory().loadSystemFont("cour", 64);
+        GLTTFont font = EngineMaster.getFontFactory().getSystemFont("bahnschrift", 64);
         GuiText text = new GLGuiText(font, "shineDamper.: 0", 0.00005f, new Color(1, 1, 1), new Vector2f(-1, .9f));
         scene.addText(text);
         float z = 0;
